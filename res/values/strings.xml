@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">地藤</string>
+    <string name="forward">前进</string>
+    <string name="back">后退</string>
+    <string name="setting">设置</string>
+    <string name="stop">停止</string>
+    <string name="refresh">刷新</string>
+    <string name="home">首页</string>
+    <string name="net_fail">糟糕，网络连接失败！</string>
+    <string name="setting_network">设置网络</string>
+    <string name="activity_title">地藤管理系统 </string>
+    <string name="setting_tip1">保存地址 </string>
+    <string name="setting_tip3">保存比例 </string>
+    <string name="setting_tip2">恢复到默认值 </string>
+
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:apk="http://schemas.android.com/apk/res/android" apk:oneshot="false">
+    <item apk:drawable="@drawable/rss_loading01" apk:duration="150" />
+    <item apk:drawable="@drawable/rss_loading02" apk:duration="150" />
+    <item apk:drawable="@drawable/rss_loading03" apk:duration="150" />
+    <item apk:drawable="@drawable/rss_loading04" apk:duration="150" />
+    <item apk:drawable="@drawable/rss_loading05" apk:duration="150" />
+    <item apk:drawable="@drawable/rss_loading06" apk:duration="150" />
+    <item apk:drawable="@drawable/rss_loading07" apk:duration="150" />
+    <item apk:drawable="@drawable/rss_loading08" apk:duration="150" />
+</animation-list>

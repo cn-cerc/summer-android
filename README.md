@@ -1,2 +1,3 @@
-# summer-android
-通用安卓客户端
+# vine-android
+
+地藤安卓客户端

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="bottom_text_color">#000000</color>
+    <color name="bottom_line_color">#888888</color>
+    <color name="white">#ffffff</color>
+    <color name="translucent_dark">#99000000</color>
+    <color name="translucenter_dark">#bf000000</color>
+    <color name="bright_foreground_dark">#ffffffff</color>
+    <color name="transparent">#00000000</color>
+    <color name="transparent_1">#ee000000</color>
+    <color name="button_color">#000000</color>
+    <color name="title_bg">#22292c</color>
+    <color name="progress_color">#3ec216</color>
+
+</resources>
