@@ -1,4 +1,4 @@
-package cn.knowall.vine.net;
+package cn.cerc.android.net;
 
 import java.io.File;
 import android.annotation.TargetApi;

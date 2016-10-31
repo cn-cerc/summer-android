@@ -1,4 +1,4 @@
-package cn.knowall.vine.activity;
+package cn.cerc.android.activity;
 
 import cn.knowall.vine.R;
 import android.app.Activity;

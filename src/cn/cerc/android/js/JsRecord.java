@@ -1,4 +1,4 @@
-package cn.knowall.vine.js;
+package cn.cerc.android.js;
 
 import org.json.JSONException;
 import org.json.JSONObject;

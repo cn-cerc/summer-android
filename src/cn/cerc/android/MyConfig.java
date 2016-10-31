@@ -1,4 +1,4 @@
-package cn.knowall.vine;
+package cn.cerc.android;
 
 public class MyConfig {
 	public static final String UPDATE_URL = "http://sb.knowall.cn/form/Android.version";

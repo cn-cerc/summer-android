@@ -1,9 +1,9 @@
-package cn.knowall.vine.net;
+package cn.cerc.android.net;
 
-import cn.knowall.vine.view.MyWebView;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import cn.cerc.android.view.MyWebView;
 
 public class LocalConfig {
 	public static String getHomeUrl(Context context) {

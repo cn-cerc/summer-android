@@ -1,8 +1,8 @@
-package cn.knowall.vine.activity;
+package cn.cerc.android.activity;
 
+import cn.cerc.android.net.LocalConfig;
+import cn.cerc.android.view.MyWebView;
 import cn.knowall.vine.R;
-import cn.knowall.vine.net.LocalConfig;
-import cn.knowall.vine.view.MyWebView;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;

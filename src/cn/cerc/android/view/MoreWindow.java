@@ -1,4 +1,4 @@
-package cn.knowall.vine.view;
+package cn.cerc.android.view;
 
 import cn.knowall.vine.R;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package cn.knowall.vine.view;
+package cn.cerc.android.view;
 
 import org.apache.http.util.EncodingUtils;
 import org.jsoup.Jsoup;
@@ -28,9 +28,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import cn.knowall.vine.activity.MainActivity;
-import cn.knowall.vine.js.JsClass;
-import cn.knowall.vine.net.LocalConfig;
+import cn.cerc.android.activity.MainActivity;
+import cn.cerc.android.js.JsClass;
+import cn.cerc.android.net.LocalConfig;
 
 public class MyWebView extends WebView
 {
