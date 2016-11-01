@@ -30,11 +30,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
+import cn.cerc.android.R;
 import cn.cerc.android.view.MoreWindow;
 import cn.cerc.android.view.UpdateDialog;
 import cn.cerc.android.view.MyWebView.InputListener;
 import cn.cerc.android.view.MyWebView.Listener;
-import cn.knowall.vine.R;
 
 public class MainActivity extends Activity implements OnClickListener
 {

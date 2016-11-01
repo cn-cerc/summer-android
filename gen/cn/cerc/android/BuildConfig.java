@@ -1,5 +1,5 @@
 /** Automatically generated file. DO NOT MODIFY */
-package cn.knowall.vine;
+package cn.cerc.android;
 
 public final class BuildConfig {
     public final static boolean DEBUG = true;

@@ -6,8 +6,8 @@ import org.json.JSONObject;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Handler;
+import cn.cerc.android.R;
 import cn.cerc.android.view.MyWebView;
-import cn.knowall.vine.R;
 
 public class JsClass
 {

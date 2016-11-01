@@ -1,6 +1,5 @@
 package cn.cerc.android.view;
 
-import cn.knowall.vine.R;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
@@ -9,6 +8,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import cn.cerc.android.R;
 
 public class MoreWindow {
 

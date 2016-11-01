@@ -1,8 +1,8 @@
 package cn.cerc.android.activity;
 
+import cn.cerc.android.R;
 import cn.cerc.android.net.LocalConfig;
 import cn.cerc.android.view.MyWebView;
-import cn.knowall.vine.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
