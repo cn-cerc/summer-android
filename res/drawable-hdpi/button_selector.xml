@@ -1,8 +1,0 @@
-<selector xmlns:Android="http://schemas.android.com/apk/res/android">
-
-    <!-- 定义按钮按下时的图片 -->
-    <item Android:drawable="@drawable/btn_press" Android:state_pressed="true"/>
-    <!-- 定义按钮默认的图片 -->
-    <item Android:drawable="@drawable/btn_normal"/>
-
-</selector>
