@@ -52,6 +52,7 @@ public class PasswordLoginActivity extends BaseActivity implements View.OnClickL
         register.setOnClickListener(this);
         forget_pwd.setOnClickListener(this);
         login.setOnClickListener(this);
+        qq_login.setOnClickListener(this);
     }
 
     @Override
@@ -73,6 +74,8 @@ public class PasswordLoginActivity extends BaseActivity implements View.OnClickL
             case R.id.login:
                 startActivity(new Intent(this, MainActivity.class));
                 finish();
+                break;
+            case R.id.qq_login:
                 break;
             default:
                 break;

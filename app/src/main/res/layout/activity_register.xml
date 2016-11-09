@@ -25,14 +25,6 @@
                 android:background="@null"
                 android:src="@mipmap/ic_launcher"/>
 
-            <Button
-                android:id="@+id/login_change"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:background="@mipmap/ic_launcher"
-                android:text="@string/app_name"/>
-
         </RelativeLayout>
 
         <LinearLayout
@@ -123,9 +115,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
                 android:gravity="bottom"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="8dp">
 
                 <ImageView
                     android:id="@+id/captcha_pic"
@@ -137,19 +129,19 @@
                     android:id="@+id/captcha_code"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:background="@null"
-                    android:padding="5dp"
                     android:gravity="bottom"
-                    android:maxLines="1"
                     android:hint="@string/app_name"
-                    android:layout_weight="1"/>
+                    android:maxLines="1"
+                    android:padding="5dp"/>
 
                 <Button
                     android:id="@+id/get_captcha"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/app_name"
-                    android:background="@mipmap/ic_launcher"/>
+                    android:background="@mipmap/ic_launcher"
+                    android:text="@string/app_name"/>
 
             </LinearLayout>
 
@@ -172,12 +164,12 @@
                 android:id="@+id/register"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@mipmap/ic_launcher"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/circular_bead_button"
                 android:text="@string/app_name"/>
 
         </LinearLayout>
 
     </LinearLayout>
-
 
 </LinearLayout>
