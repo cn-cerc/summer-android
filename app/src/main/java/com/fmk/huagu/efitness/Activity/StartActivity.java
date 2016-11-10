@@ -7,9 +7,14 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import com.fmk.huagu.efitness.Entity.UI.CaptchaLogin;
+import com.fmk.huagu.efitness.Entity.UI.PasswordLogin;
+import com.fmk.huagu.efitness.Entity.UI.Register;
 import com.fmk.huagu.efitness.MyApplication;
 import com.fmk.huagu.efitness.R;
 
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
 import org.xutils.x;
 
 import java.io.File;
@@ -28,11 +33,17 @@ public class StartActivity extends BaseActivity implements Animation.AnimationLi
 
         startimage = (ImageView) this.findViewById(R.id.startimage);
 
-        x.image().bind(startimage, new File("/storage/emulated/0/DCIM/Screenshots/Screenshot_20161031-205359.png").toURI().toString(), MyApplication.getInstance().imageOptions);
-
-
+        x.image().bind(startimage, new File("/storage/emulated/0/DCIM/Screenshots/Screenshot_20161031-205359.png").toURI().toString());
         animation = AnimationUtils.loadAnimation(this, R.anim.startanim);
+
+        try {
+            InitData();
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+
     }
+
 
     @Override
     protected void onResume() {
@@ -48,12 +59,22 @@ public class StartActivity extends BaseActivity implements Animation.AnimationLi
     @Override
     public void onAnimationEnd(Animation animation) {
         if (is_skip) is_skip = true;
-        else {
-            startActivity(new Intent(this, PasswordLoginActivity.class));
-        }
+        else startActivity(new Intent(this, PasswordLoginActivity.class));
     }
 
     @Override
     public void onAnimationRepeat(Animation animation) {
     }
+
+    private void InitData() throws DbException {
+        DbManager db = x.getDb(MyApplication.getInstance().daoconfig);
+        PasswordLogin psdlogin = new PasswordLogin("#FFFFFF","path","验证码登录","#48B3BD",16,"#48B3BD","path","请输入手机号码","path","#48B3BD","#48B3BD",16,"请输入密码","path","#48B3BD","#48B3BD",16,"忘记密码","#48B3BD",16,"登录","#48B3BD","#48B3BD",16,"注册","#48B3BD","#48B3BD",16,"path","path");
+        db.save(psdlogin);
+        CaptchaLogin captLogin = new CaptchaLogin("#FFFFFF","path","验证码登录","#48B3BD",16,"#48B3BD","path","请输入手机号码","path","#48B3BD","#48B3BD",16,"请输入验证码","path","#48B3BD","#48B3BD",16,"#48B3BD",16,"发送验证码","#48B3BD","登录","#48B3BD","#48B3BD",16);
+        db.save(captLogin);
+        Register regiest = new Register("#FFFFFF","path","path","path","请输入手机号","#48B3BD","path",16,"#48B3BD","请输入密码","#48B3BD","path",16,"#48B3BD","请输入验证码","#48B3BD","path",16,"#48B3BD","发送验证码","#48B3BD",16,"#48B3BD","注册","#48B3BD","#48B3BD",16);
+        db.save(regiest);
+
+    }
+
 }
