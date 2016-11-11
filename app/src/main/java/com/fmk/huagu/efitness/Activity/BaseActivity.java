@@ -1,15 +1,17 @@
 package com.fmk.huagu.efitness.Activity;
 
+import android.Manifest;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.view.View;
-import android.view.Window;
-import android.widget.ImageButton;
-import android.widget.TextView;
+import android.telephony.TelephonyManager;
+import com.fmk.huagu.efitness.Utils.Constans;
 
-import com.fmk.huagu.efitness.R;
 
 /**
  * Created by huagu on 2016/11/2.
@@ -17,39 +19,47 @@ import com.fmk.huagu.efitness.R;
 
 public class BaseActivity extends AppCompatActivity {
 
-    public ImageButton title_back;
-    public TextView title_right,title;
+    public static final int REQUEST_READ_PHONE_STATE = 123;
+
+    protected SharedPreferences settingShared;
+
+    protected String IMEI;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
 
+        settingShared = getSharedPreferences(Constans.SHARED_SETTING_TAB,MODE_PRIVATE);
 
-    }
-
-    /**
-     * 初始化通用的title
-     * @param backres   左边的ImageButton需显示的图片， 0即不显示，
-     * @param titles    中间title(TextView)显示的文字， 传不传都显示，默认appname
-     * @param right     右边菜单(TextView)显示的文字，为空即不显示
-     */
-    public void initTitle(int backres,String titles,String right){
-        title_back = (ImageButton) this.findViewById(R.id.title_back);
-        title_right = (TextView) this.findViewById(R.id.title_right);
-        title = (TextView) this.findViewById(R.id.title);
-        if (backres!=0){
-            title_back.setVisibility(View.VISIBLE);
-            title_back.setImageResource(backres);
-        }
-        if (!TextUtils.isEmpty(titles)){
-            title.setText(titles);
-        }
-        if (!TextUtils.isEmpty(right)){
-            title_right.setVisibility(View.VISIBLE);
-            title_right.setText(right);
+        if (getPermission(Manifest.permission.READ_PHONE_STATE)){
+            TelephonyManager TelephonyMgr = (TelephonyManager)getSystemService(TELEPHONY_SERVICE);
+            IMEI = TelephonyMgr.getDeviceId();
         }
     }
 
+    public boolean getPermission(String permission){
+        int checkCallPhonePermission = ContextCompat.checkSelfPermission(this, permission);
+        if(checkCallPhonePermission != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_READ_PHONE_STATE);
+            return false;
+        }else{
+            return true;
+        }
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_READ_PHONE_STATE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    TelephonyManager TelephonyMgr = (TelephonyManager)getSystemService(TELEPHONY_SERVICE);
+                    IMEI = TelephonyMgr.getDeviceId();
+                }else{
+                    getPermission(Manifest.permission.READ_PHONE_STATE);
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
 }
