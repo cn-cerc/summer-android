@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/text1" android:icon="@mipmap/ic_launcher" android:title="@string/refresh"></item>.
-    <!--<item android:id="@+id/text2" android:icon="@mipmap/ic_launcher" android:title="@string/app_name"></item>.-->
-    <!--<item android:id="@+id/text3" android:icon="@mipmap/ic_launcher" android:title="@string/app_name"></item>.-->
+    <item android:id="@+id/text1" android:icon="@drawable/ic_more_vert_white_24dp" android:title="@string/refresh"></item>.
 </menu>

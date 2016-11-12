@@ -21,6 +21,7 @@ public class Constans {
      * 这个是登录页
      */
     public static String LOGIN_URL = "http://ehealth.lucland.com/forms/Login?device=phone";
+//    public static String LOGIN_URL = "http://www.baidu.com";
     /**
      * 是不是第一次打开app key
      */

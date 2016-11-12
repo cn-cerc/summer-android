@@ -31,16 +31,16 @@ public class BaseActivity extends AppCompatActivity {
 
         settingShared = getSharedPreferences(Constans.SHARED_SETTING_TAB,MODE_PRIVATE);
 
-        if (getPermission(Manifest.permission.READ_PHONE_STATE)){
+        if (getPermission(Manifest.permission.READ_PHONE_STATE,REQUEST_READ_PHONE_STATE)){
             TelephonyManager TelephonyMgr = (TelephonyManager)getSystemService(TELEPHONY_SERVICE);
             IMEI = TelephonyMgr.getDeviceId();
         }
     }
 
-    public boolean getPermission(String permission){
+    public boolean getPermission(String permission, int requestcode){
         int checkCallPhonePermission = ContextCompat.checkSelfPermission(this, permission);
         if(checkCallPhonePermission != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_READ_PHONE_STATE);
+            ActivityCompat.requestPermissions(this,new String[]{permission}, requestcode);
             return false;
         }else{
             return true;
@@ -55,7 +55,7 @@ public class BaseActivity extends AppCompatActivity {
                     TelephonyManager TelephonyMgr = (TelephonyManager)getSystemService(TELEPHONY_SERVICE);
                     IMEI = TelephonyMgr.getDeviceId();
                 }else{
-                    getPermission(Manifest.permission.READ_PHONE_STATE);
+                    getPermission(Manifest.permission.READ_PHONE_STATE,REQUEST_READ_PHONE_STATE);
                 }
                 break;
             default:
