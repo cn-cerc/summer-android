@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package cn.knowall.vine;
+package cn.cerc.android;
 
 public final class R {
     public static final class anim {

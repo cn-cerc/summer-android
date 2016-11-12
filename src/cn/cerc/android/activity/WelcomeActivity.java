@@ -1,8 +1,8 @@
-package cn.knowall.vine.activity;
+package cn.cerc.android.activity;
 
-import cn.knowall.vine.R;
 import android.app.Activity;
 import android.os.Bundle;
+import cn.cerc.android.R;
 
 public class WelcomeActivity extends Activity {
 	@Override

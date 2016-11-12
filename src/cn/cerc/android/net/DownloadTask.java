@@ -1,4 +1,4 @@
-package cn.knowall.vine.net;
+package cn.cerc.android.net;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,10 +9,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import cn.knowall.vine.util.FileUtil;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import cn.cerc.android.util.FileUtil;
 
 public class DownloadTask {
 	private URL url = null;

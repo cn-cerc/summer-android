@@ -1,4 +1,4 @@
-package cn.knowall.vine.view;
+package cn.cerc.android.view;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -6,8 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import cn.knowall.vine.MyConfig;
-import cn.knowall.vine.net.DownloadTask;
+import cn.cerc.android.MyConfig;
+import cn.cerc.android.net.DownloadTask;
 
 public class UpdateDialog {
 

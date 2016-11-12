@@ -1,4 +1,4 @@
-package cn.knowall.vine.js;
+package cn.cerc.android.js;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -6,8 +6,8 @@ import org.json.JSONObject;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Handler;
-import cn.knowall.vine.R;
-import cn.knowall.vine.view.MyWebView;
+import cn.cerc.android.R;
+import cn.cerc.android.view.MyWebView;
 
 public class JsClass
 {

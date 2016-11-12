@@ -1,4 +1,4 @@
-package cn.knowall.vine.activity;
+package cn.cerc.android.activity;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -30,11 +30,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
-import cn.knowall.vine.R;
-import cn.knowall.vine.view.MoreWindow;
-import cn.knowall.vine.view.UpdateDialog;
-import cn.knowall.vine.view.MyWebView.InputListener;
-import cn.knowall.vine.view.MyWebView.Listener;
+import cn.cerc.android.R;
+import cn.cerc.android.view.MoreWindow;
+import cn.cerc.android.view.UpdateDialog;
+import cn.cerc.android.view.MyWebView.InputListener;
+import cn.cerc.android.view.MyWebView.Listener;
 
 public class MainActivity extends Activity implements OnClickListener
 {
@@ -44,7 +44,7 @@ public class MainActivity extends Activity implements OnClickListener
     private LinearLayout mBackLayout;
     private LinearLayout mReFreshLayout;
     private LinearLayout mHomeLayout;
-    private cn.knowall.vine.view.MyWebView mWebview;
+    private cn.cerc.android.view.MyWebView mWebview;
     private ProgressBar mWebProgressBar;
     private LinearLayout mFailLayout;
     private Button mBtnSettingNetwork;
@@ -70,7 +70,7 @@ public class MainActivity extends Activity implements OnClickListener
         mWebProgressBar = (ProgressBar) findViewById(R.id.pb_web);
 
         // 设置浏览器
-        mWebview = (cn.knowall.vine.view.MyWebView) findViewById(R.id.wv_my);
+        mWebview = (cn.cerc.android.view.MyWebView) findViewById(R.id.wv_my);
         mWebview.setProgressBar(mWebProgressBar);
         mWebview.setmTextView((TextView) findViewById(R.id.tv_title));
         mWebview.home();

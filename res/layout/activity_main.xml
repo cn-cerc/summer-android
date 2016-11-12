@@ -212,7 +212,7 @@
             android:layout_above="@id/input_barcode_layout"
             android:layout_below="@id/main_title_rl" >
 
-            <cn.knowall.vine.view.MyWebView
+            <cn.cerc.android.view.MyWebView
                 android:id="@+id/wv_my"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent" />

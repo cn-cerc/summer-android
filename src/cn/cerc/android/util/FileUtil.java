@@ -1,4 +1,4 @@
-package cn.knowall.vine.util;
+package cn.cerc.android.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
