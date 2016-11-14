@@ -30,7 +30,6 @@ public class GuidanceActivity extends BaseActivity implements Animation.Animatio
         Animation animation = AnimationUtils.loadAnimation(this,R.anim.startanim);
         imageview.startAnimation(animation);
         animation.setAnimationListener(this);
-
     }
 
     @Override

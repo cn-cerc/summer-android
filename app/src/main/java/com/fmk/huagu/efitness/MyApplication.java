@@ -13,6 +13,8 @@ import org.xutils.x;
 
 import java.io.File;
 
+import cn.jpush.android.api.JPushInterface;
+
 
 /**
  * Created by huagu on 2016/11/2.
@@ -49,6 +51,9 @@ public class MyApplication extends Application {
                 .setAnimation(magnifImage)
                 .setIgnoreGif(true)
                 .setAutoRotate(true).build();
+
+        JPushInterface.init(this);
+        JPushInterface.setDebugMode(true);
 
     }
 

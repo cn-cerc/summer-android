@@ -3,7 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="super_big">22sp</dimen>
+    <dimen name="super_big">20sp</dimen>
     <dimen name="big">18sp</dimen>
     <dimen name="normal">16sp</dimen>
     <dimen name="small">14sp</dimen>

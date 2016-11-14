@@ -30,7 +30,7 @@ public class StartActivity extends BaseActivity implements View.OnClickListener 
 
     private List<ImageView> imageview;
 
-    private int[] image = new int[]{R.mipmap.startimage4};//R.mipmap.startimage1, R.mipmap.startimage2, R.mipmap.startimage3,
+    private int[] image = new int[]{R.mipmap.startimage1, R.mipmap.startimage2, R.mipmap.startimage3,R.mipmap.startimage4};//
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {//?device=android&clientId=44444444
@@ -45,6 +45,7 @@ public class StartActivity extends BaseActivity implements View.OnClickListener 
         for (int i = 0; i < image.length; i++) {
             ImageView imageView = new ImageView(this);
             imageView.setImageResource(image[i]);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageview.add(imageView);
             if (i == (image.length-1)) {
                 imageView.setOnClickListener(this);

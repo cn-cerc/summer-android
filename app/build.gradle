@@ -17,7 +17,14 @@ android {
         }
         ndk{
             moduleName "native-lib"
+            abiFilters 'armeabi', 'armeabi-v7a','x86', 'x86_64'
+            // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
         }
+        manifestPlaceholders = [
+                JPUSH_PKGNAME : "ae3d51bda7bdb726dc64e973",
+                JPUSH_APPKEY : "f62b44793847fca923a1efde", //JPush上注册的包名对应的appkey.
+                JPUSH_CHANNEL : "developer-default"
+        ]
     }
     buildTypes {
         release {
@@ -40,4 +47,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.1'
     testCompile 'junit:junit:4.12'
     compile 'org.xutils:xutils:3.3.36'
+    compile 'cn.jiguang:jpush:2.2.0'
 }

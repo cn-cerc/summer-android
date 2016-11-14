@@ -19,7 +19,6 @@
         <activity android:name=".Activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -27,11 +26,9 @@
         </activity>
         <activity android:name=".Activity.GuidanceActivity">
         </activity>
-        <!--<receiver android:name=".Receiver.MyReceiver">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
+        <meta-data android:name = "android.webkit.WebView.MetricsOptOut" android:value = "true"/>
+        <activity android:name=".Activity.SettingActivity">
+        </activity>
     </application>
 
 </manifest>

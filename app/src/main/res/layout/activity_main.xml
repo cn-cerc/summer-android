@@ -15,9 +15,9 @@
             android:id="@+id/back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:layout_alignParentLeft="true"
             android:src="@drawable/ic_chevron_left_white_24dp"/>
 
         <ImageView
@@ -33,21 +33,21 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:gravity="center"
             android:layout_centerInParent="true"
-            android:layout_weight="1"
-            android:textSize="@dimen/super_big"
             android:layout_marginLeft="15dp"
-            android:text="@string/app_name"/>
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/app_name"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/super_big"/>
 
         <ImageView
             android:id="@+id/more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
             android:layout_marginRight="15dp"
             android:src="@drawable/ic_more_vert_white_24dp"/>
 
@@ -70,10 +70,25 @@
                 android:progressDrawable="@drawable/progress"
                 android:visibility="gone"/>
 
-            <WebView
-                android:id="@+id/webview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+            <!--<HorizontalScrollView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:scrollbars="horizontal">-->
+
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/id_gallery"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_gravity="center_vertical"-->
+                    <!--android:orientation="horizontal" >-->
+
+                    <WebView
+                        android:id="@+id/webview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+
+                <!--</LinearLayout>-->
+            <!--</HorizontalScrollView>-->
 
         </LinearLayout>
 

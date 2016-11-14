@@ -16,18 +16,19 @@ public class Constans {
     /**
      * 这个是首页
      */
-    public static String HOME_URL = "http://ehealth.lucland.com/forms/FrmIndex";
+    public static String HOME_URL = "http://ehealth.lucland.com";
     /**
-     * 这个是登录页
+     * 第一次打开的页面  key
      */
-    public static String LOGIN_URL = "http://ehealth.lucland.com/forms/Login?device=phone";
-//    public static String LOGIN_URL = "http://www.baidu.com";
+    public static String HOME = "home";
     /**
      * 是不是第一次打开app key
      */
     public static String IS_FIRST_SHAREDKEY = "first";
-
-
+    /**
+     * 缩放程度  shared   key
+     */
+    public static String SCALE_SHAREDKEY = "InitialScale";
 
 
 }
