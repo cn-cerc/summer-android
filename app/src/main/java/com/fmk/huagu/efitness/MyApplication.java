@@ -25,6 +25,7 @@ public class MyApplication extends Application {
     public ImageOptions imageOptions;
 
     private static MyApplication instance;
+
     public static MyApplication getInstance(){
         return instance;
     }
@@ -52,8 +53,11 @@ public class MyApplication extends Application {
                 .setIgnoreGif(true)
                 .setAutoRotate(true).build();
 
+
         JPushInterface.init(this);
         JPushInterface.setDebugMode(true);
+
+
 
     }
 

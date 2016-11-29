@@ -17,12 +17,11 @@ android {
         }
         ndk{
             moduleName "native-lib"
-            abiFilters 'armeabi', 'armeabi-v7a','x86', 'x86_64'
-            // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
+            abiFilters 'armeabi', 'armeabi-v7a','x86','x86_64'
         }
         manifestPlaceholders = [
-                JPUSH_PKGNAME : "ae3d51bda7bdb726dc64e973",
-                JPUSH_APPKEY : "f62b44793847fca923a1efde", //JPush上注册的包名对应的appkey.
+                JPUSH_PKGNAME : "com.fmk.huagu.efitness",
+                JPUSH_APPKEY : "7502239d02e7247478fc1a42", //JPush上注册的包名对应的appkey.
                 JPUSH_CHANNEL : "developer-default"
         ]
     }
@@ -48,4 +47,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'org.xutils:xutils:3.3.36'
     compile 'cn.jiguang:jpush:2.2.0'
+    compile 'com.google.android.gms:play-services-appindexing:9.2.1'
 }

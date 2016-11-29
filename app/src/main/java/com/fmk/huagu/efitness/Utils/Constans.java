@@ -5,6 +5,8 @@ package com.fmk.huagu.efitness.Utils;
  */
 
 public class Constans {
+
+
     /**
      * 设备类型
      */
@@ -29,6 +31,28 @@ public class Constans {
      * 缩放程度  shared   key
      */
     public static String SCALE_SHAREDKEY = "InitialScale";
+
+    /**
+     * 接收网络变化 连接/断开 since 1.6.3
+     */
+    public final static String CONNECTION = "cn.jpush.android.intent.CONNECTION";
+    /**
+     * 用户打开自定义通知栏的intent
+     */
+    public final static String NOTIFICATION_OPENED = "cn.jpush.android.intent.NOTIFICATION_OPENED";
+    /**
+     * 用户接收SDK通知栏信息的intent-
+     */
+    public final static String NOTIFICATION_RECEIVED = "cn.jpush.android.intent.NOTIFICATION_RECEIVED";
+    /**
+     * 用户接收SDK消息的intent
+     */
+    public final static String MESSAGE_RECEIVED = "cn.jpush.android.intent.MESSAGE_RECEIVED";
+    /**
+     * 用户注册SDK的intent
+     */
+    public final static String REGISTRATION = "cn.jpush.android.intent.REGISTRATION";
+
 
 
 }

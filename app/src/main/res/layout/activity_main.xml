@@ -20,15 +20,6 @@
             android:layout_marginLeft="15dp"
             android:src="@drawable/ic_chevron_left_white_24dp"/>
 
-        <ImageView
-            android:id="@+id/home"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="12dp"
-            android:layout_toRightOf="@id/back"
-            android:src="@drawable/ic_home_black_24dp"/>
-
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
@@ -41,16 +32,33 @@
             android:textColor="@android:color/white"
             android:textSize="@dimen/super_big"/>
 
-        <ImageView
-            android:id="@+id/more"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <RelativeLayout
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="15dp"
-            android:src="@drawable/ic_more_vert_white_24dp"/>
+            android:layout_marginRight="15dp">
 
+            <ImageView
+                android:id="@+id/more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_more_vert_white_24dp"/>
+
+            <com.fmk.huagu.efitness.View.DragPointView
+                android:id="@+id/dragpointview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:textSize="@dimen/small"
+                android:text="12"
+                android:textColor="@android:color/white"/>
+
+        </RelativeLayout>
     </RelativeLayout>
 
     <FrameLayout
@@ -70,25 +78,10 @@
                 android:progressDrawable="@drawable/progress"
                 android:visibility="gone"/>
 
-            <!--<HorizontalScrollView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:scrollbars="horizontal">-->
-
-                <!--<LinearLayout-->
-                    <!--android:id="@+id/id_gallery"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_gravity="center_vertical"-->
-                    <!--android:orientation="horizontal" >-->
-
-                    <WebView
-                        android:id="@+id/webview"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
-
-                <!--</LinearLayout>-->
-            <!--</HorizontalScrollView>-->
+            <WebView
+                android:id="@+id/webview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
         </LinearLayout>
 
