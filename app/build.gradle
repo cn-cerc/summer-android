@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.0"
     defaultConfig {
         applicationId "com.fmk.huagu.efitness"
-        minSdkVersion 21
+        minSdkVersion 17
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
@@ -17,7 +17,13 @@ android {
         }
         ndk{
             moduleName "native-lib"
+            abiFilters 'armeabi', 'armeabi-v7a','x86','x86_64'
         }
+        manifestPlaceholders = [
+                JPUSH_PKGNAME : "com.fmk.huagu.efitness",
+                JPUSH_APPKEY : "7502239d02e7247478fc1a42", //JPush上注册的包名对应的appkey.
+                JPUSH_CHANNEL : "developer-default"
+        ]
     }
     buildTypes {
         release {
@@ -40,4 +46,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.1'
     testCompile 'junit:junit:4.12'
     compile 'org.xutils:xutils:3.3.36'
+    compile 'cn.jiguang:jpush:2.2.0'
+    compile 'com.google.android.gms:play-services-appindexing:9.2.1'
 }

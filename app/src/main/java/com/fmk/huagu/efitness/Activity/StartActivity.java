@@ -2,15 +2,16 @@ package com.fmk.huagu.efitness.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
-import com.fmk.huagu.efitness.Entity.UI.CaptchaLogin;
-import com.fmk.huagu.efitness.Entity.UI.PasswordLogin;
-import com.fmk.huagu.efitness.Entity.UI.Register;
-import com.fmk.huagu.efitness.MyApplication;
 import com.fmk.huagu.efitness.R;
 
 import org.xutils.DbManager;
@@ -18,63 +19,66 @@ import org.xutils.ex.DbException;
 import org.xutils.x;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-public class StartActivity extends BaseActivity implements Animation.AnimationListener {
+public class StartActivity extends BaseActivity implements View.OnClickListener {
 
-    private ImageView startimage;
+    private ViewPager viewpager;
     private boolean is_skip;//是否跳转
     private Animation animation;//渐变动画
 
+    private List<ImageView> imageview;
+
+    private int[] image = new int[]{R.mipmap.startimage1, R.mipmap.startimage2, R.mipmap.startimage3,R.mipmap.startimage4};//
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {//?device=android&clientId=44444444
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_start);
 
-        startimage = (ImageView) this.findViewById(R.id.startimage);
+        viewpager = (ViewPager) this.findViewById(R.id.viewpager);
 
-        x.image().bind(startimage, new File("/storage/emulated/0/DCIM/Screenshots/Screenshot_20161031-205359.png").toURI().toString());
-        animation = AnimationUtils.loadAnimation(this, R.anim.startanim);
-
-        try {
-            InitData();
-        } catch (DbException e) {
-            e.printStackTrace();
+        imageview = new ArrayList<ImageView>();
+        for (int i = 0; i < image.length; i++) {
+            ImageView imageView = new ImageView(this);
+            imageView.setImageResource(image[i]);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageview.add(imageView);
+            if (i == (image.length-1)) {
+                imageView.setOnClickListener(this);
+            }
         }
 
-    }
 
+        viewpager.setAdapter(new PagerAdapter() {
+            @Override
+            public int getCount() {
+                return imageview.size();
+            }
+
+            @Override
+            public Object instantiateItem(ViewGroup container, int position) {
+                container.addView(imageview.get(position));
+                return imageview.get(position);
+            }
+
+            @Override
+            public void destroyItem(ViewGroup container, int position, Object object) {
+                container.removeView(imageview.get(position));
+            }
+
+            @Override
+            public boolean isViewFromObject(View view, Object object) {
+                return view == object;
+            }
+        });
+    }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        startimage.startAnimation(animation);
-        animation.setAnimationListener(this);
+    public void onClick(View v) {
+        finish();
     }
-
-    @Override
-    public void onAnimationStart(Animation animation) {
-    }
-
-    @Override
-    public void onAnimationEnd(Animation animation) {
-        if (is_skip) is_skip = true;
-        else startActivity(new Intent(this, PasswordLoginActivity.class));
-    }
-
-    @Override
-    public void onAnimationRepeat(Animation animation) {
-    }
-
-    private void InitData() throws DbException {
-        DbManager db = x.getDb(MyApplication.getInstance().daoconfig);
-        PasswordLogin psdlogin = new PasswordLogin("#FFFFFF","path","验证码登录","#48B3BD",16,"#48B3BD","path","请输入手机号码","path","#48B3BD","#48B3BD",16,"请输入密码","path","#48B3BD","#48B3BD",16,"忘记密码","#48B3BD",16,"登录","#48B3BD","#48B3BD",16,"注册","#48B3BD","#48B3BD",16,"path","path");
-        db.save(psdlogin);
-        CaptchaLogin captLogin = new CaptchaLogin("#FFFFFF","path","验证码登录","#48B3BD",16,"#48B3BD","path","请输入手机号码","path","#48B3BD","#48B3BD",16,"请输入验证码","path","#48B3BD","#48B3BD",16,"#48B3BD",16,"发送验证码","#48B3BD","登录","#48B3BD","#48B3BD",16);
-        db.save(captLogin);
-        Register regiest = new Register("#FFFFFF","path","path","path","请输入手机号","#48B3BD","path",16,"#48B3BD","请输入密码","#48B3BD","path",16,"#48B3BD","请输入验证码","#48B3BD","path",16,"#48B3BD","发送验证码","#48B3BD",16,"#48B3BD","注册","#48B3BD","#48B3BD",16);
-        db.save(regiest);
-
-    }
-
 }
