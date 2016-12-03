@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.ListPopupWindow;
 import android.widget.TextView;
 
-import com.huagu.ehealth.R;
+import com.mimrc.vine.R;
 
 import cn.cerc.summer.android.Entity.Menu;
 import cn.cerc.summer.android.Utils.ScreenUtils;

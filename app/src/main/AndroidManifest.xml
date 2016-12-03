@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.huagu.ehealth"
+<manifest package="com.mimrc.vine"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <permission
-        android:name="com.huagu.ehealth.permission.JPUSH_MESSAGE"
+        android:name="com.mimrc.vine.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature"/>
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -13,7 +13,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
-    <uses-permission android:name="com.huagu.ehealth.permission.JPUSH_MESSAGE"/>
+    <uses-permission android:name="com.mimrc.vine.permission.JPUSH_MESSAGE"/>
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -30,7 +30,7 @@
     <application
         android:name="cn.cerc.summer.android.MyApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/deting"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -82,7 +82,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.DaemonService"/>
-                <category android:name="com.huagu.ehealth"/>
+                <category android:name="com.mimrc.vine"/>
             </intent-filter>
         </service>
         <!-- Required -->
@@ -91,7 +91,7 @@
             android:enabled="true">
             <intent-filter android:priority="1000">
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY"/>
-                <category android:name="com.huagu.ehealth"/>
+                <category android:name="com.mimrc.vine"/>
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT"/>
@@ -107,7 +107,7 @@
                 <action android:name="cn.jpush.android.ui.PushActivity"/>
 
                 <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="com.huagu.ehealth"/>
+                <category android:name="com.mimrc.vine"/>
             </intent-filter>
         </activity>
         <!-- Required SDK核心功能-->
@@ -141,7 +141,8 @@
 
         <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="7502239d02e7247478fc1a42"/><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+            android:value="cc92570c841a688af5adc5b0"/><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+            //cc92570c841a688af5adc5b0 地藤  //7502239d02e7247478fc1a42 e健康
                 App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <meta-data
             android:name="com.google.android.gms.version"

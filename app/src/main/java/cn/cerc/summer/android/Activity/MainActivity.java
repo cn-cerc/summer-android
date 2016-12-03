@@ -47,7 +47,7 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.huagu.ehealth.R;
+import com.mimrc.vine.R;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -117,7 +117,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         mainactivity = this;
 
         Log.e("IMEI", "IMEI: " + PermissionUtils.IMEI);
-        homeurl = Constans.HOME_URL + "?device=android&deviceid=" + PermissionUtils.IMEI;
+        homeurl = Constans.HOME_URL + "?device=phone&deviceid=" + PermissionUtils.IMEI;
 
         initbro();
         InitView();

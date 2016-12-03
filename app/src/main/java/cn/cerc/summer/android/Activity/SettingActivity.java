@@ -10,7 +10,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.huagu.ehealth.R;
+import com.mimrc.vine.R;
 
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Utils.Constans;

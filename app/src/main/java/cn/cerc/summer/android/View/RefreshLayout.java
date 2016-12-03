@@ -15,7 +15,8 @@ import android.webkit.WebView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.huagu.ehealth.R;
+
+import com.mimrc.vine.R;
 
 import java.util.Timer;
 import java.util.TimerTask;

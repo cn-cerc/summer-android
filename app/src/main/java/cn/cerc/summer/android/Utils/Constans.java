@@ -19,7 +19,7 @@ public class Constans {
      * http://ehealth.lucland.com
      * http://121.40.181.228
      */
-    public static String HOME_URL = "http://ehealth.lucland.com";
+    public static String HOME_URL = "http://121.40.181.228";
     /**
      *  shared 设置的 启动页
      */
