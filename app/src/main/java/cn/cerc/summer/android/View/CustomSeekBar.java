@@ -15,7 +15,8 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.fmk.huagu.efitness.R;
+import com.huagu.ehealth.R;
+
 
 /**
  * Created by fff on 2016/11/24.

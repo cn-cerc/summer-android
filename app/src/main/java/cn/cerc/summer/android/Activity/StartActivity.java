@@ -15,10 +15,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.alibaba.fastjson.JSON;
+import com.huagu.ehealth.R;
+
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Interface.RequestCallback;
 import cn.cerc.summer.android.MyApplication;
-import com.fmk.huagu.efitness.R;
 
 import cn.cerc.summer.android.Utils.Constans;
 import cn.cerc.summer.android.Utils.PermissionUtils;

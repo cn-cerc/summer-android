@@ -10,10 +10,13 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.huagu.ehealth.R;
 
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.MyApplication;
-import com.fmk.huagu.efitness.R;
+
 
 import org.xutils.x;
 
@@ -24,6 +27,7 @@ public class GuidanceActivity extends BaseActivity implements View.OnClickListen
 
     private ViewPager viewpager;
     private LinearLayout contan;
+    private TextView skip;
     private boolean is_skip;//是否跳转
     private Animation animation;//渐变动画
 
@@ -40,26 +44,32 @@ public class GuidanceActivity extends BaseActivity implements View.OnClickListen
 
         viewpager = (ViewPager) this.findViewById(R.id.viewpager);
         contan = (LinearLayout) this.findViewById(R.id.contan);
-
+        skip = (TextView) this.findViewById(R.id.skip);
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         list = Config.getConfig().getWelcomeImages();
 
         imageview = new ArrayList<ImageView>();
         for (int i = 0; i < list.size(); i++) {
             ImageView imageView = new ImageView(this);
-            x.image().bind(imageView,list.get(i), MyApplication.getInstance().imageOptions);
+            x.image().bind(imageView, list.get(i), MyApplication.getInstance().imageOptions);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageview.add(imageView);
-            if (i == (list.size()-1)) {
+            if (i == (list.size() - 1)) {
                 imageView.setOnClickListener(this);
             }
             View view = new View(this);
             view.setBackgroundResource(R.drawable.point_white);
-            LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             llp.width = 15;
             llp.height = 15;
             llp.leftMargin = 20;
             llp.rightMargin = 20;
-            contan.addView(view,llp);
+            contan.addView(view, llp);
         }
 
         viewpager.setAdapter(new PagerAdapter() {
@@ -97,16 +107,21 @@ public class GuidanceActivity extends BaseActivity implements View.OnClickListen
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
     }
+
     @Override
     public void onPageSelected(int position) {
-        for (int i=0;i<contan.getChildCount();i++){
-            if (position==i){
+        for (int i = 0; i < contan.getChildCount(); i++) {
+            if (position == i) {
                 contan.getChildAt(i).setBackgroundResource(R.drawable.point_white);
-            }else{
+            } else {
                 contan.getChildAt(i).setBackgroundResource(R.drawable.point_color);
             }
         }
+        if (position == (imageview.size() - 1)) skip.setVisibility(View.VISIBLE);
+        else skip.setVisibility(View.INVISIBLE);
+
     }
+
     @Override
     public void onPageScrollStateChanged(int state) {
 

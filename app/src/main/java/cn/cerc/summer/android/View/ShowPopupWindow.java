@@ -9,8 +9,9 @@ import android.widget.ImageView;
 import android.widget.ListPopupWindow;
 import android.widget.TextView;
 
+import com.huagu.ehealth.R;
+
 import cn.cerc.summer.android.Entity.Menu;
-import com.fmk.huagu.efitness.R;
 import cn.cerc.summer.android.Utils.ScreenUtils;
 
 import java.util.List;

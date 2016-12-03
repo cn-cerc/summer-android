@@ -10,8 +10,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.huagu.ehealth.R;
+
 import cn.cerc.summer.android.Entity.Config;
-import com.fmk.huagu.efitness.R;
 import cn.cerc.summer.android.Utils.Constans;
 import cn.cerc.summer.android.View.CustomSeekBar;
 

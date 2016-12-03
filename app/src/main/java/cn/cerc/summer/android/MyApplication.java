@@ -6,7 +6,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 
-import com.fmk.huagu.efitness.R;
+
+import com.huagu.ehealth.R;
 
 import org.xutils.image.ImageOptions;
 import org.xutils.x;

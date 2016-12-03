@@ -12,9 +12,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.huagu.ehealth.R;
+
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.MyApplication;
-import com.fmk.huagu.efitness.R;
 
 import org.xutils.x;
 
