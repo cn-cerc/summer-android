@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">e健康</string>
+    <string name="setting">设置</string>
+    <string name="refresh">重新加载</string>
+    <string name="clear">清除缓存</string>
+    <string name="unread_msg">未读消息</string>
+    <string name="msg_manager">消息管理</string>
+    <string name="home">首页</string>
+
+    <string name="pull_to_refresh">下拉刷新</string>
+    <string name="release_to_refresh">释放立即刷新</string>
+    <string name="refreshing">正在刷新...</string>
+    <string name="refresh_succeed">刷新成功</string>
+    <string name="refresh_fail">刷新失败</string>
+    <string name="pullup_to_load">上拉加载更多</string>
+    <string name="release_to_load">释放立即加载</string>
+    <string name="loading">正在加载...</string>
+    <string name="load_succeed">加载成功</string>
+    <string name="load_fail">加载失败</string>
+
+    <string-array name="menu">
+        <item>@string/unread_msg</item>
+        <item>@string/msg_manager</item>
+        <item>@string/home</item>
+        <item>@string/setting</item>
+        <item>@string/clear</item>
+        <item>@string/refresh</item>
+    </string-array>
+
+    <string name="no_http_tips">请填写正确的协议</string>
+</resources>

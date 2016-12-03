@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/text1" android:icon="@mipmap/message" android:title="@string/unread_msg"></item>
+    <item android:id="@+id/text2" android:icon="@mipmap/msg_manager" android:title="@string/msg_manager"></item>
+    <item android:id="@+id/text3" android:icon="@mipmap/home" android:title="@string/home"></item>
+    <item android:id="@+id/text4" android:title="@string/refresh"></item>
+    <item android:id="@+id/text5" android:icon="@mipmap/setting" android:title="@string/setting"></item>
+    <item android:id="@+id/text6" android:title="@string/clear"></item>
+</menu>
