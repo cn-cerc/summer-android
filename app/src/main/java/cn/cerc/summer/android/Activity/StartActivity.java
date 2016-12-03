@@ -1,4 +1,4 @@
-package com.fmk.huagu.efitness.Activity;
+package cn.cerc.summer.android.Activity;
 
 import android.Manifest;
 import android.content.Intent;
@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import com.alibaba.fastjson.JSON;
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Interface.RequestCallback;
-import com.fmk.huagu.efitness.MyApplication;
+import cn.cerc.summer.android.MyApplication;
 import com.fmk.huagu.efitness.R;
 
 import cn.cerc.summer.android.Utils.Constans;

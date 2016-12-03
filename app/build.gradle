@@ -4,7 +4,7 @@ android {
     compileSdkVersion 24
     buildToolsVersion "24.0.0"
     defaultConfig {
-        applicationId "com.fmk.huagu.efitness"
+        applicationId "com.huagu.ehealth"
         minSdkVersion 17
         targetSdkVersion 24
         versionCode 1
@@ -20,7 +20,7 @@ android {
             abiFilters 'armeabi', 'armeabi-v7a','x86','x86_64'
         }
         manifestPlaceholders = [
-                JPUSH_PKGNAME : "com.fmk.huagu.efitness",
+                JPUSH_PKGNAME : "com.huagu.ehealth",
                 JPUSH_APPKEY : "7502239d02e7247478fc1a42", //JPush上注册的包名对应的appkey.
                 JPUSH_CHANNEL : "developer-default"
         ]

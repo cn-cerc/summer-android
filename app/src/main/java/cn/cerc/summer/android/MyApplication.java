@@ -1,10 +1,12 @@
-package com.fmk.huagu.efitness;
+package cn.cerc.summer.android;
 
 import android.app.Application;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
+
+import com.fmk.huagu.efitness.R;
 
 import org.xutils.image.ImageOptions;
 import org.xutils.x;

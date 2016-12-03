@@ -1,4 +1,4 @@
-package com.fmk.huagu.efitness.Activity;
+package cn.cerc.summer.android.Activity;
 
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import cn.cerc.summer.android.Entity.Config;
-import com.fmk.huagu.efitness.MyApplication;
+import cn.cerc.summer.android.MyApplication;
 import com.fmk.huagu.efitness.R;
 
 import org.xutils.x;

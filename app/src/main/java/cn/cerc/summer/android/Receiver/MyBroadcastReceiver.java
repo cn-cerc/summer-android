@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.fmk.huagu.efitness.Activity.MainActivity;
+import cn.cerc.summer.android.Activity.MainActivity;
 import cn.cerc.summer.android.Utils.Constans;
 
 import org.json.JSONException;

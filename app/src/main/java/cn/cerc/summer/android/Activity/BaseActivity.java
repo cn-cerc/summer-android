@@ -1,4 +1,4 @@
-package com.fmk.huagu.efitness.Activity;
+package cn.cerc.summer.android.Activity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package com.fmk.huagu.efitness.Activity;
+package cn.cerc.summer.android.Activity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
