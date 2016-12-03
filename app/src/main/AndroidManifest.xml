@@ -135,7 +135,7 @@
                 <!-- 接收网络变化 连接/断开 since 1.6.3 -->
                 <action android:name="cn.jpush.android.intent.CONNECTION" />
 
-                <category android:name="com.huagu.ehealth" />
+                <category android:name="com.mimrc.vine" />
             </intent-filter>
         </receiver>
 

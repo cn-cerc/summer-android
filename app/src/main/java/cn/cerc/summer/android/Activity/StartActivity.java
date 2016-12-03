@@ -28,11 +28,12 @@ import cn.cerc.summer.android.Utils.XHttpRequest;
 import org.json.JSONObject;
 import org.xutils.x;
 
-public class StartActivity extends BaseActivity implements Animation.AnimationListener, ActivityCompat.OnRequestPermissionsResultCallback,RequestCallback {
+public class StartActivity extends BaseActivity implements Animation.AnimationListener, ActivityCompat.OnRequestPermissionsResultCallback, RequestCallback {
 
     private ImageView imageview;
     private static StartActivity ga;
-    public static StartActivity getInstance(){
+
+    public static StartActivity getInstance() {
         return ga;
     }
 
@@ -46,8 +47,8 @@ public class StartActivity extends BaseActivity implements Animation.AnimationLi
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_guidance);
 
-        if (PermissionUtils.getPermission(Manifest.permission.READ_PHONE_STATE, PermissionUtils.REQUEST_READ_PHONE_STATE,this)) {
-            XHttpRequest.getInstance().GET(getConfigUrl( PermissionUtils.IMEI), this);
+        if (PermissionUtils.getPermission(Manifest.permission.READ_PHONE_STATE, PermissionUtils.REQUEST_READ_PHONE_STATE, this)) {
+            XHttpRequest.getInstance().GET(getConfigUrl(PermissionUtils.IMEI), this);
         }
 
         initView();
@@ -56,13 +57,13 @@ public class StartActivity extends BaseActivity implements Animation.AnimationLi
 
     private void initView() {
         imageview = (ImageView) this.findViewById(R.id.imageview);
-        String image = settingShared.getString(Constans.SHARED_START_URL,"");
+        String image = settingShared.getString(Constans.SHARED_START_URL, "");
         if (TextUtils.isEmpty(image))
             imageview.setImageResource(R.mipmap.startimage);
         else
-            x.image().bind(imageview,image, MyApplication.getInstance().imageOptions);
+            x.image().bind(imageview, image, MyApplication.getInstance().imageOptions);
 
-        Animation animation = AnimationUtils.loadAnimation(this,R.anim.startanim);
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.startanim);
         imageview.startAnimation(animation);
         animation.setAnimationListener(this);
     }
@@ -74,10 +75,10 @@ public class StartActivity extends BaseActivity implements Animation.AnimationLi
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     TelephonyManager TelephonyMgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
                     PermissionUtils.IMEI = TelephonyMgr.getDeviceId();
-                    XHttpRequest.getInstance().GET(getConfigUrl( PermissionUtils.IMEI), this);
+                    XHttpRequest.getInstance().GET(getConfigUrl(PermissionUtils.IMEI), this);
                 } else {
-                    if (PermissionUtils.getPermission(Manifest.permission.READ_PHONE_STATE, PermissionUtils.REQUEST_READ_PHONE_STATE,this)) {
-                        XHttpRequest.getInstance().GET(getConfigUrl( PermissionUtils.IMEI), this);
+                    if (PermissionUtils.getPermission(Manifest.permission.READ_PHONE_STATE, PermissionUtils.REQUEST_READ_PHONE_STATE, this)) {
+                        XHttpRequest.getInstance().GET(getConfigUrl(PermissionUtils.IMEI), this);
                     }
                 }
                 break;
@@ -86,7 +87,7 @@ public class StartActivity extends BaseActivity implements Animation.AnimationLi
         }
     }
 
-    private String getConfigUrl(String imei){
+    private String getConfigUrl(String imei) {
         return Constans.HOME_URL + "/MobileConfig?device=android&deviceId=" + imei;
     }
 
@@ -107,14 +108,14 @@ public class StartActivity extends BaseActivity implements Animation.AnimationLi
     /**
      * 跳转
      */
-    public void skip(){
-        if (settingShared.getBoolean(Constans.IS_FIRST_SHAREDKEY,true)) {
+    public void skip() {
+        if (settingShared.getBoolean(Constans.IS_FIRST_SHAREDKEY, true)) {
             settingShared.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).commit();
-            if (config != null && config.getWelcomeImages() != null && config.getWelcomeImages().size() > 0){
+            if (config != null && config.getWelcomeImages() != null && config.getWelcomeImages().size() > 0) {
                 startActivity(new Intent(this, GuidanceActivity.class));
             }
-        }else{
-            if (config != null && config.getAdImages() != null && config.getAdImages().size() > 0){
+        } else {
+            if (config != null && config.getAdImages() != null && config.getAdImages().size() > 0) {
                 startActivity(new Intent(this, AdActivity.class));
             }
         }
@@ -129,8 +130,9 @@ public class StartActivity extends BaseActivity implements Animation.AnimationLi
     @Override
     public void success(String url, JSONObject json) {
         config = JSON.parseObject(json.toString(), Config.class);
-        String homeurl = config.getRootSite()+"?device=phone&deviceid=" + PermissionUtils.IMEI;
-        settingShared.edit().putString(Constans.HOME_URL, homeurl).putString(Constans.SHARED_START_URL, config.getStartImage()).commit();
+        String homeurl = config.getRootSite() + "?device=phone&deviceid=" + PermissionUtils.IMEI;
+        String msgurl = config.getRootSite() + config.getMsgManage() + ".show";
+        settingShared.edit().putString(Constans.HOME_URL, homeurl).putString(Constans.SHARED_START_URL, config.getStartImage()).putString(Constans.SHARED_MSG_URL, msgurl).commit();
         MainActivity.getInstance().webview.loadUrl(homeurl);
         if (is_skip) skip();
         else is_skip = true;

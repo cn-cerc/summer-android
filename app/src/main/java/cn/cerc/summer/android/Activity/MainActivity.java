@@ -122,16 +122,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
         mainactivity = this;
 
-        if (getIntent().hasExtra("msgId")){
-            msgId = getIntent().getStringExtra("msgId");
-            homeurl = settingShared.getString(Constans.SHARED_MSG_URL,"")+msgId;
-        }else{
-            homeurl = Constans.HOME_URL + "?device=android&deviceid=" + PermissionUtils.IMEI;
-        }
-
-        Log.e("IMEI", "IMEI: " + PermissionUtils.IMEI);
-        Log.e("IMEI", "IMEI: " + PermissionUtils.IMEI);
-        homeurl = Constans.HOME_URL + "?device=phone&deviceid=" + PermissionUtils.IMEI;
+        homeurl = Constans.HOME_URL + "?device=android&deviceid=" + PermissionUtils.IMEI;
 
         initbro();
         InitView();
@@ -140,6 +131,26 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         startActivity(new Intent(this, StartActivity.class));
 
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+    /**
+     * 查看消息的url
+     */
+    private String getMsgUrl() {
+        return settingShared.getString(Constans.SHARED_MSG_URL, "") + "?device=android&deviceid=" + PermissionUtils.IMEI;
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent.hasExtra("msgId")) {
+            msgId = intent.getStringExtra("msgId");
+            String msgurl = getMsgUrl() + "&msgId=" + msgId;
+            webview.loadUrl(msgurl);
+        } else {
+            homeurl = Constans.HOME_URL + "?device=android&deviceid=" + PermissionUtils.IMEI;
+            webview.loadUrl(homeurl);
+        }
     }
 
     @Override
