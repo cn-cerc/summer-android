@@ -7,6 +7,7 @@ import android.util.Log;
 
 import cn.cerc.summer.android.Activity.MainActivity;
 import cn.cerc.summer.android.Utils.Constans;
+import cn.jpush.android.api.JPushInterface;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +21,12 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 //https://www.pgyer.com/app/install/9c2b21c08cee498109cfc02913ad6a64
 
     private final String EXTRA = "cn.jpush.android.EXTRA";
+    private final String NOTIFI_ID = "cn.jpush.android.NOTIFICATION_ID";
+    private final String MSG_ID = "MSG_ID";
+//    Bundle[{cn.jpush.android.ALERT=副研究员客户, cn.jpush.android.EXTRA={}, cn.jpush.android.NOTIFICATION_ID=834122552, cn.jpush.android.NOTIFICATION_CONTENT_TITLE=e健康, cn.jpush.android.MSG_ID=834122552}]
+//Bundle[{cn.jpush.android.NOTIFICATION_TYPE=0, app=com.huagu.ehealth, cn.jpush.android.ALERT=副研究员客户的说法都是, cn.jpush.android.EXTRA={}, cn.jpush.android.NOTIFICATION_ID=835082864, cn.jpush.android.NOTIFICATION_CONTENT_TITLE=e健康, cn.jpush.android.MSG_ID=835082864}]
+
+    private static final String ACTION_NOTIFICATION_OPENED = JPushInterface.ACTION_NOTIFICATION_OPENED;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -31,7 +38,16 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
                 context.sendBroadcast(networkintent);
                 break;
             case Constans.NOTIFICATION_OPENED:
-                Log.e("xxxx","111111");
+                //打开自定义的Activity
+                try {
+                    JSONObject jsonObject = new JSONObject(intent.getExtras().getString("cn.jpush.android.EXTRA"));
+                    Intent i = new Intent(context, MainActivity.class);
+                    i.putExtra("msgId",jsonObject.getString("msgId"));
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
+                    context.startActivity(i);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 break;
             case Constans.NOTIFICATION_RECEIVED:
                 if (intent.hasExtra(EXTRA)){
@@ -54,26 +70,6 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
             case Constans.REGISTRATION:
                 Log.e("xxxx","444444444");
                 break;
-//            case Intent.ACTION_PACKAGE_ADDED:
-//                Intent addedintent = new Intent(MainActivity.PACKAGE_ADDED);
-//                context.sendBroadcast(addedintent);
-//                break;
-//            case Intent.ACTION_PACKAGE_REMOVED:
-//                Intent removedintent = new Intent(MainActivity.PACKAGE_ADDED);
-//                context.sendBroadcast(removedintent);
-//                break;
-//            case Intent.ACTION_PACKAGE_CHANGED:
-//                Intent changedintent = new Intent(MainActivity.PACKAGE_ADDED);
-//                context.sendBroadcast(changedintent);
-//                break;
-//            case Intent.ACTION_PACKAGE_REPLACED:
-//                Intent replacedintent = new Intent(MainActivity.PACKAGE_ADDED);
-//                context.sendBroadcast(replacedintent);
-//                break;
-//            case Intent.ACTION_PACKAGE_RESTARTED:
-//                Intent restartedintent = new Intent(MainActivity.PACKAGE_ADDED);
-//                context.sendBroadcast(restartedintent);
-//                break;
             default:
                 break;
         }
