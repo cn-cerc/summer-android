@@ -20,4 +20,16 @@
         android:layout_marginBottom="35dp">
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/skip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="跳过"
+        android:background="@drawable/ad_skip"
+        android:layout_alignParentTop="true"
+        android:textColor="@color/colorPrimary"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="30dp"/>
+
 </RelativeLayout>

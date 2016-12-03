@@ -1,7 +1,9 @@
-package com.fmk.huagu.efitness.Utils;
+package com.fmk.huagu.efitness.Interface;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+
+import com.fmk.huagu.efitness.Utils.AppUtil;
 
 /**
  * Created by fff on 2016/11/11.

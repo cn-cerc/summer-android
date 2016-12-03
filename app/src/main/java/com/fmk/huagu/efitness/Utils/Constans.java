@@ -6,19 +6,27 @@ package com.fmk.huagu.efitness.Utils;
 
 public class Constans {
 
-
     /**
      * 设备类型
      */
     public static final String DEVICE_TYPE = "android";
     /**
-     * 设置的key
+     *  shared 设置的key
      */
     public static String SHARED_SETTING_TAB = "setting";
     /**
-     * 这个是首页
+     * 默认这个是首页
      */
     public static String HOME_URL = "http://ehealth.lucland.com";
+    /**
+     *  shared 设置的 启动页
+     */
+    public static String SHARED_START_URL = "START";
+    /**
+     * 获取配置
+     */
+    public static String GET_CONFIG = "http://ehealth.lucland.com/MobileConfig?device=android&deviceId=";
+
     /**
      * 第一次打开的页面  key
      */

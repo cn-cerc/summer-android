@@ -7,6 +7,11 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 
+import com.fmk.huagu.efitness.Interface.RequestCallback;
+import com.fmk.huagu.efitness.Utils.Constans;
+import com.fmk.huagu.efitness.Utils.XHttpRequest;
+
+import org.json.JSONObject;
 import org.xutils.DbManager;
 import org.xutils.image.ImageOptions;
 import org.xutils.x;
@@ -30,7 +35,6 @@ public class MyApplication extends Application {
         return instance;
     }
 
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -53,12 +57,13 @@ public class MyApplication extends Application {
                 .setIgnoreGif(true)
                 .setAutoRotate(true).build();
 
-
         JPushInterface.init(this);
         JPushInterface.setDebugMode(true);
 
 
 
     }
+
+
 
 }

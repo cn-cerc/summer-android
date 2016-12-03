@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.fmk.huagu.efitness.Entity.Config;
 import com.fmk.huagu.efitness.MyApplication;
@@ -20,10 +21,11 @@ import org.xutils.x;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuidanceActivity extends BaseActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
+public class AdActivity extends BaseActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
 
     private ViewPager viewpager;
     private LinearLayout contan;
+    private TextView skip;
     private boolean is_skip;//是否跳转
     private Animation animation;//渐变动画
 
@@ -36,12 +38,20 @@ public class GuidanceActivity extends BaseActivity implements View.OnClickListen
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_start);
+        setContentView(R.layout.activity_ad);
 
         viewpager = (ViewPager) this.findViewById(R.id.viewpager);
         contan = (LinearLayout) this.findViewById(R.id.contan);
+        skip = (TextView) this.findViewById(R.id.skip);
 
-        list = Config.getConfig().getWelcomeImages();
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        list = Config.getConfig().getAdImages();
 
         imageview = new ArrayList<ImageView>();
         for (int i = 0; i < list.size(); i++) {
