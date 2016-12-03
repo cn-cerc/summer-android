@@ -1,8 +1,6 @@
 package com.fmk.huagu.efitness.Activity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -14,11 +12,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -38,27 +31,23 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
-import com.fmk.huagu.efitness.Entity.Config;
-import com.fmk.huagu.efitness.Entity.Menu;
-import com.fmk.huagu.efitness.Interface.RequestCallback;
+import cn.cerc.summer.android.Entity.Config;
+import cn.cerc.summer.android.Entity.Menu;
 import com.fmk.huagu.efitness.R;
-import com.fmk.huagu.efitness.Receiver.MyBroadcastReceiver;
-import com.fmk.huagu.efitness.Utils.AppUtil;
-import com.fmk.huagu.efitness.Utils.Constans;
-import com.fmk.huagu.efitness.Interface.JSInterface;
-import com.fmk.huagu.efitness.Utils.PermissionUtils;
-import com.fmk.huagu.efitness.Utils.XHttpRequest;
-import com.fmk.huagu.efitness.View.DragPointView;
-import com.fmk.huagu.efitness.View.RefreshLayout;
-import com.fmk.huagu.efitness.View.ShowDialog;
-import com.fmk.huagu.efitness.View.ShowPopupWindow;
+import cn.cerc.summer.android.Receiver.MyBroadcastReceiver;
+import cn.cerc.summer.android.Utils.AppUtil;
+import cn.cerc.summer.android.Utils.Constans;
+import cn.cerc.summer.android.Interface.JSInterface;
+import cn.cerc.summer.android.Utils.PermissionUtils;
+
+import cn.cerc.summer.android.View.DragPointView;
+import cn.cerc.summer.android.View.RefreshLayout;
+import cn.cerc.summer.android.View.ShowDialog;
+import cn.cerc.summer.android.View.ShowPopupWindow;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
-
-import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;

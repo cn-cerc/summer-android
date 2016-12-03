@@ -1,22 +1,18 @@
-package com.fmk.huagu.efitness.View;
+package cn.cerc.summer.android.View;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListPopupWindow;
-import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.fmk.huagu.efitness.Entity.Menu;
+import cn.cerc.summer.android.Entity.Menu;
 import com.fmk.huagu.efitness.R;
-import com.fmk.huagu.efitness.Utils.ScreenUtils;
+import cn.cerc.summer.android.Utils.ScreenUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,7 +38,7 @@ public class ShowPopupWindow {
         ListPopupWindow popupWindow = new ListPopupWindow(context);
         popupView = LayoutInflater.from(context).inflate(R.layout.popupwindows,null,false);
         popupWindow.setAdapter(baseAdapter);
-        popupWindow.setWidth(ScreenUtils.getScreenWidth(context)/3);
+        popupWindow.setWidth(ScreenUtils.getScreenWidth(context)/7*3);
         return popupWindow;
     }
 
@@ -81,6 +77,7 @@ public class ShowPopupWindow {
             else{
                 vholder.msg_num.setVisibility(View.VISIBLE);
             }
+            vholder.msg_num.setVisibility(View.INVISIBLE); //测试隐藏
             vholder.msg_num.setText(menulist.get(position).getMsg_num()+"");
             vholder.menu_name.setText(menulist.get(position).getMenu());
             return convertView;

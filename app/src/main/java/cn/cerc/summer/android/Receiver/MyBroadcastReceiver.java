@@ -1,20 +1,15 @@
-package com.fmk.huagu.efitness.Receiver;
+package cn.cerc.summer.android.Receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.fmk.huagu.efitness.Activity.MainActivity;
-import com.fmk.huagu.efitness.Utils.Constans;
+import cn.cerc.summer.android.Utils.Constans;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import cn.jpush.android.api.JPushInterface;
 
 
 /**

@@ -1,4 +1,4 @@
-package com.fmk.huagu.efitness.Utils;
+package cn.cerc.summer.android.Utils;
 
 /**
  * Created by fff on 2016/11/11.
@@ -16,8 +16,10 @@ public class Constans {
     public static String SHARED_SETTING_TAB = "setting";
     /**
      * 默认这个是首页
+     * http://ehealth.lucland.com
+     * http://121.40.181.228
      */
-    public static String HOME_URL = "http://ehealth.lucland.com";
+    public static String HOME_URL = "http://121.40.181.228";
     /**
      *  shared 设置的 启动页
      */
@@ -25,7 +27,7 @@ public class Constans {
     /**
      * 获取配置
      */
-    public static String GET_CONFIG = "http://ehealth.lucland.com/MobileConfig?device=android&deviceId=";
+//    public static String GET_CONFIG = "http://ehealth.lucland.com/MobileConfig?device=android&deviceId=";
 
     /**
      * 第一次打开的页面  key

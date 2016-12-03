@@ -1,4 +1,4 @@
-package com.fmk.huagu.efitness.View;
+package cn.cerc.summer.android.View;
 
 import android.content.Context;
 import android.os.Build;
@@ -6,7 +6,7 @@ import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.webkit.WebView;
 
-import com.fmk.huagu.efitness.Interface.Pullable;
+import cn.cerc.summer.android.Interface.Pullable;
 
 /**
  * Created by fff on 2016/12/3.

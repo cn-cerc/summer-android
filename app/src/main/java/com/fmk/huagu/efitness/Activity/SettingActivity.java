@@ -1,9 +1,7 @@
 package com.fmk.huagu.efitness.Activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,10 +10,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fmk.huagu.efitness.Entity.Config;
+import cn.cerc.summer.android.Entity.Config;
 import com.fmk.huagu.efitness.R;
-import com.fmk.huagu.efitness.Utils.Constans;
-import com.fmk.huagu.efitness.View.CustomSeekBar;
+import cn.cerc.summer.android.Utils.Constans;
+import cn.cerc.summer.android.View.CustomSeekBar;
 
 public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarChangeListener {
 
@@ -38,7 +36,7 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
         url_tit = (TextView) this.findViewById(R.id.url_tit);
         customseekbar = (CustomSeekBar) this.findViewById(R.id.customseekbar);
         customseekbar.setOnSeekBarChangeListener(this);
-        edittext.setText(settingShared.getString(Constans.HOME, ""));
+        edittext.setText(settingShared.getString(Constans.HOME, "125"));
         customseekbar.setProgress(settingShared.getInt(Constans.SCALE_SHAREDKEY, 90));
 
         if (!Config.getConfig().isDebug()){

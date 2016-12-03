@@ -1,22 +1,13 @@
 package com.fmk.huagu.efitness;
 
 import android.app.Application;
-import android.os.Environment;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 
-import com.fmk.huagu.efitness.Interface.RequestCallback;
-import com.fmk.huagu.efitness.Utils.Constans;
-import com.fmk.huagu.efitness.Utils.XHttpRequest;
-
-import org.json.JSONObject;
-import org.xutils.DbManager;
 import org.xutils.image.ImageOptions;
 import org.xutils.x;
-
-import java.io.File;
 
 import cn.jpush.android.api.JPushInterface;
 

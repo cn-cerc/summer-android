@@ -1,4 +1,4 @@
-package com.fmk.huagu.efitness.View;
+package cn.cerc.summer.android.View;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -6,12 +6,9 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -19,7 +16,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.fmk.huagu.efitness.R;
-import com.fmk.huagu.efitness.Utils.ScreenUtils;
 
 /**
  * Created by fff on 2016/11/24.

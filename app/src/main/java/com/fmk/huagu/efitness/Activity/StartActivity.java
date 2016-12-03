@@ -1,18 +1,13 @@
 package com.fmk.huagu.efitness.Activity;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -20,15 +15,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.alibaba.fastjson.JSON;
-import com.fmk.huagu.efitness.Entity.Config;
-import com.fmk.huagu.efitness.Interface.RequestCallback;
+import cn.cerc.summer.android.Entity.Config;
+import cn.cerc.summer.android.Interface.RequestCallback;
 import com.fmk.huagu.efitness.MyApplication;
 import com.fmk.huagu.efitness.R;
-import com.fmk.huagu.efitness.Utils.AppUtil;
-import com.fmk.huagu.efitness.Utils.Constans;
-import com.fmk.huagu.efitness.Utils.PermissionUtils;
-import com.fmk.huagu.efitness.Utils.XHttpRequest;
-import com.fmk.huagu.efitness.View.ShowDialog;
+
+import cn.cerc.summer.android.Utils.Constans;
+import cn.cerc.summer.android.Utils.PermissionUtils;
+import cn.cerc.summer.android.Utils.XHttpRequest;
 
 import org.json.JSONObject;
 import org.xutils.x;
@@ -52,7 +46,7 @@ public class StartActivity extends BaseActivity implements Animation.AnimationLi
         setContentView(R.layout.activity_guidance);
 
         if (PermissionUtils.getPermission(Manifest.permission.READ_PHONE_STATE, PermissionUtils.REQUEST_READ_PHONE_STATE,this)) {
-            XHttpRequest.getInstance().GET(Constans.GET_CONFIG + PermissionUtils.IMEI, this);
+            XHttpRequest.getInstance().GET(Constans.HOME_URL + "/MobileConfig?device=android&deviceId=" + PermissionUtils.IMEI, this);
         }
 
         initView();
@@ -61,11 +55,11 @@ public class StartActivity extends BaseActivity implements Animation.AnimationLi
 
     private void initView() {
         imageview = (ImageView) this.findViewById(R.id.imageview);
-        String omage = settingShared.getString(Constans.SHARED_START_URL,"");
-        if (TextUtils.isEmpty(omage))
+        String image = settingShared.getString(Constans.SHARED_START_URL,"");
+        if (TextUtils.isEmpty(image))
             imageview.setImageResource(R.mipmap.startimage);
         else
-            x.image().bind(imageview,omage, MyApplication.getInstance().imageOptions);
+            x.image().bind(imageview,image, MyApplication.getInstance().imageOptions);
 
         Animation animation = AnimationUtils.loadAnimation(this,R.anim.startanim);
         imageview.startAnimation(animation);
@@ -79,10 +73,10 @@ public class StartActivity extends BaseActivity implements Animation.AnimationLi
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     TelephonyManager TelephonyMgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
                     PermissionUtils.IMEI = TelephonyMgr.getDeviceId();
-                    XHttpRequest.getInstance().GET(Constans.GET_CONFIG + PermissionUtils.IMEI, this);
+                    XHttpRequest.getInstance().GET(Constans.HOME_URL + "/MobileConfig?device=android&deviceId=" + PermissionUtils.IMEI, this);
                 } else {
                     if (PermissionUtils.getPermission(Manifest.permission.READ_PHONE_STATE, PermissionUtils.REQUEST_READ_PHONE_STATE,this)) {
-                        XHttpRequest.getInstance().GET(Constans.GET_CONFIG + PermissionUtils.IMEI, this);
+                        XHttpRequest.getInstance().GET(Constans.HOME_URL + "/MobileConfig?device=android&deviceId=" + PermissionUtils.IMEI, this);
                     }
                 }
                 break;
@@ -111,11 +105,11 @@ public class StartActivity extends BaseActivity implements Animation.AnimationLi
     public void skip(){
         if (settingShared.getBoolean(Constans.IS_FIRST_SHAREDKEY,true)) {
             settingShared.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).commit();
-            if (config.getWelcomeImages() != null && config.getWelcomeImages().size() > 0){
+            if (config != null && config.getWelcomeImages() != null && config.getWelcomeImages().size() > 0){
                 startActivity(new Intent(this, GuidanceActivity.class));
             }
         }else{
-            if (config.getAdImages() != null && config.getAdImages().size() > 0){
+            if (config != null && config.getAdImages() != null && config.getAdImages().size() > 0){
                 startActivity(new Intent(this, AdActivity.class));
             }
         }
@@ -140,6 +134,8 @@ public class StartActivity extends BaseActivity implements Animation.AnimationLi
 
     @Override
     public void Failt(String url, String error) {
+        if (is_skip) skip();
+        else is_skip = true;
     }
 
 }

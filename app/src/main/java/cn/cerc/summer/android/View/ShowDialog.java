@@ -1,4 +1,4 @@
-package com.fmk.huagu.efitness.View;
+package cn.cerc.summer.android.View;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -6,22 +6,15 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Environment;
 import android.os.Handler;
-import android.view.Window;
 import android.widget.Toast;
 
-import com.fmk.huagu.efitness.Activity.MainActivity;
-import com.fmk.huagu.efitness.Entity.Config;
-import com.fmk.huagu.efitness.Interface.GetFileCallback;
-import com.fmk.huagu.efitness.Utils.XHttpRequest;
+import cn.cerc.summer.android.Entity.Config;
+import cn.cerc.summer.android.Interface.GetFileCallback;
+import cn.cerc.summer.android.Utils.XHttpRequest;
 
 import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
 
 import java.io.File;
 

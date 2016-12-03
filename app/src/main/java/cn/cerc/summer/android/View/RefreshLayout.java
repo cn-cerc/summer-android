@@ -1,4 +1,4 @@
-package com.fmk.huagu.efitness.View;
+package cn.cerc.summer.android.View;
 
 import android.content.Context;
 import android.os.Handler;
@@ -15,7 +15,6 @@ import android.webkit.WebView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.fmk.huagu.efitness.Interface.Pullable;
 import com.fmk.huagu.efitness.R;
 
 import java.util.Timer;

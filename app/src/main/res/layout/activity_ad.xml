@@ -24,7 +24,7 @@
         android:id="@+id/skip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="跳过"
+        android:text="进入系统"
         android:background="@drawable/ad_skip"
         android:layout_alignParentTop="true"
         android:textColor="@color/colorPrimary"

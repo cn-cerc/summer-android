@@ -1,4 +1,4 @@
-package com.fmk.huagu.efitness.Interface;
+package cn.cerc.summer.android.Interface;
 
 import org.json.JSONObject;
 

@@ -1,4 +1,4 @@
-package com.fmk.huagu.efitness.Interface;
+package cn.cerc.summer.android.Interface;
 
 /**
  * Created by fff on 2016/12/3.

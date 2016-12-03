@@ -1,4 +1,4 @@
-package com.fmk.huagu.efitness.Utils;
+package cn.cerc.summer.android.Utils;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;

@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.fmk.huagu.efitness.Entity.Config;
+import cn.cerc.summer.android.Entity.Config;
 import com.fmk.huagu.efitness.MyApplication;
 import com.fmk.huagu.efitness.R;
 

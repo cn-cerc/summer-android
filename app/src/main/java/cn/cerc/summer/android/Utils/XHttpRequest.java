@@ -1,15 +1,10 @@
-package com.fmk.huagu.efitness.Utils;
+package cn.cerc.summer.android.Utils;
 
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
-import android.widget.Toast;
 
-import com.fmk.huagu.efitness.Interface.GetFileCallback;
-import com.fmk.huagu.efitness.Interface.RequestCallback;
-import com.fmk.huagu.efitness.View.ShowDialog;
+import cn.cerc.summer.android.Interface.GetFileCallback;
+import cn.cerc.summer.android.Interface.RequestCallback;
+import cn.cerc.summer.android.View.ShowDialog;
 
 import org.json.JSONObject;
 import org.xutils.common.Callback;

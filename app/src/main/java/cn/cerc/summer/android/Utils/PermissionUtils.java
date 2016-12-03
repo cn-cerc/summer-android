@@ -1,4 +1,4 @@
-package com.fmk.huagu.efitness.Utils;
+package cn.cerc.summer.android.Utils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 /**
  * Created by fff on 2016/12/2.

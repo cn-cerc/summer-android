@@ -1,4 +1,4 @@
-package com.fmk.huagu.efitness.Entity;
+package cn.cerc.summer.android.Entity;
 
 /**
  * Created by fff on 2016/11/22.

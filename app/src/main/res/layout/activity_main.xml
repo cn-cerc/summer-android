@@ -47,7 +47,7 @@
                 android:layout_centerInParent="true"
                 android:src="@drawable/ic_more_vert_white_24dp"/>
 
-            <com.fmk.huagu.efitness.View.DragPointView
+            <cn.cerc.summer.android.View.DragPointView
                 android:id="@+id/dragpointview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.fmk.huagu.efitness.View.RefreshLayout
+        <cn.cerc.summer.android.View.RefreshLayout
             android:id="@+id/refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -89,7 +89,7 @@
                     android:layout_height="match_parent"/>
 
             </LinearLayout>
-        </com.fmk.huagu.efitness.View.RefreshLayout>
+        </cn.cerc.summer.android.View.RefreshLayout>
 
         <ImageView
             android:id="@+id/image_tips"
