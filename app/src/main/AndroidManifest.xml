@@ -135,13 +135,13 @@
                 <!-- 接收网络变化 连接/断开 since 1.6.3 -->
                 <action android:name="cn.jpush.android.intent.CONNECTION" />
 
-                <category android:name="com.fmk.huagu.efitness" />
+                <category android:name="com.huagu.ehealth" />
             </intent-filter>
         </receiver>
 
         <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="7502239d02e7247478fc1a42"/><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+            android:value="16c4218fdc2f5f85e9276721"/><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
                 App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <meta-data
             android:name="com.google.android.gms.version"
