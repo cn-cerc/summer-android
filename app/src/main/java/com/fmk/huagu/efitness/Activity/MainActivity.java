@@ -1,10 +1,8 @@
 package com.fmk.huagu.efitness.Activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -17,17 +15,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
-import android.support.v7.widget.PopupMenu;
-import android.text.TextUtils;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.webkit.GeolocationPermissions;
 import android.webkit.PermissionRequest;
 import android.webkit.WebChromeClient;
@@ -39,18 +34,23 @@ import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListPopupWindow;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
-import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.fmk.huagu.efitness.Entity.Config;
 import com.fmk.huagu.efitness.Entity.Menu;
+import com.fmk.huagu.efitness.Interface.RequestCallback;
 import com.fmk.huagu.efitness.R;
 import com.fmk.huagu.efitness.Receiver.MyBroadcastReceiver;
+import com.fmk.huagu.efitness.Utils.AppUtil;
 import com.fmk.huagu.efitness.Utils.Constans;
-import com.fmk.huagu.efitness.Utils.JSInterface;
+import com.fmk.huagu.efitness.Interface.JSInterface;
+import com.fmk.huagu.efitness.Utils.PermissionUtils;
+import com.fmk.huagu.efitness.Utils.XHttpRequest;
 import com.fmk.huagu.efitness.View.DragPointView;
+import com.fmk.huagu.efitness.View.RefreshLayout;
 import com.fmk.huagu.efitness.View.ShowDialog;
 import com.fmk.huagu.efitness.View.ShowPopupWindow;
 import com.google.android.gms.appindexing.Action;
@@ -61,29 +61,25 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import cn.jpush.android.api.BasicPushNotificationBuilder;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
-import cn.jpush.android.data.JPushLocalNotification;
 
 /**
  * 主界面
  */
-public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener{
+public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, RefreshLayout.OnRefreshListener {
 
-    private WebView webview;
+    public WebView webview;
     private WebSettings websetting;
     private ProgressBar progress;
     private DragPointView dragpointview;
     private ImageView image_tips;
+    private RefreshLayout refresh;
 
     private boolean isGoHome = false;//是否返回home
     private boolean is_ERROR = false;//是否错误了
@@ -91,85 +87,69 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     private ImageView back, more;
     private TextView title;
 
-    private String homeurl;//默认打开页
+    public String homeurl;//默认打开页
 
     private GoogleApiClient client;
 
     private String[] menus;//菜单
-    private int[] menu_img = new int[]{R.mipmap.message,R.mipmap.msg_manager,R.mipmap.home,R.mipmap.setting,R.mipmap.home,R.mipmap.home};
+    private int[] menu_img = new int[]{R.mipmap.message, R.mipmap.msg_manager, R.mipmap.home, R.mipmap.setting, R.mipmap.home, R.mipmap.home};
     private List<Menu> menulist;
     private ListPopupWindow lpw;//列表弹框
 
     public static final String NETWORK_CHANGE = "android.net.conn.NETWORK_CHANGE";
     public static final String APP_UPDATA = "com.fmk.huagu.efitness.APP_UPDATA";
     public static final String JSON_ERROR = "com.fmk.huagu.efitness.JSON_ERROR";
-    public static final String PACKAGE_ADDED = "android.intent.action.PACKAGE_ADD";
+
+    /**
+     * 初始化广播
+     */
     private void initbro() {
         //通过代码的方式动态注册MyBroadcastReceiver
         IntentFilter filter = new IntentFilter();
         filter.addAction(NETWORK_CHANGE);
         filter.addAction(APP_UPDATA);
         filter.addAction(JSON_ERROR);
-        filter.addAction(PACKAGE_ADDED);
         //注册receiver
         registerReceiver(receiver, filter);
+    }
+
+
+    private static MainActivity mainactivity;
+
+    public static MainActivity getInstance() {
+        return mainactivity;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().requestFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_main);
 
+        mainactivity = this;
+
+        Log.e("IMEI", "IMEI: " + PermissionUtils.IMEI);
+        homeurl = Constans.HOME_URL + "?device=android&deviceid=" + PermissionUtils.IMEI;
+
         initbro();
-        inithome();
         InitView();
+        webview.loadUrl(homeurl);
 
-        JPushLocalNotification jPushLocalNotification = new JPushLocalNotification();
-//        jPushLocalNotification.setContent("updateAPP");
-//        jPushLocalNotification.setTitle("更新");
-        jPushLocalNotification.setBuilderId(2);
-        jPushLocalNotification.setNotificationId(123);
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("action","update");
-        JSONObject obj = new JSONObject(map);
-        jPushLocalNotification.setExtras(obj.toString());
-        JPushInterface.addLocalNotification(this,jPushLocalNotification);
+        startActivity(new Intent(this, StartActivity.class));
 
-        startActivity(new Intent(this, GuidanceActivity.class));
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-    }
-
-    private List<String> homelist;
-
-    private void inithome() {
-        homelist = new ArrayList<String>();
-        homelist.add("Login");
-        homelist.add("Registered");
-        homelist.add("forms/FrmIndex");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         JPushInterface.onResume(this);
-        if (TextUtils.isEmpty(settingShared.getString(Constans.HOME, ""))) {
-            homeurl = Constans.HOME_URL + "?device=android&deviceid=" + IMEI;
-        } else {
-            homeurl = settingShared.getString(Constans.HOME, "") + "?device=android&deviceid=" + IMEI;
-        }
-        homelist.add(homeurl);
 
-        Log.e("IMEI", "IMEI: " + IMEI);
         websetting.setTextZoom(Integer.valueOf(settingShared.getInt(Constans.SCALE_SHAREDKEY, 90)));
-//        websetting.setTextZoom();
-        webview.loadUrl(homeurl);
+        webview.reload();
 
         Set<String> set = new HashSet<String>();
         set.add("android");
-        JPushInterface.setAlias(getApplicationContext(), IMEI, tac);//极光推送设置别名
-
-
+        JPushInterface.setAlias(getApplicationContext(), PermissionUtils.IMEI, tac);//极光推送设置别名
     }
 
     private TagAliasCallback tac = new TagAliasCallback() {
@@ -177,7 +157,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         public void gotResult(int i, String s, Set<String> set) {
             switch (i) {
                 case 0://成功
-                    Log.e("regsert:","设置成功");
+                    Log.e("regsert:", "设置成功");
                     // 建议这里往 SharePreference 里写一个成功设置的状态。成功设置一次后，以后不必再次设置了。
                     break;
                 case 6002://失败
@@ -185,7 +165,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            JPushInterface.setAlias(MainActivity.this, IMEI, tac);
+                            JPushInterface.setAlias(MainActivity.this, PermissionUtils.IMEI, tac);
                         }
                     }, 30000);
                     break;
@@ -196,6 +176,11 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
     @SuppressLint("JavascriptInterface")
     private void InitView() {
+        refresh = (RefreshLayout) this.findViewById(R.id.refresh);
+        refresh.setisload(false);
+        refresh.setisrefresh(true);
+        refresh.setOnRefreshListener(this);
+
         back = (ImageView) this.findViewById(R.id.back);
         more = (ImageView) this.findViewById(R.id.more);
         title = (TextView) this.findViewById(R.id.title);
@@ -211,6 +196,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 return false;
             }
         });
+        dragpointview.setVisibility(View.INVISIBLE);
 
         progress = (ProgressBar) this.findViewById(R.id.progress);
         image_tips = (ImageView) this.findViewById(R.id.image_tips);
@@ -254,13 +240,15 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                Log.e("cururl",url);
                 is_ERROR = false;
-                for (int i=0;i<homelist.size();i++){
-                    if (url.contains(homelist.get(i))) {
-                        isGoHome = false;
-                        break;
-                    } else {
+                if (Config.getConfig() == null) return;
+                is_exit = false;
+                isGoHome = false;
+                for (int i = 0; i < Config.getConfig().getHomePagers().size(); i++) {
+                    if (url.contains(Config.getConfig().getHomePagers().get(i).getHomeurl())) {
                         isGoHome = true;
+                        is_exit = Config.getConfig().getHomePagers().get(i).is_home();
                     }
                 }
                 progress.setVisibility(View.VISIBLE);
@@ -289,11 +277,11 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                     image_tips.setVisibility(View.GONE);
                 }
                 if (isGoHome) {
-                    back.setVisibility(View.VISIBLE);
-                } else {
                     webview.clearHistory();
                     webview.clearCache(true);
                     back.setVisibility(View.INVISIBLE);
+                } else {
+                    back.setVisibility(View.VISIBLE);
                 }
                 progress.setVisibility(View.GONE);
                 super.onPageFinished(view, url);
@@ -330,7 +318,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
             @Override
             public void onReceivedTouchIconUrl(WebView view, String url, boolean precomposed) {
-
                 super.onReceivedTouchIconUrl(view, url, precomposed);
             }
         });
@@ -338,28 +325,34 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((keyCode == KeyEvent.KEYCODE_BACK) && event.getAction() == KeyEvent.ACTION_UP) {
-                    if (!isGoHome)
-                        finish();
-                    else
-                        webview.goBack();// 返回键退回
+                    if (is_exit) {
+                        if (System.currentTimeMillis() - timet > 2000) {
+                            timet = System.currentTimeMillis();
+                            Toast.makeText(v.getContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                        } else {
+                            finish();
+                        }
+                    } else {
+                        if (webview.canGoBack()) webview.goBack();// 返回键退回
+                        else finish();
+                    }
+
                     return true;
                 } else
                     return false;
             }
         });
         webview.setOnLongClickListener(this);
-
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == RESULT_OK) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-            }
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
+    /**
+     * 退出点击的第一次的时间戳
+     */
+    private long timet = 0;
+    /**
+     * 是否直接退出
+     */
+    private boolean is_exit = false;
 
     @Override
     public boolean onLongClick(View v) {
@@ -370,19 +363,23 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
-                if (!isGoHome)
-                    finish();
-                else
-                    webview.goBack();
-                break;
-            case R.id.home:
-                webview.loadUrl(homeurl);
+                webview.goBack();
                 break;
             case R.id.more:
                 showPopu(more);
                 break;
             default:
                 break;
+        }
+    }
+
+    public void Update() {
+        try {//检查是否需要更新
+            if (!AppUtil.getVersionName(this).equals(Config.getConfig().getAppVersion())) {
+                ShowDialog.getDialog(this).UpDateDialogShow();
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
@@ -396,21 +393,20 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             menulist = new ArrayList<Menu>();
             menus = getResources().getStringArray(R.array.menu);
             for (int i = 0; i < menus.length; i++) {
-                Menu menu = new Menu(i==0?12:0, menus[i], menu_img[i]);
+                Menu menu = new Menu(i == 0 ? 12 : 0, menus[i], menu_img[i]);
                 menulist.add(menu);
             }
         }
 
-        lpw = ShowPopupWindow.getPopupwindow().show(this,menulist);
+        lpw = ShowPopupWindow.getPopupwindow().show(this, menulist);
         lpw.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        setNotification();
+                        sd = ShowDialog.getDialog(view.getContext()).UpDateDialogShow();
                         break;
                     case 1:
-                        manager.cancel(100);
                         break;
                     case 2:
                         webview.loadUrl(homeurl);
@@ -432,66 +428,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         lpw.show();
     }
 
-    private RemoteViews remoteViews;
-    private NotificationManager manager;
-
-    /**
-     * 设置通知
-     */
-    private void setNotification() {
-        if (manager == null)
-            manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        remoteViews = new RemoteViews(getPackageName(), R.layout.customnotice);
-        remoteViews.setImageViewResource(R.id.widget_album, R.mipmap.ic_launcher);
-        remoteViews.setTextViewText(R.id.widget_title, "name、name");
-        remoteViews.setTextViewText(R.id.widget_artist, "歌手");
-        remoteViews.setImageViewResource(R.id.widget_play, android.R.drawable.ic_media_pause);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-
-        Intent intent = new Intent(this, MainActivity.class);
-        // 点击跳转到主界面
-        PendingIntent intent_go = PendingIntent.getActivity(this, 5, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.notice, intent_go);
-
-        Intent closeintent = new Intent();
-        // 4个参数context, requestCode, intent, flags
-        PendingIntent intent_close = PendingIntent.getBroadcast(this, 7, closeintent, PendingIntent.FLAG_UPDATE_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.widget_close, intent_close);
-
-        // 设置上一曲
-        Intent prv = new Intent();
-        PendingIntent intent_prev = PendingIntent.getBroadcast(this, 1, prv, PendingIntent.FLAG_UPDATE_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.widget_prev, intent_prev);
-
-        // 设置播放
-        Intent playorpause = new Intent();
-        PendingIntent intent_play = PendingIntent.getBroadcast(this, 2, playorpause, PendingIntent.FLAG_UPDATE_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.widget_play, intent_play);
-
-        // 下一曲
-        Intent next = new Intent();
-//        next.setAction(ACTION_NEXT);
-        PendingIntent intent_next = PendingIntent.getBroadcast(this, 3, next,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.widget_next, intent_next);
-
-        // 设置收藏
-        PendingIntent intent_fav = PendingIntent.getBroadcast(this, 4, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.widget_fav, intent_fav);
-
-        builder.setSmallIcon(R.mipmap.ic_launcher); // 设置顶部图标
-
-        Notification notify = builder.build();
-        notify.contentView = remoteViews; // 设置下拉图标
-        notify.bigContentView = remoteViews; // 防止显示不完全,需要添加apisupport
-        notify.flags = Notification.FLAG_ONGOING_EVENT;
-        notify.icon = R.mipmap.ic_launcher;
-
-        manager.notify(100, notify);
-    }
 
     @Override
     protected void onDestroy() {
@@ -508,20 +444,18 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            Log.e("xxxx","00000000 "+action);
-            switch (action){
+            Log.e("xxxx", "00000000 " + action);
+            switch (action) {
                 case NETWORK_CHANGE:
                     ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
                     NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
                     if (activeInfo != null && activeInfo.getState() == NetworkInfo.State.CONNECTED) {
                         webview.reload();
+                    } else if (activeInfo == null || activeInfo.getState() == NetworkInfo.State.DISCONNECTED) {
+                        ShowDialog.getDialog(context).showTips();
                     }
                     break;
-                case APP_UPDATA:
-                    sd = ShowDialog.getDialog(context).UpDateDialogShow();
-                    break;
-                case PACKAGE_ADDED:
-                    sd.openApk();
+                case APP_UPDATA://有更新
                     break;
                 default:
                     break;
@@ -570,10 +504,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 // TODO: Make sure this auto-generated URL is correct.
                 .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
                 .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
+        return new Action.Builder(Action.TYPE_VIEW) .setObject(object) .setActionStatus(Action.STATUS_TYPE_COMPLETED) .build();
     }
 
     @Override
@@ -588,8 +519,24 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     public void onStop() {
         super.onStop();
 
-
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
+    }
+
+
+    @Override
+    public void onRefresh(RefreshLayout refreshLayout) {
+        webview.reload();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                refresh.refreshFinish(RefreshLayout.SUCCEED);
+            }
+        },1200);
+    }
+
+    @Override
+    public void onLoadMore(RefreshLayout refreshLayout) {
+
     }
 }

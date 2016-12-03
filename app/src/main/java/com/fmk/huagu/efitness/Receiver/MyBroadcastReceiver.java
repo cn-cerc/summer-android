@@ -59,10 +59,26 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
             case Constans.REGISTRATION:
                 Log.e("xxxx","444444444");
                 break;
-            case Intent.ACTION_PACKAGE_ADDED:
-                Intent addedintent = new Intent(MainActivity.PACKAGE_ADDED);
-                context.sendBroadcast(addedintent);
-                break;
+//            case Intent.ACTION_PACKAGE_ADDED:
+//                Intent addedintent = new Intent(MainActivity.PACKAGE_ADDED);
+//                context.sendBroadcast(addedintent);
+//                break;
+//            case Intent.ACTION_PACKAGE_REMOVED:
+//                Intent removedintent = new Intent(MainActivity.PACKAGE_ADDED);
+//                context.sendBroadcast(removedintent);
+//                break;
+//            case Intent.ACTION_PACKAGE_CHANGED:
+//                Intent changedintent = new Intent(MainActivity.PACKAGE_ADDED);
+//                context.sendBroadcast(changedintent);
+//                break;
+//            case Intent.ACTION_PACKAGE_REPLACED:
+//                Intent replacedintent = new Intent(MainActivity.PACKAGE_ADDED);
+//                context.sendBroadcast(replacedintent);
+//                break;
+//            case Intent.ACTION_PACKAGE_RESTARTED:
+//                Intent restartedintent = new Intent(MainActivity.PACKAGE_ADDED);
+//                context.sendBroadcast(restartedintent);
+//                break;
             default:
                 break;
         }

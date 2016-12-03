@@ -1,84 +1,145 @@
 package com.fmk.huagu.efitness.Activity;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.view.ViewGroup;
+import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import com.alibaba.fastjson.JSON;
+import com.fmk.huagu.efitness.Entity.Config;
+import com.fmk.huagu.efitness.Interface.RequestCallback;
+import com.fmk.huagu.efitness.MyApplication;
 import com.fmk.huagu.efitness.R;
+import com.fmk.huagu.efitness.Utils.AppUtil;
+import com.fmk.huagu.efitness.Utils.Constans;
+import com.fmk.huagu.efitness.Utils.PermissionUtils;
+import com.fmk.huagu.efitness.Utils.XHttpRequest;
+import com.fmk.huagu.efitness.View.ShowDialog;
 
-import org.xutils.DbManager;
-import org.xutils.ex.DbException;
+import org.json.JSONObject;
 import org.xutils.x;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+public class StartActivity extends BaseActivity implements Animation.AnimationListener, ActivityCompat.OnRequestPermissionsResultCallback,RequestCallback {
 
-public class StartActivity extends BaseActivity implements View.OnClickListener {
+    private ImageView imageview;
+    private static StartActivity ga;
+    public static StartActivity getInstance(){
+        return ga;
+    }
 
-    private ViewPager viewpager;
-    private boolean is_skip;//是否跳转
-    private Animation animation;//渐变动画
-
-    private List<ImageView> imageview;
-
-    private int[] image = new int[]{R.mipmap.startimage1, R.mipmap.startimage2, R.mipmap.startimage3,R.mipmap.startimage4};//
+    private boolean is_skip = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {//?device=android&clientId=44444444
+    protected void onCreate(Bundle savedInstanceState) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
+        ga = this;
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_start);
+        setContentView(R.layout.activity_guidance);
 
-        viewpager = (ViewPager) this.findViewById(R.id.viewpager);
-
-        imageview = new ArrayList<ImageView>();
-        for (int i = 0; i < image.length; i++) {
-            ImageView imageView = new ImageView(this);
-            imageView.setImageResource(image[i]);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageview.add(imageView);
-            if (i == (image.length-1)) {
-                imageView.setOnClickListener(this);
-            }
+        if (PermissionUtils.getPermission(Manifest.permission.READ_PHONE_STATE, PermissionUtils.REQUEST_READ_PHONE_STATE,this)) {
+            XHttpRequest.getInstance().GET(Constans.GET_CONFIG + PermissionUtils.IMEI, this);
         }
 
+        initView();
 
-        viewpager.setAdapter(new PagerAdapter() {
-            @Override
-            public int getCount() {
-                return imageview.size();
-            }
+    }
 
-            @Override
-            public Object instantiateItem(ViewGroup container, int position) {
-                container.addView(imageview.get(position));
-                return imageview.get(position);
-            }
+    private void initView() {
+        imageview = (ImageView) this.findViewById(R.id.imageview);
+        String omage = settingShared.getString(Constans.SHARED_START_URL,"");
+        if (TextUtils.isEmpty(omage))
+            imageview.setImageResource(R.mipmap.startimage);
+        else
+            x.image().bind(imageview,omage, MyApplication.getInstance().imageOptions);
 
-            @Override
-            public void destroyItem(ViewGroup container, int position, Object object) {
-                container.removeView(imageview.get(position));
-            }
-
-            @Override
-            public boolean isViewFromObject(View view, Object object) {
-                return view == object;
-            }
-        });
+        Animation animation = AnimationUtils.loadAnimation(this,R.anim.startanim);
+        imageview.startAnimation(animation);
+        animation.setAnimationListener(this);
     }
 
     @Override
-    public void onClick(View v) {
-        finish();
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PermissionUtils.REQUEST_READ_PHONE_STATE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    TelephonyManager TelephonyMgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+                    PermissionUtils.IMEI = TelephonyMgr.getDeviceId();
+                    XHttpRequest.getInstance().GET(Constans.GET_CONFIG + PermissionUtils.IMEI, this);
+                } else {
+                    if (PermissionUtils.getPermission(Manifest.permission.READ_PHONE_STATE, PermissionUtils.REQUEST_READ_PHONE_STATE,this)) {
+                        XHttpRequest.getInstance().GET(Constans.GET_CONFIG + PermissionUtils.IMEI, this);
+                    }
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
+
+    @Override
+    public void onAnimationStart(Animation animation) {
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+        if (is_skip) skip();
+        else is_skip = true;
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+    }
+
+    /**
+     * 跳转
+     */
+    public void skip(){
+        if (settingShared.getBoolean(Constans.IS_FIRST_SHAREDKEY,true)) {
+            settingShared.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).commit();
+            if (config.getWelcomeImages() != null && config.getWelcomeImages().size() > 0){
+                startActivity(new Intent(this, GuidanceActivity.class));
+            }
+        }else{
+            if (config.getAdImages() != null && config.getAdImages().size() > 0){
+                startActivity(new Intent(this, AdActivity.class));
+            }
+        }
+        StartActivity.getInstance().finish();
+    }
+
+    /**
+     * 线上的配置参数
+     */
+    public Config config;
+
+    @Override
+    public void success(String url, JSONObject json) {
+        config = JSON.parseObject(json.toString(), Config.class);
+        String homeurl = config.getRootSite()+"?device=android&deviceid=" + PermissionUtils.IMEI;
+        settingShared.edit().putString(Constans.HOME_URL, homeurl).putString(Constans.SHARED_START_URL, config.getStartImage()).commit();
+        MainActivity.getInstance().webview.loadUrl(homeurl);
+        if (is_skip) skip();
+        else is_skip = true;
+        MainActivity.getInstance().Update();
+    }
+
+    @Override
+    public void Failt(String url, String error) {
+    }
+
 }

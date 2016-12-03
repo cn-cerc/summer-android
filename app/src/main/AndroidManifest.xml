@@ -44,11 +44,15 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".Activity.GuidanceActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
             android:name=".Activity.StartActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".Activity.GuidanceActivity"
+            android:name=".Activity.AdActivity"
             android:screenOrientation="portrait">
         </activity>
 
@@ -131,12 +135,6 @@
                 <!-- 接收网络变化 连接/断开 since 1.6.3 -->
                 <action android:name="cn.jpush.android.intent.CONNECTION" />
 
-                <category android:name="com.fmk.huagu.efitness" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_ADDED" />
-                <action android:name="android.intent.action.PACKAGE_REMOVED" />
-                <data android:scheme="package" />
                 <category android:name="com.fmk.huagu.efitness" />
             </intent-filter>
         </receiver>

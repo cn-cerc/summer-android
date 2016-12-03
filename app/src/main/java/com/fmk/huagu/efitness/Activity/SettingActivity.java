@@ -12,13 +12,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fmk.huagu.efitness.Entity.Config;
 import com.fmk.huagu.efitness.R;
 import com.fmk.huagu.efitness.Utils.Constans;
 import com.fmk.huagu.efitness.View.CustomSeekBar;
 
 public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarChangeListener {
 
-    private TextView textview;
+    private TextView textview,url_tit;
     private EditText edittext;
     private CustomSeekBar customseekbar;
     private Button button;
@@ -34,10 +35,16 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
         back = (ImageView) this.findViewById(R.id.back);
         button = (Button) this.findViewById(R.id.save);
         edittext = (EditText) this.findViewById(R.id.url);
+        url_tit = (TextView) this.findViewById(R.id.url_tit);
         customseekbar = (CustomSeekBar) this.findViewById(R.id.customseekbar);
         customseekbar.setOnSeekBarChangeListener(this);
         edittext.setText(settingShared.getString(Constans.HOME, ""));
         customseekbar.setProgress(settingShared.getInt(Constans.SCALE_SHAREDKEY, 90));
+
+        if (!Config.getConfig().isDebug()){
+            url_tit.setVisibility(View.GONE);
+            edittext.setVisibility(View.GONE);
+        }
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override

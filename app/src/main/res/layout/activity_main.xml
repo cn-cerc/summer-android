@@ -51,12 +51,12 @@
                 android:id="@+id/dragpointview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="2dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:textSize="@dimen/small"
+                android:padding="2dp"
                 android:text="12"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/small"/>
 
         </RelativeLayout>
     </RelativeLayout>
@@ -65,25 +65,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <com.fmk.huagu.efitness.View.RefreshLayout
+            android:id="@+id/refresh"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <ProgressBar
-                android:id="@+id/progress"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:max="100"
-                android:progressDrawable="@drawable/progress"
-                android:visibility="gone"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <WebView
-                android:id="@+id/webview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                <ProgressBar
+                    android:id="@+id/progress"
+                    style="@android:style/Widget.Holo.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:max="100"
+                    android:visibility="invisible"/>
 
-        </LinearLayout>
+                <WebView
+                    android:id="@+id/webview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </LinearLayout>
+        </com.fmk.huagu.efitness.View.RefreshLayout>
 
         <ImageView
             android:id="@+id/image_tips"
