@@ -130,12 +130,14 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         }
 
         Log.e("IMEI", "IMEI: " + PermissionUtils.IMEI);
+        Log.e("IMEI", "IMEI: " + PermissionUtils.IMEI);
+        homeurl = Constans.HOME_URL + "?device=phone&deviceid=" + PermissionUtils.IMEI;
 
         initbro();
         InitView();
         webview.loadUrl(homeurl);
-        if (TextUtils.isEmpty(msgId))
-            startActivity(new Intent(this, StartActivity.class));
+
+        startActivity(new Intent(this, StartActivity.class));
 
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
