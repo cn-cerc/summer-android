@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -109,6 +110,11 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         return mainactivity;
     }
 
+    /**
+     * 推送消息的消息id， 点击通知栏打开
+     */
+    private String msgId = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,14 +122,20 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
         mainactivity = this;
 
+        if (getIntent().hasExtra("msgId")){
+            msgId = getIntent().getStringExtra("msgId");
+            homeurl = settingShared.getString(Constans.SHARED_MSG_URL,"")+msgId;
+        }else{
+            homeurl = Constans.HOME_URL + "?device=android&deviceid=" + PermissionUtils.IMEI;
+        }
+
         Log.e("IMEI", "IMEI: " + PermissionUtils.IMEI);
-        homeurl = Constans.HOME_URL + "?device=android&deviceid=" + PermissionUtils.IMEI;
 
         initbro();
         InitView();
         webview.loadUrl(homeurl);
-
-        startActivity(new Intent(this, StartActivity.class));
+        if (TextUtils.isEmpty(msgId))
+            startActivity(new Intent(this, StartActivity.class));
 
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }

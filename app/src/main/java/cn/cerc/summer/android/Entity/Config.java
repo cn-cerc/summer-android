@@ -32,6 +32,7 @@ public class Config {
 
     private String msgService;
     private String msgConfig;
+    private String msgManage;
     private boolean debug;
 
     public class HomePager{
@@ -59,6 +60,14 @@ public class Config {
         public void setIs_home(boolean is_home) {
             this.is_home = is_home;
         }
+    }
+
+    public String getMsgManage() {
+        return msgManage;
+    }
+
+    public void setMsgManage(String msgManage) {
+        this.msgManage = msgManage;
     }
 
     public String getStartImage() {
