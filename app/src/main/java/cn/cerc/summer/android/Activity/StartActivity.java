@@ -47,7 +47,7 @@ public class StartActivity extends BaseActivity implements Animation.AnimationLi
         setContentView(R.layout.activity_guidance);
 
         if (PermissionUtils.getPermission(Manifest.permission.READ_PHONE_STATE, PermissionUtils.REQUEST_READ_PHONE_STATE,this)) {
-            XHttpRequest.getInstance().GET(Constans.HOME_URL + "/MobileConfig?device=android&deviceId=" + PermissionUtils.IMEI, this);
+            XHttpRequest.getInstance().GET(Constans.HOME_URL + "/MobileConfig?device=android&CLIENTID=" + PermissionUtils.IMEI, this);
         }
 
         initView();
@@ -74,10 +74,10 @@ public class StartActivity extends BaseActivity implements Animation.AnimationLi
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     TelephonyManager TelephonyMgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
                     PermissionUtils.IMEI = TelephonyMgr.getDeviceId();
-                    XHttpRequest.getInstance().GET(Constans.HOME_URL + "/MobileConfig?device=android&deviceId=" + PermissionUtils.IMEI, this);
+                    XHttpRequest.getInstance().GET(Constans.HOME_URL + "/MobileConfig?device=android&CLIENTID=" + PermissionUtils.IMEI, this);
                 } else {
                     if (PermissionUtils.getPermission(Manifest.permission.READ_PHONE_STATE, PermissionUtils.REQUEST_READ_PHONE_STATE,this)) {
-                        XHttpRequest.getInstance().GET(Constans.HOME_URL + "/MobileConfig?device=android&deviceId=" + PermissionUtils.IMEI, this);
+                        XHttpRequest.getInstance().GET(Constans.HOME_URL + "/MobileConfig?device=android&CLIENTID=" + PermissionUtils.IMEI, this);
                     }
                 }
                 break;
@@ -125,8 +125,9 @@ public class StartActivity extends BaseActivity implements Animation.AnimationLi
     @Override
     public void success(String url, JSONObject json) {
         config = JSON.parseObject(json.toString(), Config.class);
-        String homeurl = config.getRootSite()+"?device=android&deviceid=" + PermissionUtils.IMEI;
-        String msgurl = config.getRootSite() + config.getMsgManage();
+//        String homeurl = config.getRootSite()+"?device=android&CLIENTID=" + PermissionUtils.IMEI;
+        String homeurl = "http://192.168.1.111:8080/forms/Login?device=android&CLIENTID=" + PermissionUtils.IMEI;
+        String msgurl = config.getRootSite() + "/" + config.getMsgManage();
         settingShared.edit().putString(Constans.HOME_URL, homeurl).putString(Constans.SHARED_START_URL, config.getStartImage()).putString(Constans.SHARED_MSG_URL, msgurl).commit();
         MainActivity.getInstance().webview.loadUrl(homeurl);
         if (is_skip) skip();

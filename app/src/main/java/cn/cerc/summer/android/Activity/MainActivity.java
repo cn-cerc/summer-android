@@ -44,6 +44,7 @@ import cn.cerc.summer.android.View.DragPointView;
 import cn.cerc.summer.android.View.RefreshLayout;
 import cn.cerc.summer.android.View.ShowDialog;
 import cn.cerc.summer.android.View.ShowPopupWindow;
+
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
@@ -90,6 +91,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     public static final String APP_UPDATA = "com.fmk.huagu.efitness.APP_UPDATA";
     public static final String JSON_ERROR = "com.fmk.huagu.efitness.JSON_ERROR";
 
+    private final int REQUEST_SETTING = 101;
+
     /**
      * 初始化广播
      */
@@ -122,7 +125,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
         mainactivity = this;
 
-        homeurl = Constans.HOME_URL + "?device=android&deviceid=" + PermissionUtils.IMEI;
+        homeurl = Constans.HOME_URL + "?device=android&CLIENTID=" + PermissionUtils.IMEI;
 
         initbro();
         InitView();
@@ -137,9 +140,9 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
      * 查看消息的url
      */
     private String getMsgUrl(String read) {
-        return settingShared.getString(Constans.SHARED_MSG_URL, "") + read + "?device=android&deviceid=" + PermissionUtils.IMEI;
+        return settingShared.getString(Constans.SHARED_MSG_URL, "") + read + "?device=android&CLIENTID=" + PermissionUtils.IMEI;
     }
-    
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -148,20 +151,29 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             String msgurl = getMsgUrl(".show") + "&msgId=" + msgId;
             webview.loadUrl(msgurl);
         } else {
-            homeurl = Constans.HOME_URL + "?device=android&deviceid=" + PermissionUtils.IMEI;
+            homeurl = Constans.HOME_URL + "?device=android&CLIENTID=" + PermissionUtils.IMEI;
             webview.loadUrl(homeurl);
         }
-        Log.d("mainactivity",homeurl);
+        Log.d("mainactivity", homeurl);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_SETTING) {
+            if (resultCode == RESULT_OK) {
+                websetting.setTextZoom(Integer.valueOf(settingShared.getInt(Constans.SCALE_SHAREDKEY, 90)));
+                homeurl = data.getStringExtra("home");
+                webview.loadUrl(homeurl);
+                webview.reload();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
         JPushInterface.onResume(this);
-
-        websetting.setTextZoom(Integer.valueOf(settingShared.getInt(Constans.SCALE_SHAREDKEY, 90)));
-        webview.reload();
 
         Set<String> set = new HashSet<String>();
         set.add("android");
@@ -190,7 +202,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         }
     };
 
-    @SuppressLint("JavascriptInterface")
+    @SuppressLint({ "JavascriptInterface", "SetJavaScriptEnabled" })
     private void InitView() {
         refresh = (RefreshLayout) this.findViewById(R.id.refresh);
         refresh.setisload(false);
@@ -233,7 +245,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         websetting.setLoadWithOverviewMode(true);
         webview.setHorizontalScrollBarEnabled(true);
         webview.setHorizontalFadingEdgeEnabled(true);
-        webview.addJavascriptInterface(new JSInterface(), "JSobj");//hello2Html
+        webview.addJavascriptInterface(new JSInterface(this), "JSobj");//hello2Html
 
         webview.setWebViewClient(new WebViewClient() {
             @Override
@@ -256,7 +268,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                Log.e("cururl",url);
+                Log.e("cururl", url);
                 is_ERROR = false;
                 if (Config.getConfig() == null) return;
                 is_exit = false;
@@ -420,7 +432,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        webview.loadUrl(getMsgUrl("")+"&unread=1");
+                        webview.loadUrl(getMsgUrl("") + "&unread=1");
                         break;
                     case 1:
                         webview.loadUrl(getMsgUrl(""));
@@ -429,7 +441,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                         webview.loadUrl(homeurl);
                         break;
                     case 3:
-                        startActivity(new Intent(MainActivity.this, SettingActivity.class));
+                        startActivityForResult(new Intent(MainActivity.this, SettingActivity.class), REQUEST_SETTING);
                         break;
                     case 4:
                         clearCacheFolder(MainActivity.this.getCacheDir(), System.currentTimeMillis());
@@ -521,7 +533,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 // TODO: Make sure this auto-generated URL is correct.
                 .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
                 .build();
-        return new Action.Builder(Action.TYPE_VIEW) .setObject(object) .setActionStatus(Action.STATUS_TYPE_COMPLETED) .build();
+        return new Action.Builder(Action.TYPE_VIEW).setObject(object).setActionStatus(Action.STATUS_TYPE_COMPLETED).build();
     }
 
     @Override
@@ -549,7 +561,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             public void run() {
                 refresh.refreshFinish(RefreshLayout.SUCCEED);
             }
-        },1200);
+        }, 1200);
     }
 
     @Override
