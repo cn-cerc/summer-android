@@ -126,7 +126,7 @@ public class StartActivity extends BaseActivity implements Animation.AnimationLi
     public void success(String url, JSONObject json) {
         config = JSON.parseObject(json.toString(), Config.class);
         String homeurl = config.getRootSite()+"?device=android&deviceid=" + PermissionUtils.IMEI;
-        String msgurl = config.getRootSite() + config.getMsgManage() + ".show";
+        String msgurl = config.getRootSite() + config.getMsgManage();
         settingShared.edit().putString(Constans.HOME_URL, homeurl).putString(Constans.SHARED_START_URL, config.getStartImage()).putString(Constans.SHARED_MSG_URL, msgurl).commit();
         MainActivity.getInstance().webview.loadUrl(homeurl);
         if (is_skip) skip();

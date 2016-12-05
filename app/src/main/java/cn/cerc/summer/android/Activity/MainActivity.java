@@ -136,16 +136,16 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     /**
      * 查看消息的url
      */
-    private String getMsgUrl() {
-        return settingShared.getString(Constans.SHARED_MSG_URL, "") + "?device=android&deviceid=" + PermissionUtils.IMEI;
+    private String getMsgUrl(String read) {
+        return settingShared.getString(Constans.SHARED_MSG_URL, "") + read + "?device=android&deviceid=" + PermissionUtils.IMEI;
     }
-
+    
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (intent.hasExtra("msgId")) {
             msgId = intent.getStringExtra("msgId");
-            String msgurl = getMsgUrl() + "&msgId=" + msgId;
+            String msgurl = getMsgUrl(".show") + "&msgId=" + msgId;
             webview.loadUrl(msgurl);
         } else {
             homeurl = Constans.HOME_URL + "?device=android&deviceid=" + PermissionUtils.IMEI;
@@ -420,8 +420,10 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
+                        webview.loadUrl(getMsgUrl("")+"&unread=1");
                         break;
                     case 1:
+                        webview.loadUrl(getMsgUrl(""));
                         break;
                     case 2:
                         webview.loadUrl(homeurl);
