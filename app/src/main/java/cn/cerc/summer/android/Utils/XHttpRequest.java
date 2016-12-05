@@ -12,6 +12,7 @@ import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by fff on 2016/11/30.
@@ -107,6 +108,50 @@ public class XHttpRequest {
             }
         });
         return cc;
+    }
+
+    int indexload = 0;
+
+    private List<String> stringList;
+
+    public void GETConfigFile(List<String> stringList){
+        this.stringList = stringList;
+        String url = stringList.get(indexload);
+
+        loadFile(url);
+
+    }
+
+    public void loadFile(String url){
+        RequestParams rp = new RequestParams(url);
+        rp.setSaveFilePath("/storage/emulated/0/Android/data/com.huagu.ehealth/app/config/"+url.substring(url.lastIndexOf("/"),url.length()));
+        Callback.Cancelable cc = x.http().get(rp, new Callback.ProgressCallback<File>() {
+            @Override
+            public void onWaiting() {
+            }
+            @Override
+            public void onStarted() {
+            }
+            @Override
+            public void onLoading(long total, long current, boolean isDownloading) {
+            }
+            @Override
+            public void onSuccess(File result) {
+                indexload ++ ;
+                if (indexload <  stringList.size())
+                    loadFile(stringList.get(indexload));
+            }
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                loadFile(stringList.get(indexload));
+            }
+            @Override
+            public void onCancelled(CancelledException cex) {
+            }
+            @Override
+            public void onFinished() {
+            }
+        });
     }
 
 

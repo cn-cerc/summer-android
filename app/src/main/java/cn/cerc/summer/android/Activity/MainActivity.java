@@ -223,7 +223,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         websetting.setLoadWithOverviewMode(true);
         webview.setHorizontalScrollBarEnabled(true);
         webview.setHorizontalFadingEdgeEnabled(true);
-        webview.addJavascriptInterface(new JSInterface(), "JSobj");//hello2Html
+        webview.addJavascriptInterface(new JSInterface(this), "JSobj");//hello2Html
 
         webview.setWebViewClient(new WebViewClient() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -233,7 +233,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 response =  super.shouldInterceptRequest(view, request);
                 if (request.getUrl().toString().contains("login.css")){
                     try {
-                        response = new WebResourceResponse("text/css","UTF-8", getAssets().open("login.css"));
+                        response = new WebResourceResponse("text/css", "UTF-8", getAssets().open("login.css"));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

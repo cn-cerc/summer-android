@@ -125,7 +125,8 @@ public class StartActivity extends BaseActivity implements Animation.AnimationLi
     @Override
     public void success(String url, JSONObject json) {
         config = JSON.parseObject(json.toString(), Config.class);
-        String homeurl = config.getRootSite()+"?device=android&deviceid=" + PermissionUtils.IMEI;
+//        String homeurl = config.getRootSite()+"?device=android&deviceid=" + PermissionUtils.IMEI;
+        String homeurl = "http://192.168.1.111:8080/forms/Login?device=android&deviceid=" + PermissionUtils.IMEI;
         settingShared.edit().putString(Constans.HOME_URL, homeurl).putString(Constans.SHARED_START_URL, config.getStartImage()).commit();
         MainActivity.getInstance().webview.loadUrl(homeurl);
         if (is_skip) skip();
