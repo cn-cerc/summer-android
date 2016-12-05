@@ -85,18 +85,21 @@ public class XHttpRequest {
                     progressDialog.dismiss();
                 rc.success(url,result);
             }
+
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 if (progressDialog !=null && progressDialog.isShowing())
                     progressDialog.dismiss();
                 rc.Failt(url,ex.toString());
             }
+
             @Override
             public void onCancelled(CancelledException cex) {
                 if (progressDialog !=null && progressDialog.isShowing())
                     progressDialog.dismiss();
                 rc.Failt(url,"已取消下载");
             }
+
             @Override
             public void onFinished() {
                 if (progressDialog !=null && progressDialog.isShowing())

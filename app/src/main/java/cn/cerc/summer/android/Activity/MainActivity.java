@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -12,16 +13,19 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.GeolocationPermissions;
+import android.webkit.MimeTypeMap;
 import android.webkit.PermissionRequest;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -51,6 +55,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.huagu.ehealth.R;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -221,6 +226,34 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         webview.addJavascriptInterface(new JSInterface(), "JSobj");//hello2Html
 
         webview.setWebViewClient(new WebViewClient() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                WebResourceResponse response = null;
+                response =  super.shouldInterceptRequest(view, request);
+                if (request.getUrl().toString().contains("login.css")){
+                    try {
+                        response = new WebResourceResponse("text/css","UTF-8", getAssets().open("login.css"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return response;
+            }
+
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+                WebResourceResponse response = super.shouldInterceptRequest(view,url);
+                    if (url.contains("login.css")){
+                        try {
+                            response = new WebResourceResponse("text/css","UTF-8",getAssets().open("login.css"));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                return response;
+            }
+
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

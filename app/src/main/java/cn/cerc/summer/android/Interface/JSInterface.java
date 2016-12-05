@@ -31,5 +31,10 @@ public class JSInterface extends Object {
     }
 
 
+    public void wxPay(){
+
+    }
+
+
 
 }

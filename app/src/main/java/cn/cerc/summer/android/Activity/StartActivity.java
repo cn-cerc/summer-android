@@ -131,6 +131,7 @@ public class StartActivity extends BaseActivity implements Animation.AnimationLi
         if (is_skip) skip();
         else is_skip = true;
         MainActivity.getInstance().Update();
+
     }
 
     @Override
