@@ -29,10 +29,11 @@ public class Constans {
      */
     public static String SHARED_MSG_URL = "MSG_URL";
     /**
-     * 获取配置
+     * 文件存储跟目录路径
      */
-//    public static String GET_CONFIG = "http://ehealth.lucland.com/MobileConfig?device=android&deviceId=";
-
+    public final static String FILE_ROOT_SAVEPATH = "/storage/emulated/0/Android/data/com.huagu.ehealth/";
+    public final static String APP_PATH = "app/";
+    public final static String CONFIG_PATH = "config/";
     /**
      * 第一次打开的页面  key
      */

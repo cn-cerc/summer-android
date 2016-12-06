@@ -10,6 +10,8 @@ import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
+import java.util.Map;
+
 import cn.cerc.summer.android.Utils.AppUtil;
 
 /**
@@ -17,6 +19,9 @@ import cn.cerc.summer.android.Utils.AppUtil;
  */
 
 public class JSInterface extends Object {
+    private Map<String, String> resultunifiedorder;
+    private StringBuffer sb;
+    private String appid;
 
     private Context context;
 
@@ -24,13 +29,13 @@ public class JSInterface extends Object {
         this.context = context;
     }
 
-    public String hello2Html(){
+    public String hello2Html() {
         return "Hello Html";
     }
 
-
     /**
      * 返回当前的版本号
+     *
      * @return
      */
     public int getVersion(Context context) {
@@ -42,29 +47,34 @@ public class JSInterface extends Object {
         return 0;
     }
 
-
     private PayReq req;
     private IWXAPI msgApi;
 
+    /**
+     * 供html调用 微信支付
+     * @param appId         app id
+     * @param partnerId     商户号
+     * @param prepayId      与支付单号
+     * @param nonceStr      随机码
+     * @param timeStamp     时间戳
+     * @param sign          签名
+     */
     @JavascriptInterface
-    public void wxPay(String appId, String partnerId,String prepayId,String nonceStr, String timeStamp,String sign){
-        Log.e("xxxxxx",appId);
-        Log.e("xxxxxx",partnerId);
-        Log.e("xxxxxx",prepayId);
-        Log.e("xxxxxx",nonceStr);
-        Log.e("xxxxxx",timeStamp);
-        Log.e("xxxxxx",sign);
-        Toast.makeText(context,"Hello Html",Toast.LENGTH_SHORT).show();
-        req = new PayReq();
+    public void wxPay(String appId, String partnerId, String prepayId, String nonceStr, String timeStamp, String sign) {
+        Toast.makeText(context, "正在支付，请等待...", Toast.LENGTH_SHORT).show();
+        Log.e("JSInterface",appId+" "+partnerId+" "+ prepayId+" "+ nonceStr+" "+ timeStamp+" "+ sign);
         msgApi = WXAPIFactory.createWXAPI(context, appId);
+        req = new PayReq();
         req.appId = appId;
+        req.partnerId = partnerId;
         req.prepayId = prepayId;
         req.packageValue = "Sign=WXPay";
         req.nonceStr = nonceStr;
         req.timeStamp = timeStamp;
         req.sign = sign;
-        msgApi.registerApp(appId);
+        msgApi.registerApp(req.appId);
         msgApi.sendReq(req);
     }
+
 
 }

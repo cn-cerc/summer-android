@@ -1,6 +1,7 @@
 package cn.cerc.summer.android;
 
 import android.app.Application;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
@@ -38,16 +39,16 @@ public class MyApplication extends Application {
         x.Ext.init(this);//xutils 初始化
         x.Ext.setDebug(true);//设置为debug
 
-        ScaleAnimation magnifImage = new ScaleAnimation(0.8f, 1.0f, 0.8f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        magnifImage.setDuration((long)1000);
-        magnifImage.setInterpolator(new DecelerateInterpolator());
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0.5f,1.0f);
+        alphaAnimation.setDuration((long)1000);
+        alphaAnimation.setInterpolator(new DecelerateInterpolator());
 
         imageOptions = new ImageOptions.Builder()
                 .setLoadingDrawableId(R.mipmap.ic_launcher)
                 .setFailureDrawableId(R.mipmap.ic_launcher)
                 .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
                 .setUseMemCache(true)
-                .setAnimation(magnifImage)
+                .setAnimation(alphaAnimation)
                 .setIgnoreGif(true)
                 .setAutoRotate(true).build();
 

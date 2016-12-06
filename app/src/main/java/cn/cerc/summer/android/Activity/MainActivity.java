@@ -1,6 +1,7 @@
 package cn.cerc.summer.android.Activity;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -44,10 +45,12 @@ import cn.cerc.summer.android.Utils.Constans;
 import cn.cerc.summer.android.Interface.JSInterface;
 import cn.cerc.summer.android.Utils.PermissionUtils;
 
+import cn.cerc.summer.android.Utils.XHttpRequest;
 import cn.cerc.summer.android.View.DragPointView;
 import cn.cerc.summer.android.View.RefreshLayout;
 import cn.cerc.summer.android.View.ShowDialog;
 import cn.cerc.summer.android.View.ShowPopupWindow;
+
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
@@ -55,7 +58,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.huagu.ehealth.R;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -67,7 +73,7 @@ import cn.jpush.android.api.TagAliasCallback;
 /**
  * 主界面
  */
-public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, RefreshLayout.OnRefreshListener {
+public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener/*, RefreshLayout.OnRefreshListener */ {
 
     public WebView webview;
     private WebSettings websetting;
@@ -94,6 +100,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     public static final String NETWORK_CHANGE = "android.net.conn.NETWORK_CHANGE";
     public static final String APP_UPDATA = "com.fmk.huagu.efitness.APP_UPDATA";
     public static final String JSON_ERROR = "com.fmk.huagu.efitness.JSON_ERROR";
+
+    private final int REQUEST_SETTING = 101;
 
     /**
      * 初始化广播
@@ -127,31 +135,51 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
         mainactivity = this;
 
-        if (getIntent().hasExtra("msgId")){
-            msgId = getIntent().getStringExtra("msgId");
-            homeurl = settingShared.getString(Constans.SHARED_MSG_URL,"")+msgId;
-        }else{
-            homeurl = Constans.HOME_URL + "?device=android&deviceid=" + PermissionUtils.IMEI;
-        }
-
-        Log.e("IMEI", "IMEI: " + PermissionUtils.IMEI);
-
         initbro();
         InitView();
-        webview.loadUrl(homeurl);
-        if (TextUtils.isEmpty(msgId))
-            startActivity(new Intent(this, StartActivity.class));
+//        webview.loadUrl(homeurl);
+
+        startActivity(new Intent(this, StartActivity.class));
 
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+    /**
+     * 查看消息的url
+     */
+    private String getMsgUrl(String read) {
+        String url = settingShared.getString(Constans.SHARED_MSG_URL, "") + read;
+        return PermissionUtils.buildDeviceUrl(url);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent.hasExtra("msgId")) {
+            msgId = intent.getStringExtra("msgId");
+            String msgurl = getMsgUrl(".show") + "&msgId=" + msgId;
+            Log.e("mainactivity", msgurl);
+            webview.loadUrl(msgurl);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_SETTING) {
+            if (resultCode == RESULT_OK) {
+                websetting.setTextZoom(Integer.valueOf(settingShared.getInt(Constans.SCALE_SHAREDKEY, 90)));
+                homeurl = data.getStringExtra("home");
+                webview.loadUrl(homeurl);
+                webview.reload();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         JPushInterface.onResume(this);
-
-        websetting.setTextZoom(Integer.valueOf(settingShared.getInt(Constans.SCALE_SHAREDKEY, 90)));
-        webview.reload();
 
         Set<String> set = new HashSet<String>();
         set.add("android");
@@ -180,13 +208,41 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         }
     };
 
+    public WebResourceResponse getWebResponse(String type,InputStream input){
+        return new WebResourceResponse("text/"+type, "UTF-8", input);
+    }
+
+    public WebResourceResponse WebResponseO(String url) {
+        String filename = XHttpRequest.fileurl2name(url);
+        File file = new File(Constans.FILE_ROOT_SAVEPATH + Constans.CONFIG_PATH);
+        if (!file.exists())
+            file.mkdirs();
+        String fileurl = file.getAbsolutePath() + filename;
+        File files = new File(fileurl);
+        if (!(files.isFile() && files.exists()))
+            return null;
+        Log.e("WebResourceResponse",fileurl);
+        try {
+            InputStream input = new FileInputStream(fileurl);
+            if (filename.contains(".css")) {
+                getWebResponse("css",input);
+            } else if (filename.contains(".js")) {
+                return getWebResponse("js",input);
+            } else if (filename.contains(".png")) {
+                return getWebResponse("png",input);
+            } else if (filename.contains(".jpg") | filename.contains(".jpeg")) {
+                return getWebResponse("jpg",input);
+            } else if (filename.contains(".gif")) {
+                return getWebResponse("gif",input);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     @SuppressLint("JavascriptInterface")
     private void InitView() {
-        refresh = (RefreshLayout) this.findViewById(R.id.refresh);
-        refresh.setisload(false);
-        refresh.setisrefresh(true);
-        refresh.setOnRefreshListener(this);
-
         back = (ImageView) this.findViewById(R.id.back);
         more = (ImageView) this.findViewById(R.id.more);
         title = (TextView) this.findViewById(R.id.title);
@@ -226,32 +282,17 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         webview.addJavascriptInterface(new JSInterface(this), "JSobj");//hello2Html
 
         webview.setWebViewClient(new WebViewClient() {
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-                WebResourceResponse response = null;
-                response =  super.shouldInterceptRequest(view, request);
-                if (request.getUrl().toString().contains("login.css")){
-                    try {
-                        response = new WebResourceResponse("text/css", "UTF-8", getAssets().open("login.css"));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                return response;
+                WebResourceResponse webreq = WebResponseO(request.getUrl().toString());
+                return webreq != null ? webreq : super.shouldInterceptRequest(view, request);
             }
 
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-                WebResourceResponse response = super.shouldInterceptRequest(view,url);
-                    if (url.contains("login.css")){
-                        try {
-                            response = new WebResourceResponse("text/css","UTF-8",getAssets().open("login.css"));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                return response;
+                WebResourceResponse webreq = WebResponseO(url);
+                return webreq != null ? webreq : super.shouldInterceptRequest(view, url);
             }
 
             @Override
@@ -274,7 +315,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                Log.e("cururl",url);
+                Log.e("cururl", url);
                 is_ERROR = false;
                 if (Config.getConfig() == null) return;
                 is_exit = false;
@@ -438,15 +479,16 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        sd = ShowDialog.getDialog(view.getContext()).UpDateDialogShow();
+                        webview.loadUrl(getMsgUrl("") + "&unread=1");
                         break;
                     case 1:
+                        webview.loadUrl(getMsgUrl(""));
                         break;
                     case 2:
                         webview.loadUrl(homeurl);
                         break;
                     case 3:
-                        startActivity(new Intent(MainActivity.this, SettingActivity.class));
+                        startActivityForResult(new Intent(MainActivity.this, SettingActivity.class), REQUEST_SETTING);
                         break;
                     case 4:
                         clearCacheFolder(MainActivity.this.getCacheDir(), System.currentTimeMillis());
@@ -538,7 +580,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 // TODO: Make sure this auto-generated URL is correct.
                 .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
                 .build();
-        return new Action.Builder(Action.TYPE_VIEW) .setObject(object) .setActionStatus(Action.STATUS_TYPE_COMPLETED) .build();
+        return new Action.Builder(Action.TYPE_VIEW).setObject(object).setActionStatus(Action.STATUS_TYPE_COMPLETED).build();
     }
 
     @Override
@@ -558,19 +600,19 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     }
 
 
-    @Override
-    public void onRefresh(RefreshLayout refreshLayout) {
-        webview.reload();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                refresh.refreshFinish(RefreshLayout.SUCCEED);
-            }
-        },1200);
-    }
-
-    @Override
-    public void onLoadMore(RefreshLayout refreshLayout) {
-
-    }
+//    @Override
+//    public void onRefresh(RefreshLayout refreshLayout) {
+//        webview.reload();
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                refresh.refreshFinish(RefreshLayout.SUCCEED);
+//            }
+//        },1200);
+//    }
+//
+//    @Override
+//    public void onLoadMore(RefreshLayout refreshLayout) {
+//
+//    }
 }
