@@ -125,7 +125,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
         mainactivity = this;
 
-        homeurl = Constans.HOME_URL + "?device=android&CLIENTID=" + PermissionUtils.IMEI;
+        homeurl = PermissionUtils.buildDeviceUrl(Constans.HOME_URL);
 
         initbro();
         InitView();
@@ -140,7 +140,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
      * 查看消息的url
      */
     private String getMsgUrl(String read) {
-        return settingShared.getString(Constans.SHARED_MSG_URL, "") + read + "?device=android&CLIENTID=" + PermissionUtils.IMEI;
+        String url =settingShared.getString(Constans.SHARED_MSG_URL, "") + read;
+        return   PermissionUtils.buildDeviceUrl(url);
     }
 
     @Override
@@ -151,7 +152,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             String msgurl = getMsgUrl(".show") + "&msgId=" + msgId;
             webview.loadUrl(msgurl);
         } else {
-            homeurl = Constans.HOME_URL + "?device=android&CLIENTID=" + PermissionUtils.IMEI;
+            homeurl = PermissionUtils.buildDeviceUrl(Constans.HOME_URL);
             webview.loadUrl(homeurl);
         }
         Log.d("mainactivity", homeurl);
