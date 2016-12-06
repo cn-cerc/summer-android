@@ -70,6 +70,12 @@ public class ShowDialog extends AlertDialog.Builder implements DialogInterface.O
                 c_cancel = XHttpRequest.getInstance().GETFile(Config.getConfig().getAppUpgrade(), ShowDialog.this);
             }
         });
+        setNegativeButton("下次再说", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
         create();
         dialog = show();
         dialog.setCanceledOnTouchOutside(false);

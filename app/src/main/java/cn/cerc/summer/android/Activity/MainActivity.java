@@ -74,6 +74,7 @@ import cn.jpush.android.api.TagAliasCallback;
  * 主界面
  */
 public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener/*, RefreshLayout.OnRefreshListener */ {
+public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener {
 
     public WebView webview;
     private WebSettings websetting;
@@ -315,7 +316,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                Log.e("cururl", url);
+                Log.e("cururl",url);
                 is_ERROR = false;
                 if (Config.getConfig() == null) return;
                 is_exit = false;
@@ -599,20 +600,4 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         client.disconnect();
     }
 
-
-//    @Override
-//    public void onRefresh(RefreshLayout refreshLayout) {
-//        webview.reload();
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                refresh.refreshFinish(RefreshLayout.SUCCEED);
-//            }
-//        },1200);
-//    }
-//
-//    @Override
-//    public void onLoadMore(RefreshLayout refreshLayout) {
-//
-//    }
 }
