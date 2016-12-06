@@ -29,11 +29,6 @@ public class Constans {
      */
     public static String SHARED_MSG_URL = "MSG_URL";
     /**
-     * 获取配置
-     */
-//    public static String GET_CONFIG = "http://ehealth.lucland.com/MobileConfig?device=android&deviceId=";
-
-    /**
      * 第一次打开的页面  key
      */
     public static String HOME = "home";
