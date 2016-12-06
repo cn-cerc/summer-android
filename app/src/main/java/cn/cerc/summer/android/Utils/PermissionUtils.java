@@ -35,6 +35,8 @@ public class PermissionUtils {
         }
     }
 
-
+    public static String buildDeviceUrl(String baseUrl){
+        return String.format("%s?device=%s&CLIENTID=%s", baseUrl, Constans.DEVICE_TYPE,  PermissionUtils.IMEI);
+    }
 
 }
