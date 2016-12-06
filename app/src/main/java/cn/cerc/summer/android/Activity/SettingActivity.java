@@ -1,5 +1,6 @@
 package cn.cerc.summer.android.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -37,8 +38,9 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
         url_tit = (TextView) this.findViewById(R.id.url_tit);
         customseekbar = (CustomSeekBar) this.findViewById(R.id.customseekbar);
         customseekbar.setOnSeekBarChangeListener(this);
-        edittext.setText(settingShared.getString(Constans.HOME, "125"));
-        customseekbar.setProgress(settingShared.getInt(Constans.SCALE_SHAREDKEY, 90));
+        edittext.setText(settingShared.getString(Constans.HOME, ""));
+        scales = settingShared.getInt(Constans.SCALE_SHAREDKEY, 90);
+        customseekbar.setProgress(scales);
 
         if (!Config.getConfig().isDebug()){
             url_tit.setVisibility(View.GONE);
@@ -48,6 +50,10 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("scale",scales);
+                intent.putExtra("home",edittext.getText().toString().trim());
+                setResult(RESULT_OK,intent);
                 finish();
             }
         });
