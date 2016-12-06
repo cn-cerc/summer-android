@@ -9,7 +9,7 @@ public class Constans {
     /**
      * 设备类型
      */
-    public static final String DEVICE_TYPE = "android";
+    public static final String DEVICE_TYPE = "phone";
     /**
      *  shared 设置的key
      */
@@ -20,6 +20,7 @@ public class Constans {
      * http://121.40.181.228
      */
     public static String HOME_URL = "http://121.40.181.228";
+//    public static String HOME_URL = "http://192.168.1.193";
     /**
      *  shared 设置的 启动页
      */

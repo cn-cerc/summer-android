@@ -37,16 +37,16 @@ public class MyApplication extends Application {
         x.Ext.init(this);//xutils 初始化
         x.Ext.setDebug(true);//设置为debug
 
-        ScaleAnimation magnifImage = new ScaleAnimation(0.8f, 1.0f, 0.8f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        magnifImage.setDuration((long)1000);
-        magnifImage.setInterpolator(new DecelerateInterpolator());
+//        ScaleAnimation magnifImage = new ScaleAnimation(0.8f, 1.0f, 0.8f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+//        magnifImage.setDuration((long)1000);
+//        magnifImage.setInterpolator(new DecelerateInterpolator());
 
         imageOptions = new ImageOptions.Builder()
                 .setLoadingDrawableId(R.mipmap.ic_launcher)
                 .setFailureDrawableId(R.mipmap.ic_launcher)
                 .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
                 .setUseMemCache(true)
-                .setAnimation(magnifImage)
+//                .setAnimation(magnifImage)
                 .setIgnoreGif(true)
                 .setAutoRotate(true).build();
 
