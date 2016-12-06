@@ -73,7 +73,6 @@ import cn.jpush.android.api.TagAliasCallback;
 /**
  * 主界面
  */
-public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener/*, RefreshLayout.OnRefreshListener */ {
 public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener {
 
     public WebView webview;
