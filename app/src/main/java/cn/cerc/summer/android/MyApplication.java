@@ -49,7 +49,7 @@ public class MyApplication extends Application {
                 .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
                 .setUseMemCache(true)
                 .setAnimation(alphaAnimation)
-                .setIgnoreGif(true)
+                .setIgnoreGif(false)
                 .setAutoRotate(true).build();
 
         JPushInterface.init(this);

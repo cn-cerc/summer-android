@@ -119,7 +119,11 @@ public class XHttpRequest {
         return cc;
     }
 
-
+    /**
+     * 获取url的文件名
+     * @param url   文件路径
+     * @return      文件名
+     */
     public static String fileurl2name(String url) {
         if (url.contains("?"))
             url = url.replace("?", "");
@@ -127,10 +131,12 @@ public class XHttpRequest {
         return url;
     }
 
-    private List<String> filelist;
+    private List<String> filelist;//下载列表
     private int loadindex = 0;
     private ConfigFileLoafCallback cflc;
-
+    /**
+     * 单个文件下载失败次数
+     */
     private int error_num = 0;
 
     public void ConfigFileGet(List<String> filelist, ConfigFileLoafCallback cflc) {
@@ -142,11 +148,15 @@ public class XHttpRequest {
             cflc.loadfinish();
     }
 
+    /**
+     * 静态文件下载
+     * @param url   文件url
+     */
     private void fileLoad(String url) {
         String urls = Config.getConfig().getRootSite() + url;
         Log.e("url",urls);
         String savepath = Constans.FILE_ROOT_SAVEPATH + Constans.CONFIG_PATH + fileurl2name(url);
-        if (new File(savepath).exists()) {
+        if (new File(savepath).exists()) {//已存在文件直接下一个
             loadindex++;
             if (loadindex < filelist.size()) fileLoad(filelist.get(loadindex));
             else cflc.loadfinish();
@@ -160,39 +170,30 @@ public class XHttpRequest {
                     if (loadindex < filelist.size()) fileLoad(filelist.get(loadindex));
                     else cflc.loadfinish();
                 }
-
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
                     error_num++;
-                    if (error_num >= 3) {
+                    if (error_num >= 3) {//下载失败次数达到三次即下载下一个文件
                         loadindex++;
                         error_num = 0;
                     }
-                    if (loadindex >= filelist.size()) {
-                        cflc.loadfinish();
-                        return;
-                    }
-                    fileLoad(filelist.get(loadindex));
+                    if (loadindex < filelist.size()) fileLoad(filelist.get(loadindex));
+                    else cflc.loadfinish();
                 }
-
                 @Override
                 public void onCancelled(CancelledException cex) {
                 }
-
                 @Override
                 public void onFinished() {
 
                 }
-
                 @Override
                 public void onWaiting() {
 
                 }
-
                 @Override
                 public void onStarted() {
                 }
-
                 @Override
                 public void onLoading(long total, long current, boolean isDownloading) {
 
