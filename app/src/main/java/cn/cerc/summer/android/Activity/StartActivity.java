@@ -92,7 +92,6 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
      */
     public void skip() {
         if (settingShared.getBoolean(Constans.IS_FIRST_SHAREDKEY, true)) {
-            settingShared.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).commit();
             if (config != null && config.getWelcomeImages() != null && config.getWelcomeImages().size() > 0) {
                 startActivity(new Intent(this, GuidanceActivity.class));
             }
@@ -139,5 +138,6 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
     public void loadfinish() {
         MainActivity.getInstance().webview.loadUrl(homeurl);
         skip();
+        settingShared.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).commit();
     }
 }
