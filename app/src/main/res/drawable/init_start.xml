@@ -3,7 +3,7 @@
     <item android:drawable="@mipmap/one" android:duration="50"/>
     <item android:drawable="@mipmap/two" android:duration="50"/>
     <item android:drawable="@mipmap/three" android:duration="50"/>
-    <item android:drawable="@mipmap/four" android:duration="50"/>
-    <item android:drawable="@mipmap/five" android:duration="50"/>
-    <item android:drawable="@mipmap/six" android:duration="50"/>
+    <!--<item android:drawable="@mipmap/four" android:duration="50"/>-->
+    <!--<item android:drawable="@mipmap/five" android:duration="50"/>-->
+    <!--<item android:drawable="@mipmap/six" android:duration="50"/>-->
 </animation-list>

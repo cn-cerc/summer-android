@@ -60,7 +60,7 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
         load_gif = (ImageView) this.findViewById(R.id.load_gif);
         RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         rlp.leftMargin = ScreenUtils.getScreenWidth(this) / 2;
-        rlp.topMargin = ScreenUtils.getScreenHeight(this) / 2 - load_gif.getMeasuredHeight();
+        rlp.topMargin = ScreenUtils.getScreenHeight(this) / 2;
         load_gif.setLayoutParams(rlp);
         String image = settingShared.getString(Constans.SHARED_START_URL, "");
         if (TextUtils.isEmpty(image))
@@ -126,7 +126,14 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
         settingShared.edit().putString(Constans.HOME, homeurl).putString(Constans.SHARED_MSG_URL, msgurl).putString(Constans.SHARED_START_URL, config.getStartImage()).commit();
 
         MainActivity.getInstance().Update();
-        XHttpRequest.getInstance().ConfigFileGet(config.getCacheFiles(), this);
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                XHttpRequest.getInstance().ConfigFileGet(config.getCacheFiles(), StartActivity.this);
+            }
+        }).start();
     }
 
     @Override

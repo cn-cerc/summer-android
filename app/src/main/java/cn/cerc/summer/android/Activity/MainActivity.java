@@ -60,7 +60,6 @@ import com.huagu.ehealth.R;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -225,7 +224,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         try {
             InputStream input = new FileInputStream(fileurl);
             if (filename.contains(".css")) {
-                getWebResponse("css",input);
+                return getWebResponse("css",input);
             } else if (filename.contains(".js")) {
                 return getWebResponse("js",input);
             } else if (filename.contains(".png")) {
