@@ -2,12 +2,15 @@ package cn.cerc.summer.android.Interface;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
-import org.json.JSONObject;
+import com.tencent.mm.sdk.modelpay.PayReq;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
+
+import java.util.Map;
 
 import cn.cerc.summer.android.Utils.AppUtil;
 
@@ -16,6 +19,9 @@ import cn.cerc.summer.android.Utils.AppUtil;
  */
 
 public class JSInterface extends Object {
+    private Map<String, String> resultunifiedorder;
+    private StringBuffer sb;
+    private String appid;
 
     private Context context;
 
@@ -23,16 +29,13 @@ public class JSInterface extends Object {
         this.context = context;
     }
 
-    @JavascriptInterface
-    public String hello2Html(){
-        Toast.makeText(context,"Hello Html",Toast.LENGTH_SHORT).show();
-        Log.e("xxxxx","xxxxxxxxxx");
+    public String hello2Html() {
         return "Hello Html";
     }
 
-
     /**
      * 返回当前的版本号
+     *
      * @return
      */
     public int getVersion(Context context) {
@@ -44,10 +47,34 @@ public class JSInterface extends Object {
         return 0;
     }
 
-    //{nonce_str=pNN5yZlqew36TzxU, appid=wx880d8fc48ac1e88e, sign=49892924323589C849C4E3D0ADD225B7, trade_type=APP, return_msg=OK,
-    // result_code=SUCCESS, mch_id=1281260601, return_code=SUCCESS, prepay_id=wx20161205152251561fa982900583537302, timestamp=1480922571}
+    private PayReq req;
+    private IWXAPI msgApi;
 
-
+    /**
+     * 供html调用 微信支付
+     * @param appId         app id
+     * @param partnerId     商户号
+     * @param prepayId      与支付单号
+     * @param nonceStr      随机码
+     * @param timeStamp     时间戳
+     * @param sign          签名
+     */
+    @JavascriptInterface
+    public void wxPay(String appId, String partnerId, String prepayId, String nonceStr, String timeStamp, String sign) {
+        Toast.makeText(context, "正在支付，请等待...", Toast.LENGTH_SHORT).show();
+        Log.e("JSInterface",appId+" "+partnerId+" "+ prepayId+" "+ nonceStr+" "+ timeStamp+" "+ sign);
+        msgApi = WXAPIFactory.createWXAPI(context, appId);
+        req = new PayReq();
+        req.appId = appId;
+        req.partnerId = partnerId;
+        req.prepayId = prepayId;
+        req.packageValue = "Sign=WXPay";
+        req.nonceStr = nonceStr;
+        req.timeStamp = timeStamp;
+        req.sign = sign;
+        msgApi.registerApp(req.appId);
+        msgApi.sendReq(req);
+    }
 
 
 }

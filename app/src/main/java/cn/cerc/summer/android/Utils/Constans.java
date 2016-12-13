@@ -30,6 +30,12 @@ public class Constans {
      */
     public static String SHARED_MSG_URL = "MSG_URL";
     /**
+     * 文件存储跟目录路径
+     */
+    public final static String FILE_ROOT_SAVEPATH = "/storage/emulated/0/Android/data/com.huagu.ehealth/";
+    public final static String APP_PATH = "app/";
+    public final static String CONFIG_PATH = "config/";
+    /**
      * 第一次打开的页面  key
      */
     public static String HOME = "home";

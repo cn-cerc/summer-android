@@ -66,6 +66,8 @@ public class AdActivity extends BaseActivity implements View.OnClickListener, Vi
             }
             View view = new View(this);
             view.setBackgroundResource(R.drawable.point_white);
+            if (i==0)
+                view.setBackgroundResource(R.drawable.point_color);
             LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
             llp.width = 15;
             llp.height = 15;

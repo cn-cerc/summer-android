@@ -55,7 +55,9 @@
             android:name="cn.cerc.summer.android.Activity.AdActivity"
             android:screenOrientation="portrait">
         </activity>
-
+        <activity android:name="cn.cerc.summer.android.wxapi.WXPayEntryActivity"
+                  android:exported="true"
+                  android:launchMode="singleTop"/>
         <meta-data
             android:name="android.webkit.WebView.MetricsOptOut"
             android:value="true"/>

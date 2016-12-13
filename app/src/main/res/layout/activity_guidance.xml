@@ -13,5 +13,11 @@
         android:src="@mipmap/startimage"
         android:scaleType="centerCrop"/>
 
+    <ImageView
+        android:id="@+id/load_gif"
+        android:layout_width="200dp"
+        android:layout_height="300dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone"/>
 
 </RelativeLayout>

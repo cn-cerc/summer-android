@@ -65,10 +65,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <cn.cerc.summer.android.View.RefreshLayout
-            android:id="@+id/refresh"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <!--<cn.cerc.summer.android.View.RefreshLayout-->
+            <!--android:id="@+id/refresh"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent">-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -89,7 +89,7 @@
                     android:layout_height="match_parent"/>
 
             </LinearLayout>
-        </cn.cerc.summer.android.View.RefreshLayout>
+        <!--</cn.cerc.summer.android.View.RefreshLayout>-->
 
         <ImageView
             android:id="@+id/image_tips"

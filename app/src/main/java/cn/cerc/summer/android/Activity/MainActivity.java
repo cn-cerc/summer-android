@@ -1,10 +1,12 @@
 package cn.cerc.summer.android.Activity;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -12,16 +14,19 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.GeolocationPermissions;
+import android.webkit.MimeTypeMap;
 import android.webkit.PermissionRequest;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -40,6 +45,7 @@ import cn.cerc.summer.android.Utils.Constans;
 import cn.cerc.summer.android.Interface.JSInterface;
 import cn.cerc.summer.android.Utils.PermissionUtils;
 
+import cn.cerc.summer.android.Utils.XHttpRequest;
 import cn.cerc.summer.android.View.DragPointView;
 import cn.cerc.summer.android.View.RefreshLayout;
 import cn.cerc.summer.android.View.ShowDialog;
@@ -52,6 +58,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.mimrc.vine.R;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -63,7 +73,7 @@ import cn.jpush.android.api.TagAliasCallback;
 /**
  * 主界面
  */
-public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, RefreshLayout.OnRefreshListener {
+public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener {
 
     public WebView webview;
     private WebSettings websetting;
@@ -125,11 +135,9 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
         mainactivity = this;
 
-        homeurl = PermissionUtils.buildDeviceUrl(Constans.HOME_URL);
-
         initbro();
         InitView();
-        webview.loadUrl(homeurl);
+//        webview.loadUrl(homeurl);
 
         startActivity(new Intent(this, StartActivity.class));
 
@@ -140,8 +148,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
      * 查看消息的url
      */
     private String getMsgUrl(String read) {
-        String url =settingShared.getString(Constans.SHARED_MSG_URL, "") + read;
-        return   PermissionUtils.buildDeviceUrl(url);
+        String url = settingShared.getString(Constans.SHARED_MSG_URL, "") + read;
+        return PermissionUtils.buildDeviceUrl(url);
     }
 
     @Override
@@ -150,12 +158,9 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         if (intent.hasExtra("msgId")) {
             msgId = intent.getStringExtra("msgId");
             String msgurl = getMsgUrl(".show") + "&msgId=" + msgId;
+            Log.e("mainactivity", msgurl);
             webview.loadUrl(msgurl);
-        } else {
-            homeurl = PermissionUtils.buildDeviceUrl(Constans.HOME_URL);
-            webview.loadUrl(homeurl);
         }
-        Log.d("mainactivity", homeurl);
     }
 
     @Override
@@ -203,13 +208,41 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         }
     };
 
-    @SuppressLint({ "JavascriptInterface", "SetJavaScriptEnabled" })
-    private void InitView() {
-        refresh = (RefreshLayout) this.findViewById(R.id.refresh);
-        refresh.setisload(false);
-        refresh.setisrefresh(true);
-        refresh.setOnRefreshListener(this);
+    public WebResourceResponse getWebResponse(String type,InputStream input){
+        return new WebResourceResponse("text/"+type, "UTF-8", input);
+    }
 
+    public WebResourceResponse WebResponseO(String url) {
+        String filename = XHttpRequest.fileurl2name(url);
+        File file = new File(Constans.FILE_ROOT_SAVEPATH + Constans.CONFIG_PATH);
+        if (!file.exists())
+            file.mkdirs();
+        String fileurl = file.getAbsolutePath() + filename;
+        File files = new File(fileurl);
+        if (!(files.isFile() && files.exists()))
+            return null;
+        Log.e("WebResourceResponse",fileurl);
+        try {
+            InputStream input = new FileInputStream(fileurl);
+            if (filename.contains(".css")) {
+                getWebResponse("css",input);
+            } else if (filename.contains(".js")) {
+                return getWebResponse("js",input);
+            } else if (filename.contains(".png")) {
+                return getWebResponse("png",input);
+            } else if (filename.contains(".jpg") | filename.contains(".jpeg")) {
+                return getWebResponse("jpg",input);
+            } else if (filename.contains(".gif")) {
+                return getWebResponse("gif",input);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @SuppressLint("JavascriptInterface")
+    private void InitView() {
         back = (ImageView) this.findViewById(R.id.back);
         more = (ImageView) this.findViewById(R.id.more);
         title = (TextView) this.findViewById(R.id.title);
@@ -249,6 +282,19 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         webview.addJavascriptInterface(new JSInterface(this), "JSobj");//hello2Html
 
         webview.setWebViewClient(new WebViewClient() {
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                WebResourceResponse webreq = WebResponseO(request.getUrl().toString());
+                return webreq != null ? webreq : super.shouldInterceptRequest(view, request);
+            }
+
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+                WebResourceResponse webreq = WebResponseO(url);
+                return webreq != null ? webreq : super.shouldInterceptRequest(view, url);
+            }
+
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -269,7 +315,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                Log.e("cururl", url);
+                Log.e("cururl",url);
                 is_ERROR = false;
                 if (Config.getConfig() == null) return;
                 is_exit = false;
@@ -553,20 +599,4 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         client.disconnect();
     }
 
-
-    @Override
-    public void onRefresh(RefreshLayout refreshLayout) {
-        webview.reload();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                refresh.refreshFinish(RefreshLayout.SUCCEED);
-            }
-        }, 1200);
-    }
-
-    @Override
-    public void onLoadMore(RefreshLayout refreshLayout) {
-
-    }
 }

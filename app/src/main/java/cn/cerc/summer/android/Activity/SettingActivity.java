@@ -41,6 +41,7 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
         edittext.setText(settingShared.getString(Constans.HOME, ""));
         scales = settingShared.getInt(Constans.SCALE_SHAREDKEY, 90);
         customseekbar.setProgress(scales);
+        customseekbar.setProgress(settingShared.getInt(Constans.SCALE_SHAREDKEY, 90));
 
         if (!Config.getConfig().isDebug()){
             url_tit.setVisibility(View.GONE);

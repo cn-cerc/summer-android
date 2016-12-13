@@ -23,8 +23,6 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
     private final String EXTRA = "cn.jpush.android.EXTRA";
     private final String NOTIFI_ID = "cn.jpush.android.NOTIFICATION_ID";
     private final String MSG_ID = "MSG_ID";
-//    Bundle[{cn.jpush.android.ALERT=副研究员客户, cn.jpush.android.EXTRA={}, cn.jpush.android.NOTIFICATION_ID=834122552, cn.jpush.android.NOTIFICATION_CONTENT_TITLE=e健康, cn.jpush.android.MSG_ID=834122552}]
-//Bundle[{cn.jpush.android.NOTIFICATION_TYPE=0, app=com.huagu.ehealth, cn.jpush.android.ALERT=副研究员客户的说法都是, cn.jpush.android.EXTRA={}, cn.jpush.android.NOTIFICATION_ID=835082864, cn.jpush.android.NOTIFICATION_CONTENT_TITLE=e健康, cn.jpush.android.MSG_ID=835082864}]
 
     private static final String ACTION_NOTIFICATION_OPENED = JPushInterface.ACTION_NOTIFICATION_OPENED;
 
@@ -34,6 +32,8 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         Log.e("Receiver:",action);
         switch (action){
             case Constans.CONNECTION:
+                if (JPushInterface.isPushStopped(context))
+                    JPushInterface.onResume(context);
                 Intent networkintent = new Intent(MainActivity.NETWORK_CHANGE);
                 context.sendBroadcast(networkintent);
                 break;
