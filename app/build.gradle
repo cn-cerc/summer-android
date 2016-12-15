@@ -39,4 +39,5 @@ dependencies {
     compile 'cn.jiguang:jpush:2.2.0'
     compile 'com.google.android.gms:play-services-appindexing:9.2.1'
     compile files('libs/libammsdk.jar')
+    compile files('libs/GifView.jar')
 }

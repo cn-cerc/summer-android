@@ -202,4 +202,55 @@ public class XHttpRequest {
         }
     }
 
+
+    public String GetHtml(String html, ConfigFileLoafCallback cflc){
+        this.cflc = cflc;
+
+        String savepath = Constans.FILE_ROOT_SAVEPATH + Constans.HTML_PATH;
+        File file = new File(savepath);
+        if (!file.exists())
+            file.mkdirs();
+        savepath = Constans.FILE_ROOT_SAVEPATH + Constans.HTML_PATH + fileurl2name(html);
+        if (new File(savepath).exists())
+            return savepath;
+        RequestParams rp = new RequestParams(html);
+        rp.setSaveFilePath(savepath);
+        x.http().get(rp, new Callback.ProgressCallback<File>() {
+            @Override
+            public void onSuccess(File result) {
+                XHttpRequest.this.cflc.loadfinish();
+            }
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                error_num++;
+                if (error_num >= 3) {//下载失败次数达到三次即下载下一个文件
+                    error_num = 0;
+                    XHttpRequest.this.cflc.loadfinish();
+                }else{
+                    fileLoad(filelist.get(loadindex));
+                }
+            }
+            @Override
+            public void onCancelled(CancelledException cex) {
+            }
+            @Override
+            public void onFinished() {
+
+            }
+            @Override
+            public void onWaiting() {
+
+            }
+            @Override
+            public void onStarted() {
+            }
+            @Override
+            public void onLoading(long total, long current, boolean isDownloading) {
+
+            }
+        });
+        return "";
+    }
+
+
 }

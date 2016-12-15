@@ -3,21 +3,21 @@
     android:id="@+id/activity_guidance"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="@mipmap/start"
     android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/imageview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:background="@mipmap/init_bg"
+            android:visibility="gone"/>
 
-    <ImageView
-        android:id="@+id/imageview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@mipmap/startimage"
-        android:scaleType="centerCrop"/>
-
-    <ImageView
-        android:id="@+id/load_gif"
-        android:layout_width="200dp"
-        android:layout_height="300dp"
-        android:scaleType="centerCrop"
-        android:visibility="gone"/>
+        <com.ant.liao.GifView
+            android:id="@+id/load_gif"
+            android:layout_width="200dp"
+            android:layout_height="300dp"
+            android:visibility="gone"/>
 
 </RelativeLayout>

@@ -39,6 +39,7 @@ import android.widget.Toast;
 
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Entity.Menu;
+import cn.cerc.summer.android.Interface.ConfigFileLoafCallback;
 import cn.cerc.summer.android.Receiver.MyBroadcastReceiver;
 import cn.cerc.summer.android.Utils.AppUtil;
 import cn.cerc.summer.android.Utils.Constans;
@@ -72,7 +73,7 @@ import cn.jpush.android.api.TagAliasCallback;
 /**
  * 主界面
  */
-public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, ConfigFileLoafCallback {
 
     public WebView webview;
     private WebSettings websetting;
@@ -315,6 +316,11 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 Log.e("cururl",url);
+                if (url.contains(".html")){
+                    String local = XHttpRequest.getInstance().GetHtml(url, MainActivity.this);
+                    if (!TextUtils.isEmpty(local))
+                        url = local;
+                }
                 is_ERROR = false;
                 if (Config.getConfig() == null) return;
                 is_exit = false;
@@ -598,4 +604,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         client.disconnect();
     }
 
+    @Override
+    public void loadfinish() {
+        Log.e("mainactivity","html加载完毕");
+    }
 }

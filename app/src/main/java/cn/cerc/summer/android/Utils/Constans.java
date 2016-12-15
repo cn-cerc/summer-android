@@ -34,6 +34,7 @@ public class Constans {
     public final static String FILE_ROOT_SAVEPATH = "/storage/emulated/0/Android/data/com.huagu.ehealth/";
     public final static String APP_PATH = "app/";
     public final static String CONFIG_PATH = "config/";
+    public final static String HTML_PATH = "html/";
     /**
      * 第一次打开的页面  key
      */
