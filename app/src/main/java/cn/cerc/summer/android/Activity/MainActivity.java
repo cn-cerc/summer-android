@@ -73,7 +73,7 @@ import cn.jpush.android.api.TagAliasCallback;
 public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, ConfigFileLoafCallback {
 
     public MyWebView webview;
-    private WebSettings websetting;
+//    private WebSettings websetting;
     private ProgressBar progress;
     private DragPointView dragpointview;
     private ImageView image_tips;
@@ -163,7 +163,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_SETTING) {
             if (resultCode == RESULT_OK) {
-                websetting.setTextZoom(Integer.valueOf(settingShared.getInt(Constans.SCALE_SHAREDKEY, 90)));
+                webview.getSettings().setTextZoom(Integer.valueOf(settingShared.getInt(Constans.SCALE_SHAREDKEY, 90)));
                 homeurl = data.getStringExtra("home");
                 webview.loadUrl(homeurl);
                 webview.reload();

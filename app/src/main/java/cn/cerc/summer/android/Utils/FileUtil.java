@@ -24,12 +24,11 @@ import cn.cerc.summer.android.MyApplication;
 /**
  * 文件工具类
  */
-@RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class FileUtil {
 
     private static final String TAG = "FileUtil";
     private static String pathDiv = "/";
-    private static File cacheDir = !isExternalStorageWritable()? MyApplication.getInstance().getFilesDir(): MyApplication.getInstance().getExternalFilesDir("");
+    private static File cacheDir = new File(Constans.FILE_ROOT_SAVEPATH + Constans.CACHEFILE_PATH);
 
     private FileUtil() {
         /* cannot be instantiated */
@@ -42,12 +41,12 @@ public class FileUtil {
      *
      * @param type 文件类型
      */
-    public static File getTempFile(FileType type){
-        try{
+    public static File getTempFile(FileType type) {
+        try {
             File file = File.createTempFile(type.toString(), null, cacheDir);
             file.deleteOnExit();
             return file;
-        }catch (IOException e){
+        } catch (IOException e) {
             return null;
         }
     }
@@ -56,15 +55,15 @@ public class FileUtil {
     /**
      * 获取缓存文件地址
      */
-    public static String getCacheFilePath(String fileName){
-        return cacheDir.getAbsolutePath()+pathDiv+fileName;
+    public static String getCacheFilePath(String fileName) {
+        return cacheDir.getAbsolutePath() + pathDiv + fileName;
     }
 
 
     /**
      * 判断缓存文件是否存在
      */
-    public static boolean isCacheFileExist(String fileName){
+    public static boolean isCacheFileExist(String fileName) {
         File file = new File(getCacheFilePath(fileName));
         return file.exists();
     }
@@ -75,10 +74,10 @@ public class FileUtil {
      *
      * @param bitmap 图片
      */
-    public static String createFile(Bitmap bitmap, String filename){
+    public static String createFile(Bitmap bitmap, String filename) {
         File f = new File(cacheDir, filename);
-        try{
-            if (f.createNewFile()){
+        try {
+            if (f.createNewFile()) {
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
                 byte[] bitmapdata = bos.toByteArray();
@@ -87,10 +86,10 @@ public class FileUtil {
                 fos.flush();
                 fos.close();
             }
-        }catch (IOException e){
-            Log.e(TAG,"create bitmap file error" + e);
+        } catch (IOException e) {
+            Log.e(TAG, "create bitmap file error" + e);
         }
-        if (f.exists()){
+        if (f.exists()) {
             return f.getAbsolutePath();
         }
         return null;
@@ -101,28 +100,34 @@ public class FileUtil {
      *
      * @param data 数据
      */
-    public static void createFile(byte[] data,String filename){
+    public static void createFile(byte[] data, String filename) {
         File f = new File(cacheDir, filename);
-        try{
-            if (f.createNewFile()){
-                FileOutputStream fos = new FileOutputStream(f);
-                fos.write(data);
-                fos.flush();
-                fos.close();
-            }
-        }catch (IOException e){
-            Log.e(TAG,"create file error" + e);
+        try {
+//            if (f.createNewFile()){
+            FileOutputStream fos = new FileOutputStream(f);
+            fos.write(data);
+            fos.flush();
+            fos.close();
+//            }
+        } catch (IOException e) {
+            Log.e(TAG, "create file error" + e);
         }
+    }
+
+    public static void deleteFile(String filepath){
+        File file = new File(filepath);
+        if (file.exists())
+            file.delete();
     }
 
 
     /**
      * 判断缓存文件是否存在
      */
-    public static boolean isFileExist(String fileName, String type){
-        if (isExternalStorageWritable()){
+    public static boolean isFileExist(String fileName, String type) {
+        if (isExternalStorageWritable()) {
             File dir = MyApplication.getInstance().getExternalFilesDir(type);
-            if (dir != null){
+            if (dir != null) {
                 File f = new File(dir, fileName);
                 return f.exists();
             }
@@ -134,25 +139,25 @@ public class FileUtil {
     /**
      * 将数据存储为文件
      *
-     * @param data 数据
+     * @param data     数据
      * @param fileName 文件名
-     * @param type 文件类型
+     * @param type     文件类型
      */
-    public static File createFile(byte[] data, String fileName, String type){
-        if (isExternalStorageWritable()){
+    public static File createFile(byte[] data, String fileName, String type) {
+        if (isExternalStorageWritable()) {
             File dir = MyApplication.getInstance().getExternalFilesDir(type);
-            if (dir != null){
+            if (dir != null) {
                 File f = new File(dir, fileName);
-                try{
-                    if (f.createNewFile()){
+                try {
+                    if (f.createNewFile()) {
                         FileOutputStream fos = new FileOutputStream(f);
                         fos.write(data);
                         fos.flush();
                         fos.close();
                         return f;
                     }
-                }catch (IOException e){
-                    Log.e(TAG,"create file error" + e);
+                } catch (IOException e) {
+                    Log.e(TAG, "create file error" + e);
                     return null;
                 }
             }
@@ -165,31 +170,32 @@ public class FileUtil {
      * 从URI获取图片文件地址
      *
      * @param context 上下文
-     * @param uri 文件uri
+     * @param uri     文件uri
      */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static String getImageFilePath(Context context, Uri uri) {
         if (uri == null) {
             return null;
         }
         String path = null;
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-        if (isKitKat){
-            if (!isMediaDocument(uri)){
-                try{
+        if (isKitKat) {
+            if (!isMediaDocument(uri)) {
+                try {
                     final String docId = DocumentsContract.getDocumentId(uri);
                     final String[] split = docId.split(":");
                     Uri contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
                     final String selection = "_id=?";
-                    final String[] selectionArgs = new String[] {
+                    final String[] selectionArgs = new String[]{
                             split[1]
                     };
                     path = getDataColumn(context, contentUri, selection, selectionArgs);
-                }catch (IllegalArgumentException e){
+                } catch (IllegalArgumentException e) {
                     path = null;
                 }
             }
         }
-        if (path == null){
+        if (path == null) {
             String[] projection = {MediaStore.Images.Media.DATA};
             Cursor cursor = ((Activity) context).managedQuery(uri, projection, null, null, null);
             if (cursor != null) {
@@ -209,8 +215,9 @@ public class FileUtil {
      * 从URI获取文件地址
      *
      * @param context 上下文
-     * @param uri 文件uri
+     * @param uri     文件uri
      */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static String getFilePath(Context context, Uri uri) {
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
         // DocumentProvider
@@ -252,7 +259,7 @@ public class FileUtil {
                 }
 
                 final String selection = "_id=?";
-                final String[] selectionArgs = new String[] {
+                final String[] selectionArgs = new String[]{
                         split[1]
                 };
 
@@ -272,17 +279,13 @@ public class FileUtil {
     }
 
 
-
-
-
-
     /**
      * Get the value of the data column for this Uri. This is useful for
      * MediaStore Uris, and other file-based ContentProviders.
      *
-     * @param context The context.
-     * @param uri The Uri to query.
-     * @param selection (Optional) Filter used in the query.
+     * @param context       The context.
+     * @param uri           The Uri to query.
+     * @param selection     (Optional) Filter used in the query.
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
@@ -307,7 +310,6 @@ public class FileUtil {
 
     /**
      * 判断外部存储是否可用
-     *
      */
     public static boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
@@ -335,8 +337,7 @@ public class FileUtil {
     }
 
 
-
-    public enum FileType{
+    public enum FileType {
         IMG,
         AUDIO,
         VIDEO,
