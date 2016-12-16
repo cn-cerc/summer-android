@@ -28,7 +28,7 @@ public class FileUtil {
 
     private static final String TAG = "FileUtil";
     private static String pathDiv = "/";
-    private static File cacheDir = new File(Constans.FILE_ROOT_SAVEPATH + Constans.CACHEFILE_PATH);
+    private static File cacheDir = new File(Constans.getAppPath(Constans.CACHEFILE_PATH));
 
     private FileUtil() {
         /* cannot be instantiated */
