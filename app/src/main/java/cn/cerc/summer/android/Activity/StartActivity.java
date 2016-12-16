@@ -151,18 +151,22 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
         MainActivity.getInstance().Update();
 
         Map<String, String> map = new HashMap<String, String>();
-        JSONObject jsonObject = new JSONObject(map);
-        jsonObject.toString().getBytes(Charset.forName("utf-8"));
-        try {
-            FileUtil.createFile(json.getString("cacheFiles").getBytes(), "cahcefile.txt");
-        } catch (JSONException e) {
-            e.printStackTrace();
+        for (String str : config.getCacheFiles()){
+            if (str.contains(",")){
+                String key = str.substring(0,str.indexOf(","));
+                String value = str.substring(str.indexOf(",")+1,str.length());
+                map.put(key,value);
+            }else{
+                map.put(str,"0");
+            }
         }
+        JSONObject jsonObject = new JSONObject(map);
+        FileUtil.createFile(jsonObject.toString().getBytes(Charset.forName("utf-8")), "cahcefile.txt");
 
         load_gif.setVisibility(View.VISIBLE);
         imageview.setVisibility(View.VISIBLE);
         imageview.setImageResource(R.mipmap.init_bg);
-        List<String> list = new ArrayList<>();
+        List<String> list = config.getCacheFiles();
         if (list != null && list.size() > 0) {
             XHttpRequest.getInstance().ConfigFileGet(list, StartActivity.this);
         } else {
