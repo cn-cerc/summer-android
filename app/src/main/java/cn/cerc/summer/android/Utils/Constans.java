@@ -35,6 +35,7 @@ public class Constans {
     public final static String APP_PATH = "app/";
     public final static String CONFIG_PATH = "config/";
     public final static String HTML_PATH = "html/";
+    public final static String IMAGE_PATH = "image/";
     /**
      * 第一次打开的页面  key
      */

@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.huagu.ehealth.R;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.MyApplication;
@@ -49,6 +50,7 @@ public class GuidanceActivity extends BaseActivity implements View.OnClickListen
         setContentView(R.layout.activity_start);
 
         viewpager = (ViewPager) this.findViewById(R.id.viewpager);
+        viewpager.setOffscreenPageLimit(2);
         contan = (LinearLayout) this.findViewById(R.id.contan);
         skip = (TextView) this.findViewById(R.id.skip);
         skip.setOnClickListener(new View.OnClickListener() {
@@ -62,7 +64,8 @@ public class GuidanceActivity extends BaseActivity implements View.OnClickListen
         imageview = new ArrayList<ImageView>();
         for (int i = 0; i < list.size(); i++) {
             ImageView imageView = new ImageView(this);
-            x.image().bind(imageView, list.get(i), MyApplication.getInstance().imageOptions);
+//            x.image().bind(imageView, list.get(i), MyApplication.getInstance().imageOptions);
+            ImageLoader.getInstance().displayImage(list.get(i),imageView,MyApplication.getInstance().options);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageview.add(imageView);
             if (i == (list.size() - 1)) {
