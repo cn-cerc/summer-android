@@ -196,7 +196,7 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
 
     @Override
     public void loadfinish() {
-        MainActivity.getInstance().webview.loadUrl(homeurl);
+        MainActivity.getInstance().setHomeurl(homeurl);
         settingShared.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).commit();
         AppUtil.saveCacheList(config);
         skip();

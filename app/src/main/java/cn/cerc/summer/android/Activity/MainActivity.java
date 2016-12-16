@@ -119,6 +119,11 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         return mainactivity;
     }
 
+    public void setHomeurl(String homeurl){
+        this.homeurl = homeurl;
+        webview.loadUrl(homeurl);
+    }
+
     /**
      * 推送消息的消息id， 点击通知栏打开
      */
