@@ -1,5 +1,7 @@
 package cn.cerc.summer.android.Utils;
 
+import java.io.File;
+import cn.cerc.summer.android.MyApplication;
 /**
  * Created by fff on 2016/11/11.
  */
@@ -31,15 +33,21 @@ public class Constans {
     /**
      * 文件存储跟目录路径
      */
-    public final static String FILE_ROOT_SAVEPATH = "/storage/emulated/0/Android/data/com.huagu.ehealth/";
-    public final static String APP_PATH = "app/";
-    public final static String CONFIG_PATH = "config/";
-    public final static String CACHEFILE_PATH = "files/";
-    public final static String HTML_PATH = "html/";
-    public final static String IMAGE_PATH = "image/";
-    /**
-     * //缓存文件列表
-     */
+    public final static String APP_PATH = "app";
+    public final static String CONFIG_PATH = "config";
+    public final static String CACHEFILE_PATH = "files";
+    public final static String HTML_PATH = "html";
+    public final static String IMAGE_PATH = "image";
+
+    public static String getAppPath(String Dir){
+        File file = MyApplication.getInstance().getExternalFilesDir(Dir);
+        if (!file.exists())
+            file.mkdirs();
+        return file.getAbsolutePath();
+    }
+        /**
+         * //缓存文件列表
+         */
     public final static String CONFIGNAME = "cahcefile.txt";
 
     /**
