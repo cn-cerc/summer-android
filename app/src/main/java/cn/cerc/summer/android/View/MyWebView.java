@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import cn.cerc.summer.android.Activity.MainActivity;
 import cn.cerc.summer.android.Utils.AppUtil;
 import cn.cerc.summer.android.Utils.Constans;
 import cn.cerc.summer.android.Utils.XHttpRequest;
@@ -68,7 +69,21 @@ public class MyWebView extends WebView {
     }
 
     public WebResourceResponse WebResponseO(String url) {
-        String filename = AppUtil.fileurl2name(url, 1);
+        String type = "";
+            if (url.contains(".css")) {
+                type = "css";
+            } else if (url.contains(".js")) {
+                type = "js";
+            } else if (url.contains(".png")) {
+                type = "png";
+            } else if (url.contains(".jpg") | url.contains(".jpeg")) {
+                type = "jpg";
+            } else if (url.contains(".gif")) {
+                type = "gif";
+            }else{
+                return null;
+            }
+        String filename = url.substring(url.indexOf("com")+3);
         File file = new File(Constans.getAppPath(Constans.CONFIG_PATH));
         if (!file.exists())
             file.mkdirs();
@@ -76,20 +91,9 @@ public class MyWebView extends WebView {
         File files = new File(fileurl);
         if (!(files.isFile() && files.exists()))
             return null;
-        Log.e("WebResourceResponse",fileurl);
         try {
             InputStream input = new FileInputStream(fileurl);
-            if (filename.contains(".css")) {
-                return getWebResponse("css",input);
-            } else if (filename.contains(".js")) {
-                return getWebResponse("js",input);
-            } else if (filename.contains(".png")) {
-                return getWebResponse("png",input);
-            } else if (filename.contains(".jpg") | filename.contains(".jpeg")) {
-                return getWebResponse("jpg",input);
-            } else if (filename.contains(".gif")) {
-                return getWebResponse("gif",input);
-            }
+            return getWebResponse(type,input);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
