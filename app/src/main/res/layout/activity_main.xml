@@ -13,11 +13,12 @@
 
         <ImageView
             android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
+            android:scaleType="centerInside"
+            android:layout_marginLeft="10dp"
             android:src="@drawable/ic_chevron_left_white_24dp"/>
 
         <TextView
@@ -65,11 +66,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--<cn.cerc.summer.android.View.RefreshLayout-->
-            <!--android:id="@+id/refresh"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent">-->
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -83,13 +79,12 @@
                     android:max="100"
                     android:visibility="invisible"/>
 
-                <WebView
+                <cn.cerc.summer.android.View.MyWebView
                     android:id="@+id/webview"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
 
             </LinearLayout>
-        <!--</cn.cerc.summer.android.View.RefreshLayout>-->
 
         <ImageView
             android:id="@+id/image_tips"

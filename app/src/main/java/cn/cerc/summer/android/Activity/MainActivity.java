@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -14,14 +13,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.GeolocationPermissions;
-import android.webkit.MimeTypeMap;
 import android.webkit.PermissionRequest;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -48,7 +45,7 @@ import cn.cerc.summer.android.Utils.PermissionUtils;
 
 import cn.cerc.summer.android.Utils.XHttpRequest;
 import cn.cerc.summer.android.View.DragPointView;
-import cn.cerc.summer.android.View.RefreshLayout;
+import cn.cerc.summer.android.View.MyWebView;
 import cn.cerc.summer.android.View.ShowDialog;
 import cn.cerc.summer.android.View.ShowPopupWindow;
 
@@ -75,12 +72,11 @@ import cn.jpush.android.api.TagAliasCallback;
  */
 public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, ConfigFileLoafCallback {
 
-    public WebView webview;
+    public MyWebView webview;
     private WebSettings websetting;
     private ProgressBar progress;
     private DragPointView dragpointview;
     private ImageView image_tips;
-    private RefreshLayout refresh;
 
     private boolean isGoHome = false;//是否返回home
     private boolean is_ERROR = false;//是否错误了
@@ -208,39 +204,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         }
     };
 
-    public WebResourceResponse getWebResponse(String type,InputStream input){
-        return new WebResourceResponse("text/"+type, "UTF-8", input);
-    }
-
-    public WebResourceResponse WebResponseO(String url) {
-        String filename = XHttpRequest.fileurl2name(url);
-        File file = new File(Constans.FILE_ROOT_SAVEPATH + Constans.CONFIG_PATH);
-        if (!file.exists())
-            file.mkdirs();
-        String fileurl = file.getAbsolutePath() + filename;
-        File files = new File(fileurl);
-        if (!(files.isFile() && files.exists()))
-            return null;
-        Log.e("WebResourceResponse",fileurl);
-        try {
-            InputStream input = new FileInputStream(fileurl);
-            if (filename.contains(".css")) {
-                return getWebResponse("css",input);
-            } else if (filename.contains(".js")) {
-                return getWebResponse("js",input);
-            } else if (filename.contains(".png")) {
-                return getWebResponse("png",input);
-            } else if (filename.contains(".jpg") | filename.contains(".jpeg")) {
-                return getWebResponse("jpg",input);
-            } else if (filename.contains(".gif")) {
-                return getWebResponse("gif",input);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     @SuppressLint("JavascriptInterface")
     private void InitView() {
         back = (ImageView) this.findViewById(R.id.back);
@@ -263,35 +226,21 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         progress = (ProgressBar) this.findViewById(R.id.progress);
         image_tips = (ImageView) this.findViewById(R.id.image_tips);
 
-        webview = (WebView) this.findViewById(R.id.webview);
+        webview = (MyWebView) this.findViewById(R.id.webview);
 
-        websetting = webview.getSettings();
-        websetting.setJavaScriptEnabled(true);
-        websetting.setJavaScriptCanOpenWindowsAutomatically(true);
-        websetting.setDomStorageEnabled(true);
-        websetting.setGeolocationEnabled(true);
-        websetting.setUseWideViewPort(true);
-        websetting.setAppCacheEnabled(true);
-        websetting.setCacheMode(WebSettings.LOAD_DEFAULT);
-        websetting.setRenderPriority(WebSettings.RenderPriority.HIGH);
-        //自适应屏幕
-        websetting.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        websetting.setLoadWithOverviewMode(true);
-        webview.setHorizontalScrollBarEnabled(true);
-        webview.setHorizontalFadingEdgeEnabled(true);
         webview.addJavascriptInterface(new JSInterface(this), "JSobj");//hello2Html
 
         webview.setWebViewClient(new WebViewClient() {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-                WebResourceResponse webreq = WebResponseO(request.getUrl().toString());
+                WebResourceResponse webreq = webview.WebResponseO(request.getUrl().toString());
                 return webreq != null ? webreq : super.shouldInterceptRequest(view, request);
             }
 
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-                WebResourceResponse webreq = WebResponseO(url);
+                WebResourceResponse webreq = webview.WebResponseO(url);
                 return webreq != null ? webreq : super.shouldInterceptRequest(view, url);
             }
 
