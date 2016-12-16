@@ -20,7 +20,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
 
         settingShared = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);

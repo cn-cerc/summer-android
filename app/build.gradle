@@ -9,7 +9,9 @@ android {
         targetSdkVersion 24
         versionCode 1
         versionName "1.0.1"
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
         manifestPlaceholders = [
                 JPUSH_PKGNAME : "com.mimrc.vine",
                 JPUSH_APPKEY : "cc92570c841a688af5adc5b0", //JPush上注册的包名对应的appkey.//cc92570c841a688af5adc5b0 //7502239d02e7247478fc1a42
@@ -37,4 +39,5 @@ dependencies {
     compile 'cn.jiguang:jpush:2.2.0'
     compile 'com.google.android.gms:play-services-appindexing:9.2.1'
     compile files('libs/libammsdk.jar')
+    compile files('libs/GifView.jar')
 }

@@ -37,6 +37,12 @@ public class GuidanceActivity extends BaseActivity implements View.OnClickListen
     private List<String> list;
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        System.exit(0);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {//?device=android&clientId=44444444
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);

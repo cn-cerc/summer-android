@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.alibaba.fastjson.JSON;
+import com.ant.liao.GifView;
 import com.mimrc.vine.R;
 
 import cn.cerc.summer.android.Entity.Config;
@@ -34,11 +35,17 @@ import org.xutils.x;
 public class StartActivity extends BaseActivity implements ActivityCompat.OnRequestPermissionsResultCallback, RequestCallback, ConfigFileLoafCallback {
 
     private ImageView imageview;
-    private ImageView load_gif;
+    private GifView load_gif;
     private static StartActivity ga;
 
     public static StartActivity getInstance() {
         return ga;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        System.exit(0);
     }
 
     @Override
@@ -57,14 +64,19 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
 
     private void initView() {
         imageview = (ImageView) this.findViewById(R.id.imageview);
-        load_gif = (ImageView) this.findViewById(R.id.load_gif);
+        load_gif = (GifView) this.findViewById(R.id.load_gif);
         RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         rlp.leftMargin = ScreenUtils.getScreenWidth(this) / 2;
-        rlp.topMargin = ScreenUtils.getScreenHeight(this) / 2 - load_gif.getMeasuredHeight();
+        rlp.bottomMargin = ScreenUtils.getScreenHeight(this) / 2;
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         load_gif.setLayoutParams(rlp);
+
+        load_gif.setGifImage(R.mipmap.start_init);
+        load_gif.setGifImageType(GifView.GifImageType.WAIT_FINISH);
+
         String image = settingShared.getString(Constans.SHARED_START_URL, "");
-        if (TextUtils.isEmpty(image))
-            imageview.setImageResource(R.mipmap.start);
+        if (settingShared.getBoolean(Constans.IS_FIRST_SHAREDKEY,true))
+            imageview.setBackgroundResource(R.mipmap.start);
         else
             x.image().bind(imageview, image, MyApplication.getInstance().imageOptions);
 
@@ -114,19 +126,22 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
     public void success(String url, JSONObject json) {
         config = JSON.parseObject(json.toString(), Config.class);
         if (settingShared.getBoolean(Constans.IS_FIRST_SHAREDKEY, true)){
-            imageview.setImageResource(R.mipmap.init_bg);
             load_gif.setVisibility(View.VISIBLE);
-            load_gif.setBackgroundResource(R.drawable.init_start);
-            AnimationDrawable animationDrawable = (AnimationDrawable) load_gif.getBackground();
-            animationDrawable.start();
-//            x.image().bind(load_gif, "assets://start_init.gif", MyApplication.getInstance().imageOptions);
+            imageview.setVisibility(View.VISIBLE);
+            imageview.setImageResource(R.mipmap.init_bg);
         }
         homeurl = PermissionUtils.buildDeviceUrl(Constans.HOME_URL);
         String msgurl = config.getRootSite() + "/" + config.getMsgManage();
         settingShared.edit().putString(Constans.HOME, homeurl).putString(Constans.SHARED_MSG_URL, msgurl).putString(Constans.SHARED_START_URL, config.getStartImage()).commit();
 
         MainActivity.getInstance().Update();
-        XHttpRequest.getInstance().ConfigFileGet(config.getCacheFiles(), this);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                XHttpRequest.getInstance().ConfigFileGet(config.getCacheFiles(), StartActivity.this);
+            }
+        }).start();
     }
 
     @Override
