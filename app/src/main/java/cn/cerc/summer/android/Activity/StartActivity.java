@@ -31,6 +31,7 @@ import cn.cerc.summer.android.Interface.ConfigFileLoafCallback;
 import cn.cerc.summer.android.Interface.RequestCallback;
 import cn.cerc.summer.android.MyApplication;
 
+import cn.cerc.summer.android.Utils.AppUtil;
 import cn.cerc.summer.android.Utils.Constans;
 import cn.cerc.summer.android.Utils.FileUtil;
 import cn.cerc.summer.android.Utils.PermissionUtils;
@@ -150,19 +151,10 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
 
         MainActivity.getInstance().Update();
 
-        Map<String, String> map = new HashMap<String, String>();
-        JSONObject jsonObject = new JSONObject(map);
-        jsonObject.toString().getBytes(Charset.forName("utf-8"));
-        try {
-            FileUtil.createFile(json.getString("cacheFiles").getBytes(), "cahcefile.txt");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
         load_gif.setVisibility(View.VISIBLE);
         imageview.setVisibility(View.VISIBLE);
         imageview.setImageResource(R.mipmap.init_bg);
-        List<String> list = new ArrayList<>();
+        List<String> list = config.getCacheFiles();
         if (list != null && list.size() > 0) {
             XHttpRequest.getInstance().ConfigFileGet(list, StartActivity.this);
         } else {
@@ -171,14 +163,13 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
                 public void run() {
                     loadfinish();
                 }
-            },2000);
+            }, 2000);
         }
-
         prestrainImage();//预加载一张图片， 有缓存的
 
     }
 
-    public void prestrainImage(){
+    public void prestrainImage() {
         ImageLoader.getInstance().loadImage(config.getWelcomeImages().get(0), MyApplication.getInstance().options, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
@@ -206,7 +197,9 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
     @Override
     public void loadfinish() {
         MainActivity.getInstance().webview.loadUrl(homeurl);
-        skip();
         settingShared.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).commit();
+        AppUtil.saveCacheList(config);
+        skip();
     }
+
 }

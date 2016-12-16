@@ -9,6 +9,8 @@ import cn.cerc.summer.android.Interface.GetFileCallback;
 import cn.cerc.summer.android.Interface.RequestCallback;
 import cn.cerc.summer.android.View.ShowDialog;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -119,18 +121,6 @@ public class XHttpRequest {
         return cc;
     }
 
-    /**
-     * 获取url的文件名
-     * @param url   文件路径
-     * @return      文件名
-     */
-    public static String fileurl2name(String url) {
-        if (url.contains("?"))
-            url = url.replace("?", "");
-        url = url.substring(url.lastIndexOf("/"), url.length());
-        return url;
-    }
-
     private List<String> filelist;//下载列表
     private int loadindex = 0;
     private ConfigFileLoafCallback cflc;
@@ -143,9 +133,17 @@ public class XHttpRequest {
         if (filelist != null && filelist.size() > 0) {
             this.filelist = filelist;
             this.cflc = cflc;
+            jsonarr = AppUtil.getCacheList();
             fileLoad(filelist.get(loadindex));
         }else
             cflc.loadfinish();
+    }
+
+    private JSONObject jsonarr;
+
+    public int getconfigTime(String url){
+        if (!url.contains(",")) return 0;
+        return Integer.valueOf(url.split(",")[1]);
     }
 
     /**
@@ -153,9 +151,32 @@ public class XHttpRequest {
      * @param url   文件url
      */
     private void fileLoad(String url) {
-        String urls = Config.getConfig().getRootSite() + url;
+        String remote = AppUtil.fileurl2name(url,0);
+        String savepath = Constans.FILE_ROOT_SAVEPATH + Constans.CONFIG_PATH + AppUtil.fileurl2name(url,1);
+
+        if (jsonarr != null && jsonarr.has(remote)){// 此段代码用于判断文件是否需要更新或删除
+            String modis = "";
+            try {
+                modis = jsonarr.getString(remote);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if ("delete".equals(modis)){
+                FileUtil.deleteFile(savepath);
+                return;
+            }else{
+                int modi = Integer.valueOf(modis);
+                if (modi >= getconfigTime(url)){
+                    loadindex++;
+                    if (loadindex < filelist.size()) fileLoad(filelist.get(loadindex));
+                    else cflc.loadfinish();
+                    return;
+                }
+            }
+        }
+
+        String urls = Config.getConfig().getRootSite() + remote;
         Log.e("url",urls);
-        String savepath = Constans.FILE_ROOT_SAVEPATH + Constans.CONFIG_PATH + fileurl2name(url);
         if (new File(savepath).exists()) {//已存在文件直接下一个
             loadindex++;
             if (loadindex < filelist.size()) fileLoad(filelist.get(loadindex));
@@ -210,7 +231,7 @@ public class XHttpRequest {
         File file = new File(savepath);
         if (!file.exists())
             file.mkdirs();
-        savepath = Constans.FILE_ROOT_SAVEPATH + Constans.HTML_PATH + fileurl2name(html);
+        savepath = Constans.FILE_ROOT_SAVEPATH + Constans.HTML_PATH + AppUtil.fileurl2name(html,1);;
         if (new File(savepath).exists())
             return savepath;
         RequestParams rp = new RequestParams(html);

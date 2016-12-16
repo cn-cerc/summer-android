@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import cn.cerc.summer.android.Utils.AppUtil;
 import cn.cerc.summer.android.Utils.Constans;
 import cn.cerc.summer.android.Utils.XHttpRequest;
 
@@ -67,7 +68,7 @@ public class MyWebView extends WebView {
     }
 
     public WebResourceResponse WebResponseO(String url) {
-        String filename = XHttpRequest.fileurl2name(url);
+        String filename = AppUtil.fileurl2name(url, 1);
         File file = new File(Constans.FILE_ROOT_SAVEPATH + Constans.CONFIG_PATH);
         if (!file.exists())
             file.mkdirs();
