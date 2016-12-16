@@ -74,7 +74,7 @@ public class XHttpRequest {
      */
     public Callback.Cancelable GETFile(final String url, final GetFileCallback rc) {
         RequestParams rp = new RequestParams(url);
-        rp.setSaveFilePath(Constans.FILE_ROOT_SAVEPATH + Constans.APP_PATH + "app.apk");
+        rp.setSaveFilePath(Constans.getAppPath(Constans.APP_PATH) + "app.apk");
         Callback.Cancelable cc = x.http().get(rp, new Callback.ProgressCallback<File>() {
             @Override
             public void onWaiting() {
@@ -152,7 +152,7 @@ public class XHttpRequest {
      */
     private void fileLoad(String url) {
         String remote = AppUtil.fileurl2name(url,0);
-        String savepath = Constans.FILE_ROOT_SAVEPATH + Constans.CONFIG_PATH + AppUtil.fileurl2name(url,1);
+        String savepath = Constans.getAppPath(Constans.CONFIG_PATH) + AppUtil.fileurl2name(url,1);
 
         if (jsonarr != null && jsonarr.has(remote)){// 此段代码用于判断文件是否需要更新或删除
             String modis = "";
@@ -227,11 +227,11 @@ public class XHttpRequest {
     public String GetHtml(String html, ConfigFileLoafCallback cflc){
         this.cflc = cflc;
 
-        String savepath = Constans.FILE_ROOT_SAVEPATH + Constans.HTML_PATH;
+        String savepath = Constans.getAppPath(Constans.HTML_PATH);
         File file = new File(savepath);
         if (!file.exists())
             file.mkdirs();
-        savepath = Constans.FILE_ROOT_SAVEPATH + Constans.HTML_PATH + AppUtil.fileurl2name(html,1);;
+        savepath = Constans.getAppPath(Constans.HTML_PATH) + AppUtil.fileurl2name(html,1);;
         if (new File(savepath).exists())
             return savepath;
         RequestParams rp = new RequestParams(html);
