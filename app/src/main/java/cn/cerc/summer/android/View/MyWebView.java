@@ -69,7 +69,7 @@ public class MyWebView extends WebView {
 
     public WebResourceResponse WebResponseO(String url) {
         String filename = AppUtil.fileurl2name(url, 1);
-        File file = new File(Constans.FILE_ROOT_SAVEPATH + Constans.CONFIG_PATH);
+        File file = new File(Constans.getAppPath(Constans.CONFIG_PATH));
         if (!file.exists())
             file.mkdirs();
         String fileurl = file.getAbsolutePath() + filename;
