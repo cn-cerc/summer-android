@@ -101,14 +101,12 @@ public class FileUtil {
      * @param data 数据
      */
     public static void createFile(byte[] data, String filename) {
-        File f = new File(cacheDir, filename);
+        File f = new File(Constans.getAppPath(Constans.CACHEFILE_PATH), filename);
         try {
-//            if (f.createNewFile()){
             FileOutputStream fos = new FileOutputStream(f);
             fos.write(data);
             fos.flush();
             fos.close();
-//            }
         } catch (IOException e) {
             Log.e(TAG, "create file error" + e);
         }

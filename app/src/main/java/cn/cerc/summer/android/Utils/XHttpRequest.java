@@ -135,103 +135,109 @@ public class XHttpRequest {
             this.cflc = cflc;
             jsonarr = AppUtil.getCacheList();
             fileLoad(filelist.get(loadindex));
-        }else
+        } else
             cflc.loadfinish();
     }
 
     private JSONObject jsonarr;
 
-    public int getconfigTime(String url){
-        if (!url.contains(",")) return 0;
-        return Integer.valueOf(url.split(",")[1]);
+    public String getconfigTime(String url) {
+        if (!url.contains(",")) return "0";
+        return url.split(",")[1];
+    }
+
+    public void loadnext(){
+        loadindex++;
+        if (loadindex < filelist.size()) fileLoad(filelist.get(loadindex));
+        else cflc.loadfinish();
     }
 
     /**
      * 静态文件下载
-     * @param url   文件url
+     *
+     * @param url 文件url
      */
     private void fileLoad(String url) {
-        String remote = AppUtil.fileurl2name(url,0);
-        String savepath = Constans.getAppPath(Constans.CONFIG_PATH) + AppUtil.fileurl2name(url,1);
+        String remote = AppUtil.fileurl2name(url, 0);
+        String savepath = Constans.getAppPath(Constans.CONFIG_PATH) + AppUtil.fileurl2name(url, 1);
 
-        if (jsonarr != null && jsonarr.has(remote)){// 此段代码用于判断文件是否需要更新或删除
+        if (jsonarr != null && jsonarr.has(remote)) {// 此段代码用于判断文件是否需要更新或删除
             String modis = "";
             try {
                 modis = jsonarr.getString(remote);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            if ("delete".equals(modis)){
+            if ("delete".equals(getconfigTime(url))) {
                 FileUtil.deleteFile(savepath);
+                loadnext();
                 return;
-            }else{
-                int modi = Integer.valueOf(modis);
-                if (modi >= getconfigTime(url)){
-                    loadindex++;
-                    if (loadindex < filelist.size()) fileLoad(filelist.get(loadindex));
-                    else cflc.loadfinish();
+            } else {
+                if (getconfigTime(url).equals(modis)) {
+                    loadnext();
                     return;
                 }
             }
         }
 
         String urls = Config.getConfig().getRootSite() + remote;
-        Log.e("url",urls);
-        if (new File(savepath).exists()) {//已存在文件直接下一个
-            loadindex++;
-            if (loadindex < filelist.size()) fileLoad(filelist.get(loadindex));
-            else cflc.loadfinish();
-        } else {
-            RequestParams rp = new RequestParams(urls);
-            rp.setSaveFilePath(savepath);
-            x.http().get(rp, new Callback.ProgressCallback<File>() {
-                @Override
-                public void onSuccess(File result) {
+        Log.e("url", urls);
+        RequestParams rp = new RequestParams(urls);
+        rp.setSaveFilePath(savepath);
+        x.http().get(rp, new Callback.ProgressCallback<File>() {
+            @Override
+            public void onSuccess(File result) {
+                loadindex++;
+                if (loadindex < filelist.size()) fileLoad(filelist.get(loadindex));
+                else cflc.loadfinish();
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                error_num++;
+                if (error_num >= 3) {//下载失败次数达到三次即下载下一个文件
                     loadindex++;
-                    if (loadindex < filelist.size()) fileLoad(filelist.get(loadindex));
-                    else cflc.loadfinish();
+                    error_num = 0;
                 }
-                @Override
-                public void onError(Throwable ex, boolean isOnCallback) {
-                    error_num++;
-                    if (error_num >= 3) {//下载失败次数达到三次即下载下一个文件
-                        loadindex++;
-                        error_num = 0;
-                    }
-                    if (loadindex < filelist.size()) fileLoad(filelist.get(loadindex));
-                    else cflc.loadfinish();
-                }
-                @Override
-                public void onCancelled(CancelledException cex) {
-                }
-                @Override
-                public void onFinished() {
+                if (loadindex < filelist.size()) fileLoad(filelist.get(loadindex));
+                else cflc.loadfinish();
+            }
 
-                }
-                @Override
-                public void onWaiting() {
+            @Override
+            public void onCancelled(CancelledException cex) {
+            }
 
-                }
-                @Override
-                public void onStarted() {
-                }
-                @Override
-                public void onLoading(long total, long current, boolean isDownloading) {
+            @Override
+            public void onFinished() {
 
-                }
-            });
-        }
+            }
+
+            @Override
+            public void onWaiting() {
+
+            }
+
+            @Override
+            public void onStarted() {
+            }
+
+            @Override
+            public void onLoading(long total, long current, boolean isDownloading) {
+
+            }
+        });
     }
 
 
-    public String GetHtml(String html, ConfigFileLoafCallback cflc){
+    public String GetHtml(String html, ConfigFileLoafCallback cflc) {
         this.cflc = cflc;
 
         String savepath = Constans.getAppPath(Constans.HTML_PATH);
         File file = new File(savepath);
         if (!file.exists())
             file.mkdirs();
-        savepath = Constans.getAppPath(Constans.HTML_PATH) + AppUtil.fileurl2name(html,1);;
+        savepath = Constans.getAppPath(Constans.HTML_PATH) + AppUtil.fileurl2name(html, 1);
+        ;
         if (new File(savepath).exists())
             return savepath;
         RequestParams rp = new RequestParams(html);
@@ -241,30 +247,36 @@ public class XHttpRequest {
             public void onSuccess(File result) {
                 XHttpRequest.this.cflc.loadfinish();
             }
+
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 error_num++;
                 if (error_num >= 3) {//下载失败次数达到三次即下载下一个文件
                     error_num = 0;
                     XHttpRequest.this.cflc.loadfinish();
-                }else{
+                } else {
                     fileLoad(filelist.get(loadindex));
                 }
             }
+
             @Override
             public void onCancelled(CancelledException cex) {
             }
+
             @Override
             public void onFinished() {
 
             }
+
             @Override
             public void onWaiting() {
 
             }
+
             @Override
             public void onStarted() {
             }
+
             @Override
             public void onLoading(long total, long current, boolean isDownloading) {
 
