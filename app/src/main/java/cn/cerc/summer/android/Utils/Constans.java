@@ -15,7 +15,7 @@ public class Constans {
      */
     public static final String DEVICE_TYPE = "phone";
     /**
-     *  shared 设置的key
+     * shared 设置的key
      */
     public static String SHARED_SETTING_TAB = "setting";
     /**
@@ -27,27 +27,26 @@ public class Constans {
 //    public static String HOME_URL = "http://m.knowall.cn";
     public static String HOME_URL = "http://192.168.1.194";
     /**
-     *  shared 设置的 启动页
+     * shared 设置的 启动页
      */
     public static String SHARED_START_URL = "START";
     /**
-     *  shared 设置的 消息页
+     * shared 设置的 消息页
      */
     public static String SHARED_MSG_URL = "MSG_URL";
     /**
      * 文件存储跟目录路径
      */
     public final static String APP_PATH = "app";
+    public final static String DATA_PATH = "data";
     public final static String CONFIG_PATH = "config";
-    public final static String CACHEFILE_PATH = "files";
     public final static String HTML_PATH = "html";
     public final static String IMAGE_PATH = "image";
 
-    public static String getAppPath(String Dir){
+    public static String getAppPath(String Dir) {
         File file = MyApplication.getInstance().getExternalFilesDir(Dir);
-        if (!file.exists())
-            file.mkdirs();
-        return file.getAbsolutePath() ;
+        if (!file.exists()) file.mkdirs();
+        return file.getAbsolutePath();
     }
 
     /**
@@ -88,7 +87,6 @@ public class Constans {
      * 用户注册SDK的intent
      */
     public final static String REGISTRATION = "cn.jpush.android.intent.REGISTRATION";
-
 
 
 }
