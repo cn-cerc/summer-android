@@ -3,6 +3,11 @@ package cn.cerc.summer.android.Utils;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.widget.Toast;
+
+import com.huagu.ehealth.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,7 +29,6 @@ import cn.cerc.summer.android.Entity.Config;
 public class AppUtil {
 
 
-
     public static int getVersionCode(Context context) throws PackageManager.NameNotFoundException {
         PackageManager pm = context.getPackageManager();
         PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
@@ -41,24 +45,25 @@ public class AppUtil {
 
     /**
      * 储存缓存配置列表
-     * @param config    配置文件类
+     *
+     * @param config 配置文件类
      */
-    public static void saveCacheList(Config config){
+    public static void saveCacheList(Config config) {
         Map<String, String> map = new HashMap<String, String>();
         for (String str : config.getCacheFiles()) {
             String[] args = str.split(",");
-            map.put(args[0], args.length == 2 ? args[1]: "0");
+            map.put(args[0], args.length == 2 ? args[1] : "0");
         }
         JSONObject jsonObject = new JSONObject(map);
         FileUtil.createFile(jsonObject.toString().getBytes(Charset.forName("utf-8")), Constans.CONFIGNAME);
     }
 
-    public static JSONObject getCacheList(){
-        File file = new File(Constans.getAppPath(Constans.DATA_PATH) + "/"+ Constans.CONFIGNAME);
+    public static JSONObject getCacheList() {
+        File file = new File(Constans.getAppPath(Constans.DATA_PATH) + "/" + Constans.CONFIGNAME);
         try {
             FileInputStream fis = new FileInputStream(file);
             int length = fis.available();
-            byte [] buffer = new byte[length];
+            byte[] buffer = new byte[length];
             fis.read(buffer);
             String str = new String(buffer);
             fis.close();
@@ -73,15 +78,34 @@ public class AppUtil {
 
     /**
      * 获取url的文件名
-     * @param url   文件路径
-     * @param nrp   0 带远程路径， 否则为文件名
-     * @return      文件名
+     *
+     * @param url 文件路径
+     * @param nrp 0 带远程路径， 否则为文件名
+     * @return 文件名
      */
-    public static String fileurl2name(String url,int nrp) {
+    public static String fileurl2name(String url, int nrp) {
         if (url.contains("?"))
             url = url.replace("?", "");
         String Remotename = url.split(",")[0];
-        return nrp==0?Remotename:Remotename.substring(Remotename.lastIndexOf("/"), Remotename.length());
+        return nrp == 0 ? Remotename : Remotename.substring(Remotename.lastIndexOf("/"), Remotename.length());
+    }
+
+
+    public static boolean getNetWorkStata(Context context) {
+        // 获取手机所有连接管理对象（包括对wi-fi,net等连接的管理）
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            NetworkInfo info = connectivityManager.getActiveNetworkInfo();
+            if (info != null && info.isConnected()){
+                // 当前网络是连接的
+                if (info.getState() == NetworkInfo.State.CONNECTED){
+                    // 当前所连接的网络可用
+                    return true;
+                }
+            }
+        }
+        Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show();
+        return false;
     }
 
 }

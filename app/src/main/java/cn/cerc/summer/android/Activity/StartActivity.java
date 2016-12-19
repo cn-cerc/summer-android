@@ -1,6 +1,7 @@
 package cn.cerc.summer.android.Activity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -61,7 +62,8 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        System.exit(0);
+        MainActivity.getInstance().finish();
+        finish();
     }
 
     @Override
@@ -190,7 +192,13 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
     }
 
     @Override
+    public Context getContext(){
+        return this;
+    }
+
+    @Override
     public void Failt(String url, String error) {
+        MainActivity.getInstance().setHomeurl(Constans.HOME_URL);
         skip();
     }
 

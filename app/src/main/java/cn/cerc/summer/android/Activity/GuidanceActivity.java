@@ -39,7 +39,8 @@ public class GuidanceActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        System.exit(0);
+        MainActivity.getInstance().finish();
+        finish();
     }
 
     @Override

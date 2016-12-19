@@ -41,6 +41,7 @@ public class XHttpRequest {
      * @param rc  请求回调
      */
     public void GET(final String url, final RequestCallback rc) {
+        if (!AppUtil.getNetWorkStata(rc.getContext())) return;
         x.http().get(new RequestParams(url), new Callback.CommonCallback<JSONObject>() {
             @Override
             public void onSuccess(JSONObject result) {
@@ -73,6 +74,7 @@ public class XHttpRequest {
      * @return 可取消的回调
      */
     public Callback.Cancelable GETFile(final String url, final GetFileCallback rc) {
+        if (!AppUtil.getNetWorkStata(rc.getContext())) return null;
         RequestParams rp = new RequestParams(url);
         rp.setSaveFilePath(Constans.getAppPath(Constans.APP_PATH) + "app.apk");
         Callback.Cancelable cc = x.http().get(rp, new Callback.ProgressCallback<File>() {

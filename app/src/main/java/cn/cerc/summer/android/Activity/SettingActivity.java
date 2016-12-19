@@ -22,7 +22,7 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
     private TextView textview,url_tit;
     private EditText edittext;
     private CustomSeekBar customseekbar;
-    private Button button;
+    private Button button ;
     private ImageView back;
     private String InitialScale;
     private int scales=0;
@@ -34,6 +34,7 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
 
         back = (ImageView) this.findViewById(R.id.back);
         button = (Button) this.findViewById(R.id.save);
+//        logout = (Button) this.findViewById(R.id.logout);
         edittext = (EditText) this.findViewById(R.id.url);
         url_tit = (TextView) this.findViewById(R.id.url_tit);
         customseekbar = (CustomSeekBar) this.findViewById(R.id.customseekbar);
@@ -58,6 +59,14 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
                 finish();
             }
         });
+
+//        logout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                MainActivity.getInstance().finish();
+//                finish();
+//            }
+//        });
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override

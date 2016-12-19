@@ -44,9 +44,9 @@ public class Constans {
         if (!file.exists()) file.mkdirs();
         return file.getAbsolutePath();
     }
-        /**
-         * //缓存文件列表
-         */
+    /**
+     * //缓存文件列表
+     */
     public final static String CONFIGNAME = "cahcefile.txt";
 
     /**

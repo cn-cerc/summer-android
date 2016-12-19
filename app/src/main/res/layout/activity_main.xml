@@ -66,10 +66,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="match_parent">
+
+                <cn.cerc.summer.android.View.MyWebView
+                    android:id="@+id/webview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
 
                 <ProgressBar
                     android:id="@+id/progress"
@@ -79,12 +83,7 @@
                     android:max="100"
                     android:visibility="invisible"/>
 
-                <cn.cerc.summer.android.View.MyWebView
-                    android:id="@+id/webview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-            </LinearLayout>
+            </RelativeLayout>
 
         <ImageView
             android:id="@+id/image_tips"

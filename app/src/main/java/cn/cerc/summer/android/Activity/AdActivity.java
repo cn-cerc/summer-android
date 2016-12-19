@@ -38,8 +38,10 @@ public class AdActivity extends BaseActivity implements View.OnClickListener, Vi
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        System.exit(0);
+        MainActivity.getInstance().finish();
+        finish();
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {//?device=android&clientId=44444444

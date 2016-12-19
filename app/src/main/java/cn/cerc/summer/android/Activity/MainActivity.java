@@ -89,7 +89,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     private GoogleApiClient client;
 
     private String[] menus;//菜单
-    private int[] menu_img = new int[]{R.mipmap.message, R.mipmap.msg_manager, R.mipmap.home, R.mipmap.setting, R.mipmap.home, R.mipmap.home};
+    private int[] menu_img = new int[]{R.mipmap.message, R.mipmap.msg_manager, R.mipmap.home, R.mipmap.setting, R.mipmap.home, R.mipmap.home,R.mipmap.home};
     private List<Menu> menulist;
     private ListPopupWindow lpw;//列表弹框
 
@@ -138,7 +138,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
         initbro();
         InitView();
-//        webview.loadUrl(homeurl);
 
         startActivity(new Intent(this, StartActivity.class));
 
@@ -269,6 +268,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                if (!AppUtil.getNetWorkStata(view.getContext())) return;
                 Log.e("cururl",url);
                 if (url.contains(".html")){
                     String local = XHttpRequest.getInstance().GetHtml(url, MainActivity.this);
@@ -453,6 +453,11 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                         clearCacheFolder(MainActivity.this.getCacheDir(), System.currentTimeMillis());
                         break;
                     case 5:
+                        webview.loadUrl("http://ehealth.lucland.com/forms/Login.exit");
+                        webview.clearCache(true);
+                        webview.clearHistory();
+                        break;
+                    case 6:
                         webview.reload();
                         break;
                 }
