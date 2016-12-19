@@ -34,15 +34,14 @@ public class Constans {
      * 文件存储跟目录路径
      */
     public final static String APP_PATH = "app";
+    public final static String DATA_PATH = "data";
     public final static String CONFIG_PATH = "config";
-    public final static String CACHEFILE_PATH = "files";
     public final static String HTML_PATH = "html";
     public final static String IMAGE_PATH = "image";
 
     public static String getAppPath(String Dir){
         File file = MyApplication.getInstance().getExternalFilesDir(Dir);
-        if (!file.exists())
-            file.mkdirs();
+        if (!file.exists()) file.mkdirs();
         return file.getAbsolutePath();
     }
         /**
