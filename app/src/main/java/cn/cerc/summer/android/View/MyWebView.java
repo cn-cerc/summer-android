@@ -48,7 +48,7 @@ public class MyWebView extends WebView {
 
     private WebSettings websetting;
 
-    public void init(Context context){
+    public void init(Context context) {
         websetting = getSettings();
         websetting.setJavaScriptEnabled(true);
         websetting.setJavaScriptCanOpenWindowsAutomatically(true);
@@ -64,36 +64,29 @@ public class MyWebView extends WebView {
 
     }
 
-    public WebResourceResponse getWebResponse(String type, InputStream input){
-        return new WebResourceResponse("text/"+type, "UTF-8", input);
+    public WebResourceResponse getWebResponse(String type, InputStream input) {
+        return new WebResourceResponse("text/" + type, "UTF-8", input);
     }
 
     public WebResourceResponse WebResponseO(String url) {
         String type = "";
-            if (url.contains(".css")) {
-                type = "css";
-            } else if (url.contains(".js")) {
-                type = "js";
-            } else if (url.contains(".png")) {
-                type = "png";
-            } else if (url.contains(".jpg") | url.contains(".jpeg")) {
-                type = "jpg";
-            } else if (url.contains(".gif")) {
-                type = "gif";
-            }else{
-                return null;
-            }
-        String filename = url.substring(url.indexOf("com")+3);
-        File file = new File(Constans.getAppPath(Constans.CONFIG_PATH));
-        if (!file.exists())
-            file.mkdirs();
+        if (url.contains(".css")) type = "css";
+        else if (url.contains(".js")) type = "js";
+        else if (url.contains(".png")) type = "png";
+        else if (url.contains(".jpg") | url.contains(".jpeg")) type = "jpg";
+        else if (url.contains(".gif")) type = "gif";
+        else return null;
+
+        String filename = url.substring(url.indexOf("com") + 3);
+        File file = new File(Constans.getAppPath(Constans.DATA_PATH));
+        if (!file.exists()) file.mkdirs();
         String fileurl = file.getAbsolutePath() + filename;
         File files = new File(fileurl);
         if (!(files.isFile() && files.exists()))
             return null;
         try {
             InputStream input = new FileInputStream(fileurl);
-            return getWebResponse(type,input);
+            return getWebResponse(type, input);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
