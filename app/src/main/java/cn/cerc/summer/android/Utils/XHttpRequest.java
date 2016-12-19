@@ -159,7 +159,7 @@ public class XHttpRequest {
      */
     private void fileLoad(String url) {
         String remote = AppUtil.fileurl2name(url, 0);
-        String savepath = Constans.getAppPath(Constans.CONFIG_PATH) + AppUtil.fileurl2name(url, 0);
+        String savepath = Constans.getAppPath(Constans.DATA_PATH) + AppUtil.fileurl2name(url, 0);
 
         if (jsonarr != null && jsonarr.has(remote)) {// 此段代码用于判断文件是否需要更新或删除
             String modis = "";

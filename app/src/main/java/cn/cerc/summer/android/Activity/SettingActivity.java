@@ -19,13 +19,13 @@ import cn.cerc.summer.android.View.CustomSeekBar;
 
 public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarChangeListener {
 
-    private TextView textview,url_tit;
+    private TextView textview, url_tit;
     private EditText edittext;
     private CustomSeekBar customseekbar;
     private Button button;
     private ImageView back;
     private String InitialScale;
-    private int scales=0;
+    private int scales = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
         customseekbar.setProgress(scales);
         customseekbar.setProgress(settingShared.getInt(Constans.SCALE_SHAREDKEY, 90));
 
-        if (!Config.getConfig().isDebug()){
+        if (!Config.getConfig().isDebug()) {
             url_tit.setVisibility(View.GONE);
             edittext.setVisibility(View.GONE);
         }
@@ -52,9 +52,9 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.putExtra("scale",scales);
-                intent.putExtra("home",edittext.getText().toString().trim());
-                setResult(RESULT_OK,intent);
+                intent.putExtra("scale", scales);
+                intent.putExtra("home", edittext.getText().toString().trim());
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });
@@ -64,14 +64,12 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(edittext.getText().toString().trim()) && !edittext.getText().toString().trim().contains("http")) {
                     Toast.makeText(SettingActivity.this, R.string.no_http_tips, Toast.LENGTH_SHORT).show();
-                } else {
+                } else
                     settingShared.edit().putString(Constans.HOME, edittext.getText().toString().trim()).commit();
-                }
-                if (scales==0) {
-                    settingShared.edit().putInt(Constans.SCALE_SHAREDKEY, 90).commit();
-                } else {
-                    settingShared.edit().putInt(Constans.SCALE_SHAREDKEY, scales).commit();
-                }
+
+                if (scales == 0) settingShared.edit().putInt(Constans.SCALE_SHAREDKEY, 90).commit();
+                else settingShared.edit().putInt(Constans.SCALE_SHAREDKEY, scales).commit();
+
             }
         });
     }
