@@ -88,7 +88,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     private GoogleApiClient client;
 
     private String[] menus;//菜单
-    private int[] menu_img = new int[]{R.mipmap.message, R.mipmap.msg_manager, R.mipmap.home, R.mipmap.setting, R.mipmap.home, R.mipmap.home,R.mipmap.home};
+    private int[] menu_img = new int[]{R.mipmap.message, R.mipmap.msg_manager, R.mipmap.home, R.mipmap.setting, R.mipmap.wipe, R.mipmap.logout,R.mipmap.reload};
     private List<Menu> menulist;
     private ListPopupWindow lpw;//列表弹框
 
@@ -110,7 +110,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         //注册receiver
         registerReceiver(receiver, filter);
     }
-
 
     private static MainActivity mainactivity;
 

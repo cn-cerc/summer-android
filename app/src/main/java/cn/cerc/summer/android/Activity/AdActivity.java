@@ -42,7 +42,6 @@ public class AdActivity extends BaseActivity implements View.OnClickListener, Vi
         finish();
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {//?device=android&clientId=44444444
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
