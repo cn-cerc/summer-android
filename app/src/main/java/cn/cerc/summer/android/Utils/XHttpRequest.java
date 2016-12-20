@@ -126,6 +126,7 @@ public class XHttpRequest {
     private List<String> filelist;//下载列表
     private int loadindex = 0;
     private ConfigFileLoafCallback cflc;
+
     /**
      * 单个文件下载失败次数
      */

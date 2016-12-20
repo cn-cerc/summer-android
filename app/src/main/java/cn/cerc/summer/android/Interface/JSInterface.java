@@ -15,9 +15,9 @@ import java.util.Map;
 import cn.cerc.summer.android.Utils.AppUtil;
 
 /**
+ * 供js调用的js
  * Created by fff on 2016/11/11.
  */
-
 public class JSInterface extends Object {
     private Map<String, String> resultunifiedorder;
     private StringBuffer sb;

@@ -73,7 +73,6 @@ import cn.jpush.android.api.TagAliasCallback;
 public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, ConfigFileLoafCallback {
 
     public MyWebView webview;
-//    private WebSettings websetting;
     private ProgressBar progress;
     private DragPointView dragpointview;
     private ImageView image_tips;
@@ -149,7 +148,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
      */
     private String getMsgUrl(String read) {
         String url = settingShared.getString(Constans.SHARED_MSG_URL, "") + read;
-        return PermissionUtils.buildDeviceUrl(url);
+        return AppUtil.buildDeviceUrl(url);
     }
 
     @Override
@@ -195,7 +194,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                     // 建议这里往 SharePreference 里写一个成功设置的状态。成功设置一次后，以后不必再次设置了。
                     break;
                 case 6002://失败
-                    // 延迟 60 秒来调用 Handler 设置别名
+                    // 延迟 30 秒来调用 Handler 设置别名
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -232,11 +231,12 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
         webview = (MyWebView) this.findViewById(R.id.webview);
 
-        webview.addJavascriptInterface(new JSInterface(this), "JSobj");//hello2Html
+        webview.addJavascriptInterface(new JSInterface(this), "JSobj");//JSobj 供web端js调用标识，修改请通知web开发者
 
         webview.setWebViewClient(new WebViewClient() {
-            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+
             @Override
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 WebResourceResponse webreq = webview.WebResponseO(request.getUrl().toString());
                 return webreq != null ? webreq : super.shouldInterceptRequest(view, request);
@@ -270,11 +270,11 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 if (!AppUtil.getNetWorkStata(view.getContext())) return;
                 Log.e("cururl",url);
-                if (url.contains(".html")){
-                    String local = XHttpRequest.getInstance().GetHtml(url, MainActivity.this);
-                    if (!TextUtils.isEmpty(local))
-                        url = local;
-                }
+//                if (url.contains(".html")){
+//                    String local = XHttpRequest.getInstance().GetHtml(url, MainActivity.this);
+//                    if (!TextUtils.isEmpty(local))
+//                        url = local;
+//                }
                 is_ERROR = false;
                 if (Config.getConfig() == null) return;
                 is_exit = false;
@@ -336,12 +336,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    progress.setProgress(newProgress, true);
-                } else {
-                    progress.setProgress(newProgress);
-                }
-                MainActivity.this.setProgress(newProgress);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) progress.setProgress(newProgress, true);
+                else progress.setProgress(newProgress);
                 super.onProgressChanged(view, newProgress);
             }
 
@@ -363,14 +359,11 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                         if (System.currentTimeMillis() - timet > 2000) {
                             timet = System.currentTimeMillis();
                             Toast.makeText(v.getContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
-                        } else {
-                            finish();
-                        }
+                        } else finish();
                     } else {
                         if (webview.canGoBack()) webview.goBack();// 返回键退回
                         else finish();
                     }
-
                     return true;
                 } else
                     return false;
@@ -390,6 +383,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
     @Override
     public boolean onLongClick(View v) {
+        //webview的长按事件，设置true后webview将不会触发长按复制动作
         return true;
     }
 
@@ -468,14 +462,11 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         lpw.show();
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(receiver);//注销广播
     }
-
-    private ShowDialog sd;
 
     /**
      * 广播接收者
@@ -484,20 +475,16 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            Log.e("xxxx", "00000000 " + action);
+            Log.e("xxxx", "mainactivity " + action);
             switch (action) {
                 case NETWORK_CHANGE:
-                    ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-                    NetworkInfo activeInfo = connectivityManager.getActiveNetworkInfo();
-                    if (activeInfo != null && activeInfo.getState() == NetworkInfo.State.CONNECTED) {
-                        webview.reload();
-                    } else if (activeInfo == null || activeInfo.getState() == NetworkInfo.State.DISCONNECTED) {
-                        ShowDialog.getDialog(context).showTips();
-                    }
+                    if (AppUtil.getNetWorkStata(context)) webview.reload();
+                    else ShowDialog.getDialog(context).showTips();
                     break;
                 case APP_UPDATA://有更新
                     break;
                 default:
+                    Log.e("mainact","mainactivity:接收到广播");
                     break;
             }
         }
@@ -510,21 +497,17 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     }
 
     /**
-     * clear the cache before time numDays
+     * 清除缓存
      */
     private int clearCacheFolder(File dir, long numDays) {
         int deletedFiles = 0;
         if (dir != null && dir.isDirectory()) {
             try {
                 for (File child : dir.listFiles()) {
-                    if (child.isDirectory()) {
+                    if (child.isDirectory())
                         deletedFiles += clearCacheFolder(child, numDays);
-                    }
-                    if (child.lastModified() < numDays) {
-                        if (child.delete()) {
-                            deletedFiles++;
-                        }
-                    }
+                    if (child.lastModified() < numDays)
+                        if (child.delete()) deletedFiles++;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
