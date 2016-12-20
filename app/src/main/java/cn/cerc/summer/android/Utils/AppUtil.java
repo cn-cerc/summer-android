@@ -59,7 +59,7 @@ public class AppUtil {
     }
 
     public static JSONObject getCacheList() {
-        File file = new File(Constans.getAppPath(Constans.DATA_PATH) + "/" + Constans.CONFIGNAME);
+        File file = new File(Constans.getAppPath(Constans.CONFIG_PATH) + "/" + Constans.CONFIGNAME);
         try {
             FileInputStream fis = new FileInputStream(file);
             int length = fis.available();
