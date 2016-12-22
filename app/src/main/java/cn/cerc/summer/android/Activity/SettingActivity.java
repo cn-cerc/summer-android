@@ -66,6 +66,7 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
                 else settingShared.edit().putString(Constans.HOME, edittext.getText().toString().trim()).commit();
                 if (scales==0) settingShared.edit().putInt(Constans.SCALE_SHAREDKEY, 90).commit();
                 else settingShared.edit().putInt(Constans.SCALE_SHAREDKEY, scales).commit();
+                Toast.makeText(v.getContext(),"保存成功",Toast.LENGTH_SHORT).show();
             }
         });
     }

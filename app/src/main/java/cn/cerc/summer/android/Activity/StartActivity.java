@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.annotation.UiThread;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -142,7 +143,6 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
     public Config config;
     private String homeurl;
 
-
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void success(String url, JSONObject json) {
@@ -163,7 +163,7 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    loadfinish();
+                    loadfinish(0);
                 }
             }, 2000);
         }
@@ -195,7 +195,7 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
     public Context getContext(){
         return this;
     }
-
+    
     @Override
     public void Failt(String url, String error) {
         MainActivity.getInstance().setHomeurl(Constans.HOME_URL);
@@ -203,11 +203,16 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
     }
 
     @Override
-    public void loadfinish() {
-        MainActivity.getInstance().setHomeurl(homeurl);
-        settingShared.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).commit();
-        AppUtil.saveCacheList(config);
-        skip();
+    public void loadfinish(int size) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                MainActivity.getInstance().setHomeurl(homeurl);
+                settingShared.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).commit();
+                AppUtil.saveCacheList(config);
+                skip();
+            }
+        });
     }
 
 }

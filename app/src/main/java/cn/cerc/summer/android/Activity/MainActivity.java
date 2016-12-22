@@ -1,5 +1,6 @@
 package cn.cerc.summer.android.Activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -13,6 +14,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -462,6 +467,22 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 111:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    PowerManager pManager=(PowerManager) getSystemService(Context.POWER_SERVICE);
+                    pManager.reboot("重启");
+                } else {
+                    ActivityCompat.requestPermissions(this, permissions, requestCode);
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(receiver);//注销广播
@@ -546,7 +567,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     }
 
     @Override
-    public void loadfinish() {
+    public void loadfinish(int size) {
         Log.e("mainactivity","html加载完毕");
     }
 }

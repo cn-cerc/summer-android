@@ -134,4 +134,27 @@ public class AppUtil {
         return false;
     }
 
+    public static boolean needUpdate(String url, JSONObject jsonarr){
+        String remote = AppUtil.fileurl2name(url, 0);
+        String savepath = Constans.getAppPath(Constans.DATA_PATH) + AppUtil.fileurl2name(url, 0);
+        if (jsonarr != null && jsonarr.has(remote)) {// 此段代码用于判断文件是否需要更新或删除
+            String modis = "";
+            try {
+                modis = jsonarr.getString(remote);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if ("delete".equals(FileUtil.getconfigTime(url))) {
+                FileUtil.deleteFile(savepath);
+                return false;
+            } else {
+                if (FileUtil.getconfigTime(url).equals(modis)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+
 }

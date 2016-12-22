@@ -310,6 +310,11 @@ public class FileUtil {
     }
 
 
+    public static String getconfigTime(String url) {
+        if (!url.contains(",")) return "0";
+        return url.split(",")[1];
+    }
+
     /**
      * 判断外部存储是否可用
      */

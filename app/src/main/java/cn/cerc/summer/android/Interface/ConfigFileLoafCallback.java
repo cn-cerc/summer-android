@@ -7,6 +7,6 @@ package cn.cerc.summer.android.Interface;
 
 public interface ConfigFileLoafCallback {
 
-    void loadfinish();
+    void loadfinish(int size);
 
 }
