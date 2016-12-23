@@ -7,10 +7,8 @@ import java.util.List;
  * Created by fff on 2016/12/6.
  */
 
-public interface ConfigFileLoafCallback {
+public interface AsyncFileLoafCallback {
 
-    void loadfinish(int size);
-
-    void loadAllfinish();
+    void loadfinish(List<String> filelist,int fail);
 
 }

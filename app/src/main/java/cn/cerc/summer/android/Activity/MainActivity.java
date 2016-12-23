@@ -42,6 +42,7 @@ import android.widget.Toast;
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Entity.Menu;
 import cn.cerc.summer.android.Interface.ConfigFileLoafCallback;
+import cn.cerc.summer.android.Interface.JSInterfaceLintener;
 import cn.cerc.summer.android.Receiver.MyBroadcastReceiver;
 import cn.cerc.summer.android.Utils.AppUtil;
 import cn.cerc.summer.android.Utils.Constans;
@@ -75,7 +76,7 @@ import cn.jpush.android.api.TagAliasCallback;
 /**
  * 主界面
  */
-public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, ConfigFileLoafCallback {
+public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, JSInterfaceLintener {
 
     public MyWebView webview;
     private ProgressBar progress;
@@ -93,7 +94,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     private GoogleApiClient client;
 
     private String[] menus;//菜单
-    private int[] menu_img = new int[]{R.mipmap.message, R.mipmap.msg_manager, R.mipmap.home, R.mipmap.setting, R.mipmap.wipe, R.mipmap.logout,R.mipmap.reload};
+    private int[] menu_img = new int[]{R.mipmap.message, R.mipmap.msg_manager, R.mipmap.home, R.mipmap.setting, R.mipmap.wipe, R.mipmap.logout, R.mipmap.reload};
     private List<Menu> menulist;
     private ListPopupWindow lpw;//列表弹框
 
@@ -122,7 +123,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         return mainactivity;
     }
 
-    public void setHomeurl(String homeurl){
+    public void setHomeurl(String homeurl) {
         this.homeurl = homeurl;
         webview.loadUrl(homeurl);
     }
@@ -273,7 +274,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 if (!AppUtil.getNetWorkStata(view.getContext())) return;
-                Log.e("cururl",url);
+                Log.e("cururl", url);
 //                if (url.contains(".html")){
 //                    String local = XHttpRequest.getInstance().GetHtml(url, MainActivity.this);
 //                    if (!TextUtils.isEmpty(local))
@@ -340,7 +341,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) progress.setProgress(newProgress, true);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                    progress.setProgress(newProgress, true);
                 else progress.setProgress(newProgress);
                 super.onProgressChanged(view, newProgress);
             }
@@ -360,10 +362,9 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((keyCode == KeyEvent.KEYCODE_BACK) && event.getAction() == KeyEvent.ACTION_UP) {
                     if (is_exit) {
-                        if (System.currentTimeMillis() - timet > 2000) {
-                            timet = System.currentTimeMillis();
-                            Toast.makeText(v.getContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
-                        } else finish();
+                        Intent home = new Intent(Intent.ACTION_MAIN);
+                        home.addCategory(Intent.CATEGORY_HOME);
+                        startActivity(home);
                     } else {
                         if (webview.canGoBack()) webview.goBack();// 返回键退回
                         else finish();
@@ -415,20 +416,22 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         }
     }
 
+    public boolean islogin = false;
+
     /**
      * 显示菜单栏的窗口
      *
      * @param view
      */
     public void showPopu(View view) {
-        if (menulist == null) {
-            menulist = new ArrayList<Menu>();
-            menus = getResources().getStringArray(R.array.menu);
-            for (int i = 0; i < menus.length; i++) {
-                Menu menu = new Menu(i == 0 ? 12 : 0, menus[i], menu_img[i]);
-                menulist.add(menu);
-            }
+        menulist = new ArrayList<Menu>();
+        menus = getResources().getStringArray(R.array.menu);
+        ss: for (int i = 0; i < menus.length; i++) {
+            if ("退出登录".equals(menus[i]) && !islogin) continue ss;
+            Menu menu = new Menu(i == 0 ? 12 : 0, menus[i], menu_img[i]);
+            menulist.add(menu);
         }
+
 
         lpw = ShowPopupWindow.getPopupwindow().show(this, menulist);
         lpw.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -471,7 +474,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         switch (requestCode) {
             case 111:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    PowerManager pManager=(PowerManager) getSystemService(Context.POWER_SERVICE);
+                    PowerManager pManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
                     pManager.reboot("重启");
                 } else {
                     ActivityCompat.requestPermissions(this, permissions, requestCode);
@@ -504,7 +507,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 case APP_UPDATA://有更新
                     break;
                 default:
-                    Log.e("mainact","mainactivity:接收到广播");
+                    Log.e("mainact", "mainactivity:接收到广播");
                     break;
             }
         }
@@ -566,8 +569,14 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         client.disconnect();
     }
 
+
     @Override
-    public void loadfinish(int size) {
-        Log.e("mainactivity","html加载完毕");
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public void LoginOrLogout(boolean islogin) {
+        this.islogin = islogin;
     }
 }

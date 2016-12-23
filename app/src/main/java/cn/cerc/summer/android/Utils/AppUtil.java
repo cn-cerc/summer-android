@@ -152,6 +152,10 @@ public class AppUtil {
                     return false;
                 }
             }
+        }else{
+            File file = new File(savepath);
+            if (file.exists())
+                return false;
         }
         return true;
     }

@@ -34,19 +34,14 @@ public class CustomSeekBar extends LinearLayout implements SeekBar.OnSeekBarChan
     }
 
     public CustomSeekBar(Context context, AttributeSet attrs, int defStyleAttr) {
-        this(context, attrs, defStyleAttr, 0);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public CustomSeekBar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.CustomSeekBar, defStyleAttr, defStyleRes);
+        super(context, attrs, defStyleAttr);
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.CustomSeekBar, defStyleAttr,0);
         max = ta.getInt(R.styleable.CustomSeekBar_max, max);
         min = ta.getInt(R.styleable.CustomSeekBar_min, min);
 
         init(context);
     }
+
 
     private int min = 0;//区间最小值
     private int max = 50;//最大值

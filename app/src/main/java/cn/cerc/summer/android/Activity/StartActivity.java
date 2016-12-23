@@ -153,9 +153,11 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
 
         MainActivity.getInstance().Update();
 
-        load_gif.setVisibility(View.VISIBLE);
-        imageview.setVisibility(View.VISIBLE);
-        imageview.setImageResource(R.mipmap.init_bg);
+        if (settingShared.getInt(Constans.FAIL_NUM_SHAREDKEY,1) > 0){
+            load_gif.setVisibility(View.VISIBLE);
+            imageview.setVisibility(View.VISIBLE);
+            imageview.setImageResource(R.mipmap.init_bg);
+        }
         List<String> list = config.getCacheFiles();
         if (list != null && list.size() > 0) {
             XHttpRequest.getInstance().ConfigFileGet(list, StartActivity.this);
@@ -203,16 +205,20 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
     }
 
     @Override
-    public void loadfinish(int size) {
+    public void loadfinish(final int fail_num) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 MainActivity.getInstance().setHomeurl(homeurl);
-                settingShared.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).commit();
-                AppUtil.saveCacheList(config);
+                settingShared.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).putInt(Constans.FAIL_NUM_SHAREDKEY,fail_num).commit();
                 skip();
             }
         });
+    }
+
+    @Override
+    public void loadAllfinish(){
+        AppUtil.saveCacheList(config);
     }
 
 }
