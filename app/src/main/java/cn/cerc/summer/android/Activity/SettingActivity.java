@@ -19,12 +19,11 @@ import cn.cerc.summer.android.View.CustomSeekBar;
 
 public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarChangeListener {
 
-    private TextView textview,url_tit;
+    private TextView url_tit;
     private EditText edittext;
     private CustomSeekBar customseekbar;
     private Button button ;
     private ImageView back;
-    private String InitialScale;
     private int scales=0;
 
     @Override
@@ -34,7 +33,6 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
 
         back = (ImageView) this.findViewById(R.id.back);
         button = (Button) this.findViewById(R.id.save);
-//        logout = (Button) this.findViewById(R.id.logout);
         edittext = (EditText) this.findViewById(R.id.url);
         url_tit = (TextView) this.findViewById(R.id.url_tit);
         customseekbar = (CustomSeekBar) this.findViewById(R.id.customseekbar);
@@ -60,27 +58,15 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
             }
         });
 
-//        logout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                MainActivity.getInstance().finish();
-//                finish();
-//            }
-//        });
-
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.isEmpty(edittext.getText().toString().trim()) && !edittext.getText().toString().trim().contains("http")) {
+                if (!TextUtils.isEmpty(edittext.getText().toString().trim()) && !edittext.getText().toString().trim().contains("http"))
                     Toast.makeText(SettingActivity.this, R.string.no_http_tips, Toast.LENGTH_SHORT).show();
-                } else {
-                    settingShared.edit().putString(Constans.HOME, edittext.getText().toString().trim()).commit();
-                }
-                if (scales==0) {
-                    settingShared.edit().putInt(Constans.SCALE_SHAREDKEY, 90).commit();
-                } else {
-                    settingShared.edit().putInt(Constans.SCALE_SHAREDKEY, scales).commit();
-                }
+                else settingShared.edit().putString(Constans.HOME, edittext.getText().toString().trim()).commit();
+                if (scales==0) settingShared.edit().putInt(Constans.SCALE_SHAREDKEY, 90).commit();
+                else settingShared.edit().putInt(Constans.SCALE_SHAREDKEY, scales).commit();
+                Toast.makeText(v.getContext(),"保存成功",Toast.LENGTH_SHORT).show();
             }
         });
     }

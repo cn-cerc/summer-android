@@ -69,6 +69,9 @@ public class MyApplication extends Application {
 
     }
 
+    /**
+     * ImageLoader 初始化
+     */
     private void InitImageLoader() {
 
         ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(this);

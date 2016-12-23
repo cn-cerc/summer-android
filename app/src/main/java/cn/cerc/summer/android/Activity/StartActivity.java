@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.annotation.UiThread;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -74,7 +75,7 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_guidance);
         if (PermissionUtils.getPermission(new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PermissionUtils.REQUEST_READ_PHONE_STATE, this)) {
-            XHttpRequest.getInstance().GET(PermissionUtils.buildDeviceUrl(Constans.HOME_URL + "/MobileConfig"), this);
+            XHttpRequest.getInstance().GET(AppUtil.buildDeviceUrl(Constans.HOME_URL + "/MobileConfig"), this);
         }
 
         initView();
@@ -110,7 +111,7 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     TelephonyManager TelephonyMgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
                     PermissionUtils.IMEI = TelephonyMgr.getDeviceId();
-                    XHttpRequest.getInstance().GET(PermissionUtils.buildDeviceUrl(Constans.HOME_URL + "/MobileConfig"), this);
+                    XHttpRequest.getInstance().GET(AppUtil.buildDeviceUrl(Constans.HOME_URL + "/MobileConfig"), this);
                 } else {
                     ActivityCompat.requestPermissions(this, permissions, requestCode);
                 }
@@ -142,12 +143,11 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
     public Config config;
     private String homeurl;
 
-
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void success(String url, JSONObject json) {
         config = JSON.parseObject(json.toString(), Config.class);
-        homeurl = PermissionUtils.buildDeviceUrl(Constans.HOME_URL);
+        homeurl = AppUtil.buildDeviceUrl(Constans.HOME_URL);
         String msgurl = config.getRootSite() + "/" + config.getMsgManage();
         settingShared.edit().putString(Constans.HOME, homeurl).putString(Constans.SHARED_MSG_URL, msgurl).putString(Constans.SHARED_START_URL, config.getStartImage()).commit();
 
@@ -163,7 +163,7 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    loadfinish();
+                    loadfinish(0);
                 }
             }, 2000);
         }
@@ -195,7 +195,7 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
     public Context getContext(){
         return this;
     }
-
+    
     @Override
     public void Failt(String url, String error) {
         MainActivity.getInstance().setHomeurl(Constans.HOME_URL);
@@ -203,11 +203,16 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
     }
 
     @Override
-    public void loadfinish() {
-        MainActivity.getInstance().setHomeurl(homeurl);
-        settingShared.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).commit();
-        AppUtil.saveCacheList(config);
-        skip();
+    public void loadfinish(int size) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                MainActivity.getInstance().setHomeurl(homeurl);
+                settingShared.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).commit();
+                AppUtil.saveCacheList(config);
+                skip();
+            }
+        });
     }
 
 }

@@ -42,7 +42,6 @@ public class AdActivity extends BaseActivity implements View.OnClickListener, Vi
         finish();
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {//?device=android&clientId=44444444
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -67,13 +66,12 @@ public class AdActivity extends BaseActivity implements View.OnClickListener, Vi
         imageview = new ArrayList<ImageView>();
         for (int i = 0; i < list.size(); i++) {
             ImageView imageView = new ImageView(this);
-//            x.image().bind(imageView,list.get(i), MyApplication.getInstance().imageOptions);
             ImageLoader.getInstance().displayImage(list.get(i),imageView,MyApplication.getInstance().options);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageview.add(imageView);
-            if (i == (list.size()-1)) {
+            if (i == (list.size()-1))
                 imageView.setOnClickListener(this);
-            }
+
             View view = new View(this);
             view.setBackgroundResource(R.drawable.point_white);
             if (i==0)
@@ -119,20 +117,15 @@ public class AdActivity extends BaseActivity implements View.OnClickListener, Vi
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
     }
     @Override
     public void onPageSelected(int position) {
         for (int i=0;i<contan.getChildCount();i++){
-            if (position==i){
-                contan.getChildAt(i).setBackgroundResource(R.drawable.point_white);
-            }else{
-                contan.getChildAt(i).setBackgroundResource(R.drawable.point_color);
-            }
+            if (position==i) contan.getChildAt(i).setBackgroundResource(R.drawable.point_white);
+            else contan.getChildAt(i).setBackgroundResource(R.drawable.point_color);
         }
     }
     @Override
     public void onPageScrollStateChanged(int state) {
-
     }
 }

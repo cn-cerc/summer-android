@@ -28,7 +28,12 @@ import cn.cerc.summer.android.Entity.Config;
 
 public class AppUtil {
 
-
+    /**
+     * 获取的版本号
+     * @param context   上下文
+     * @return          版本号
+     * @throws PackageManager.NameNotFoundException
+     */
     public static int getVersionCode(Context context) throws PackageManager.NameNotFoundException {
         PackageManager pm = context.getPackageManager();
         PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
@@ -36,11 +41,26 @@ public class AppUtil {
         return versioncode;
     }
 
+    /**
+     * 获取的版本名
+     * @param context   上下文
+     * @return          版本号
+     * @throws PackageManager.NameNotFoundException
+     */
     public static String getVersionName(Context context) throws PackageManager.NameNotFoundException {
         PackageManager pm = context.getPackageManager();
         PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
         String versionname = pi.versionName;
         return versionname;
+    }
+
+    /**
+     * 配置url
+     * @param baseUrl   host
+     * @return  url
+     */
+    public static String buildDeviceUrl(String baseUrl){
+        return String.format("%s?device=%s&CLIENTID=%s", baseUrl, Constans.DEVICE_TYPE,  PermissionUtils.IMEI);
     }
 
     /**
@@ -58,8 +78,12 @@ public class AppUtil {
         FileUtil.createFile(jsonObject.toString().getBytes(Charset.forName("utf-8")), Constans.CONFIGNAME);
     }
 
+    /**
+     * 读取缓存的配置文件
+     * @return  返回的文件json字符串
+     */
     public static JSONObject getCacheList() {
-        File file = new File(Constans.getAppPath(Constans.DATA_PATH) + "/" + Constans.CONFIGNAME);
+        File file = new File(Constans.getAppPath(Constans.CONFIG_PATH) + "/" + Constans.CONFIGNAME);
         try {
             FileInputStream fis = new FileInputStream(file);
             int length = fis.available();
@@ -90,16 +114,18 @@ public class AppUtil {
         return nrp == 0 ? Remotename : Remotename.substring(Remotename.lastIndexOf("/"), Remotename.length());
     }
 
-
+    /**
+     * 获取当前网络状态
+     * @param context   上下文
+     * @return          是否有网络
+     */
     public static boolean getNetWorkStata(Context context) {
         // 获取手机所有连接管理对象（包括对wi-fi,net等连接的管理）
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager != null) {
             NetworkInfo info = connectivityManager.getActiveNetworkInfo();
-            if (info != null && info.isConnected()){
-                // 当前网络是连接的
-                if (info.getState() == NetworkInfo.State.CONNECTED){
-                    // 当前所连接的网络可用
+            if (info != null && info.isConnected()){ // 当前网络是连接的
+                if (info.getState() == NetworkInfo.State.CONNECTED){ // 当前所连接的网络可用
                     return true;
                 }
             }
@@ -107,5 +133,28 @@ public class AppUtil {
         Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show();
         return false;
     }
+
+    public static boolean needUpdate(String url, JSONObject jsonarr){
+        String remote = AppUtil.fileurl2name(url, 0);
+        String savepath = Constans.getAppPath(Constans.DATA_PATH) + AppUtil.fileurl2name(url, 0);
+        if (jsonarr != null && jsonarr.has(remote)) {// 此段代码用于判断文件是否需要更新或删除
+            String modis = "";
+            try {
+                modis = jsonarr.getString(remote);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if ("delete".equals(FileUtil.getconfigTime(url))) {
+                FileUtil.deleteFile(savepath);
+                return false;
+            } else {
+                if (FileUtil.getconfigTime(url).equals(modis)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 
 }

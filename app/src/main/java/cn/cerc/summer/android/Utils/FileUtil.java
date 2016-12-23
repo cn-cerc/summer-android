@@ -112,6 +112,10 @@ public class FileUtil {
         }
     }
 
+    /**
+     * 删除文件
+     * @param filepath  文件全路径
+     */
     public static void deleteFile(String filepath){
         File file = new File(filepath);
         if (file.exists())
@@ -305,6 +309,11 @@ public class FileUtil {
         return null;
     }
 
+
+    public static String getconfigTime(String url) {
+        if (!url.contains(",")) return "0";
+        return url.split(",")[1];
+    }
 
     /**
      * 判断外部存储是否可用
