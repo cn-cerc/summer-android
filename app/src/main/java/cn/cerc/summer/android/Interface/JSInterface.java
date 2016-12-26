@@ -81,7 +81,13 @@ public class JSInterface extends Object {
      */
     @JavascriptInterface
     public void login(){
-        jsInterfaceLintener.LoginOrLogout(true);
+        String loginUrl = "http://ehealth.lucland.com/forms/Login.exit";
+        login(loginUrl);
+    }
+
+    @JavascriptInterface
+    public void login(String loginUrl){
+        jsInterfaceLintener.LoginOrLogout(true,loginUrl);
     }
 
     /**
@@ -89,7 +95,7 @@ public class JSInterface extends Object {
      */
     @JavascriptInterface
     public void logout(){
-        jsInterfaceLintener.LoginOrLogout(false);
+        jsInterfaceLintener.LoginOrLogout(false,"");
     }
 
 

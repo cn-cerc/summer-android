@@ -14,7 +14,7 @@ public interface JSInterfaceLintener {
      * 登陆和退出的js调用回调
      * @param islogin   true：登录 false：退出
      */
-    void LoginOrLogout(boolean islogin);
+    void LoginOrLogout(boolean islogin,String rul);
 
 
 

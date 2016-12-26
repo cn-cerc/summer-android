@@ -83,6 +83,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     private DragPointView dragpointview;
     private ImageView image_tips;
 
+    private String logoutUrl = "";
+
     private boolean isGoHome = false;//是否返回home
     private boolean is_ERROR = false;//是否错误了
 
@@ -453,9 +455,11 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                         break;
                     case 5:
                         if (islogin){
-                            webview.loadUrl("http://ehealth.lucland.com/forms/Login.exit");
-                            webview.clearCache(true);
-                            webview.clearHistory();
+                            if(!TextUtils.isEmpty(logoutUrl)){
+                                webview.loadUrl(logoutUrl);
+                                webview.clearCache(true);
+                                webview.clearHistory();
+                            }
                         } else
                             webview.reload();
                         break;
@@ -577,7 +581,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     }
 
     @Override
-    public void LoginOrLogout(boolean islogin) {
+    public void LoginOrLogout(boolean islogin,String url) {
+        this.logoutUrl = url;
         this.islogin = islogin;
     }
 
