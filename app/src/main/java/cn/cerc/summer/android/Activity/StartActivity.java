@@ -143,7 +143,6 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
     public Config config;
     private String homeurl;
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void success(String url, JSONObject json) {
         config = JSON.parseObject(json.toString(), Config.class);
