@@ -424,9 +424,9 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     public void showPopu(View view) {
         menulist = new ArrayList<Menu>();
         menus = getResources().getStringArray(R.array.menu);
-        ss:
+
         for (int i = 0; i < menus.length; i++) {
-            if ("退出登录".equals(menus[i]) && !islogin) continue ss;
+            if ("退出登录".equals(menus[i]) && !islogin) continue;
             Menu menu = new Menu(i == 0 ? 12 : 0, menus[i], menu_img[i]);
             menulist.add(menu);
         }
