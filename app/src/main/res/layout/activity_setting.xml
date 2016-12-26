@@ -65,10 +65,9 @@
             android:textSize="@dimen/normal"/>
 
         <cn.cerc.summer.android.View.CustomSeekBar
-            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/customseekbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             app:max="120"
             app:min="70"

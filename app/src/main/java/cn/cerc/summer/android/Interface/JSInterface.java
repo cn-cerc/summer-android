@@ -23,10 +23,10 @@ public class JSInterface extends Object {
     private StringBuffer sb;
     private String appid;
 
-    private Context context;
+    private JSInterfaceLintener jsInterfaceLintener;
 
-    public JSInterface(Context context) {
-        this.context = context;
+    public JSInterface(JSInterfaceLintener jsInterfaceLintener) {
+        this.jsInterfaceLintener = jsInterfaceLintener;
     }
 
     public String hello2Html() {
@@ -38,9 +38,9 @@ public class JSInterface extends Object {
      *
      * @return
      */
-    public int getVersion(Context context) {
+    public int getVersion() {
         try {
-            return AppUtil.getVersionCode(context);
+            return AppUtil.getVersionCode(jsInterfaceLintener.getContext());
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -61,9 +61,9 @@ public class JSInterface extends Object {
      */
     @JavascriptInterface
     public void wxPay(String appId, String partnerId, String prepayId, String nonceStr, String timeStamp, String sign) {
-        Toast.makeText(context, "正在支付，请等待...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(jsInterfaceLintener.getContext(), "正在支付，请等待...", Toast.LENGTH_SHORT).show();
         Log.e("JSInterface",appId+" "+partnerId+" "+ prepayId+" "+ nonceStr+" "+ timeStamp+" "+ sign);
-        msgApi = WXAPIFactory.createWXAPI(context, appId);
+        msgApi = WXAPIFactory.createWXAPI(jsInterfaceLintener.getContext(), appId);
         req = new PayReq();
         req.appId = appId;
         req.partnerId = partnerId;
@@ -75,6 +75,23 @@ public class JSInterface extends Object {
         msgApi.registerApp(req.appId);
         msgApi.sendReq(req);
     }
+
+    /**
+     * 登陆
+     */
+    @JavascriptInterface
+    public void login(){
+        jsInterfaceLintener.LoginOrLogout(true);
+    }
+
+    /**
+     * 退出
+     */
+    @JavascriptInterface
+    public void logout(){
+        jsInterfaceLintener.LoginOrLogout(false);
+    }
+
 
 
 }
