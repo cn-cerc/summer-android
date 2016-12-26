@@ -92,6 +92,7 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
             public void onClick(View v) {
                 settingShared.edit().putString(Constans.HOME, MyConfig.HOME_URL).putInt(Constans.SCALE_SHAREDKEY, def_scales).commit();
                 customseekbar.setProgress(def_scales);
+                MainActivity.getInstance().reload(def_scales);
                 Toast.makeText(v.getContext(), "已恢复默认", Toast.LENGTH_SHORT).show();
             }
         });

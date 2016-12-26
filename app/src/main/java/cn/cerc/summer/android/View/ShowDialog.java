@@ -96,7 +96,7 @@ public class ShowDialog extends AlertDialog.Builder implements DialogInterface.O
      */
     public ProgressDialog showprogressdialog(){
         progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("apk下载");
+        progressDialog.setMessage("正在下载新版本");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setMax(100);
