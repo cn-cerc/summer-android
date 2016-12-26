@@ -471,22 +471,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         lpw.setAnchorView(view);
         lpw.show();
     }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case 111:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    PowerManager pManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-                    pManager.reboot("重启");
-                } else {
-                    ActivityCompat.requestPermissions(this, permissions, requestCode);
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
+    
 
     @Override
     protected void onDestroy() {
