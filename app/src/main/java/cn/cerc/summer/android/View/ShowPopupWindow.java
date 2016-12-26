@@ -78,6 +78,9 @@ public class ShowPopupWindow {
             else{
                 vholder.msg_num.setVisibility(View.VISIBLE);
             }
+            if (ScreenUtils.getScreenWidth(popupView.getContext()) > 1200)
+                vholder.menu_name.setTextSize(18);
+            else vholder.menu_name.setTextSize(14);
             vholder.msg_num.setVisibility(View.INVISIBLE); //测试隐藏
             vholder.msg_num.setText(menulist.get(position).getMsg_num()+"");
             vholder.menu_name.setText(menulist.get(position).getMenu());

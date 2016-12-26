@@ -40,7 +40,8 @@ public class GuidanceActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        System.exit(0);
+        MainActivity.getInstance().finish();
+        finish();
     }
 
     @Override
@@ -65,7 +66,6 @@ public class GuidanceActivity extends BaseActivity implements View.OnClickListen
         imageview = new ArrayList<ImageView>();
         for (int i = 0; i < list.size(); i++) {
             ImageView imageView = new ImageView(this);
-//            x.image().bind(imageView, list.get(i), MyApplication.getInstance().imageOptions);
             ImageLoader.getInstance().displayImage(list.get(i),imageView,MyApplication.getInstance().options);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageview.add(imageView);
@@ -74,8 +74,7 @@ public class GuidanceActivity extends BaseActivity implements View.OnClickListen
             }
             View view = new View(this);
             view.setBackgroundResource(R.drawable.point_white);
-            if (i==0)
-                view.setBackgroundResource(R.drawable.point_color);
+            if (i==0) view.setBackgroundResource(R.drawable.point_color);
             LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             llp.width = 15;
             llp.height = 15;
@@ -117,25 +116,19 @@ public class GuidanceActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
     }
 
     @Override
     public void onPageSelected(int position) {
         for (int i = 0; i < contan.getChildCount(); i++) {
-            if (position == i) {
-                contan.getChildAt(i).setBackgroundResource(R.drawable.point_white);
-            } else {
-                contan.getChildAt(i).setBackgroundResource(R.drawable.point_color);
-            }
+            if (position == i) contan.getChildAt(i).setBackgroundResource(R.drawable.point_white);
+            else contan.getChildAt(i).setBackgroundResource(R.drawable.point_color);
         }
         if (position == (imageview.size() - 1)) skip.setVisibility(View.VISIBLE);
         else skip.setVisibility(View.INVISIBLE);
-
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
-
     }
 }

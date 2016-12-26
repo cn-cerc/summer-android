@@ -48,7 +48,6 @@ public class Constans {
         if (!file.exists()) file.mkdirs();
         return file.getAbsolutePath();
     }
-
     /**
      * //缓存文件列表
      */
@@ -62,6 +61,9 @@ public class Constans {
      * 是不是第一次打开app key
      */
     public static String IS_FIRST_SHAREDKEY = "first";
+
+    public static String FAIL_NUM_SHAREDKEY = "load";
+
     /**
      * 缩放程度  shared   key
      */

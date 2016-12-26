@@ -19,12 +19,11 @@ import cn.cerc.summer.android.View.CustomSeekBar;
 
 public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarChangeListener {
 
-    private TextView textview,url_tit;
+    private TextView url_tit;
     private EditText edittext;
     private CustomSeekBar customseekbar;
-    private Button button;
+    private Button button ;
     private ImageView back;
-    private String InitialScale;
     private int scales=0;
 
     @Override
@@ -62,16 +61,13 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.isEmpty(edittext.getText().toString().trim()) && !edittext.getText().toString().trim().contains("http")) {
+                if (!TextUtils.isEmpty(edittext.getText().toString().trim()) && !edittext.getText().toString().trim().contains("http"))
                     Toast.makeText(SettingActivity.this, R.string.no_http_tips, Toast.LENGTH_SHORT).show();
-                } else {
-                    settingShared.edit().putString(Constans.HOME, edittext.getText().toString().trim()).commit();
-                }
-                if (scales==0) {
-                    settingShared.edit().putInt(Constans.SCALE_SHAREDKEY, 90).commit();
-                } else {
-                    settingShared.edit().putInt(Constans.SCALE_SHAREDKEY, scales).commit();
-                }
+                else settingShared.edit().putString(Constans.HOME, edittext.getText().toString().trim()).commit();
+                if (scales==0) settingShared.edit().putInt(Constans.SCALE_SHAREDKEY, 90).commit();
+                else settingShared.edit().putInt(Constans.SCALE_SHAREDKEY, scales).commit();
+                MainActivity.getInstance().reload(scales);
+                Toast.makeText(v.getContext(),"保存成功",Toast.LENGTH_SHORT).show();
             }
         });
     }

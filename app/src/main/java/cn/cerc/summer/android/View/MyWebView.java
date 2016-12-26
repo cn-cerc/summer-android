@@ -1,13 +1,19 @@
 package cn.cerc.summer.android.View;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import cn.cerc.summer.android.Activity.MainActivity;
+import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Utils.AppUtil;
 import cn.cerc.summer.android.Utils.Constans;
 import cn.cerc.summer.android.Utils.XHttpRequest;
@@ -79,7 +86,6 @@ public class MyWebView extends WebView {
 
         String filename = url.substring(url.indexOf("com") + 3);
         File file = new File(Constans.getAppPath(Constans.DATA_PATH));
-        if (!file.exists()) file.mkdirs();
         String fileurl = file.getAbsolutePath() + filename;
         File files = new File(fileurl);
         if (!(files.isFile() && files.exists()))
@@ -92,5 +98,7 @@ public class MyWebView extends WebView {
         }
         return null;
     }
+
+
 
 }

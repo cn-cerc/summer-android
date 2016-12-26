@@ -1,9 +1,11 @@
 package cn.cerc.summer.android.Utils;
 
 import android.app.ProgressDialog;
+import android.os.Handler;
 import android.util.Log;
 
 import cn.cerc.summer.android.Entity.Config;
+import cn.cerc.summer.android.Interface.AsyncFileLoafCallback;
 import cn.cerc.summer.android.Interface.ConfigFileLoafCallback;
 import cn.cerc.summer.android.Interface.GetFileCallback;
 import cn.cerc.summer.android.Interface.RequestCallback;
@@ -17,13 +19,14 @@ import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by fff on 2016/11/30.
  * 网络请求
  */
-public class XHttpRequest {
+public class XHttpRequest implements AsyncFileLoafCallback {
 
     /**
      * 获取当前实例
@@ -41,6 +44,7 @@ public class XHttpRequest {
      * @param rc  请求回调
      */
     public void GET(final String url, final RequestCallback rc) {
+        if (!AppUtil.getNetWorkStata(rc.getContext())) return;
         x.http().get(new RequestParams(url), new Callback.CommonCallback<JSONObject>() {
             @Override
             public void onSuccess(JSONObject result) {
@@ -65,6 +69,12 @@ public class XHttpRequest {
 
     private ProgressDialog progressDialog;
 
+
+    /**
+     * 单个文件下载失败次数
+     */
+    private int error_num = 0;
+
     /**
      * 文件下载
      *
@@ -73,6 +83,7 @@ public class XHttpRequest {
      * @return 可取消的回调
      */
     public Callback.Cancelable GETFile(final String url, final GetFileCallback rc) {
+        if (!AppUtil.getNetWorkStata(rc.getContext())) return null;
         RequestParams rp = new RequestParams(url);
         rp.setSaveFilePath(Constans.getAppPath(Constans.APP_PATH) + "app.apk");
         Callback.Cancelable cc = x.http().get(rp, new Callback.ProgressCallback<File>() {
@@ -82,7 +93,8 @@ public class XHttpRequest {
 
             @Override
             public void onStarted() {
-                progressDialog = ShowDialog.getDialog(rc.getContext()).showprogressdialog();
+                if (progressDialog == null)
+                    progressDialog = ShowDialog.getDialog(rc.getContext()).showprogressdialog();
             }
 
             @Override
@@ -100,9 +112,19 @@ public class XHttpRequest {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                if (progressDialog != null && progressDialog.isShowing())
-                    progressDialog.dismiss();
-                rc.Failt(url, ex.toString());
+                if (error_num < 3) {
+                    error_num++;
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            GETFile(url, rc);
+                        }
+                    },3000);
+                } else {
+                    if (progressDialog != null && progressDialog.isShowing())
+                        progressDialog.dismiss();
+                    rc.Failt(url, ex.toString());
+                }
             }
 
             @Override
@@ -114,176 +136,62 @@ public class XHttpRequest {
 
             @Override
             public void onFinished() {
-                if (progressDialog != null && progressDialog.isShowing())
-                    progressDialog.dismiss();
+//                if (progressDialog != null && progressDialog.isShowing())
+//                    progressDialog.dismiss();
             }
         });
         return cc;
     }
 
     private List<String> filelist;//下载列表
-    private int loadindex = 0;
     private ConfigFileLoafCallback cflc;
-    /**
-     * 单个文件下载失败次数
-     */
-    private int error_num = 0;
+    private JSONObject jsonarr;
+
+    private List<String> firstlist;
+    private int firstindex = 20;
 
     public void ConfigFileGet(List<String> filelist, ConfigFileLoafCallback cflc) {
         if (filelist != null && filelist.size() > 0) {
             this.filelist = filelist;
             this.cflc = cflc;
             jsonarr = AppUtil.getCacheList();
-            fileLoad(filelist.get(loadindex));
+            loadfile();
         } else
-            cflc.loadfinish();
+            cflc.loadfinish(0);
     }
 
-    private JSONObject jsonarr;
-
-    public String getconfigTime(String url) {
-        if (!url.contains(",")) return "0";
-        return url.split(",")[1];
+    public void loadfile() {
+        if (filelist.size() < 50)
+            new DownloadTask(filelist, jsonarr, this).execute();
+        else {
+            firstlist = new ArrayList<String>();
+            firstlist.addAll(filelist.subList(0, firstindex));//先下载20个文件
+            new DownloadTask(firstlist, jsonarr, this).execute();
+        }
     }
 
-    public void loadnext(){
-        loadindex++;
-        if (loadindex < filelist.size()) fileLoad(filelist.get(loadindex));
-        else cflc.loadfinish();
-    }
-
-    /**
-     * 静态文件下载
-     *
-     * @param url 文件url
-     */
-    private void fileLoad(String url) {
-        String remote = AppUtil.fileurl2name(url, 0);
-        String savepath = Constans.getAppPath(Constans.DATA_PATH) + AppUtil.fileurl2name(url, 0);
-
-        if (jsonarr != null && jsonarr.has(remote)) {// 此段代码用于判断文件是否需要更新或删除
-            String modis = "";
-            try {
-                modis = jsonarr.getString(remote);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            if ("delete".equals(getconfigTime(url))) {
-                FileUtil.deleteFile(savepath);
-                loadnext();
-                return;
-            } else {
-                if (getconfigTime(url).equals(modis)) {
-                    loadnext();
-                    return;
-                }
+    @Override
+    public void loadfinish(List<String> list,int fail) {
+        if (list == firstlist) {
+            cflc.loadfinish(fail);
+            filelist = filelist.subList(20, filelist.size());
+            for (int i = 0; i < (filelist.size() / 50); i++) {
+                new DownloadTask(filelist.subList(i * 50, ((filelist.size() - (i + 1) * 50) < 50) ? filelist.size() : ((i + 1) * 50)), jsonarr, cfc).execute();//用于启动多线程下载
             }
         }
-
-        String urls = Config.getConfig().getRootSite() + remote;
-        Log.e("url", urls);
-        RequestParams rp = new RequestParams(urls);
-        rp.setSaveFilePath(savepath);
-        x.http().get(rp, new Callback.ProgressCallback<File>() {
-            @Override
-            public void onSuccess(File result) {
-                loadindex++;
-                if (loadindex < filelist.size()) fileLoad(filelist.get(loadindex));
-                else cflc.loadfinish();
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                error_num++;
-                if (error_num >= 3) {//下载失败次数达到三次即下载下一个文件
-                    loadindex++;
-                    error_num = 0;
-                }
-                if (loadindex < filelist.size()) fileLoad(filelist.get(loadindex));
-                else cflc.loadfinish();
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-            }
-
-            @Override
-            public void onFinished() {
-
-            }
-
-            @Override
-            public void onWaiting() {
-
-            }
-
-            @Override
-            public void onStarted() {
-            }
-
-            @Override
-            public void onLoading(long total, long current, boolean isDownloading) {
-
-            }
-        });
     }
 
+    private int filesize = 0;
 
-    public String GetHtml(String html, ConfigFileLoafCallback cflc) {
-        this.cflc = cflc;
-
-        String savepath = Constans.getAppPath(Constans.HTML_PATH);
-        File file = new File(savepath);
-        if (!file.exists())
-            file.mkdirs();
-        savepath = Constans.getAppPath(Constans.HTML_PATH) + AppUtil.fileurl2name(html, 1);
-        ;
-        if (new File(savepath).exists())
-            return savepath;
-        RequestParams rp = new RequestParams(html);
-        rp.setSaveFilePath(savepath);
-        x.http().get(rp, new Callback.ProgressCallback<File>() {
-            @Override
-            public void onSuccess(File result) {
-                XHttpRequest.this.cflc.loadfinish();
+    ConfigFileLoafCallback cfc = new ConfigFileLoafCallback(){
+        @Override
+        public void loadfinish(int size) {
+            if ((filesize += size) >= filelist.size()){
+                cflc.loadAllfinish();
             }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                error_num++;
-                if (error_num >= 3) {//下载失败次数达到三次即下载下一个文件
-                    error_num = 0;
-                    XHttpRequest.this.cflc.loadfinish();
-                } else {
-                    fileLoad(filelist.get(loadindex));
-                }
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-            }
-
-            @Override
-            public void onFinished() {
-
-            }
-
-            @Override
-            public void onWaiting() {
-
-            }
-
-            @Override
-            public void onStarted() {
-            }
-
-            @Override
-            public void onLoading(long total, long current, boolean isDownloading) {
-
-            }
-        });
-        return "";
-    }
-
-
+        }
+        @Override
+        public void loadAllfinish() {
+        }
+    };
 }

@@ -5,7 +5,10 @@
     <string name="clear">清除缓存</string>
     <string name="unread_msg">未读消息</string>
     <string name="msg_manager">消息管理</string>
+    <string name="logout">退出登录</string>
     <string name="home">首页</string>
+
+    <string name="network_error">请检查网络</string>
 
     <string name="pull_to_refresh">下拉刷新</string>
     <string name="release_to_refresh">释放立即刷新</string>
@@ -24,6 +27,7 @@
         <item>@string/home</item>
         <item>@string/setting</item>
         <item>@string/clear</item>
+        <item>@string/logout</item>
         <item>@string/refresh</item>
     </string-array>
 
