@@ -3,18 +3,21 @@ package cn.cerc.summer.android.Utils;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
+
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 
 /**
  * Created by fff on 2016/11/14.
  */
 
 public class ScreenUtils {
-    private ScreenUtils()
-    {
+    private ScreenUtils() {
         /* cannot be instantiated */
         throw new UnsupportedOperationException("cannot be instantiated");
     }
@@ -25,8 +28,7 @@ public class ScreenUtils {
      * @param context
      * @return
      */
-    public static int getScreenWidth(Context context)
-    {
+    public static int getScreenWidth(Context context) {
         WindowManager wm = (WindowManager) context
                 .getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics outMetrics = new DisplayMetrics();
@@ -40,10 +42,8 @@ public class ScreenUtils {
      * @param context
      * @return
      */
-    public static int getScreenHeight(Context context)
-    {
-        WindowManager wm = (WindowManager) context
-                .getSystemService(Context.WINDOW_SERVICE);
+    public static int getScreenHeight(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics outMetrics = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(outMetrics);
         return outMetrics.heightPixels;
@@ -55,19 +55,15 @@ public class ScreenUtils {
      * @param context
      * @return
      */
-    public static int getStatusHeight(Context context)
-    {
-
+    public static int getStatusHeight(Context context) {
         int statusHeight = -1;
-        try
-        {
+        try {
             Class<?> clazz = Class.forName("com.android.internal.R$dimen");
             Object object = clazz.newInstance();
             int height = Integer.parseInt(clazz.getField("status_bar_height")
                     .get(object).toString());
             statusHeight = context.getResources().getDimensionPixelSize(height);
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return statusHeight;
@@ -79,8 +75,7 @@ public class ScreenUtils {
      * @param activity
      * @return
      */
-    public static Bitmap snapShotWithStatusBar(Activity activity)
-    {
+    public static Bitmap snapShotWithStatusBar(Activity activity) {
         View view = activity.getWindow().getDecorView();
         view.setDrawingCacheEnabled(true);
         view.buildDrawingCache();
@@ -100,8 +95,7 @@ public class ScreenUtils {
      * @param activity
      * @return
      */
-    public static Bitmap snapShotWithoutStatusBar(Activity activity)
-    {
+    public static Bitmap snapShotWithoutStatusBar(Activity activity) {
         View view = activity.getWindow().getDecorView();
         view.setDrawingCacheEnabled(true);
         view.buildDrawingCache();
@@ -118,5 +112,29 @@ public class ScreenUtils {
         view.destroyDrawingCache();
         return bp;
 
+    }
+
+    public static double getInches(Context context) {
+        Point point = new Point();
+        ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRealSize(point);
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        double x = Math.pow(point.x / dm.xdpi, 2);
+        double y = Math.pow(point.y / dm.ydpi, 2);
+        double screenInches = Num(Math.sqrt(x + y));
+        return screenInches;
+    }
+
+    public static double Num(double Inches) {
+        BigDecimal bigDec = new BigDecimal(Inches);
+        double total = bigDec.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
+        return total;
+    }
+
+    public static int getScales(Context context,double Inches) {
+        if (Inches <= 4) return  85;
+        if (Inches <= 4.5) return  90;
+        else if (Inches <= 5) return 95;
+        else if (Inches <= 5.5) return 95;
+        else return 100;
     }
 }
