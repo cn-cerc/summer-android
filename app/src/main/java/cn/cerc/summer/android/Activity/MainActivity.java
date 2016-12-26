@@ -49,6 +49,7 @@ import cn.cerc.summer.android.Utils.Constans;
 import cn.cerc.summer.android.Interface.JSInterface;
 import cn.cerc.summer.android.Utils.PermissionUtils;
 
+import cn.cerc.summer.android.Utils.ScreenUtils;
 import cn.cerc.summer.android.Utils.XHttpRequest;
 import cn.cerc.summer.android.View.DragPointView;
 import cn.cerc.summer.android.View.MyWebView;
@@ -236,6 +237,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
         webview = (MyWebView) this.findViewById(R.id.webview);
 
+        webview.getSettings().setTextZoom(settingShared.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this,ScreenUtils.getInches(this))));
+
         webview.addJavascriptInterface(new JSInterface(this), "JSobj");//JSobj 供web端js调用标识，修改请通知web开发者
 
         webview.setWebViewClient(new WebViewClient() {
@@ -275,11 +278,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 if (!AppUtil.getNetWorkStata(view.getContext())) return;
                 Log.e("cururl", url);
-//                if (url.contains(".html")){
-//                    String local = XHttpRequest.getInstance().GetHtml(url, MainActivity.this);
-//                    if (!TextUtils.isEmpty(local))
-//                        url = local;
-//                }
                 is_ERROR = false;
                 if (Config.getConfig() == null) return;
                 is_exit = false;
@@ -426,12 +424,12 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     public void showPopu(View view) {
         menulist = new ArrayList<Menu>();
         menus = getResources().getStringArray(R.array.menu);
-        ss: for (int i = 0; i < menus.length; i++) {
-            if ("退出登录".equals(menus[i]) && !islogin) continue ss;
+
+        for (int i = 0; i < menus.length; i++) {
+            if ("退出登录".equals(menus[i]) && !islogin) continue;
             Menu menu = new Menu(i == 0 ? 12 : 0, menus[i], menu_img[i]);
             menulist.add(menu);
         }
-
 
         lpw = ShowPopupWindow.getPopupwindow().show(this, menulist);
         lpw.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -454,8 +452,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                         clearCacheFolder(MainActivity.this.getCacheDir(), System.currentTimeMillis());
                         break;
                     case 5:
-                        if (islogin){
-                            if(!TextUtils.isEmpty(logoutUrl)){
+                        if (islogin) {
+                            if (!TextUtils.isEmpty(logoutUrl)) {
                                 webview.loadUrl(logoutUrl);
                                 webview.clearCache(true);
                                 webview.clearHistory();
@@ -581,7 +579,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     }
 
     @Override
-    public void LoginOrLogout(boolean islogin,String url) {
+    public void LoginOrLogout(boolean islogin, String url) {
         this.logoutUrl = url;
         this.islogin = islogin;
     }

@@ -161,8 +161,8 @@ public class XHttpRequest implements AsyncFileLoafCallback {
     }
 
     public void loadfile() {
-        if (filelist.size() < 50)
-            new DownloadTask(filelist, jsonarr, this).execute();
+        if (filelist.size() < firstindex)
+            new DownloadTask(filelist, jsonarr, cfc).execute();
         else {
             firstlist = new ArrayList<String>();
             firstlist.addAll(filelist.subList(0, firstindex));//先下载20个文件
@@ -174,7 +174,7 @@ public class XHttpRequest implements AsyncFileLoafCallback {
     public void loadfinish(List<String> list,int fail) {
         if (list == firstlist) {
             cflc.loadfinish(fail);
-            filelist = filelist.subList(20, filelist.size());
+            filelist = filelist.subList(firstindex, filelist.size());
             for (int i = 0; i < (filelist.size() / 50); i++) {
                 new DownloadTask(filelist.subList(i * 50, ((filelist.size() - (i + 1) * 50) < 50) ? filelist.size() : ((i + 1) * 50)), jsonarr, cfc).execute();//用于启动多线程下载
             }
