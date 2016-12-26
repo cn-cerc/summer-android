@@ -52,17 +52,18 @@ public class JSInterface extends Object {
 
     /**
      * 供html调用 微信支付
-     * @param appId         app id
-     * @param partnerId     商户号
-     * @param prepayId      与支付单号
-     * @param nonceStr      随机码
-     * @param timeStamp     时间戳
-     * @param sign          签名
+     *
+     * @param appId     app id
+     * @param partnerId 商户号
+     * @param prepayId  与支付单号
+     * @param nonceStr  随机码
+     * @param timeStamp 时间戳
+     * @param sign      签名
      */
     @JavascriptInterface
     public void wxPay(String appId, String partnerId, String prepayId, String nonceStr, String timeStamp, String sign) {
         Toast.makeText(jsInterfaceLintener.getContext(), "正在支付，请等待...", Toast.LENGTH_SHORT).show();
-        Log.e("JSInterface",appId+" "+partnerId+" "+ prepayId+" "+ nonceStr+" "+ timeStamp+" "+ sign);
+        Log.e("JSInterface", appId + " " + partnerId + " " + prepayId + " " + nonceStr + " " + timeStamp + " " + sign);
         msgApi = WXAPIFactory.createWXAPI(jsInterfaceLintener.getContext(), appId);
         req = new PayReq();
         req.appId = appId;
@@ -80,24 +81,23 @@ public class JSInterface extends Object {
      * 登陆
      */
     @JavascriptInterface
-    public void login(){
+    public void login() {
         String loginUrl = "http://ehealth.lucland.com/forms/Login.exit";
         login(loginUrl);
     }
 
     @JavascriptInterface
-    public void login(String loginUrl){
-        jsInterfaceLintener.LoginOrLogout(true,loginUrl);
+    public void login(String loginUrl) {
+        jsInterfaceLintener.LoginOrLogout(true, loginUrl);
     }
 
     /**
      * 退出
      */
     @JavascriptInterface
-    public void logout(){
-        jsInterfaceLintener.LoginOrLogout(false,"");
+    public void logout() {
+        jsInterfaceLintener.LoginOrLogout(false, "");
     }
-
 
 
 }
