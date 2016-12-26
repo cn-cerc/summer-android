@@ -83,6 +83,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     private DragPointView dragpointview;
     private ImageView image_tips;
 
+    private String logoutUrl = "";
+
     private boolean isGoHome = false;//是否返回home
     private boolean is_ERROR = false;//是否错误了
 
@@ -171,10 +173,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_SETTING) {
             if (resultCode == RESULT_OK) {
-                webview.getSettings().setTextZoom(Integer.valueOf(settingShared.getInt(Constans.SCALE_SHAREDKEY, 90)));
                 homeurl = data.getStringExtra("home");
                 webview.loadUrl(homeurl);
-                webview.reload();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -454,9 +454,14 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                         clearCacheFolder(MainActivity.this.getCacheDir(), System.currentTimeMillis());
                         break;
                     case 5:
-                        webview.loadUrl("http://ehealth.lucland.com/forms/Login.exit");
-                        webview.clearCache(true);
-                        webview.clearHistory();
+                        if (islogin){
+                            if(!TextUtils.isEmpty(logoutUrl)){
+                                webview.loadUrl(logoutUrl);
+                                webview.clearCache(true);
+                                webview.clearHistory();
+                            }
+                        } else
+                            webview.reload();
                         break;
                     case 6:
                         webview.reload();
@@ -576,7 +581,13 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     }
 
     @Override
-    public void LoginOrLogout(boolean islogin) {
+    public void LoginOrLogout(boolean islogin,String url) {
+        this.logoutUrl = url;
         this.islogin = islogin;
+    }
+
+    public void reload(int scales) {
+        webview.getSettings().setTextZoom(Integer.valueOf(settingShared.getInt(Constans.SCALE_SHAREDKEY, 90)));
+        webview.reload();
     }
 }

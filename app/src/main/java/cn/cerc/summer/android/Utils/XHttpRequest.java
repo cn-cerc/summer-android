@@ -1,9 +1,11 @@
 package cn.cerc.summer.android.Utils;
 
 import android.app.ProgressDialog;
+import android.os.Handler;
 import android.util.Log;
 
 import cn.cerc.summer.android.Entity.Config;
+import cn.cerc.summer.android.Interface.AsyncFileLoafCallback;
 import cn.cerc.summer.android.Interface.ConfigFileLoafCallback;
 import cn.cerc.summer.android.Interface.GetFileCallback;
 import cn.cerc.summer.android.Interface.RequestCallback;
@@ -17,13 +19,14 @@ import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by fff on 2016/11/30.
  * 网络请求
  */
-public class XHttpRequest implements ConfigFileLoafCallback {
+public class XHttpRequest implements AsyncFileLoafCallback {
 
     /**
      * 获取当前实例
@@ -66,6 +69,12 @@ public class XHttpRequest implements ConfigFileLoafCallback {
 
     private ProgressDialog progressDialog;
 
+
+    /**
+     * 单个文件下载失败次数
+     */
+    private int error_num = 0;
+
     /**
      * 文件下载
      *
@@ -84,7 +93,8 @@ public class XHttpRequest implements ConfigFileLoafCallback {
 
             @Override
             public void onStarted() {
-                progressDialog = ShowDialog.getDialog(rc.getContext()).showprogressdialog();
+                if (progressDialog == null)
+                    progressDialog = ShowDialog.getDialog(rc.getContext()).showprogressdialog();
             }
 
             @Override
@@ -102,9 +112,19 @@ public class XHttpRequest implements ConfigFileLoafCallback {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                if (progressDialog != null && progressDialog.isShowing())
-                    progressDialog.dismiss();
-                rc.Failt(url, ex.toString());
+                if (error_num < 3) {
+                    error_num++;
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            GETFile(url, rc);
+                        }
+                    },3000);
+                } else {
+                    if (progressDialog != null && progressDialog.isShowing())
+                        progressDialog.dismiss();
+                    rc.Failt(url, ex.toString());
+                }
             }
 
             @Override
@@ -116,21 +136,19 @@ public class XHttpRequest implements ConfigFileLoafCallback {
 
             @Override
             public void onFinished() {
-                if (progressDialog != null && progressDialog.isShowing())
-                    progressDialog.dismiss();
+//                if (progressDialog != null && progressDialog.isShowing())
+//                    progressDialog.dismiss();
             }
         });
         return cc;
     }
 
     private List<String> filelist;//下载列表
-    private int loadindex = 0;
     private ConfigFileLoafCallback cflc;
+    private JSONObject jsonarr;
 
-    /**
-     * 单个文件下载失败次数
-     */
-    private int error_num = 0;
+    private List<String> firstlist;
+    private int firstindex = 20;
 
     public void ConfigFileGet(List<String> filelist, ConfigFileLoafCallback cflc) {
         if (filelist != null && filelist.size() > 0) {
@@ -142,23 +160,38 @@ public class XHttpRequest implements ConfigFileLoafCallback {
             cflc.loadfinish(0);
     }
 
-    private JSONObject jsonarr;
-
     public void loadfile() {
         if (filelist.size() < 50)
-            new MyMultiDownloadThread(filelist, jsonarr, this);
-        else
-            for (int i = 0; i < (filelist.size() / 50); i++) {
-                new MyMultiDownloadThread(filelist.subList(i * 50, ((filelist.size()-(i + 1) * 50) < 50 ) ? filelist.size() : ((i + 1) * 50)), jsonarr, this).start();//用于启动多线程下载
-            }
-    }
-
-    int size = 0;
-
-    @Override
-    public void loadfinish(int size) {
-        if ((this.size += size) >= filelist.size()) {
-            cflc.loadfinish(this.size);
+            new DownloadTask(filelist, jsonarr, this).execute();
+        else {
+            firstlist = new ArrayList<String>();
+            firstlist.addAll(filelist.subList(0, firstindex));//先下载20个文件
+            new DownloadTask(firstlist, jsonarr, this).execute();
         }
     }
+
+    @Override
+    public void loadfinish(List<String> list,int fail) {
+        if (list == firstlist) {
+            cflc.loadfinish(fail);
+            filelist = filelist.subList(20, filelist.size());
+            for (int i = 0; i < (filelist.size() / 50); i++) {
+                new DownloadTask(filelist.subList(i * 50, ((filelist.size() - (i + 1) * 50) < 50) ? filelist.size() : ((i + 1) * 50)), jsonarr, cfc).execute();//用于启动多线程下载
+            }
+        }
+    }
+
+    private int filesize = 0;
+
+    ConfigFileLoafCallback cfc = new ConfigFileLoafCallback(){
+        @Override
+        public void loadfinish(int size) {
+            if ((filesize += size) >= filelist.size()){
+                cflc.loadAllfinish();
+            }
+        }
+        @Override
+        public void loadAllfinish() {
+        }
+    };
 }
