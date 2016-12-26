@@ -18,14 +18,7 @@ public class Constans {
      * shared 设置的key
      */
     public static String SHARED_SETTING_TAB = "setting";
-    /**
-     * 默认这个是首页
-     * http://ehealth.lucland.com
-     * http://121.40.181.228
-     */
-//    public static String HOME_URL = "http://121.40.181.228";
-    public static String HOME_URL = "http://m.knowall.cn";
-//    public static String HOME_URL = "http://192.168.1.194";
+
     /**
      * shared 设置的 启动页
      */

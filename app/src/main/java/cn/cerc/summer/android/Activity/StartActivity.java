@@ -33,6 +33,7 @@ import cn.cerc.summer.android.Interface.ConfigFileLoafCallback;
 import cn.cerc.summer.android.Interface.RequestCallback;
 import cn.cerc.summer.android.MyApplication;
 
+import cn.cerc.summer.android.MyConfig;
 import cn.cerc.summer.android.Utils.AppUtil;
 import cn.cerc.summer.android.Utils.Constans;
 import cn.cerc.summer.android.Utils.FileUtil;
@@ -75,7 +76,7 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_guidance);
         if (PermissionUtils.getPermission(new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PermissionUtils.REQUEST_READ_PHONE_STATE, this)) {
-            XHttpRequest.getInstance().GET(AppUtil.buildDeviceUrl(Constans.HOME_URL + "/MobileConfig"), this);
+            XHttpRequest.getInstance().GET(AppUtil.buildDeviceUrl(MyConfig.HOME_URL + "/MobileConfig"), this);
         }
 
         initView();
@@ -111,7 +112,7 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     TelephonyManager TelephonyMgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
                     PermissionUtils.IMEI = TelephonyMgr.getDeviceId();
-                    XHttpRequest.getInstance().GET(AppUtil.buildDeviceUrl(Constans.HOME_URL + "/MobileConfig"), this);
+                    XHttpRequest.getInstance().GET(AppUtil.buildDeviceUrl(MyConfig.HOME_URL + "/MobileConfig"), this);
                 } else {
                     ActivityCompat.requestPermissions(this, permissions, requestCode);
                 }
@@ -146,7 +147,7 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
     @Override
     public void success(String url, JSONObject json) {
         config = JSON.parseObject(json.toString(), Config.class);
-        homeurl = AppUtil.buildDeviceUrl(Constans.HOME_URL);
+        homeurl = AppUtil.buildDeviceUrl(MyConfig.HOME_URL);
         String msgurl = config.getRootSite() + "/" + config.getMsgManage();
         settingShared.edit().putString(Constans.HOME, homeurl).putString(Constans.SHARED_MSG_URL, msgurl).putString(Constans.SHARED_START_URL, config.getStartImage()).commit();
 
@@ -199,7 +200,7 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
     
     @Override
     public void Failt(String url, String error) {
-        MainActivity.getInstance().setHomeurl(Constans.HOME_URL);
+        MainActivity.getInstance().setHomeurl(MyConfig.HOME_URL);
         skip();
     }
 
