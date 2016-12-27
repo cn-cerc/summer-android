@@ -43,12 +43,14 @@ import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Entity.Menu;
 import cn.cerc.summer.android.Interface.ConfigFileLoafCallback;
 import cn.cerc.summer.android.Interface.JSInterfaceLintener;
+import cn.cerc.summer.android.MyConfig;
 import cn.cerc.summer.android.Receiver.MyBroadcastReceiver;
 import cn.cerc.summer.android.Utils.AppUtil;
 import cn.cerc.summer.android.Utils.Constans;
 import cn.cerc.summer.android.Interface.JSInterface;
 import cn.cerc.summer.android.Utils.PermissionUtils;
 
+import cn.cerc.summer.android.Utils.PhotoUtils;
 import cn.cerc.summer.android.Utils.ScreenUtils;
 import cn.cerc.summer.android.Utils.XHttpRequest;
 import cn.cerc.summer.android.View.DragPointView;
@@ -77,7 +79,7 @@ import cn.jpush.android.api.TagAliasCallback;
 /**
  * 主界面
  */
-public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, JSInterfaceLintener {
+public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, JSInterfaceLintener, ActivityCompat.OnRequestPermissionsResultCallback {
 
     public MyWebView webview;
     private ProgressBar progress;
@@ -168,17 +170,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             Log.e("mainactivity", msgurl);
             webview.loadUrl(msgurl);
         }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_SETTING) {
-            if (resultCode == RESULT_OK) {
-                homeurl = data.getStringExtra("home");
-                webview.loadUrl(homeurl);
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -426,7 +417,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         menus = getResources().getStringArray(R.array.menu);
 
         for (int i = 0; i < menus.length; i++) {
-            if ("退出登录".equals(menus[i]) && !islogin) continue;
+//            if ("退出登录".equals(menus[i]) && !islogin) continue;
             Menu menu = new Menu(i == 0 ? 12 : 0, menus[i], menu_img[i]);
             menulist.add(menu);
         }
@@ -567,10 +558,60 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     public void LoginOrLogout(boolean islogin, String url) {
         this.logoutUrl = url;
         this.islogin = islogin;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (MainActivity.this.islogin) more.setVisibility(View.VISIBLE);
+                else more.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
+    private PhotoUtils pu;
+
+    @Override
+    public void Action(String json) {
+        if ("action".equals(pu.jsp.getAction()))
+            pu = new PhotoUtils(this,json);
+            //首先判断是否有权限使用摄像头
+            if(PermissionUtils.getPermission(new String[]{Manifest.permission.CAMERA},PermissionUtils.REQUEST_CAMERA_STATE,this)){
+                pu.Start_P(this, PhotoUtils.REQUEST_PHOTO_CAMERA);
+            }
     }
 
     public void reload(int scales) {
-        webview.getSettings().setTextZoom(Integer.valueOf(settingShared.getInt(Constans.SCALE_SHAREDKEY, 90)));
+        webview.getSettings().setTextZoom(scales);
         webview.reload();
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PermissionUtils.REQUEST_CAMERA_STATE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    pu.Start_P(this, PhotoUtils.REQUEST_PHOTO_CAMERA);
+                } else {
+                    ActivityCompat.requestPermissions(this, permissions, requestCode);
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_SETTING) {
+            if (resultCode == RESULT_OK) {
+                homeurl = data.getStringExtra("home");
+                webview.loadUrl(homeurl);
+            }
+        }else if (requestCode == PhotoUtils.REQUEST_PHOTO_CAMERA){
+            if (requestCode == RESULT_OK) pu.Paifinish(true);
+            else if (requestCode == RESULT_CANCELED) pu.Paifinish(false);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
 }

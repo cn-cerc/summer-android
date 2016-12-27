@@ -197,7 +197,7 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
     public Context getContext(){
         return this;
     }
-    
+
     @Override
     public void Failt(String url, String error) {
         MainActivity.getInstance().setHomeurl(MyConfig.HOME_URL);

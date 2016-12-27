@@ -2,6 +2,8 @@ package cn.cerc.summer.android.Interface;
 
 import android.content.Context;
 
+import cn.cerc.summer.android.Utils.PhotoUtils;
+
 /**
  * Created by fengm on 2016/12/23.
  */
@@ -16,6 +18,6 @@ public interface JSInterfaceLintener {
      */
     void LoginOrLogout(boolean islogin,String rul);
 
-
+    void Action(String pu);
 
 }

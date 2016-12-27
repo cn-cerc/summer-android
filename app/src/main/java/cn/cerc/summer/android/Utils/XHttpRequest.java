@@ -20,6 +20,8 @@ import org.xutils.x;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -67,8 +69,42 @@ public class XHttpRequest implements AsyncFileLoafCallback {
         });
     }
 
-    private ProgressDialog progressDialog;
+    /**
+     * POST请求
+     */
+    public void POST(final String url, HashMap<String, String> map, final RequestCallback rc) {
+        if (!AppUtil.getNetWorkStata(rc.getContext())) return;
+        RequestParams param = new RequestParams(url);
+        Iterator it = map.keySet().iterator();
+        while (it.hasNext()) {
+            String key = (String) it.next();
+            String value = map.get("key");
+            if ("img".equals(key)) param.addBodyParameter(key, new File(value));
+            else param.addBodyParameter(key, value);
+        }
+        x.http().post(param, new Callback.CommonCallback<JSONObject>() {
+            @Override
+            public void onSuccess(JSONObject result) {
+                rc.success(url, result);
+            }
 
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                rc.Failt(url, ex.toString());
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                rc.Failt(url, "已取消");
+            }
+
+            @Override
+            public void onFinished() {
+            }
+        });
+    }
+
+    private ProgressDialog progressDialog;
 
     /**
      * 单个文件下载失败次数
@@ -119,7 +155,7 @@ public class XHttpRequest implements AsyncFileLoafCallback {
                         public void run() {
                             GETFile(url, rc);
                         }
-                    },3000);
+                    }, 3000);
                 } else {
                     if (progressDialog != null && progressDialog.isShowing())
                         progressDialog.dismiss();
@@ -172,7 +208,7 @@ public class XHttpRequest implements AsyncFileLoafCallback {
     }
 
     @Override
-    public void loadfinish(List<String> list,int fail) {
+    public void loadfinish(List<String> list, int fail) {
         if (list == firstlist) {
             cflc.loadfinish(fail);
             if (filelist.size() > firstindex) { //列表数量大于20则需要继续多线程下载
@@ -186,13 +222,14 @@ public class XHttpRequest implements AsyncFileLoafCallback {
 
     private int filesize = 0;
 
-    ConfigFileLoafCallback cfc = new ConfigFileLoafCallback(){
+    ConfigFileLoafCallback cfc = new ConfigFileLoafCallback() {
         @Override
         public void loadfinish(int size) {
-            if ((filesize += size) >= filelist.size()){
+            if ((filesize += size) >= filelist.size()) {
                 cflc.loadAllfinish();
             }
         }
+
         @Override
         public void loadAllfinish() {
         }
