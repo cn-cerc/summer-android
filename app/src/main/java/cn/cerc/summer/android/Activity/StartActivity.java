@@ -76,6 +76,8 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_guidance);
         if (PermissionUtils.getPermission(new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PermissionUtils.REQUEST_READ_PHONE_STATE, this)) {
+            TelephonyManager TelephonyMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+            PermissionUtils.IMEI = TelephonyMgr.getDeviceId();
             XHttpRequest.getInstance().GET(AppUtil.buildDeviceUrl(MyConfig.HOME_URL + "/MobileConfig"), this);
         }
 

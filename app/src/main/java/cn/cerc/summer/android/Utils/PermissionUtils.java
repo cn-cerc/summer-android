@@ -27,7 +27,7 @@ public class PermissionUtils {
      *
      * @param permissions  获取的权限名字数组
      * @param requestcode 请求权限的请求码
-     * @return 返回是否以获取了这个权限
+     * @return 返回是否已获取了这个权限
      */
     public static boolean getPermission(String[] permissions, int requestcode, Activity activity){
         for (String permission : permissions){
@@ -38,8 +38,6 @@ public class PermissionUtils {
             ActivityCompat.requestPermissions(activity, permissions, requestcode);
             return false;
         } else {
-            TelephonyManager TelephonyMgr = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
-            IMEI = TelephonyMgr.getDeviceId();
             return true;
         }
     }

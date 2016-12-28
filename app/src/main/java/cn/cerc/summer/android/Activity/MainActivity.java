@@ -52,6 +52,7 @@ import cn.cerc.summer.android.Utils.PermissionUtils;
 
 import cn.cerc.summer.android.Utils.PhotoUtils;
 import cn.cerc.summer.android.Utils.ScreenUtils;
+import cn.cerc.summer.android.Utils.SoundUtils;
 import cn.cerc.summer.android.Utils.XHttpRequest;
 import cn.cerc.summer.android.View.DragPointView;
 import cn.cerc.summer.android.View.MyWebView;
@@ -79,7 +80,7 @@ import cn.jpush.android.api.TagAliasCallback;
 /**
  * 主界面
  */
-public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, JSInterfaceLintener, ActivityCompat.OnRequestPermissionsResultCallback {
+public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, JSInterfaceLintener, ActivityCompat.OnRequestPermissionsResultCallback, SoundUtils.SoundPlayerStatusLintener {
 
     public MyWebView webview;
     private ProgressBar progress;
@@ -90,6 +91,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
     private boolean isGoHome = false;//是否返回home
     private boolean is_ERROR = false;//是否错误了
+    private boolean is_info = false;
 
     private ImageView back, more;
     private TextView title;
@@ -107,7 +109,10 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     public static final String APP_UPDATA = "com.fmk.huagu.efitness.APP_UPDATA";
     public static final String JSON_ERROR = "com.fmk.huagu.efitness.JSON_ERROR";
 
-    private final int REQUEST_SETTING = 101;
+    public static final int REQUEST_PHOTO_CAMERA = 111;//拍照请求
+    public static final int REQUEST_PHOTO_CROP = 113;//裁剪请求
+
+    private final int REQUEST_SETTING = 101;//进入设置页面请求
 
     /**
      * 初始化广播
@@ -311,6 +316,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 } else {
                     back.setVisibility(View.VISIBLE);
                 }
+                if (url.contains("FrmCardPage")) is_info = true;
+                else is_info = false;
                 progress.setVisibility(View.GONE);
                 super.onPageFinished(view, url);
             }
@@ -355,7 +362,12 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                         home.addCategory(Intent.CATEGORY_HOME);
                         startActivity(home);
                     } else {
-                        if (webview.canGoBack()) webview.goBack();// 返回键退回
+                        if (webview.canGoBack())
+                            if (is_info){
+                                webview.loadUrl(homeurl);
+                                webview.clearCache(true);
+                                webview.clearHistory();
+                            }else webview.goBack();// 返回键退回
                         else finish();
                     }
                     return true;
@@ -385,7 +397,11 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
-                webview.goBack();
+                if (is_info){
+                    webview.loadUrl(homeurl);
+                    webview.clearCache(true);
+                    webview.clearHistory();
+                }else webview.goBack();
                 break;
             case R.id.more:
                 showPopu(more);
@@ -441,6 +457,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                         break;
                     case 4:
                         clearCacheFolder(MainActivity.this.getCacheDir(), System.currentTimeMillis());
+                        Action("","camera");
                         break;
                     case 5:
                         if (islogin) {
@@ -544,10 +561,18 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     public void onStop() {
         super.onStop();
 
+        if (su != null)
+            su.onCompletion(null);
+
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
     }
 
+    //声音播放结束的回调
+    @Override
+    public void Completion() {
+
+    }
 
     @Override
     public Context getContext() {
@@ -568,15 +593,21 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     }
 
     private PhotoUtils pu;
+    private SoundUtils su;
 
     @Override
-    public void Action(String json) {
-        if ("action".equals(pu.jsp.getAction()))
-            pu = new PhotoUtils(this,json);
+    public void Action(String json, String action) {
+        if ("camera".equals(action)) {
+            pu = PhotoUtils.getInstance();
+            pu.setJson(json);
             //首先判断是否有权限使用摄像头
-            if(PermissionUtils.getPermission(new String[]{Manifest.permission.CAMERA},PermissionUtils.REQUEST_CAMERA_STATE,this)){
-                pu.Start_P(this, PhotoUtils.REQUEST_PHOTO_CAMERA);
-            }
+            if (PermissionUtils.getPermission(new String[]{Manifest.permission.CAMERA}, PermissionUtils.REQUEST_CAMERA_STATE, this))
+                pu.Start_P(this, REQUEST_PHOTO_CAMERA);
+        }else if ("sound".equals(action)){
+            su = SoundUtils.getInstance(this);
+            su.setJson(json);
+            su.startPlayer();
+        }
     }
 
     public void reload(int scales) {
@@ -589,7 +620,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         switch (requestCode) {
             case PermissionUtils.REQUEST_CAMERA_STATE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    pu.Start_P(this, PhotoUtils.REQUEST_PHOTO_CAMERA);
+                    pu.Start_P(this, REQUEST_PHOTO_CAMERA);
                 } else {
                     ActivityCompat.requestPermissions(this, permissions, requestCode);
                 }
@@ -606,12 +637,22 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 homeurl = data.getStringExtra("home");
                 webview.loadUrl(homeurl);
             }
-        }else if (requestCode == PhotoUtils.REQUEST_PHOTO_CAMERA){
-            if (requestCode == RESULT_OK) pu.Paifinish(true);
-            else if (requestCode == RESULT_CANCELED) pu.Paifinish(false);
+        }else if (requestCode == REQUEST_PHOTO_CAMERA){
+            if (resultCode == RESULT_OK) pu.Paifinish(REQUEST_PHOTO_CROP);
+            else if (resultCode == RESULT_CANCELED) pu.Paifinish(0);
+        }else if (requestCode == REQUEST_PHOTO_CROP){
+            // 拿到剪切数据
+            Bitmap bmap = data.getParcelableExtra("data");
+            if (resultCode == RESULT_OK) {
+                if (bmap != null )
+                    pu.Cropfinish(bmap);
+                else{
+                    Toast.makeText(this, "裁剪图片失败", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            } else if (resultCode == RESULT_CANCELED) pu.Cropfinish(null);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
 
 }

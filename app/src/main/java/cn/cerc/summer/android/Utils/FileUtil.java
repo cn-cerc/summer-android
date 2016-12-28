@@ -74,23 +74,22 @@ public class FileUtil {
      *
      * @param bitmap 图片
      */
-    public static String createFile(Bitmap bitmap, String filename) {
-        File f = new File(cacheDir, filename);
+    public static String createFile(Bitmap bitmap, File file) {
         try {
-            if (f.createNewFile()) {
+            if (file.createNewFile()) {
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
                 byte[] bitmapdata = bos.toByteArray();
-                FileOutputStream fos = new FileOutputStream(f);
+                FileOutputStream fos = new FileOutputStream(file);
                 fos.write(bitmapdata);
                 fos.flush();
                 fos.close();
             }
+            if (file.exists()) {
+                return file.getAbsolutePath();
+            }
         } catch (IOException e) {
             Log.e(TAG, "create bitmap file error" + e);
-        }
-        if (f.exists()) {
-            return f.getAbsolutePath();
         }
         return null;
     }

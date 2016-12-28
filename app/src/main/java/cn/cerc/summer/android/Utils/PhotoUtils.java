@@ -2,8 +2,10 @@ package cn.cerc.summer.android.Utils;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 
@@ -23,40 +25,75 @@ import cn.cerc.summer.android.Interface.RequestCallback;
 
 public class PhotoUtils implements PhotoCallback, RequestCallback {
 
-    public static final int REQUEST_PHOTO_CAMERA = 111;
-    public static final int REQUEST_PHOTO_CROP = 113;
-
     public JSParam jsp;
-    private Context context;
+    private Activity activity;
+    private static PhotoUtils pu;
 
-    public PhotoUtils(Context context, String json) {
-        this.context = context;
-        jsp = JSON.parseObject(json,JSParam.class);
+    public PhotoUtils() {
+    }
+
+    /**
+     * 获取单例实例，
+     *
+     * @return 返回当前实例
+     */
+    public static PhotoUtils getInstance() {
+        if (pu == null) pu = new PhotoUtils();
+        return pu;
+    }
+
+    /**
+     * 传递json,
+     *
+     * @param json 每次调用js时传递过来的js  注意不要漏调此方法
+     */
+    public void setJson(String json) {
+        jsp = JSON.parseObject(json, JSParam.class);
     }
 
     private File imagefile;
 
-    public void Start_P(Activity activity, int request){
+    public void Start_P(Activity activity, int request) {
+        this.activity = activity;
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        imagefile = new File(Constans.getAppPath(Constans.IMAGE_PATH) + System.currentTimeMillis() + ".jpg");
+        imagefile = new File(Constans.getAppPath(Constans.IMAGE_PATH + "/original") + "/" + System.currentTimeMillis() + ".jpg");
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imagefile));
         activity.startActivityForResult(intent, request);
     }
 
-    public void Start_Crop(){
+    public void Start_Crop() {   //"/crop/"
 
     }
 
     @Override
-    public void Paifinish(boolean status) {
-
-        HashMap<String, String> map = new HashMap<String, String>();
-        XHttpRequest.getInstance().POST("", map, this);
+    public void Paifinish(int requestCode) {
+        if (requestCode != 0){ //裁剪图片
+            Intent intent = new Intent("com.android.camera.action.CROP");
+            intent.setDataAndType(Uri.fromFile(imagefile), "image/*");
+            intent.putExtra("crop", "true");
+            intent.putExtra("scale", true);
+            intent.putExtra("outputX", 500);
+            intent.putExtra("outputY", 500);
+            intent.putExtra("return-data", true);
+            intent.putExtra("noFaceDetection", true);
+            activity.startActivityForResult(intent, requestCode);
+        }else{
+            HashMap<String, String> map = new HashMap<String, String>();
+            XHttpRequest.getInstance().POST("", map, this);
+        }
     }
 
     @Override
-    public void Cropfinish(boolean status) {
-
+    public void Cropfinish(Bitmap bitmap) {
+        if (bitmap == null){
+            HashMap<String, String> map = new HashMap<String, String>();
+            XHttpRequest.getInstance().POST("", map, this);
+        }else{
+            File file = new File(Constans.getAppPath(Constans.IMAGE_PATH + "/crop") + "/" + System.currentTimeMillis() + ".jpg");
+            FileUtil.createFile(bitmap, file);
+            HashMap<String, String> map = new HashMap<String, String>();
+            XHttpRequest.getInstance().POST("", map, this);
+        }
     }
 
     @Override
@@ -68,17 +105,22 @@ public class PhotoUtils implements PhotoCallback, RequestCallback {
     public void Failt(String url, String error) {
 
     }
+
     @Override
     public Context getContext() {
-        return context;
+        return activity.getApplicationContext();
     }
 }
 
-interface PhotoCallback{
+interface PhotoCallback {
 
-    void Paifinish(boolean status);
+    /**
+     * 拍照完成
+     * @param requestCode   裁剪的请求码如果为0则不需要裁剪
+     */
+    void Paifinish(int requestCode);
 
-    void Cropfinish(boolean status);
+    void Cropfinish(Bitmap bitmap);
 
 }
 
