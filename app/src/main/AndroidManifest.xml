@@ -67,6 +67,10 @@
             android:name="cn.cerc.summer.android.Activity.SettingActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity
+            android:name="cn.cerc.summer.android.Activity.MipcaActivityCapture"
+            android:screenOrientation="portrait">
+        </activity>
 
         <!--JPush-->
         <service

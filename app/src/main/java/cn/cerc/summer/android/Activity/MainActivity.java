@@ -55,6 +55,7 @@ import cn.cerc.summer.android.Utils.PhotoUtils;
 import cn.cerc.summer.android.Utils.ScreenUtils;
 import cn.cerc.summer.android.Utils.SoundUtils;
 import cn.cerc.summer.android.Utils.XHttpRequest;
+import cn.cerc.summer.android.Utils.ZXingUtils;
 import cn.cerc.summer.android.View.DragPointView;
 import cn.cerc.summer.android.View.MyWebView;
 import cn.cerc.summer.android.View.ShowDialog;
@@ -71,6 +72,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -113,6 +115,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
     public static final int REQUEST_PHOTO_CAMERA = 111;//拍照请求
     public static final int REQUEST_PHOTO_CROP = 113;//裁剪请求
+    public static final int REQUEST_SCAN_QRCODE = 114;//扫码请求
 
     private final int REQUEST_SETTING = 101;//进入设置页面请求
 
@@ -459,7 +462,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                         break;
                     case 4:
                         clearCacheFolder(MainActivity.this.getCacheDir(), System.currentTimeMillis());
-                        Action("","camera");
+                        Action("","zxing");
                         break;
                     case 5:
                         if (islogin) {
@@ -588,14 +591,15 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (MainActivity.this.islogin) more.setVisibility(View.VISIBLE);
-                else more.setVisibility(View.INVISIBLE);
+//                if (MainActivity.this.islogin) more.setVisibility(View.VISIBLE);
+//                else more.setVisibility(View.INVISIBLE);
             }
         });
     }
 
     private PhotoUtils pu;
     private SoundUtils su;
+    private ZXingUtils zxu;
 
     @Override
     public void Action(String json, String action) {
@@ -609,6 +613,10 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             su = SoundUtils.getInstance(this);
             su.setJson(json);
             su.startPlayer();
+        }else if ("zxing".equals(action)){
+            zxu = ZXingUtils.getInstance();
+            zxu.setJson(json);
+            zxu.startScan(this, REQUEST_SCAN_QRCODE);
         }
     }
 
@@ -640,19 +648,24 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 webview.loadUrl(homeurl);
             }
         }else if (requestCode == REQUEST_PHOTO_CAMERA){
-            if (resultCode == RESULT_OK) pu.Paifinish(REQUEST_PHOTO_CROP);
-            else if (resultCode == RESULT_CANCELED) pu.Paifinish(0);
+//            HashMap<String, String> map = new HashMap<String, String>();
+//            XHttpRequest.getInstance().POST("", map, this);
+            if (resultCode == RESULT_OK) pu.Start_Crop(REQUEST_PHOTO_CROP);
+            else if (resultCode == RESULT_CANCELED) Toast.makeText(this, "取消拍照", Toast.LENGTH_SHORT).show();;
         }else if (requestCode == REQUEST_PHOTO_CROP){
             // 拿到剪切数据
             Bitmap bmap = data.getParcelableExtra("data");
             if (resultCode == RESULT_OK) {
                 if (bmap != null )
                     pu.Cropfinish(bmap);
-                else{
-                    Toast.makeText(this, "裁剪图片失败", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            } else if (resultCode == RESULT_CANCELED) pu.Cropfinish(null);
+//                    HashMap<String, String> map = new HashMap<String, String>();
+//                    XHttpRequest.getInstance().POST("", map, this);
+                else Toast.makeText(this, "裁剪图片失败", Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED) Toast.makeText(this, "取消裁剪图片", Toast.LENGTH_SHORT).show();
+        }else if (requestCode == REQUEST_SCAN_QRCODE){
+            if (resultCode == RESULT_OK) {
+
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

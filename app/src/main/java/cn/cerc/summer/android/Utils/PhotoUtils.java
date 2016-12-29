@@ -23,7 +23,7 @@ import cn.cerc.summer.android.Interface.RequestCallback;
  * Created by fff on 2016/12/27.
  */
 
-public class PhotoUtils implements PhotoCallback, RequestCallback {
+public class PhotoUtils extends HardwareJSUtils implements PhotoCallback{
 
     public JSParam jsp;
     private Activity activity;
@@ -44,12 +44,13 @@ public class PhotoUtils implements PhotoCallback, RequestCallback {
 
     /**
      * 传递json,
-     *
      * @param json 每次调用js时传递过来的js  注意不要漏调此方法
      */
+    @Override
     public void setJson(String json) {
-        jsp = JSON.parseObject(json, JSParam.class);
+        jsp = JSON.parseObject(json,JSParam.class);
     }
+
 
     private File imagefile;
 
@@ -61,66 +62,30 @@ public class PhotoUtils implements PhotoCallback, RequestCallback {
         activity.startActivityForResult(intent, request);
     }
 
-    public void Start_Crop() {   //"/crop/"
-
+    public void Start_Crop(int request) {   //"/crop/"
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(Uri.fromFile(imagefile), "image/*");
+        intent.putExtra("crop", "true");
+        intent.putExtra("scale", true);
+        intent.putExtra("outputX", 500);
+        intent.putExtra("outputY", 500);
+        intent.putExtra("return-data", true);
+        intent.putExtra("noFaceDetection", true);
+        activity.startActivityForResult(intent, request);
     }
 
     @Override
-    public void Paifinish(int requestCode) {
-        if (requestCode != 0){ //裁剪图片
-            Intent intent = new Intent("com.android.camera.action.CROP");
-            intent.setDataAndType(Uri.fromFile(imagefile), "image/*");
-            intent.putExtra("crop", "true");
-            intent.putExtra("scale", true);
-            intent.putExtra("outputX", 500);
-            intent.putExtra("outputY", 500);
-            intent.putExtra("return-data", true);
-            intent.putExtra("noFaceDetection", true);
-            activity.startActivityForResult(intent, requestCode);
-        }else{
-            HashMap<String, String> map = new HashMap<String, String>();
-            XHttpRequest.getInstance().POST("", map, this);
-        }
+    public File Cropfinish(Bitmap bitmap) {
+        File file = new File(Constans.getAppPath(Constans.IMAGE_PATH + "/crop") + "/" + System.currentTimeMillis() + ".jpg");
+        FileUtil.createFile(bitmap, file);
+        return file;
     }
 
-    @Override
-    public void Cropfinish(Bitmap bitmap) {
-        if (bitmap == null){
-            HashMap<String, String> map = new HashMap<String, String>();
-            XHttpRequest.getInstance().POST("", map, this);
-        }else{
-            File file = new File(Constans.getAppPath(Constans.IMAGE_PATH + "/crop") + "/" + System.currentTimeMillis() + ".jpg");
-            FileUtil.createFile(bitmap, file);
-            HashMap<String, String> map = new HashMap<String, String>();
-            XHttpRequest.getInstance().POST("", map, this);
-        }
-    }
-
-    @Override
-    public void success(String url, JSONObject json) {
-
-    }
-
-    @Override
-    public void Failt(String url, String error) {
-
-    }
-
-    @Override
-    public Context getContext() {
-        return activity.getApplicationContext();
-    }
 }
 
 interface PhotoCallback {
 
-    /**
-     * 拍照完成
-     * @param requestCode   裁剪的请求码如果为0则不需要裁剪
-     */
-    void Paifinish(int requestCode);
-
-    void Cropfinish(Bitmap bitmap);
+    File Cropfinish(Bitmap bitmap);
 
 }
 

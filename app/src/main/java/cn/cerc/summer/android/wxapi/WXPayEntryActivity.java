@@ -15,7 +15,7 @@ import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
-
+import cn.cerc.summer.android.Activity.MainActivity;
 
 
 public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
@@ -53,11 +53,11 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
 			builder.setTitle(R.string.app_tip);
 			builder.setMessage(getString(R.string.pay_result_callback_msg, String.valueOf(resp.errCode)));
 			builder.show();
+			if (resp.errCode == 0) MainActivity.getInstance().webview.loadUrl("javascript:ReturnForApp('支付成功')");
+			else if (resp.errCode == -2) MainActivity.getInstance().webview.loadUrl("javascript:ReturnForApp('用户取消')");
+			else MainActivity.getInstance().webview.loadUrl("javascript:ReturnForApp('支付失败')");
 //			Toast.makeText(WXPayEntryActivity.this,"支付成功",Toast.LENGTH_SHORT).show();
-
-
 			WXPayEntryActivity.this.finish();
-
 		}
 
 	}

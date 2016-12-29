@@ -14,10 +14,9 @@ import cn.cerc.summer.android.Entity.JSParam;
  * Created by fff on 2016/12/28.
  */
 
-public class SoundUtils implements SountPlayerLinter, AudioManager.OnAudioFocusChangeListener, MediaPlayer.OnCompletionListener {
+public class SoundUtils extends HardwareJSUtils implements SountPlayerLinter, AudioManager.OnAudioFocusChangeListener, MediaPlayer.OnCompletionListener {
 
     public JSParam jsp;
-    private Context context;
     private AudioManager mAm;
     private MediaPlayer player;
 
@@ -34,11 +33,8 @@ public class SoundUtils implements SountPlayerLinter, AudioManager.OnAudioFocusC
         return su;
     }
 
-    /**
-     * 传递json,
-     * @param json  每次调用js时传递过来的js  注意不要漏调此方法
-     */
-    public void setJson(String json){
+    @Override
+    public void setJson(String json) {
         jsp = JSON.parseObject(json,JSParam.class);
     }
 
@@ -105,7 +101,6 @@ public class SoundUtils implements SountPlayerLinter, AudioManager.OnAudioFocusC
         mAm.abandonAudioFocus(this);
         spsl.Completion();
     }
-
 
     public interface SoundPlayerStatusLintener{
         void Completion();
