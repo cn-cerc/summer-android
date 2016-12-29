@@ -24,6 +24,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.GeolocationPermissions;
+import android.webkit.JavascriptInterface;
 import android.webkit.PermissionRequest;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -80,6 +81,7 @@ import cn.jpush.android.api.TagAliasCallback;
 /**
  * 主界面
  */
+@SuppressLint({ "JavascriptInterface", "SetJavaScriptEnabled" })
 public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, JSInterfaceLintener, ActivityCompat.OnRequestPermissionsResultCallback, SoundUtils.SoundPlayerStatusLintener {
 
     public MyWebView webview;
@@ -367,7 +369,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                                 webview.loadUrl(homeurl);
                                 webview.clearCache(true);
                                 webview.clearHistory();
-                            }else webview.goBack();// 返回键退回
+                            }else webview.loadUrl("javascript:ReturnBtnClick()");// 返回键退回
                         else finish();
                     }
                     return true;
@@ -401,7 +403,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                     webview.loadUrl(homeurl);
                     webview.clearCache(true);
                     webview.clearHistory();
-                }else webview.goBack();
+                }else webview.loadUrl("javascript:ReturnBtnClick()");
                 break;
             case R.id.more:
                 showPopu(more);
