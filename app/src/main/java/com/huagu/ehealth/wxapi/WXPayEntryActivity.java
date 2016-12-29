@@ -1,11 +1,13 @@
-package cn.cerc.summer.android.wxapi;
+package com.huagu.ehealth.wxapi;
 
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.huagu.ehealth.R;
 import com.tencent.mm.sdk.constants.ConstantsAPI;
@@ -49,16 +51,23 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
 		Log.i("resp", resp.getType() + "");
 
 		if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
+			String str = "";
+			if (resp.errCode == 0) str = "支付成功";
+			else if (resp.errCode == -2) str = "用户取消";
+			else str = "支付失败";
+			MainActivity.getInstance().webview.loadUrl("javascript:ReturnForApp('"+str+"')");
+
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(R.string.app_tip);
-			builder.setMessage(getString(R.string.pay_result_callback_msg, String.valueOf(resp.errCode)));
+			builder.setMessage(getString(R.string.pay_result_callback_msg, str));
+			builder.setNegativeButton("返回我的页面", null);
+			builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+				@Override
+				public void onDismiss(DialogInterface dialog) {
+					WXPayEntryActivity.this.finish();
+				}
+			});
 			builder.show();
-			if (resp.errCode == 0) MainActivity.getInstance().webview.loadUrl("javascript:ReturnForApp('支付成功')");
-			else if (resp.errCode == -2) MainActivity.getInstance().webview.loadUrl("javascript:ReturnForApp('用户取消')");
-			else MainActivity.getInstance().webview.loadUrl("javascript:ReturnForApp('支付失败')");
-//			Toast.makeText(WXPayEntryActivity.this,"支付成功",Toast.LENGTH_SHORT).show();
-			WXPayEntryActivity.this.finish();
 		}
-
 	}
 }

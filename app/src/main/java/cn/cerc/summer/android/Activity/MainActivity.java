@@ -462,7 +462,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                         break;
                     case 4:
                         clearCacheFolder(MainActivity.this.getCacheDir(), System.currentTimeMillis());
-                        Action("","zxing");
+//                        Action("","zxing");//测试时使用
                         break;
                     case 5:
                         if (islogin) {

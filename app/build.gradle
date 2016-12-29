@@ -42,5 +42,5 @@ dependencies {
     compile files('libs/GifView.jar')
     compile files('libs/universal-image-loader-1.9.5.jar')
     compile 'com.google.zxing:core:3.3.0'
-    compile 'com.asprise.ocr:java-ocr-api:15.3.0.3'
+
 }
