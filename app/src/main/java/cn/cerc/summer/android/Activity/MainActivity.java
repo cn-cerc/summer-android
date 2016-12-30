@@ -3,11 +3,14 @@ package cn.cerc.summer.android.Activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -617,12 +620,26 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             zxu = ZXingUtils.getInstance();
             zxu.setJson(json);
             zxu.startScan(this, REQUEST_SCAN_QRCODE);
+        }else if ("call".equals(action)){
+            phone = json;
+            if (PermissionUtils.getPermission(new String[]{Manifest.permission.CALL_PHONE}, PermissionUtils.REQUEST_CALL_PHONE_STATE, this)) {
+                call(json);
+            }
         }
     }
+
+    String phone = "";
 
     public void reload(int scales) {
         webview.getSettings().setTextZoom(scales);
         webview.reload();
+    }
+
+    public void call(String phone){
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        Uri data = Uri.parse("tel:" + phone);
+        intent.setData(data);
+        startActivity(intent);
     }
 
     @Override
@@ -631,6 +648,13 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             case PermissionUtils.REQUEST_CAMERA_STATE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     pu.Start_P(this, REQUEST_PHOTO_CAMERA);
+                } else {
+                    ActivityCompat.requestPermissions(this, permissions, requestCode);
+                }
+                break;
+            case PermissionUtils.REQUEST_CALL_PHONE_STATE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    call(phone);
                 } else {
                     ActivityCompat.requestPermissions(this, permissions, requestCode);
                 }
@@ -648,8 +672,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 webview.loadUrl(homeurl);
             }
         }else if (requestCode == REQUEST_PHOTO_CAMERA){
-//            HashMap<String, String> map = new HashMap<String, String>();
-//            XHttpRequest.getInstance().POST("", map, this);
             if (resultCode == RESULT_OK) pu.Start_Crop(REQUEST_PHOTO_CROP);
             else if (resultCode == RESULT_CANCELED) Toast.makeText(this, "取消拍照", Toast.LENGTH_SHORT).show();;
         }else if (requestCode == REQUEST_PHOTO_CROP){
@@ -658,13 +680,19 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             if (resultCode == RESULT_OK) {
                 if (bmap != null )
                     pu.Cropfinish(bmap);
-//                    HashMap<String, String> map = new HashMap<String, String>();
-//                    XHttpRequest.getInstance().POST("", map, this);
                 else Toast.makeText(this, "裁剪图片失败", Toast.LENGTH_SHORT).show();
             } else if (resultCode == RESULT_CANCELED) Toast.makeText(this, "取消裁剪图片", Toast.LENGTH_SHORT).show();
         }else if (requestCode == REQUEST_SCAN_QRCODE){
             if (resultCode == RESULT_OK) {
 
+//                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+//                ImageView image = new ImageView(this);
+//                image.setImageBitmap(((Bitmap) data.getParcelableExtra("bitmap")));
+//                alert.setView(image);
+//                alert.create().show();
+
+                String Scanresult = data.getStringExtra("result");
+                webview.loadUrl(String.format("javascript:appRichScan('%s')",Scanresult));
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

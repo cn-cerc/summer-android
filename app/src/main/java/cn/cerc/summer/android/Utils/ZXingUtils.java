@@ -37,5 +37,4 @@ public class ZXingUtils extends HardwareJSUtils{
         activity.startActivityForResult(intent, requestCode);
     }
 
-
 }

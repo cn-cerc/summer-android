@@ -13,6 +13,7 @@ public class MyConfig {
      * http://121.40.181.228
      */
     public static String HOME_URL = "http://ehealth.lucland.com";
+//    public static String HOME_URL = "http://192.168.1.110:8080";
 
 
 }

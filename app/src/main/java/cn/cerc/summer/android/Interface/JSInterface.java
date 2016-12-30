@@ -124,4 +124,25 @@ public class JSInterface extends Object {
         jsInterfaceLintener.Action(json, action);
     }
 
+    /**
+     * 扫码
+     * @param json
+     */
+    @JavascriptInterface
+    public void zxing(){
+//        String action = JSON.parseObject(json).getString("action");
+        String action = "zxing";
+        jsInterfaceLintener.Action("", action);
+    }
+
+    /**
+     * 打电话
+     * @param json
+     */
+    @JavascriptInterface
+    public void callphone(String phone){
+        jsInterfaceLintener.Action(phone, "call");
+    }
+
+
 }

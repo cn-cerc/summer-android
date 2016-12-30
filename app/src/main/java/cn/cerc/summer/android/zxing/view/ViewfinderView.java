@@ -112,7 +112,7 @@ public final class ViewfinderView extends View {
 	private Collection<ResultPoint> possibleResultPoints;
 	private Collection<ResultPoint> lastPossibleResultPoints;
 
-	boolean isFirst;
+	private boolean isFirst;
 
 	public ViewfinderView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -129,6 +129,8 @@ public final class ViewfinderView extends View {
 		resultPointColor = Color.parseColor("#c0ffff00");
 		possibleResultPoints = new HashSet<ResultPoint>(5);
 	}
+
+	private Bitmap bitmap;
 
 	@Override
 	public void onDraw(Canvas canvas) {
@@ -155,11 +157,8 @@ public final class ViewfinderView extends View {
 		//扫描框的左边面到屏幕左边，扫描框的右边到屏幕右边
 		canvas.drawRect(0, 0, width, frame.top, paint);
 		canvas.drawRect(0, frame.top, frame.left, frame.bottom + 1, paint);
-		canvas.drawRect(frame.right + 1, frame.top, width, frame.bottom + 1,
-				paint);
+		canvas.drawRect(frame.right + 1, frame.top, width, frame.bottom + 1, paint);
 		canvas.drawRect(0, frame.bottom + 1, width, height, paint);
-
-
 
 		if (resultBitmap != null) {
 			// Draw the opaque result bitmap over the scanning rectangle
@@ -169,23 +168,14 @@ public final class ViewfinderView extends View {
 
 			//画扫描框边上的角，总共8个部分
 			paint.setColor(Color.GREEN);
-			canvas.drawRect(frame.left, frame.top, frame.left + ScreenRate,
-					frame.top + CORNER_WIDTH, paint);
-			canvas.drawRect(frame.left, frame.top, frame.left + CORNER_WIDTH, frame.top
-					+ ScreenRate, paint);
-			canvas.drawRect(frame.right - ScreenRate, frame.top, frame.right,
-					frame.top + CORNER_WIDTH, paint);
-			canvas.drawRect(frame.right - CORNER_WIDTH, frame.top, frame.right, frame.top
-					+ ScreenRate, paint);
-			canvas.drawRect(frame.left, frame.bottom - CORNER_WIDTH, frame.left
-					+ ScreenRate, frame.bottom, paint);
-			canvas.drawRect(frame.left, frame.bottom - ScreenRate,
-					frame.left + CORNER_WIDTH, frame.bottom, paint);
-			canvas.drawRect(frame.right - ScreenRate, frame.bottom - CORNER_WIDTH,
-					frame.right, frame.bottom, paint);
-			canvas.drawRect(frame.right - CORNER_WIDTH, frame.bottom - ScreenRate,
-					frame.right, frame.bottom, paint);
-
+			canvas.drawRect(frame.left, frame.top, frame.left + ScreenRate, frame.top + CORNER_WIDTH, paint);
+			canvas.drawRect(frame.left, frame.top, frame.left + CORNER_WIDTH, frame.top + ScreenRate, paint);
+			canvas.drawRect(frame.right - ScreenRate, frame.top, frame.right, frame.top + CORNER_WIDTH, paint);
+			canvas.drawRect(frame.right - CORNER_WIDTH, frame.top, frame.right, frame.top + ScreenRate, paint);
+			canvas.drawRect(frame.left, frame.bottom - CORNER_WIDTH, frame.left + ScreenRate, frame.bottom, paint);
+			canvas.drawRect(frame.left, frame.bottom - ScreenRate, frame.left + CORNER_WIDTH, frame.bottom, paint);
+			canvas.drawRect(frame.right - ScreenRate, frame.bottom - CORNER_WIDTH, frame.right, frame.bottom, paint);
+			canvas.drawRect(frame.right - CORNER_WIDTH, frame.bottom - ScreenRate, frame.right, frame.bottom, paint);
 
 			//绘制中间的线,每次刷新界面，中间的线往下移动SPEEN_DISTANCE
 			slideTop += SPEEN_DISTANCE;
@@ -199,7 +189,9 @@ public final class ViewfinderView extends View {
 			paint.setTextSize(TEXT_SIZE * density);
 			paint.setAlpha(0x40);
 			paint.setTypeface(Typeface.create("System", Typeface.BOLD));
-			canvas.drawText("将二维码放入框内, 即可自动扫描", frame.left, (float) (frame.bottom + (float)TEXT_PADDING_TOP *density), paint);
+			String tips = "将二维码放入框内, 即可自动扫描";
+			float textwidth = paint.measureText(tips);
+			canvas.drawText(tips, (width - textwidth) / 2, (float) (frame.bottom + (float)TEXT_PADDING_TOP *density), paint);
 
 			Collection<ResultPoint> currentPossible = possibleResultPoints;
 			Collection<ResultPoint> currentLast = lastPossibleResultPoints;
@@ -224,11 +216,13 @@ public final class ViewfinderView extends View {
 				}
 			}
 
-
+			if (isDraw) {
+				bitmap = Bitmap.createBitmap(frame.right - frame.left, frame.bottom - frame.top, Bitmap.Config.ARGB_8888);
+				canvas.drawBitmap(bitmap, frame.left, (float) (frame.bottom + (float) TEXT_PADDING_TOP * density), paint);
+				isDraw = false;
+			}
 			//只刷新扫描框的内容，其他地方不刷新
-			postInvalidateDelayed(ANIMATION_DELAY, frame.left, frame.top,
-					frame.right, frame.bottom);
-
+			postInvalidateDelayed(ANIMATION_DELAY, frame.left, frame.top, frame.right, frame.bottom);
 		}
 	}
 
@@ -237,12 +231,19 @@ public final class ViewfinderView extends View {
 		invalidate();
 	}
 
+	private boolean isDraw = false;
+
+	public Bitmap getBitmap() {
+		isDraw = true;
+		invalidate();
+		return bitmap;
+	}
+
 	/**
 	 * Draw a bitmap with the result points highlighted instead of the live
 	 * scanning display.
 	 *
-	 * @param barcode
-	 *            An image of the decoded barcode.
+	 * @param barcode An image of the decoded barcode.
 	 */
 	public void drawResultBitmap(Bitmap barcode) {
 		resultBitmap = barcode;

@@ -1,31 +1,39 @@
 package cn.cerc.summer.android.Activity;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Vector;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.hardware.Camera;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.huagu.ehealth.R;
 
+import cn.cerc.summer.android.Utils.ScreenUtils;
 import cn.cerc.summer.android.zxing.camera.CameraManager;
 import cn.cerc.summer.android.zxing.decoding.CaptureActivityHandler;
 import cn.cerc.summer.android.zxing.decoding.InactivityTimer;
@@ -35,7 +43,7 @@ import cn.cerc.summer.android.zxing.view.ViewfinderView;
  * Initial the camera
  * @author Ryan.Tang
  */
-public class MipcaActivityCapture extends Activity implements Callback {
+public class MipcaActivityCapture extends BaseActivity implements Callback {
 
 	private CaptureActivityHandler handler;
 	private ViewfinderView viewfinderView;
@@ -70,10 +78,12 @@ public class MipcaActivityCapture extends Activity implements Callback {
 		inactivityTimer = new InactivityTimer(this);
 	}
 
+	private SurfaceView surfaceView;
+
 	@Override
 	protected void onResume() {
 		super.onResume();
-		SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
+		surfaceView = (SurfaceView) findViewById(R.id.preview_view);
 		SurfaceHolder surfaceHolder = surfaceView.getHolder();
 		if (hasSurface) {
 			initCamera(surfaceHolder);
@@ -131,7 +141,7 @@ public class MipcaActivityCapture extends Activity implements Callback {
 		}
 		MipcaActivityCapture.this.finish();
 	}
-	
+
 	private void initCamera(SurfaceHolder surfaceHolder) {
 		try {
 			CameraManager.get().openDriver(surfaceHolder);
@@ -191,8 +201,7 @@ public class MipcaActivityCapture extends Activity implements Callback {
 			AssetFileDescriptor file = getResources().openRawResourceFd(R.raw.beep);
 
 			try {
-				mediaPlayer.setDataSource(file.getFileDescriptor(),
-						file.getStartOffset(), file.getLength());
+				mediaPlayer.setDataSource(file.getFileDescriptor(), file.getStartOffset(), file.getLength());
 				file.close();
 				mediaPlayer.setVolume(BEEP_VOLUME, BEEP_VOLUME);
 				mediaPlayer.prepare();

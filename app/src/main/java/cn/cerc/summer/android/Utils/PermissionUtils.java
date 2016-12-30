@@ -15,6 +15,7 @@ public class PermissionUtils {
 
     public static final int REQUEST_READ_PHONE_STATE = 123;
     public static final int REQUEST_CAMERA_STATE = 124;
+    public static final int REQUEST_CALL_PHONE_STATE = 125;
     public static String IMEI;
 
     /**
