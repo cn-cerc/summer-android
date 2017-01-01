@@ -8,7 +8,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 24
         versionCode 1
-        versionName "1.2.0"
+        versionName "1.2.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -41,4 +41,6 @@ dependencies {
     compile files('libs/libammsdk.jar')
     compile files('libs/GifView.jar')
     compile files('libs/universal-image-loader-1.9.5.jar')
+    compile 'com.google.zxing:core:3.3.0'
+
 }

@@ -33,8 +33,6 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
 
     private Button[] buttons = new Button[5];
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +57,6 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
         if (!Config.getConfig().isDebug()) {
             url_tit.setVisibility(View.GONE);
             edittext.setVisibility(View.GONE);
-//            lin_cun.setVisibility(View.GONE);
         }
 
         back.setOnClickListener(new View.OnClickListener() {

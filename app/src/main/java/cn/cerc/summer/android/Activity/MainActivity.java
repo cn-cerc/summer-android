@@ -3,11 +3,14 @@ package cn.cerc.summer.android.Activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -24,6 +27,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.GeolocationPermissions;
+import android.webkit.JavascriptInterface;
 import android.webkit.PermissionRequest;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -52,7 +56,9 @@ import cn.cerc.summer.android.Utils.PermissionUtils;
 
 import cn.cerc.summer.android.Utils.PhotoUtils;
 import cn.cerc.summer.android.Utils.ScreenUtils;
+import cn.cerc.summer.android.Utils.SoundUtils;
 import cn.cerc.summer.android.Utils.XHttpRequest;
+import cn.cerc.summer.android.Utils.ZXingUtils;
 import cn.cerc.summer.android.View.DragPointView;
 import cn.cerc.summer.android.View.MyWebView;
 import cn.cerc.summer.android.View.ShowDialog;
@@ -69,6 +75,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -79,7 +86,8 @@ import cn.jpush.android.api.TagAliasCallback;
 /**
  * 主界面
  */
-public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, JSInterfaceLintener, ActivityCompat.OnRequestPermissionsResultCallback {
+@SuppressLint({ "JavascriptInterface", "SetJavaScriptEnabled" })
+public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, JSInterfaceLintener, ActivityCompat.OnRequestPermissionsResultCallback, SoundUtils.SoundPlayerStatusLintener {
 
     public MyWebView webview;
     private ProgressBar progress;
@@ -90,6 +98,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
     private boolean isGoHome = false;//是否返回home
     private boolean is_ERROR = false;//是否错误了
+    private boolean is_info = false;
 
     private ImageView back, more;
     private TextView title;
@@ -107,7 +116,11 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     public static final String APP_UPDATA = "com.fmk.huagu.efitness.APP_UPDATA";
     public static final String JSON_ERROR = "com.fmk.huagu.efitness.JSON_ERROR";
 
-    private final int REQUEST_SETTING = 101;
+    public static final int REQUEST_PHOTO_CAMERA = 111;//拍照请求
+    public static final int REQUEST_PHOTO_CROP = 113;//裁剪请求
+    public static final int REQUEST_SCAN_QRCODE = 114;//扫码请求
+
+    private final int REQUEST_SETTING = 101;//进入设置页面请求
 
     /**
      * 初始化广播
@@ -311,6 +324,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 } else {
                     back.setVisibility(View.VISIBLE);
                 }
+                if (url.contains("FrmCardPage")) is_info = true;
+                else is_info = false;
                 progress.setVisibility(View.GONE);
                 super.onPageFinished(view, url);
             }
@@ -355,7 +370,12 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                         home.addCategory(Intent.CATEGORY_HOME);
                         startActivity(home);
                     } else {
-                        if (webview.canGoBack()) webview.goBack();// 返回键退回
+                        if (webview.canGoBack())
+                            if (is_info){
+                                webview.loadUrl(homeurl);
+                                webview.clearCache(true);
+                                webview.clearHistory();
+                            }else webview.loadUrl("javascript:ReturnBtnClick()");// 返回键退回
                         else finish();
                     }
                     return true;
@@ -385,7 +405,11 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
-                webview.goBack();
+                if (is_info){
+                    webview.loadUrl(homeurl);
+                    webview.clearCache(true);
+                    webview.clearHistory();
+                }else webview.loadUrl("javascript:ReturnBtnClick()");
                 break;
             case R.id.more:
                 showPopu(more);
@@ -441,6 +465,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                         break;
                     case 4:
                         clearCacheFolder(MainActivity.this.getCacheDir(), System.currentTimeMillis());
+//                        Action("","zxing");//测试时使用
                         break;
                     case 5:
                         if (islogin) {
@@ -544,10 +569,18 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     public void onStop() {
         super.onStop();
 
+        if (su != null)
+            su.onCompletion(null);
+
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
     }
 
+    //声音播放结束的回调
+    @Override
+    public void Completion() {
+
+    }
 
     @Override
     public Context getContext() {
@@ -561,27 +594,52 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (MainActivity.this.islogin) more.setVisibility(View.VISIBLE);
-                else more.setVisibility(View.INVISIBLE);
+//                if (MainActivity.this.islogin) more.setVisibility(View.VISIBLE);
+//                else more.setVisibility(View.INVISIBLE);
             }
         });
     }
 
     private PhotoUtils pu;
+    private SoundUtils su;
+    private ZXingUtils zxu;
 
     @Override
-    public void Action(String json) {
-        if ("action".equals(pu.jsp.getAction()))
-            pu = new PhotoUtils(this,json);
+    public void Action(String json, String action) {
+        if ("camera".equals(action)) {
+            pu = PhotoUtils.getInstance();
+            pu.setJson(json);
             //首先判断是否有权限使用摄像头
-            if(PermissionUtils.getPermission(new String[]{Manifest.permission.CAMERA},PermissionUtils.REQUEST_CAMERA_STATE,this)){
-                pu.Start_P(this, PhotoUtils.REQUEST_PHOTO_CAMERA);
+            if (PermissionUtils.getPermission(new String[]{Manifest.permission.CAMERA}, PermissionUtils.REQUEST_CAMERA_STATE, this))
+                pu.Start_P(this, REQUEST_PHOTO_CAMERA);
+        }else if ("sound".equals(action)){
+            su = SoundUtils.getInstance(this);
+            su.setJson(json);
+            su.startPlayer();
+        }else if ("zxing".equals(action)){
+            zxu = ZXingUtils.getInstance();
+            zxu.setJson(json);
+            zxu.startScan(this, REQUEST_SCAN_QRCODE);
+        }else if ("call".equals(action)){
+            phone = json;
+            if (PermissionUtils.getPermission(new String[]{Manifest.permission.CALL_PHONE}, PermissionUtils.REQUEST_CALL_PHONE_STATE, this)) {
+                call(json);
             }
+        }
     }
+
+    String phone = "";
 
     public void reload(int scales) {
         webview.getSettings().setTextZoom(scales);
         webview.reload();
+    }
+
+    public void call(String phone){
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        Uri data = Uri.parse("tel:" + phone);
+        intent.setData(data);
+        startActivity(intent);
     }
 
     @Override
@@ -589,7 +647,14 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         switch (requestCode) {
             case PermissionUtils.REQUEST_CAMERA_STATE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    pu.Start_P(this, PhotoUtils.REQUEST_PHOTO_CAMERA);
+                    pu.Start_P(this, REQUEST_PHOTO_CAMERA);
+                } else {
+                    ActivityCompat.requestPermissions(this, permissions, requestCode);
+                }
+                break;
+            case PermissionUtils.REQUEST_CALL_PHONE_STATE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    call(phone);
                 } else {
                     ActivityCompat.requestPermissions(this, permissions, requestCode);
                 }
@@ -606,12 +671,31 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 homeurl = data.getStringExtra("home");
                 webview.loadUrl(homeurl);
             }
-        }else if (requestCode == PhotoUtils.REQUEST_PHOTO_CAMERA){
-            if (requestCode == RESULT_OK) pu.Paifinish(true);
-            else if (requestCode == RESULT_CANCELED) pu.Paifinish(false);
+        }else if (requestCode == REQUEST_PHOTO_CAMERA){
+            if (resultCode == RESULT_OK) pu.Start_Crop(REQUEST_PHOTO_CROP);
+            else if (resultCode == RESULT_CANCELED) Toast.makeText(this, "取消拍照", Toast.LENGTH_SHORT).show();;
+        }else if (requestCode == REQUEST_PHOTO_CROP){
+            // 拿到剪切数据
+            Bitmap bmap = data.getParcelableExtra("data");
+            if (resultCode == RESULT_OK) {
+                if (bmap != null )
+                    pu.Cropfinish(bmap);
+                else Toast.makeText(this, "裁剪图片失败", Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED) Toast.makeText(this, "取消裁剪图片", Toast.LENGTH_SHORT).show();
+        }else if (requestCode == REQUEST_SCAN_QRCODE){
+            if (resultCode == RESULT_OK) {
+
+//                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+//                ImageView image = new ImageView(this);
+//                image.setImageBitmap(((Bitmap) data.getParcelableExtra("bitmap")));
+//                alert.setView(image);
+//                alert.create().show();
+
+                String Scanresult = data.getStringExtra("result");
+                webview.loadUrl(String.format("javascript:appRichScan('%s')",Scanresult));
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
 
 }

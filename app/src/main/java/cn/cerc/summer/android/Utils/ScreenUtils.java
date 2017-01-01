@@ -107,11 +107,9 @@ public class ScreenUtils {
         int width = getScreenWidth(activity);
         int height = getScreenHeight(activity);
         Bitmap bp = null;
-        bp = Bitmap.createBitmap(bmp, 0, statusBarHeight, width, height
-                - statusBarHeight);
+        bp = Bitmap.createBitmap(bmp, 0, statusBarHeight, width, height - statusBarHeight);
         view.destroyDrawingCache();
         return bp;
-
     }
 
     public static double getInches(Context context) {

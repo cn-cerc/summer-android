@@ -42,7 +42,6 @@ public class CustomSeekBar extends LinearLayout implements SeekBar.OnSeekBarChan
         init(context);
     }
 
-
     private int min = 0;//区间最小值
     private int max = 50;//最大值
 

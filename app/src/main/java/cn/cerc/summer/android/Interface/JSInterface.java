@@ -8,6 +8,8 @@ import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
@@ -102,10 +104,45 @@ public class JSInterface extends Object {
         jsInterfaceLintener.LoginOrLogout(false, "");
     }
 
+    /**
+     * 拍照
+     * @param json  json格式的
+     */
     @JavascriptInterface
     public void paizhao(String json){
-        jsInterfaceLintener.Action(json);
-
+        String action = JSON.parseObject(json).getString("action");
+        jsInterfaceLintener.Action(json, action);
     }
+
+    /**
+     * 播放声音
+     * @param json
+     */
+    @JavascriptInterface
+    public void soundplay(String json){
+        String action = JSON.parseObject(json).getString("action");
+        jsInterfaceLintener.Action(json, action);
+    }
+
+    /**
+     * 扫码
+     * @param json
+     */
+    @JavascriptInterface
+    public void zxing(){
+//        String action = JSON.parseObject(json).getString("action");
+        String action = "zxing";
+        jsInterfaceLintener.Action("", action);
+    }
+
+    /**
+     * 打电话
+     * @param json
+     */
+    @JavascriptInterface
+    public void callphone(String phone){
+        jsInterfaceLintener.Action(phone, "call");
+    }
+
 
 }

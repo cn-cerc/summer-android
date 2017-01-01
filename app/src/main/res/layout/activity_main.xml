@@ -43,8 +43,9 @@
 
             <ImageView
                 android:id="@+id/more"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:scaleType="centerInside"
                 android:layout_centerInParent="true"
                 android:src="@drawable/ic_more_vert_white_24dp"/>
 

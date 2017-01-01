@@ -18,6 +18,6 @@ public interface JSInterfaceLintener {
      */
     void LoginOrLogout(boolean islogin,String rul);
 
-    void Action(String pu);
+    void Action(String json, String action);
 
 }

@@ -20,7 +20,7 @@
         <item name="android:orientation">vertical</item>
         <item name="android:gravity">center_horizontal</item>
         <!-- <item name="android:background">@drawable/nav_page</item> -->
-        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:background">#00000000</item>
     </style>
 
 
