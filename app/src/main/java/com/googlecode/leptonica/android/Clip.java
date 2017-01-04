@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package cn.cerc.summer.android.OCR.leptonica.android;
+package com.googlecode.leptonica.android;
 
 /**
  * Extract rectangular regions.

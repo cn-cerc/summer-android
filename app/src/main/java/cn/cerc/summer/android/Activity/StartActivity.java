@@ -20,6 +20,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.ant.liao.GifView;
@@ -43,8 +44,11 @@ import cn.cerc.summer.android.Utils.XHttpRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.io.File;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,7 +85,34 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
             XHttpRequest.getInstance().GET(AppUtil.buildDeviceUrl(MyConfig.HOME_URL + "/MobileConfig"), this);
         }
 
+        loadteass();//下载语言文件
         initView();
+    }
+
+    public void loadteass(){
+        RequestParams request = new RequestParams("http://ehealth.lucland.com/eng.traineddata");
+        File file = new File(Constans.getAppPath(Constans.TESSDATA_PATH) + "/eng.traineddata");
+        if (file.exists()) return;
+        request.setSaveFilePath(Constans.getAppPath(Constans.TESSDATA_PATH) + "/eng.traineddata");
+        x.http().get(request, new Callback.CommonCallback<File>() {
+            @Override
+            public void onSuccess(File result) {
+//                Toast.makeText(StartActivity.this,"下载完成了", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                loadteass();
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+            }
+
+            @Override
+            public void onFinished() {
+            }
+        });
     }
 
     private void initView() {
@@ -154,12 +185,11 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
         settingShared.edit().putString(Constans.HOME, homeurl).putString(Constans.SHARED_MSG_URL, msgurl).putString(Constans.SHARED_START_URL, config.getStartImage()).commit();
 
         MainActivity.getInstance().Update();
-
-        if (settingShared.getInt(Constans.FAIL_NUM_SHAREDKEY,1) > 0){
-            load_gif.setVisibility(View.VISIBLE);
+//        if (settingShared.getInt(Constans.FAIL_NUM_SHAREDKEY,1) > 0){
+//            load_gif.setVisibility(View.VISIBLE);
             imageview.setVisibility(View.VISIBLE);
             imageview.setImageResource(R.mipmap.init_bg);
-        }
+//        }
         List<String> list = config.getCacheFiles();
         if (list != null && list.size() > 0) {
             XHttpRequest.getInstance().ConfigFileGet(list, StartActivity.this);

@@ -67,9 +67,6 @@ public class ScanCardActivity extends BaseActivity implements SurfaceHolder.Call
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (handler == null) {
-//            handler = new CaptureActivityHandler(this, decodeFormats, characterSet);
-        }
     }
 
     @Override

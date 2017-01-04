@@ -14,12 +14,12 @@
  * the License.
  */
 
-package cn.cerc.summer.android.OCR.tesseract.android;
+package com.googlecode.tesseract.android;
 
 import android.util.Log;
 import android.util.Pair;
 
-import cn.cerc.summer.android.OCR.tesseract.android.TessBaseAPI.PageIteratorLevel;
+import com.googlecode.tesseract.android.TessBaseAPI.PageIteratorLevel;
 
 import java.util.ArrayList;
 import java.util.List;

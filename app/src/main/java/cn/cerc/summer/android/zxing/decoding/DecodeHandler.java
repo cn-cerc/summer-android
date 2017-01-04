@@ -16,13 +16,21 @@
 
 package cn.cerc.summer.android.zxing.decoding;
 
+import java.io.IOException;
 import java.util.Hashtable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import android.app.AlertDialog;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
@@ -33,9 +41,13 @@ import com.google.zxing.common.HybridBinarizer;
 import com.huagu.ehealth.R;
 
 import cn.cerc.summer.android.Activity.MipcaActivityCapture;
+
+import com.googlecode.tesseract.android.TessBaseAPI;
+
+import cn.cerc.summer.android.MyApplication;
+import cn.cerc.summer.android.Utils.ClearImageHelper;
 import cn.cerc.summer.android.zxing.camera.CameraManager;
 import cn.cerc.summer.android.zxing.camera.PlanarYUVLuminanceSource;
-
 
 final class DecodeHandler extends Handler {
 
@@ -43,10 +55,25 @@ final class DecodeHandler extends Handler {
 
     private final MipcaActivityCapture activity;
     private final MultiFormatReader multiFormatReader;
+    private final TessBaseAPI tessBaseAPI;
+    private final ClearImageHelper cih;
 
     DecodeHandler(MipcaActivityCapture activity, Hashtable<DecodeHintType, Object> hints) {
         multiFormatReader = new MultiFormatReader();
         multiFormatReader.setHints(hints);
+        tessBaseAPI = new TessBaseAPI();
+        tessBaseAPI.setDebug(true);
+        try{
+            String path = MyApplication.getInstance().getExternalFilesDir("").getAbsolutePath();
+            Log.e("path : ", path);
+            tessBaseAPI.init(path, "eng");//eng  /i_sim
+        }catch(IllegalArgumentException e){
+            Toast.makeText(activity, "初始化失败", Toast.LENGTH_SHORT).show();
+            activity.finish();
+            e.printStackTrace();
+        }
+        cih = new ClearImageHelper();
+
         this.activity = activity;
     }
 
@@ -86,28 +113,58 @@ final class DecodeHandler extends Handler {
         height = tmp;
 
         PlanarYUVLuminanceSource source = CameraManager.get().buildLuminanceSource(rotatedData, width, height);
-        BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
-        try {
-            rawResult = multiFormatReader.decodeWithState(bitmap);
-        } catch (ReaderException re) {
-            // continue
-        } finally {
-            multiFormatReader.reset();
-        }
-
-        if (rawResult != null) {
-            long end = System.currentTimeMillis();
-            Log.d(TAG, "Found barcode (" + (end - start) + " ms):\n" + rawResult.toString());
-            Message message = Message.obtain(activity.getHandler(), R.id.decode_succeeded, rawResult);
-            Bundle bundle = new Bundle();
-            bundle.putParcelable(DecodeThread.BARCODE_BITMAP, source.renderCroppedGreyscaleBitmap());
-            message.setData(bundle);
-            //Log.d(TAG, "Sending decode succeeded message...");
-            message.sendToTarget();
+        if ("card".equals(activity.getScanType())) {
+            String CardCode = decodeBitmap(source);
+            if (CardCode != null) {
+                rawResult = new Result(CardCode, null, null, null);
+                tessBaseAPI.stop();
+            } else tessBaseAPI.clear();
         } else {
-            Message message = Message.obtain(activity.getHandler(), R.id.decode_failed);
-            message.sendToTarget();
+            BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+            try {
+                rawResult = multiFormatReader.decodeWithState(bitmap);
+            } catch (ReaderException re) {
+                // continue
+            } finally {
+                multiFormatReader.reset();
+            }
         }
+        if ((System.currentTimeMillis() - endtine) > 1000)
+            if (rawResult != null) {
+                endtine = System.currentTimeMillis();
+                Log.d(TAG, "Found barcode (" + (endtine - start) + " ms):\n" + rawResult.toString());
+                Message message = Message.obtain(activity.getHandler(), R.id.decode_succeeded, rawResult);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(DecodeThread.BARCODE_BITMAP, source.renderCroppedGreyscaleBitmap());
+                message.setData(bundle);
+                //Log.d(TAG, "Sending decode succeeded message...");
+                message.sendToTarget();
+            } else {
+                Message message = Message.obtain(activity.getHandler(), R.id.decode_failed);
+                message.sendToTarget();
+            }
+    }
+
+    long endtine = 0;
+
+    public String decodeBitmap(PlanarYUVLuminanceSource source) {
+        Bitmap bitmap = source.renderCroppedGreyscaleBitmap();//获取灰度图
+        tessBaseAPI.setImage(bitmap);
+        String recognizedText = tessBaseAPI.getUTF8Text();
+        return getCardCode(recognizedText);
+    }
+
+    public String getCardCode(String recognizedText) {
+        Pattern p = Pattern.compile("\\d{17}");//正则匹配卡号
+        Matcher m = p.matcher(recognizedText);
+        String code = "";
+        while (m.find()) {
+            code = m.group();
+        }
+        if (!TextUtils.isEmpty(code) && code.length() == 17) {
+            Log.e("cururl", code + " code:");
+            return code;
+        } else return null;
     }
 
 }

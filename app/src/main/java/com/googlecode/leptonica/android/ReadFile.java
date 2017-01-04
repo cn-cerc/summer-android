@@ -14,7 +14,7 @@
  * the License.
  */
 
-package cn.cerc.summer.android.OCR.leptonica.android;
+package com.googlecode.leptonica.android;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

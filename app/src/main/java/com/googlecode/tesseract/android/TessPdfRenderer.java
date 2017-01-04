@@ -14,7 +14,7 @@
  * the License.
  */
 
-package cn.cerc.summer.android.OCR.tesseract.android;
+package com.googlecode.tesseract.android;
 
 /**
  * Java representation of a native Tesseract PDF renderer

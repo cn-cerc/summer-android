@@ -8,7 +8,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 24
         versionCode 1
-        versionName "1.2.1"
+        versionName "1.2.2"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -17,6 +17,11 @@ android {
                 JPUSH_APPKEY : "16c4218fdc2f5f85e9276721", //JPush上注册的包名对应的appkey.
                 JPUSH_CHANNEL : "developer-default"
         ]
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
     }
     buildTypes {
         release {

@@ -17,19 +17,16 @@
 package cn.cerc.summer.android.zxing.camera;
 
 import java.io.IOException;
-import java.util.List;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
-import android.hardware.Camera.Size;
 import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 
 /**
  * This object wraps the Camera service object and expects to be the only one talking to it. The
@@ -42,9 +39,11 @@ public final class CameraManager {
 
     private static final int MIN_FRAME_WIDTH = 480;
     private static final int MIN_FRAME_HEIGHT = 480;
-
     private static final int MAX_FRAME_WIDTH = 640;
     private static final int MAX_FRAME_HEIGHT = 640;
+
+    private static final int CARD_WIDTH = 1080;//扫描卡的宽
+    private static final int CARD_HEIGHT = 678;//扫描卡的高
 
     private static CameraManager cameraManager;
 
@@ -65,6 +64,7 @@ public final class CameraManager {
     private final CameraConfigurationManager configManager;
     private Camera camera;
     private Rect framingRect;
+    private Rect card_framingRect;
     private Rect framingRectInPreview;
     private boolean initialized;
     private boolean previewing;
@@ -85,9 +85,7 @@ public final class CameraManager {
      * @param context The Activity which wants to use the camera.
      */
     public static void init(Context context) {
-        if (cameraManager == null) {
-            cameraManager = new CameraManager(context);
-        }
+        if (cameraManager == null) cameraManager = new CameraManager(context);
     }
 
     /**
@@ -99,8 +97,13 @@ public final class CameraManager {
         return cameraManager;
     }
 
-    private CameraManager(Context context) {
+    private String type;
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    private CameraManager(Context context) {
         this.context = context;
         this.configManager = new CameraConfigurationManager(context);
 
@@ -113,9 +116,6 @@ public final class CameraManager {
 
         previewCallback = new PreviewCallback(configManager, useOneShotPreviewCallback);
         autoFocusCallback = new AutoFocusCallback();
-
-
-
     }
 
     /**
@@ -125,7 +125,6 @@ public final class CameraManager {
      * @throws IOException Indicates the camera driver failed to open.
      */
     public void openDriver(SurfaceHolder holder) throws IOException {
-
         if (camera == null) {
             camera = Camera.open();
             if (camera == null) {
@@ -139,6 +138,12 @@ public final class CameraManager {
             }
             configManager.setDesiredCameraParameters(camera);
 
+            //FIXME
+            //     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            //�Ƿ�ʹ��ǰ��
+//      if (prefs.getBoolean(PreferencesActivity.KEY_FRONT_LIGHT, false)) {
+//        FlashlightManager.enableFlashlight();
+//      }
             FlashlightManager.enableFlashlight();
         }
     }
@@ -221,32 +226,41 @@ public final class CameraManager {
      */
     public Rect getFramingRect() {
         Point screenResolution = configManager.getScreenResolution();
-        if (framingRect == null) {
-            if (camera == null) {
-                return null;
-            }
-            int width = screenResolution.x * 3 / 4;
-            if (width < MIN_FRAME_WIDTH) {
-                width = MIN_FRAME_WIDTH;
-            } else if (width > MAX_FRAME_WIDTH) {
-                width = MAX_FRAME_WIDTH;
-            }
-            int height = screenResolution.y * 3 / 4;
-            if (height < MIN_FRAME_HEIGHT) {
-                height = MIN_FRAME_HEIGHT;
-            } else if (height > MAX_FRAME_HEIGHT) {
-                height = MAX_FRAME_HEIGHT;
-            }
-            int leftOffset = (screenResolution.x - width) / 2;
-            int topOffset = (screenResolution.y - height) / 2;
-            framingRect = new Rect(leftOffset, topOffset, leftOffset + width, topOffset + height);
-            Log.d(TAG, "Calculated framing rect: " + framingRect);
-        }
-        return framingRect;
-    }
+        if ("qrcode".equals(type)) {
+            if (framingRect == null) {
+                if (camera == null) {
+                    return null;
+                }
+                int width = screenResolution.x * 3 / 4;
+                if (width < MIN_FRAME_WIDTH) {
+                    width = MIN_FRAME_WIDTH;
+                } else if (width > MAX_FRAME_WIDTH) {
+                    width = MAX_FRAME_WIDTH;
+                }
+                int height = screenResolution.y * 3 / 4;
+                if (height < MIN_FRAME_HEIGHT) {
+                    height = MIN_FRAME_HEIGHT;
+                } else if (height > MAX_FRAME_HEIGHT) {
+                    height = MAX_FRAME_HEIGHT;
+                }
 
-    public Point getCameraResolution(){
-        return configManager.getCameraResolution();
+                int leftOffset = (screenResolution.x - width) / 2;
+                int topOffset = (screenResolution.y - height) / 2;
+                framingRect = new Rect(leftOffset, topOffset, leftOffset + width, topOffset + height);
+                Log.d(TAG, "Calculated framing rect: " + framingRect);
+            }
+            return framingRect;
+        }else{
+            if (card_framingRect == null) {
+                if (camera == null) {
+                    return null;
+                }
+                int leftOffset = (screenResolution.x - CARD_WIDTH) / 2;
+                int topOffset = (screenResolution.y - CARD_HEIGHT) / 2;
+                card_framingRect = new Rect(leftOffset, topOffset, leftOffset + CARD_WIDTH, topOffset + CARD_HEIGHT);
+            }
+            return card_framingRect;
+        }
     }
 
     /**

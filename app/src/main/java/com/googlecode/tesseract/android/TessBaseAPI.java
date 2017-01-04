@@ -15,16 +15,16 @@
  * the License.
  */
 
-package cn.cerc.summer.android.OCR.tesseract.android;
+package com.googlecode.tesseract.android;
 
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 
 import java.io.File;
 
-import cn.cerc.summer.android.OCR.leptonica.android.Pix;
-import cn.cerc.summer.android.OCR.leptonica.android.Pixa;
-import cn.cerc.summer.android.OCR.leptonica.android.ReadFile;
+import com.googlecode.leptonica.android.Pix;
+import com.googlecode.leptonica.android.Pixa;
+import com.googlecode.leptonica.android.ReadFile;
 
 /**
  * Java interface for the Tesseract OCR engine. Does not implement all available

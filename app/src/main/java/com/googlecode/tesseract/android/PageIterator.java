@@ -14,11 +14,11 @@
  * the License.
  */
 
-package cn.cerc.summer.android.OCR.tesseract.android;
+package com.googlecode.tesseract.android;
 
 import android.graphics.Rect;
 
-import cn.cerc.summer.android.OCR.tesseract.android.TessBaseAPI.PageIteratorLevel;
+import com.googlecode.tesseract.android.TessBaseAPI.PageIteratorLevel;
 
 public class PageIterator {
     static {

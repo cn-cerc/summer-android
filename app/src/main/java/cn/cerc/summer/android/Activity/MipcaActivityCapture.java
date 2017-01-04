@@ -33,7 +33,6 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.huagu.ehealth.R;
 
-import cn.cerc.summer.android.Utils.ScreenUtils;
 import cn.cerc.summer.android.zxing.camera.CameraManager;
 import cn.cerc.summer.android.zxing.decoding.CaptureActivityHandler;
 import cn.cerc.summer.android.zxing.decoding.InactivityTimer;
@@ -56,13 +55,18 @@ public class MipcaActivityCapture extends BaseActivity implements Callback {
 	private static final float BEEP_VOLUME = 0.10f;
 	private boolean vibrate;
 
+	private String scantype = "qrcode";
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_capture);
-		//ViewUtil.addTopView(getApplicationContext(), this, R.string.scan_card);
+		if (getIntent().hasExtra("scantype"))
+			scantype = getIntent().getStringExtra("scantype");
+
 		CameraManager.init(getApplication());
+		CameraManager.get().setType(scantype);
 		viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
 
 		ImageView mButtonBack = (ImageView) findViewById(R.id.back);
@@ -71,7 +75,6 @@ public class MipcaActivityCapture extends BaseActivity implements Callback {
 			@Override
 			public void onClick(View v) {
 				MipcaActivityCapture.this.finish();
-				
 			}
 		});
 		hasSurface = false;
@@ -135,7 +138,7 @@ public class MipcaActivityCapture extends BaseActivity implements Callback {
 			Intent resultIntent = new Intent();
 			Bundle bundle = new Bundle();
 			bundle.putString("result", resultString);
-			bundle.putParcelable("bitmap", barcode);
+//			bundle.putParcelable("bitmap", barcode);//bitmap太大，传输报错
 			resultIntent.putExtras(bundle);
 			this.setResult(RESULT_OK, resultIntent);
 		}
@@ -178,6 +181,10 @@ public class MipcaActivityCapture extends BaseActivity implements Callback {
 
 	public ViewfinderView getViewfinderView() {
 		return viewfinderView;
+	}
+
+	public String getScanType(){
+		return scantype;
 	}
 
 	public Handler getHandler() {

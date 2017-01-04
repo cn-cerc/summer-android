@@ -43,17 +43,11 @@ public class ClearImageHelper {
     }
 
     /**
-     * @param sfile   需要去噪的图像
-     * @param destDir 去噪后的图像保存地址
+     * @param bufferedImage   需要去噪的图像
      * @throws IOException
      */
-    public static void cleanImage(File sfile, String destDir) throws IOException {
-        File destF = new File(destDir);
-        if (!destF.exists()) {
-            destF.mkdirs();
-        }
+    public static Bitmap cleanImage(Bitmap bufferedImage) throws IOException {
 
-        Bitmap bufferedImage = BitmapFactory.decodeFile(sfile.getAbsolutePath());
         int h = bufferedImage.getHeight();
         int w = bufferedImage.getWidth();
 
@@ -90,8 +84,7 @@ public class ClearImageHelper {
             }
         }
 
-        File file = new File(destDir, sfile.getName());
-        FileUtil.createFile(binaryBufferedImage, file);
+        return binaryBufferedImage;
     }
 
     public static boolean isBlack(int colorInt) {

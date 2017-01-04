@@ -144,5 +144,13 @@ public class JSInterface extends Object {
         jsInterfaceLintener.Action(phone, "call");
     }
 
+    /**
+     * 扫卡
+     */
+    @JavascriptInterface
+    public void scancard(){
+        String action = "card";
+        jsInterfaceLintener.Action("", action);
+    }
 
 }

@@ -119,6 +119,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     public static final int REQUEST_PHOTO_CAMERA = 111;//拍照请求
     public static final int REQUEST_PHOTO_CROP = 113;//裁剪请求
     public static final int REQUEST_SCAN_QRCODE = 114;//扫码请求
+    public static final int REQUEST_SCAN_CARD = 115;//扫卡请求
 
     private final int REQUEST_SETTING = 101;//进入设置页面请求
 
@@ -458,6 +459,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                         webview.loadUrl(getMsgUrl(""));
                         break;
                     case 2:
+//                        Action("","card");//测试时使用
                         webview.loadUrl(homeurl);
                         break;
                     case 3:
@@ -594,8 +596,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-//                if (MainActivity.this.islogin) more.setVisibility(View.VISIBLE);
-//                else more.setVisibility(View.INVISIBLE);
+                if (MainActivity.this.islogin) more.setVisibility(View.VISIBLE);
+                else more.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -619,7 +621,13 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         }else if ("zxing".equals(action)){
             zxu = ZXingUtils.getInstance();
             zxu.setJson(json);
-            zxu.startScan(this, REQUEST_SCAN_QRCODE);
+            if (PermissionUtils.getPermission(new String[]{Manifest.permission.CAMERA}, PermissionUtils.REQUEST_CAMERA_STATE, this))
+                zxu.startScan(this, REQUEST_SCAN_QRCODE);
+        }else if ("card".equals(action)){
+            zxu = ZXingUtils.getInstance();
+            zxu.setJson(json);
+            if (PermissionUtils.getPermission(new String[]{Manifest.permission.CAMERA}, PermissionUtils.REQUEST_CAMERA_STATE, this))
+                zxu.startScan(this, REQUEST_SCAN_CARD);
         }else if ("call".equals(action)){
             phone = json;
             if (PermissionUtils.getPermission(new String[]{Manifest.permission.CALL_PHONE}, PermissionUtils.REQUEST_CALL_PHONE_STATE, this)) {
@@ -684,15 +692,15 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             } else if (resultCode == RESULT_CANCELED) Toast.makeText(this, "取消裁剪图片", Toast.LENGTH_SHORT).show();
         }else if (requestCode == REQUEST_SCAN_QRCODE){
             if (resultCode == RESULT_OK) {
-
-//                AlertDialog.Builder alert = new AlertDialog.Builder(this);
-//                ImageView image = new ImageView(this);
-//                image.setImageBitmap(((Bitmap) data.getParcelableExtra("bitmap")));
-//                alert.setView(image);
-//                alert.create().show();
-
                 String Scanresult = data.getStringExtra("result");
+                Toast.makeText(this, Scanresult, Toast.LENGTH_SHORT).show();
                 webview.loadUrl(String.format("javascript:appRichScan('%s')",Scanresult));
+            }
+        }else if (requestCode == REQUEST_SCAN_CARD){
+            if (resultCode == RESULT_OK) {
+                String Scanresult = data.getStringExtra("result");
+                Toast.makeText(this, Scanresult, Toast.LENGTH_SHORT).show();
+                webview.loadUrl(String.format("javascript:scanCall('%s')", Scanresult));
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

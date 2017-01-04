@@ -42,7 +42,6 @@ final class DecodeThread extends Thread {
     private final CountDownLatch handlerInitLatch;
 
     DecodeThread(MipcaActivityCapture activity, Vector<BarcodeFormat> decodeFormats, String characterSet, ResultPointCallback resultPointCallback) {
-
         this.activity = activity;
         handlerInitLatch = new CountDownLatch(1);
 
