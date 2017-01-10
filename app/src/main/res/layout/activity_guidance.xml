@@ -14,10 +14,4 @@
             android:background="@mipmap/init_bg"
             android:visibility="gone"/>
 
-        <com.ant.liao.GifView
-            android:id="@+id/load_gif"
-            android:layout_width="200dp"
-            android:layout_height="300dp"
-            android:visibility="gone"/>
-
 </RelativeLayout>

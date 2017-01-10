@@ -58,7 +58,7 @@ import java.util.Map;
 public class StartActivity extends BaseActivity implements ActivityCompat.OnRequestPermissionsResultCallback, RequestCallback, ConfigFileLoafCallback {
 
     private ImageView imageview;
-    private GifView load_gif;
+
     private static StartActivity ga;
 
     public static StartActivity getInstance() {
@@ -117,17 +117,6 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
 
     private void initView() {
         imageview = (ImageView) this.findViewById(R.id.imageview);
-        load_gif = (GifView) this.findViewById(R.id.load_gif);
-        RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        rlp.leftMargin = ScreenUtils.getScreenWidth(this) / 2;
-        rlp.bottomMargin = ScreenUtils.getScreenHeight(this) / 8 * 5;
-        rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        rlp.width = ScreenUtils.getScreenWidth(this) / 3;
-        rlp.height = ScreenUtils.getScreenHeight(this) / 5;
-        load_gif.setLayoutParams(rlp);
-        load_gif.setShowDimension(ScreenUtils.getScreenWidth(this) / 3, ScreenUtils.getScreenHeight(this) / 5);
-        load_gif.setGifImage(R.mipmap.start_init);
-        load_gif.setGifImageType(GifView.GifImageType.WAIT_FINISH);
 
         String image = settingShared.getString(Constans.SHARED_START_URL, "");
         if (settingShared.getBoolean(Constans.IS_FIRST_SHAREDKEY, true))
@@ -185,11 +174,10 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
         settingShared.edit().putString(Constans.HOME, homeurl).putString(Constans.SHARED_MSG_URL, msgurl).putString(Constans.SHARED_START_URL, config.getStartImage()).commit();
 
         MainActivity.getInstance().Update();
-//        if (settingShared.getInt(Constans.FAIL_NUM_SHAREDKEY,1) > 0){
-//            load_gif.setVisibility(View.VISIBLE);
-            imageview.setVisibility(View.VISIBLE);
-            imageview.setImageResource(R.mipmap.init_bg);
-//        }
+
+        imageview.setVisibility(View.VISIBLE);
+        imageview.setImageResource(R.mipmap.init_bg);
+
         List<String> list = config.getCacheFiles();
         if (list != null && list.size() > 0) {
             XHttpRequest.getInstance().ConfigFileGet(list, StartActivity.this);
@@ -206,23 +194,8 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
     }
 
     public void prestrainImage() {
-        ImageLoader.getInstance().loadImage(config.getWelcomeImages().get(0), MyApplication.getInstance().options, new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String s, View view) {
-            }
-
-            @Override
-            public void onLoadingFailed(String s, View view, FailReason failReason) {
-            }
-
-            @Override
-            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-            }
-
-            @Override
-            public void onLoadingCancelled(String s, View view) {
-            }
-        });
+        if (config.getWelcomeImages() != null && config.getWelcomeImages().size()>0)
+            ImageLoader.getInstance().loadImage(config.getWelcomeImages().get(0), MyApplication.getInstance().options, null);
     }
 
     @Override

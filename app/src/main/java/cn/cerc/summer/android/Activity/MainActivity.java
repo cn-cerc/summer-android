@@ -3,37 +3,28 @@ package cn.cerc.summer.android.Activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.media.Image;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.GeolocationPermissions;
-import android.webkit.JavascriptInterface;
 import android.webkit.PermissionRequest;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
@@ -45,9 +36,7 @@ import android.widget.Toast;
 
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Entity.Menu;
-import cn.cerc.summer.android.Interface.ConfigFileLoafCallback;
 import cn.cerc.summer.android.Interface.JSInterfaceLintener;
-import cn.cerc.summer.android.MyConfig;
 import cn.cerc.summer.android.Receiver.MyBroadcastReceiver;
 import cn.cerc.summer.android.Utils.AppUtil;
 import cn.cerc.summer.android.Utils.Constans;
@@ -57,7 +46,6 @@ import cn.cerc.summer.android.Utils.PermissionUtils;
 import cn.cerc.summer.android.Utils.PhotoUtils;
 import cn.cerc.summer.android.Utils.ScreenUtils;
 import cn.cerc.summer.android.Utils.SoundUtils;
-import cn.cerc.summer.android.Utils.XHttpRequest;
 import cn.cerc.summer.android.Utils.ZXingUtils;
 import cn.cerc.summer.android.View.DragPointView;
 import cn.cerc.summer.android.View.MyWebView;
@@ -69,13 +57,11 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.huagu.ehealth.R;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.analytics.MobclickAgent.UMAnalyticsConfig;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -190,6 +176,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     protected void onResume() {
         super.onResume();
         JPushInterface.onResume(this);
+        MobclickAgent.onResume(this);
 
         Set<String> set = new HashSet<String>();
         set.add("android");
@@ -246,8 +233,13 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
         webview.addJavascriptInterface(new JSInterface(this), "JSobj");//JSobj 供web端js调用标识，修改请通知web开发者
 
-        webview.setWebViewClient(new WebViewClient() {
+//        MobclickAgent.startWithConfigure(new UMAnalyticsConfig(this, "", ""));
+        //统计sdk
+//        MobclickAgent.setDebugMode(true);
+//        MobclickAgent.openActivityDurationTrack(false);
+//        MobclickAgent.setSessionContinueMillis(1000);
 
+        webview.setWebViewClient(new WebViewClient() {
             @Override
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
@@ -311,6 +303,10 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
             @Override
             public void onPageFinished(WebView view, String url) {
+//                view.loadUrl("javascript:setWebViewFlag()");
+//                if (url != null && url.contains("FrmIndex")) {
+//                    MobclickAgent.onPageStart(url);
+//                }
                 if (is_ERROR) {
                     title.setText("出错了");
                     image_tips.setVisibility(View.VISIBLE);
@@ -453,7 +449,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        webview.loadUrl(getMsgUrl("") + "&unread=1");
+                        webview.loadUrl(getMsgUrl(".unread"));
                         break;
                     case 1:
                         webview.loadUrl(getMsgUrl(""));
@@ -523,6 +519,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     protected void onPause() {
         super.onPause();
         JPushInterface.onPause(this);
+        MobclickAgent.onPause(this);
     }
 
     /**

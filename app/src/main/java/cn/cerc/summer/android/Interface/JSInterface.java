@@ -126,7 +126,6 @@ public class JSInterface extends Object {
 
     /**
      * 扫码
-     * @param json
      */
     @JavascriptInterface
     public void zxing(){
@@ -137,7 +136,7 @@ public class JSInterface extends Object {
 
     /**
      * 打电话
-     * @param json
+     * @param phone
      */
     @JavascriptInterface
     public void callphone(String phone){

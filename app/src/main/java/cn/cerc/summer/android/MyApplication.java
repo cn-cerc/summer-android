@@ -48,10 +48,8 @@ public class MyApplication extends Application {
 
         instance = this;
 
-        x.Ext.init(this);//xutils 初始化
-        x.Ext.setDebug(true);//设置为debug
+        init();
 
-        InitImageLoader();
         options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.mipmap.init_bg) // 设置图片下载期间显示的图片
                 .showImageForEmptyUri(R.mipmap.error) // 设置图片Uri为空或是错误的时候显示的图片
@@ -63,10 +61,6 @@ public class MyApplication extends Application {
                 .bitmapConfig(Bitmap.Config.RGB_565) // default 设置图片的解码类型
                 .displayer(new FadeInBitmapDisplayer(500))
                 .build();
-
-        JPushInterface.init(this);
-        JPushInterface.setDebugMode(true);
-
     }
 
     /**
@@ -81,9 +75,18 @@ public class MyApplication extends Application {
         config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
         config.diskCacheSize(200 * 1024 * 1024); // 100 MiB
         config.tasksProcessingOrder(QueueProcessingType.LIFO);
-        // config.writeDebugLogs(); // Remove for release app
         ImageLoader.getInstance().init(config.build());
 
+    }
+
+    public void init(){
+        x.Ext.init(this);//xutils 初始化
+        x.Ext.setDebug(true);//设置为debug
+
+        InitImageLoader();
+
+        JPushInterface.init(this);
+        JPushInterface.setDebugMode(true);
     }
 
 }

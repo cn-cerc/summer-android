@@ -53,7 +53,7 @@ public class AdActivity extends BaseActivity implements View.OnClickListener, Vi
         viewpager.setOffscreenPageLimit(2);
         contan = (LinearLayout) this.findViewById(R.id.contan);
         skip = (TextView) this.findViewById(R.id.skip);
-
+        skip.setVisibility(View.INVISIBLE);
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,8 +69,10 @@ public class AdActivity extends BaseActivity implements View.OnClickListener, Vi
             ImageLoader.getInstance().displayImage(list.get(i),imageView,MyApplication.getInstance().options);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageview.add(imageView);
-            if (i == (list.size()-1))
+            if (i == (list.size()-1)){
                 imageView.setOnClickListener(this);
+                skip.setVisibility(View.VISIBLE);
+            }
 
             View view = new View(this);
             view.setBackgroundResource(R.drawable.point_white);

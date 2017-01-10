@@ -54,6 +54,7 @@ public class GuidanceActivity extends BaseActivity implements View.OnClickListen
         viewpager.setOffscreenPageLimit(2);
         contan = (LinearLayout) this.findViewById(R.id.contan);
         skip = (TextView) this.findViewById(R.id.skip);
+        skip.setVisibility(View.INVISIBLE);
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,6 +71,7 @@ public class GuidanceActivity extends BaseActivity implements View.OnClickListen
             imageview.add(imageView);
             if (i == (list.size() - 1)) {
                 imageView.setOnClickListener(this);
+                skip.setVisibility(View.VISIBLE);
             }
             View view = new View(this);
             view.setBackgroundResource(R.drawable.point_white);
