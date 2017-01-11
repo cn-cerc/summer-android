@@ -55,24 +55,29 @@ final class DecodeHandler extends Handler {
 
     private final MipcaActivityCapture activity;
     private final MultiFormatReader multiFormatReader;
-    private final TessBaseAPI tessBaseAPI;
-    private final ClearImageHelper cih;
+    private TessBaseAPI tessBaseAPI = null ;
+//    private final ClearImageHelper cih;
 
     DecodeHandler(MipcaActivityCapture activity, Hashtable<DecodeHintType, Object> hints) {
         multiFormatReader = new MultiFormatReader();
         multiFormatReader.setHints(hints);
-        tessBaseAPI = new TessBaseAPI();
-        tessBaseAPI.setDebug(true);
-        try{
-            String path = MyApplication.getInstance().getExternalFilesDir("").getAbsolutePath();
-            Log.e("path : ", path);
-            tessBaseAPI.init(path, "eng");//eng  /i_sim
-        }catch(IllegalArgumentException e){
-            Toast.makeText(activity, "初始化失败", Toast.LENGTH_SHORT).show();
-            activity.finish();
-            e.printStackTrace();
+
+        if ("card".equals(activity.getScanType())) {
+            try {
+                tessBaseAPI = new TessBaseAPI();
+                tessBaseAPI.setDebug(true);
+                tessBaseAPI.setPageSegMode(TessBaseAPI.PageSegMode.PSM_AUTO_OSD);
+                String path = MyApplication.getInstance().getExternalFilesDir("").getAbsolutePath();
+                Log.e("path : ", path);
+                boolean bool = tessBaseAPI.init(path, "eng");//eng  /chi_sim
+                Log.e("path : ", bool+" 1111111111111111111");
+            } catch (IllegalArgumentException e) {
+                Toast.makeText(activity, "初始化失败", Toast.LENGTH_SHORT).show();
+                activity.finish();
+                e.printStackTrace();
+            }
         }
-        cih = new ClearImageHelper();
+//        cih = new ClearImageHelper();
 
         this.activity = activity;
     }

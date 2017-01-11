@@ -17,10 +17,10 @@
 
 package com.googlecode.tesseract.android;
 
+import java.io.File;
+
 import android.graphics.Bitmap;
 import android.graphics.Rect;
-
-import java.io.File;
 
 import com.googlecode.leptonica.android.Pix;
 import com.googlecode.leptonica.android.Pixa;

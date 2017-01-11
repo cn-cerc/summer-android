@@ -71,7 +71,6 @@ public class AdActivity extends BaseActivity implements View.OnClickListener, Vi
             imageview.add(imageView);
             if (i == (list.size()-1)){
                 imageView.setOnClickListener(this);
-                skip.setVisibility(View.VISIBLE);
             }
 
             View view = new View(this);
@@ -122,6 +121,8 @@ public class AdActivity extends BaseActivity implements View.OnClickListener, Vi
     }
     @Override
     public void onPageSelected(int position) {
+        if (position == (imageview.size() - 1)) skip.setVisibility(View.VISIBLE);
+        else skip.setVisibility(View.INVISIBLE);
         for (int i=0;i<contan.getChildCount();i++){
             if (position==i) contan.getChildAt(i).setBackgroundResource(R.drawable.point_white);
             else contan.getChildAt(i).setBackgroundResource(R.drawable.point_color);

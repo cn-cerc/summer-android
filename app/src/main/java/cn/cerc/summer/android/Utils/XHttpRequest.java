@@ -104,6 +104,36 @@ public class XHttpRequest implements AsyncFileLoafCallback {
         });
     }
 
+    /**
+     * 获取语言识别库文件
+     */
+    public void getTess(){
+        File file = new File(Constans.getAppPath(Constans.TESSDATA_PATH) + "/eng.traineddata");
+        if (file.exists()) return;
+        RequestParams request = new RequestParams("http://ehealth.lucland.com/eng.traineddata");
+        request.setSaveFilePath(Constans.getAppPath(Constans.TESSDATA_PATH) + "/eng.traineddata");
+        x.http().get(request, new Callback.CommonCallback<File>() {
+            @Override
+            public void onSuccess(File result) {
+//                Toast.makeText(StartActivity.this,"下载完成了", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                getTess();
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+            }
+
+            @Override
+            public void onFinished() {
+            }
+        });
+    }
+
+
     private ProgressDialog progressDialog;
 
     /**

@@ -28,6 +28,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
+import cn.cerc.summer.android.Utils.ScreenUtils;
+
 /**
  * This object wraps the Camera service object and expects to be the only one talking to it. The
  * implementation encapsulates the steps needed to take preview-sized images, which are used for
@@ -42,8 +44,8 @@ public final class CameraManager {
     private static final int MAX_FRAME_WIDTH = 640;
     private static final int MAX_FRAME_HEIGHT = 640;
 
-    private static final int CARD_WIDTH = 1080;//扫描卡的宽
-    private static final int CARD_HEIGHT = 678;//扫描卡的高
+    private static int CARD_WIDTH = 1080;//扫描卡的宽
+    private static int CARD_HEIGHT = 678;//扫描卡的高
 
     private static CameraManager cameraManager;
 
@@ -254,6 +256,10 @@ public final class CameraManager {
             if (card_framingRect == null) {
                 if (camera == null) {
                     return null;
+                }
+                if (ScreenUtils.getScreenWidth(context) < CARD_WIDTH) {
+                    CARD_WIDTH = ScreenUtils.getScreenWidth(context);
+                    CARD_HEIGHT = (int)(ScreenUtils.getScreenWidth(context) / (1080f / 678f));
                 }
                 int leftOffset = (screenResolution.x - CARD_WIDTH) / 2;
                 int topOffset = (screenResolution.y - CARD_HEIGHT) / 2;

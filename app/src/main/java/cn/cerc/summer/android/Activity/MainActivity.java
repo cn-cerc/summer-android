@@ -37,6 +37,7 @@ import android.widget.Toast;
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Entity.Menu;
 import cn.cerc.summer.android.Interface.JSInterfaceLintener;
+import cn.cerc.summer.android.MyApplication;
 import cn.cerc.summer.android.Receiver.MyBroadcastReceiver;
 import cn.cerc.summer.android.Utils.AppUtil;
 import cn.cerc.summer.android.Utils.Constans;
@@ -46,16 +47,14 @@ import cn.cerc.summer.android.Utils.PermissionUtils;
 import cn.cerc.summer.android.Utils.PhotoUtils;
 import cn.cerc.summer.android.Utils.ScreenUtils;
 import cn.cerc.summer.android.Utils.SoundUtils;
+import cn.cerc.summer.android.Utils.UMHybrid;
+import cn.cerc.summer.android.Utils.XHttpRequest;
 import cn.cerc.summer.android.Utils.ZXingUtils;
 import cn.cerc.summer.android.View.DragPointView;
 import cn.cerc.summer.android.View.MyWebView;
 import cn.cerc.summer.android.View.ShowDialog;
 import cn.cerc.summer.android.View.ShowPopupWindow;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.huagu.ehealth.R;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.analytics.MobclickAgent.UMAnalyticsConfig;
@@ -91,7 +90,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
     public String homeurl;//默认打开页
 
-    private GoogleApiClient client;
+//    private GoogleApiClient client;
 
     private String[] menus;//菜单
     private int[] menu_img = new int[]{R.mipmap.message, R.mipmap.msg_manager, R.mipmap.home, R.mipmap.setting, R.mipmap.wipe, R.mipmap.logout, R.mipmap.reload};
@@ -150,7 +149,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
         startActivity(new Intent(this, StartActivity.class));
 
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+//        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     /**
@@ -233,11 +232,10 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
         webview.addJavascriptInterface(new JSInterface(this), "JSobj");//JSobj 供web端js调用标识，修改请通知web开发者
 
-//        MobclickAgent.startWithConfigure(new UMAnalyticsConfig(this, "", ""));
-        //统计sdk
-//        MobclickAgent.setDebugMode(true);
-//        MobclickAgent.openActivityDurationTrack(false);
-//        MobclickAgent.setSessionContinueMillis(1000);
+//        统计sdk
+        MobclickAgent.setDebugMode(true);
+        MobclickAgent.openActivityDurationTrack(false);
+        MobclickAgent.setSessionContinueMillis(1000);
 
         webview.setWebViewClient(new WebViewClient() {
             @Override
@@ -255,6 +253,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     if (request.getUrl().toString().startsWith("http:") || request.getUrl().toString().startsWith("https:")) {
                         return super.shouldOverrideUrlLoading(view, request);
@@ -265,6 +264,13 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                try {
+                    Log.d("UMHybrid", "shouldOverrideUrlLoading url:" + url);
+                    String decodedURL = java.net.URLDecoder.decode(url, "UTF-8");
+                    UMHybrid.getInstance(MainActivity.this).execute(decodedURL, view);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 if (url.toString().startsWith("http:") || url.startsWith("https:")) {
                     return super.shouldOverrideUrlLoading(view, url);
                 }
@@ -303,10 +309,10 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
             @Override
             public void onPageFinished(WebView view, String url) {
-//                view.loadUrl("javascript:setWebViewFlag()");
-//                if (url != null && url.contains("FrmIndex")) {
-//                    MobclickAgent.onPageStart(url);
-//                }
+                view.loadUrl("javascript:setWebViewFlag()");
+                if (url != null && url.contains("FrmIndex")) {
+                    MobclickAgent.onPageStart(url);
+                }
                 if (is_ERROR) {
                     title.setText("出错了");
                     image_tips.setVisibility(View.VISIBLE);
@@ -315,8 +321,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                     image_tips.setVisibility(View.GONE);
                 }
                 if (isGoHome) {
-                    webview.clearHistory();
-                    webview.clearCache(true);
                     back.setVisibility(View.INVISIBLE);
                 } else {
                     back.setVisibility(View.VISIBLE);
@@ -387,6 +391,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
      * 退出点击的第一次的时间戳
      */
     private long timet = 0;
+
     /**
      * 是否直接退出
      */
@@ -543,25 +548,25 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     }
 
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("Main Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW).setObject(object).setActionStatus(Action.STATUS_TYPE_COMPLETED).build();
-    }
+//    /**
+//     * ATTENTION: This was auto-generated to implement the App Indexing API.
+//     * See https://g.co/AppIndexing/AndroidStudio for more information.
+//     */
+//    public Action getIndexApiAction() {
+//        Thing object = new Thing.Builder()
+//                .setName("Main Page") // TODO: Define a title for the content shown.
+//                // TODO: Make sure this auto-generated URL is correct.
+//                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+//                .build();
+//        return new Action.Builder(Action.TYPE_VIEW).setObject(object).setActionStatus(Action.STATUS_TYPE_COMPLETED).build();
+//    }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        client.connect();
-        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+//        client.connect();
+//        AppIndex.AppIndexApi.start(client, getIndexApiAction());
     }
 
     @Override
@@ -571,8 +576,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         if (su != null)
             su.onCompletion(null);
 
-        AppIndex.AppIndexApi.end(client, getIndexApiAction());
-        client.disconnect();
+//        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+//        client.disconnect();
     }
 
     //声音播放结束的回调
@@ -609,7 +614,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             pu = PhotoUtils.getInstance();
             pu.setJson(json);
             //首先判断是否有权限使用摄像头
-            if (PermissionUtils.getPermission(new String[]{Manifest.permission.CAMERA}, PermissionUtils.REQUEST_CAMERA_STATE, this))
+            if (PermissionUtils.getPermission(new String[]{Manifest.permission.CAMERA}, PermissionUtils.REQUEST_CAMERA_P_STATE, this))
                 pu.Start_P(this, REQUEST_PHOTO_CAMERA);
         }else if ("sound".equals(action)){
             su = SoundUtils.getInstance(this);
@@ -618,13 +623,24 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         }else if ("zxing".equals(action)){
             zxu = ZXingUtils.getInstance();
             zxu.setJson(json);
-            if (PermissionUtils.getPermission(new String[]{Manifest.permission.CAMERA}, PermissionUtils.REQUEST_CAMERA_STATE, this))
+            if (PermissionUtils.getPermission(new String[]{Manifest.permission.CAMERA}, PermissionUtils.REQUEST_CAMERA_Q_STATE, this))
                 zxu.startScan(this, REQUEST_SCAN_QRCODE);
         }else if ("card".equals(action)){
             zxu = ZXingUtils.getInstance();
             zxu.setJson(json);
-            if (PermissionUtils.getPermission(new String[]{Manifest.permission.CAMERA}, PermissionUtils.REQUEST_CAMERA_STATE, this))
-                zxu.startScan(this, REQUEST_SCAN_CARD);
+            if (PermissionUtils.getPermission(new String[]{Manifest.permission.CAMERA}, PermissionUtils.REQUEST_CAMERA_C_STATE, this)){
+                File file = new File(Constans.getAppPath(Constans.TESSDATA_PATH),"eng.traineddata");
+                if (file.exists()) zxu.startScan(this, REQUEST_SCAN_CARD);
+                else {
+                    XHttpRequest.getInstance().getTess();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(MainActivity.getInstance(), "正在初始化卡识别程序", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
         }else if ("call".equals(action)){
             phone = json;
             if (PermissionUtils.getPermission(new String[]{Manifest.permission.CALL_PHONE}, PermissionUtils.REQUEST_CALL_PHONE_STATE, this)) {
@@ -649,23 +665,25 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PermissionUtils.REQUEST_CAMERA_STATE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            switch (requestCode) {
+                case PermissionUtils.REQUEST_CAMERA_P_STATE:
                     pu.Start_P(this, REQUEST_PHOTO_CAMERA);
-                } else {
-                    ActivityCompat.requestPermissions(this, permissions, requestCode);
-                }
-                break;
-            case PermissionUtils.REQUEST_CALL_PHONE_STATE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    break;
+                case PermissionUtils.REQUEST_CAMERA_C_STATE:
+                    zxu.startScan(this, REQUEST_SCAN_CARD);
+                    break;
+                case PermissionUtils.REQUEST_CAMERA_Q_STATE:
+                    zxu.startScan(this, REQUEST_SCAN_QRCODE);
+                    break;
+                case PermissionUtils.REQUEST_CALL_PHONE_STATE:
                     call(phone);
-                } else {
-                    ActivityCompat.requestPermissions(this, permissions, requestCode);
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                    break;
+                default:
+                    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            }
+        }else {
+            ActivityCompat.requestPermissions(this, permissions, requestCode);
         }
     }
 

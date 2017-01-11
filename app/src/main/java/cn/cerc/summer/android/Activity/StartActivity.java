@@ -15,6 +15,7 @@ import android.support.annotation.UiThread;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -82,47 +83,20 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
         if (PermissionUtils.getPermission(new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PermissionUtils.REQUEST_READ_PHONE_STATE, this)) {
             TelephonyManager TelephonyMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
             PermissionUtils.IMEI = TelephonyMgr.getDeviceId();
+            Log.e("IMEI:", "IMEI: " + PermissionUtils.IMEI);
             XHttpRequest.getInstance().GET(AppUtil.buildDeviceUrl(MyConfig.HOME_URL + "/MobileConfig"), this);
         }
 
-        loadteass();//下载语言文件
+        XHttpRequest.getInstance().getTess();//下载语言文件
         initView();
-    }
-
-    public void loadteass(){
-        RequestParams request = new RequestParams("http://ehealth.lucland.com/eng.traineddata");
-        File file = new File(Constans.getAppPath(Constans.TESSDATA_PATH) + "/eng.traineddata");
-        if (file.exists()) return;
-        request.setSaveFilePath(Constans.getAppPath(Constans.TESSDATA_PATH) + "/eng.traineddata");
-        x.http().get(request, new Callback.CommonCallback<File>() {
-            @Override
-            public void onSuccess(File result) {
-//                Toast.makeText(StartActivity.this,"下载完成了", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                loadteass();
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-            }
-
-            @Override
-            public void onFinished() {
-            }
-        });
     }
 
     private void initView() {
         imageview = (ImageView) this.findViewById(R.id.imageview);
 
         String image = settingShared.getString(Constans.SHARED_START_URL, "");
-        if (settingShared.getBoolean(Constans.IS_FIRST_SHAREDKEY, true))
-            imageview.setVisibility(View.INVISIBLE);
-        else
-            ImageLoader.getInstance().displayImage(image, imageview, MyApplication.getInstance().options);
+        if (settingShared.getBoolean(Constans.IS_FIRST_SHAREDKEY, true)) imageview.setVisibility(View.INVISIBLE);
+        else ImageLoader.getInstance().displayImage(image, imageview, MyApplication.getInstance().options);
 //            x.image().bind(imageview, image, MyApplication.getInstance().imageOptions);
 
     }
@@ -215,8 +189,8 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
             @Override
             public void run() {
                 MainActivity.getInstance().setHomeurl(homeurl);
-                settingShared.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).putInt(Constans.FAIL_NUM_SHAREDKEY,fail_num).commit();
                 skip();
+                settingShared.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).putInt(Constans.FAIL_NUM_SHAREDKEY,fail_num).commit();
             }
         });
     }

@@ -66,12 +66,11 @@ public class GuidanceActivity extends BaseActivity implements View.OnClickListen
         imageview = new ArrayList<ImageView>();
         for (int i = 0; i < list.size(); i++) {
             ImageView imageView = new ImageView(this);
-            ImageLoader.getInstance().displayImage(list.get(i),imageView,MyApplication.getInstance().options);
+            ImageLoader.getInstance().displayImage(list.get(i), imageView, MyApplication.getInstance().options);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageview.add(imageView);
             if (i == (list.size() - 1)) {
                 imageView.setOnClickListener(this);
-                skip.setVisibility(View.VISIBLE);
             }
             View view = new View(this);
             view.setBackgroundResource(R.drawable.point_white);

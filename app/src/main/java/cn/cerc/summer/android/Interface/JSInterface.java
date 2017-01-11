@@ -1,15 +1,11 @@
 package cn.cerc.summer.android.Interface;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.support.annotation.RequiresPermission;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
@@ -17,7 +13,6 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import java.util.Map;
 
 import cn.cerc.summer.android.Utils.AppUtil;
-import cn.cerc.summer.android.Utils.PhotoUtils;
 
 /**
  * 供js调用的js
@@ -131,6 +126,7 @@ public class JSInterface extends Object {
     public void zxing(){
 //        String action = JSON.parseObject(json).getString("action");
         String action = "zxing";
+        Log.e("zxing", "zxing");
         jsInterfaceLintener.Action("", action);
     }
 

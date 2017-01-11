@@ -147,14 +147,11 @@
                 <category android:name="com.huagu.ehealth" />
             </intent-filter>
         </receiver>
-
+        <meta-data android:value="58662a3fae1bf81dce00185e" android:name="UMENG_APPKEY"></meta-data>
+        <meta-data android:value="Channel ID" android:name="UMENG_CHANNEL"/>
         <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="16c4218fdc2f5f85e9276721"/><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-                App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
+            android:value="16c4218fdc2f5f85e9276721"/>
     </application>
 
 </manifest>

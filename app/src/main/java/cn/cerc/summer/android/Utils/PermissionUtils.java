@@ -14,8 +14,10 @@ import android.telephony.TelephonyManager;
 public class PermissionUtils {
 
     public static final int REQUEST_READ_PHONE_STATE = 123;
-    public static final int REQUEST_CAMERA_STATE = 124;
-    public static final int REQUEST_CALL_PHONE_STATE = 125;
+    public static final int REQUEST_CAMERA_P_STATE = 124;
+    public static final int REQUEST_CAMERA_C_STATE = 125;
+    public static final int REQUEST_CAMERA_Q_STATE = 126;
+    public static final int REQUEST_CALL_PHONE_STATE = 127;
     public static String IMEI;
 
     /**
