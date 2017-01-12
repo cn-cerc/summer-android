@@ -57,17 +57,17 @@ public class MyWebView extends WebView {
 
     public void init(Context context) {
         websetting = getSettings();
-        websetting.setJavaScriptEnabled(true);
-        websetting.setJavaScriptCanOpenWindowsAutomatically(true);
-        websetting.setDomStorageEnabled(true);
-        websetting.setGeolocationEnabled(true);
-        websetting.setUseWideViewPort(true);
-        websetting.setAppCacheEnabled(true);
-        websetting.setCacheMode(WebSettings.LOAD_DEFAULT);
-        websetting.setRenderPriority(WebSettings.RenderPriority.HIGH);
+        websetting.setJavaScriptEnabled(true);//如果访问的页面中要与Javascript交互，则webview必须设置支持Javascript
+        websetting.setJavaScriptCanOpenWindowsAutomatically(true);////支持通过JS打开新窗口
+        websetting.setDomStorageEnabled(true);//开启 DOM storage API 功能
+        websetting.setGeolocationEnabled(true);//定位是否可用，默认为true
+        websetting.setUseWideViewPort(true);//将图片调整到适合webview的大小
+        websetting.setAppCacheEnabled(true);//开启 Application Caches 功能
+        websetting.setCacheMode(WebSettings.LOAD_DEFAULT);//没网，则从本地获取，即离线加载
+        websetting.setRenderPriority(WebSettings.RenderPriority.HIGH);//提高渲染的优先级
         //自适应屏幕
         websetting.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        websetting.setLoadWithOverviewMode(true);
+        websetting.setLoadWithOverviewMode(true);// 缩放至屏幕的大小
 
     }
 
@@ -75,6 +75,7 @@ public class MyWebView extends WebView {
         return new WebResourceResponse("text/" + type, "UTF-8", input);
     }
 
+    //获取js/css
     public WebResourceResponse WebResponseO(String url) {
         String type = "";
         if (url.contains(".css")) type = "css";
