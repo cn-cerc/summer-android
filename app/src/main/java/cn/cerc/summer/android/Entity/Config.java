@@ -36,6 +36,16 @@ public class Config {
     private String msgService;
     private String msgConfig;
     private String msgManage;
+    private String ocrDataPath;
+
+    public String getOcrDataPath() {
+        return ocrDataPath;
+    }
+
+    public void setOcrDataPath(String ocrDataPath) {
+        this.ocrDataPath = ocrDataPath;
+    }
+
     private boolean debug;
 
     public class HomePager {
