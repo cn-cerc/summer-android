@@ -20,4 +20,7 @@ public interface JSInterfaceLintener {
 
     void Action(String json, String action);
 
+    void showBack(boolean flag);
+
+
 }

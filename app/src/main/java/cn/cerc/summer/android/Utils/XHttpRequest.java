@@ -9,6 +9,7 @@ import cn.cerc.summer.android.Interface.AsyncFileLoafCallback;
 import cn.cerc.summer.android.Interface.ConfigFileLoafCallback;
 import cn.cerc.summer.android.Interface.GetFileCallback;
 import cn.cerc.summer.android.Interface.RequestCallback;
+import cn.cerc.summer.android.MyConfig;
 import cn.cerc.summer.android.View.ShowDialog;
 
 import org.json.JSONArray;
@@ -110,7 +111,7 @@ public class XHttpRequest implements AsyncFileLoafCallback {
     public void getTess(){
         File file = new File(Constans.getAppPath(Constans.TESSDATA_PATH) + "/eng.traineddata");
         if (file.exists()) return;
-        RequestParams request = new RequestParams("http://ehealth.lucland.com/eng.traineddata");
+        RequestParams request = new RequestParams(MyConfig.HOME_URL + "/eng.traineddata");
         request.setSaveFilePath(Constans.getAppPath(Constans.TESSDATA_PATH) + "/eng.traineddata");
         x.http().get(request, new Callback.CommonCallback<File>() {
             @Override

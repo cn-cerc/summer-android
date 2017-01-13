@@ -376,7 +376,9 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                                 webview.loadUrl(homeurl);
                                 webview.clearCache(true);
                                 webview.clearHistory();
-                            }else webview.loadUrl("javascript:ReturnBtnClick()");// 返回键退回
+                            }else
+                                webview.goBack();
+//                                webview.loadUrl("javascript:ReturnBtnClick()");// 返回键退回
                         else finish();
                     }
                     return true;
@@ -602,6 +604,21 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 else more.setVisibility(View.INVISIBLE);
             }
         });
+    }
+
+    @Override
+    public void showBack(final boolean flag) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(flag){
+                    back.setVisibility(View.GONE);
+                }else {
+                    back.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
     }
 
     private PhotoUtils pu;

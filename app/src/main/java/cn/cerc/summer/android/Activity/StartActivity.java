@@ -142,12 +142,13 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
 
     @Override
     public void success(String url, JSONObject json) {
+        Log.i("-------config------",json.toString());
         config = JSON.parseObject(json.toString(), Config.class);
         homeurl = AppUtil.buildDeviceUrl(MyConfig.HOME_URL);
         String msgurl = config.getRootSite() + "/" + config.getMsgManage();
         settingShared.edit().putString(Constans.HOME, homeurl).putString(Constans.SHARED_MSG_URL, msgurl).putString(Constans.SHARED_START_URL, config.getStartImage()).commit();
 
-        MainActivity.getInstance().Update();
+        MainActivity.getInstance().Update();//提示更新处理
 
         imageview.setVisibility(View.VISIBLE);
         imageview.setImageResource(R.mipmap.init_bg);

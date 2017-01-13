@@ -92,6 +92,14 @@ public class JSInterface extends Object {
     }
 
     /**
+     * 隐藏返回按钮
+     */
+    @JavascriptInterface
+    public void hideBack(String loginUrl) {
+        jsInterfaceLintener.showBack(true);
+    }
+
+    /**
      * 退出
      */
     @JavascriptInterface
@@ -144,8 +152,7 @@ public class JSInterface extends Object {
      */
     @JavascriptInterface
     public void scancard(){
-        String action = "card";
-        jsInterfaceLintener.Action("", action);
+        jsInterfaceLintener.Action("", "");
     }
 
 }
