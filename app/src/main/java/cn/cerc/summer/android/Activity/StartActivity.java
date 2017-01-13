@@ -92,9 +92,6 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
             //下载获取配置文件（接口：RequestCallback   方法：1.success   2.Failt）
             XHttpRequest.getInstance().GET(AppUtil.buildDeviceUrl(MyConfig.HOME_URL + "/MobileConfig"), this);
         }
-
-        //XXX 这里要方法success方法里面
-        XHttpRequest.getInstance().getTess();//下载语言文件
         initView();
     }
 
@@ -152,12 +149,20 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
 
     @Override
     public void success(String url, JSONObject json) {
+        Log.i("-------config------",json.toString());
         config = JSON.parseObject(json.toString(), Config.class);
         homeurl = AppUtil.buildDeviceUrl(MyConfig.HOME_URL);
         String msgurl = config.getRootSite() + "/" + config.getMsgManage();
-        settingShared.edit().putString(Constans.HOME, homeurl).putString(Constans.SHARED_MSG_URL, msgurl).putString(Constans.SHARED_START_URL, config.getStartImage()).commit();
+        settingShared.edit().putString(Constans.HOME, homeurl)
+                .putString(Constans.SHARED_MSG_URL, msgurl)
+                .putString(Constans.SHARED_START_URL, config.getStartImage())
+                .putString(Constans.OCR_PATH, config.getOcrDataPath())
+                .commit();
+        //XXX 这里要方法success方法里面
+        XHttpRequest.getInstance().getTess(MyConfig.HOME_URL + config.getOcrDataPath());//下载语言文件
 
-        MainActivity.getInstance().Update();
+
+        MainActivity.getInstance().Update();//提示更新处理
 
         imageview.setVisibility(View.VISIBLE);
         imageview.setImageResource(R.mipmap.init_bg);

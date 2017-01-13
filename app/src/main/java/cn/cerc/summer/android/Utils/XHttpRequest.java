@@ -108,11 +108,12 @@ public class XHttpRequest implements AsyncFileLoafCallback {
     /**
      * 获取语言识别库文件
      */
-    public void getTess(){
+    public void getTess(final String url){
         File file = new File(Constans.getAppPath(Constans.TESSDATA_PATH) + "/eng.traineddata");
         if (file.exists()) return;
+
 //        RequestParams request = new RequestParams("http://ehealth.lucland.com/eng.traineddata");//这个url待修改，来适配扫卡
-        RequestParams request = new RequestParams(MyConfig.HOME_URL + "/eng.traineddata");
+        RequestParams request = new RequestParams(url);
         request.setSaveFilePath(Constans.getAppPath(Constans.TESSDATA_PATH) + "/eng.traineddata");
         x.http().get(request, new Callback.CommonCallback<File>() {
             @Override
@@ -122,7 +123,7 @@ public class XHttpRequest implements AsyncFileLoafCallback {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                getTess();
+                getTess(url);
             }
 
             @Override

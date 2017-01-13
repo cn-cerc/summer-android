@@ -38,6 +38,7 @@ import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Entity.Menu;
 import cn.cerc.summer.android.Interface.JSInterfaceLintener;
 import cn.cerc.summer.android.MyApplication;
+import cn.cerc.summer.android.MyConfig;
 import cn.cerc.summer.android.Receiver.MyBroadcastReceiver;
 import cn.cerc.summer.android.Utils.AppUtil;
 import cn.cerc.summer.android.Utils.Constans;
@@ -392,21 +393,23 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         webview.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((keyCode == KeyEvent.KEYCODE_BACK) && event.getAction() == KeyEvent.ACTION_UP) {///表示按返回键
+                if ((keyCode == KeyEvent.KEYCODE_BACK) && event.getAction() == KeyEvent.ACTION_UP) {
                     if (is_exit) {
                         Intent home = new Intent(Intent.ACTION_MAIN);
                         home.addCategory(Intent.CATEGORY_HOME);
                         startActivity(home);
                     } else {
-                        if (webview.canGoBack())// 返回键退回
+                        if (webview.canGoBack())
                             if (is_info){
                                 webview.loadUrl(homeurl);
-                                webview.clearCache(true);//清除缓存
-                                webview.clearHistory();//清除历史记录
-                            }else webview.loadUrl("javascript:ReturnBtnClick()");
+                                webview.clearCache(true);
+                                webview.clearHistory();
+                            }else
+                                webview.goBack();
+//                                webview.loadUrl("javascript:ReturnBtnClick()");// 返回键退回
                         else finish();
                     }
-                    return true;//已处理
+                    return true;
                 } else
                     return false;
             }
@@ -632,6 +635,22 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         });
     }
 
+
+    @Override
+    public void showBack(final boolean flag) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(flag){
+                    back.setVisibility(View.GONE);
+                }else {
+                    back.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+    }
+
     private PhotoUtils pu;//相册工具类
     private SoundUtils su;//声音工具类
     private ZXingUtils zxu;//二维码工具类
@@ -660,7 +679,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 File file = new File(Constans.getAppPath(Constans.TESSDATA_PATH),"eng.traineddata");
                 if (file.exists()) zxu.startScan(this, REQUEST_SCAN_CARD);
                 else {
-                    XHttpRequest.getInstance().getTess();
+                    XHttpRequest.getInstance().getTess(MyConfig.HOME_URL + settingShared.getString(Constans.OCR_PATH,"/data/eng.traineddata"));
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
