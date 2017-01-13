@@ -16,6 +16,7 @@ import cn.cerc.summer.android.Utils.Constans;
 public abstract class BaseActivity extends AppCompatActivity {
 
 
+    //保存销量数据的sp工具
     protected SharedPreferences settingShared;
 
     @Override

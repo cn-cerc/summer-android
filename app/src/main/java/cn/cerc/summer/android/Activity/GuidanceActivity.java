@@ -47,7 +47,7 @@ public class GuidanceActivity extends BaseActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {//?device=android&clientId=44444444
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//撑满全屏
         setContentView(R.layout.activity_start);
 
         viewpager = (ViewPager) this.findViewById(R.id.viewpager);

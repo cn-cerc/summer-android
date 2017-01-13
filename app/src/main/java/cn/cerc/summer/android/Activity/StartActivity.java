@@ -56,6 +56,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 启动界面
+ */
 public class StartActivity extends BaseActivity implements ActivityCompat.OnRequestPermissionsResultCallback, RequestCallback, ConfigFileLoafCallback {
 
     private ImageView imageview;
@@ -75,22 +78,27 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
         super.onCreate(savedInstanceState);
         ga = this;
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//撑满全屏
         setContentView(R.layout.activity_guidance);
+        //判断手机的sd卡的读写权限
         if (PermissionUtils.getPermission(new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PermissionUtils.REQUEST_READ_PHONE_STATE, this)) {
             TelephonyManager TelephonyMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+            //获取手机设备号
             PermissionUtils.IMEI = TelephonyMgr.getDeviceId();
             Log.e("IMEI:", "IMEI: " + PermissionUtils.IMEI);
+            //下载获取配置文件（接口：RequestCallback   方法：1.success   2.Failt）
             XHttpRequest.getInstance().GET(AppUtil.buildDeviceUrl(MyConfig.HOME_URL + "/MobileConfig"), this);
         }
 
+        //XXX 这里要方法success方法里面
         XHttpRequest.getInstance().getTess();//下载语言文件
         initView();
     }
 
+    //初始化
     private void initView() {
         imageview = (ImageView) this.findViewById(R.id.imageview);
 
@@ -104,10 +112,12 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case PermissionUtils.REQUEST_READ_PHONE_STATE:
+            case PermissionUtils.REQUEST_READ_PHONE_STATE://23以上获取手机权限的操作
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //获取手机设备号
                     TelephonyManager TelephonyMgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
                     PermissionUtils.IMEI = TelephonyMgr.getDeviceId();
+                    //下载获取配置文件（接口：RequestCallback   方法：1.success   2.Failt）
                     XHttpRequest.getInstance().GET(AppUtil.buildDeviceUrl(MyConfig.HOME_URL + "/MobileConfig"), this);
                 } else {
                     ActivityCompat.requestPermissions(this, permissions, requestCode);
@@ -122,11 +132,11 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
      * 跳转
      */
     public void skip() {
-        if (settingShared.getBoolean(Constans.IS_FIRST_SHAREDKEY, true)) {
+        if (settingShared.getBoolean(Constans.IS_FIRST_SHAREDKEY, true)) {//第一次安装进入引导界面
             if (config != null && config.getWelcomeImages() != null && config.getWelcomeImages().size() > 0) {
                 startActivity(new Intent(this, GuidanceActivity.class));
             }
-        } else {
+        } else {//下次进入直接跳入到主界面
             if (config != null && config.getAdImages() != null && config.getAdImages().size() > 0) {
                 startActivity(new Intent(this, AdActivity.class));
             }
@@ -151,9 +161,10 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
 
         imageview.setVisibility(View.VISIBLE);
         imageview.setImageResource(R.mipmap.init_bg);
-
+        //下载js、css相关文件
         List<String> list = config.getCacheFiles();
         if (list != null && list.size() > 0) {
+            //下载js、css相关文件（接口：ConfigFileLoafCallback 方法：1.loadfinish 2.loadAllfinish）
             XHttpRequest.getInstance().ConfigFileGet(list, StartActivity.this);
         } else {
             new Handler().postDelayed(new Runnable() {
