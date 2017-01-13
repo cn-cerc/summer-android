@@ -76,7 +76,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
     public MyWebView webview;
     private ProgressBar progress;
-    private DragPointView dragpointview;
+    private DragPointView dragpointview;//消息
     private ImageView image_tips;
 
     private String logoutUrl = "";
@@ -85,8 +85,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     private boolean is_ERROR = false;//是否错误了
     private boolean is_info = false;
 
-    private ImageView back, more;
-    private TextView title;
+    private ImageView back, more;//返回/更多
+    private TextView title;//标题
 
     public String homeurl;//默认打开页
 
@@ -97,9 +97,9 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     private List<Menu> menulist;
     private ListPopupWindow lpw;//列表弹框
 
-    public static final String NETWORK_CHANGE = "android.net.conn.NETWORK_CHANGE";
-    public static final String APP_UPDATA = "com.fmk.huagu.efitness.APP_UPDATA";
-    public static final String JSON_ERROR = "com.fmk.huagu.efitness.JSON_ERROR";
+    public static final String NETWORK_CHANGE = "android.net.conn.NETWORK_CHANGE";//网络广播action
+    public static final String APP_UPDATA = "com.fmk.huagu.efitness.APP_UPDATA";//更新广播action
+    public static final String JSON_ERROR = "com.fmk.huagu.efitness.JSON_ERROR";//JSON错误广播action
 
     public static final int REQUEST_PHOTO_CAMERA = 111;//拍照请求
     public static final int REQUEST_PHOTO_CROP = 113;//裁剪请求
@@ -144,8 +144,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
         mainactivity = this;
 
-        initbro();
-        InitView();
+        initbro();//初始化广播
+        InitView();//初始化控件和相关配置
 
         startActivity(new Intent(this, StartActivity.class));
 
@@ -160,6 +160,12 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         return AppUtil.buildDeviceUrl(url);
     }
 
+    /**
+     *    无论什么模式，只有activity是同一个实例的情况下，intent发生了变化，
+     * 就会进入onNewIntent中，这个方法的作用也是让你来对旧的intent进行保存，
+     * 对新的intent进行对应的处理。
+     * @param intent
+     */
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -179,6 +185,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
         Set<String> set = new HashSet<String>();
         set.add("android");
+        //用手机设备号来注册极光别名
         JPushInterface.setAlias(getApplicationContext(), PermissionUtils.IMEI, tac);//极光推送设置别名
     }
 
@@ -195,6 +202,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            //用手机设备号来注册极光别名
                             JPushInterface.setAlias(MainActivity.this, PermissionUtils.IMEI, tac);
                         }
                     }, 30000);
@@ -230,6 +238,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
         webview.getSettings().setTextZoom(settingShared.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this,ScreenUtils.getInches(this))));
 
+        //登陆和退出的js调用回调(接口：JSInterfaceLintener 方法：1.LoginOrLogout 2.Action)
         webview.addJavascriptInterface(new JSInterface(this), "JSobj");//JSobj 供web端js调用标识，修改请通知web开发者
 
 //        统计sdk
@@ -238,6 +247,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         MobclickAgent.setSessionContinueMillis(1000);
 
         webview.setWebViewClient(new WebViewClient() {
+
+            //在每一次请求资源时，都会通过这个函数来回调
             @Override
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
@@ -245,12 +256,14 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 return webreq != null ? webreq : super.shouldInterceptRequest(view, request);
             }
 
+            //在每一次请求资源时，都会通过这个函数来回调
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
                 WebResourceResponse webreq = webview.WebResponseO(url);
                 return webreq != null ? webreq : super.shouldInterceptRequest(view, url);
             }
 
+            // 在点击请求的是链接是才会调用，重写此方法返回true表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
 
@@ -262,6 +275,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 return true;
             }
 
+            // 在点击请求的是链接是才会调用，重写此方法返回true表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 try {
@@ -277,6 +291,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 return true;
             }
 
+            //在页面加载开始时调用
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 if (!AppUtil.getNetWorkStata(view.getContext())) return;
@@ -295,24 +310,28 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 super.onPageStarted(view, url, favicon);
             }
 
+            //报告错误信息
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 is_ERROR = true;
                 super.onReceivedError(view, request, error);
             }
 
+            //报告错误信息
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 is_ERROR = true;
                 super.onReceivedError(view, errorCode, description, failingUrl);
             }
 
+            //在页面加载结束时调用
             @Override
             public void onPageFinished(WebView view, String url) {
                 view.loadUrl("javascript:setWebViewFlag()");
                 if (url != null && url.contains("FrmIndex")) {
                     MobclickAgent.onPageStart(url);
                 }
+                //webview出错判断
                 if (is_ERROR) {
                     title.setText("出错了");
                     image_tips.setVisibility(View.VISIBLE);
@@ -320,6 +339,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                     title.setText(webview.getTitle());
                     image_tips.setVisibility(View.GONE);
                 }
+                //webview返回主界面判断（返回按钮的显示与隐藏）
                 if (isGoHome) {
                     back.setVisibility(View.INVISIBLE);
                 } else {
@@ -333,6 +353,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         });
 
         webview.setWebChromeClient(new WebChromeClient() {
+
+            //配置权限
             @Override
             public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
                 callback.invoke(origin, true, false);
@@ -344,6 +366,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 super.onPermissionRequest(request);
             }
 
+            // 当WebView进度改变时更新窗口进
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
@@ -352,36 +375,46 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 super.onProgressChanged(view, newProgress);
             }
 
+            //WebView获取页面title
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
             }
 
+            //当前页面有个新的favicon时候，会回调这个函数
             @Override
             public void onReceivedTouchIconUrl(WebView view, String url, boolean precomposed) {
                 super.onReceivedTouchIconUrl(view, url, precomposed);
             }
         });
+
+        //点击后退按钮,让WebView后退一页(也可以覆写Activity的onKeyDown方法)
         webview.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((keyCode == KeyEvent.KEYCODE_BACK) && event.getAction() == KeyEvent.ACTION_UP) {
+                if ((keyCode == KeyEvent.KEYCODE_BACK) && event.getAction() == KeyEvent.ACTION_UP) {///表示按返回键
                     if (is_exit) {
                         Intent home = new Intent(Intent.ACTION_MAIN);
                         home.addCategory(Intent.CATEGORY_HOME);
                         startActivity(home);
                     } else {
-                        if (webview.canGoBack())
+                        if (webview.canGoBack())// 返回键退回
                             if (is_info){
                                 webview.loadUrl(homeurl);
+<<<<<<< HEAD
                                 webview.clearCache(true);
                                 webview.clearHistory();
                             }else
                                 webview.goBack();
 //                                webview.loadUrl("javascript:ReturnBtnClick()");// 返回键退回
+=======
+                                webview.clearCache(true);//清除缓存
+                                webview.clearHistory();//清除历史记录
+                            }else webview.loadUrl("javascript:ReturnBtnClick()");
+>>>>>>> refs/remotes/origin/master
                         else finish();
                     }
-                    return true;
+                    return true;//已处理
                 } else
                     return false;
             }
@@ -408,14 +441,14 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back:
+            case R.id.back://返回按钮
                 if (is_info){
                     webview.loadUrl(homeurl);
-                    webview.clearCache(true);
-                    webview.clearHistory();
+                    webview.clearCache(true);//清除缓存
+                    webview.clearHistory();//清除历史记录
                 }else webview.loadUrl("javascript:ReturnBtnClick()");
                 break;
-            case R.id.more:
+            case R.id.more://右上角更多按钮
                 showPopu(more);
                 break;
             default:
@@ -437,10 +470,11 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
     /**
      * 显示菜单栏的窗口
-     *
+     * 初始化菜单
      * @param view
      */
     public void showPopu(View view) {
+
         menulist = new ArrayList<Menu>();
         menus = getResources().getStringArray(R.array.menu);
 
@@ -455,24 +489,24 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
-                    case 0:
+                    case 0://未读消息
                         webview.loadUrl(getMsgUrl(".unread"));
                         break;
-                    case 1:
+                    case 1://消息管理
                         webview.loadUrl(getMsgUrl(""));
                         break;
-                    case 2:
+                    case 2://首页
 //                        Action("","card");//测试时使用
                         webview.loadUrl(homeurl);
                         break;
-                    case 3:
+                    case 3://设置
                         startActivityForResult(new Intent(MainActivity.this, SettingActivity.class), REQUEST_SETTING);
                         break;
-                    case 4:
+                    case 4://清除缓存
                         clearCacheFolder(MainActivity.this.getCacheDir(), System.currentTimeMillis());
 //                        Action("","zxing");//测试时使用
                         break;
-                    case 5:
+                    case 5://退出登录
                         if (islogin) {
                             if (!TextUtils.isEmpty(logoutUrl)) {
                                 webview.loadUrl(logoutUrl);
@@ -482,7 +516,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                         } else
                             webview.reload();
                         break;
-                    case 6:
+                    case 6://重新加载
                         webview.reload();
                         break;
                 }
@@ -509,7 +543,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             String action = intent.getAction();
             Log.e("xxxx", "mainactivity " + action);
             switch (action) {
-                case NETWORK_CHANGE:
+                case NETWORK_CHANGE://网络广播
                     if (AppUtil.getNetWorkStata(context)) webview.reload();
                     else ShowDialog.getDialog(context).showTips();
                     break;
@@ -606,6 +640,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         });
     }
 
+<<<<<<< HEAD
     @Override
     public void showBack(final boolean flag) {
         runOnUiThread(new Runnable() {
@@ -624,25 +659,30 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     private PhotoUtils pu;
     private SoundUtils su;
     private ZXingUtils zxu;
+=======
+    private PhotoUtils pu;//相册工具类
+    private SoundUtils su;//声音工具类
+    private ZXingUtils zxu;//二维码工具类
+>>>>>>> refs/remotes/origin/master
 
     @Override
     public void Action(String json, String action) {
-        if ("camera".equals(action)) {
+        if ("camera".equals(action)) {//调用手机相机
             pu = PhotoUtils.getInstance();
             pu.setJson(json);
             //首先判断是否有权限使用摄像头
             if (PermissionUtils.getPermission(new String[]{Manifest.permission.CAMERA}, PermissionUtils.REQUEST_CAMERA_P_STATE, this))
                 pu.Start_P(this, REQUEST_PHOTO_CAMERA);
-        }else if ("sound".equals(action)){
+        }else if ("sound".equals(action)){//调用声音播放器
             su = SoundUtils.getInstance(this);
             su.setJson(json);
             su.startPlayer();
-        }else if ("zxing".equals(action)){
+        }else if ("zxing".equals(action)){//调用二维码扫描
             zxu = ZXingUtils.getInstance();
             zxu.setJson(json);
             if (PermissionUtils.getPermission(new String[]{Manifest.permission.CAMERA}, PermissionUtils.REQUEST_CAMERA_Q_STATE, this))
                 zxu.startScan(this, REQUEST_SCAN_QRCODE);
-        }else if ("card".equals(action)){
+        }else if ("card".equals(action)){//调用卡片扫描
             zxu = ZXingUtils.getInstance();
             zxu.setJson(json);
             if (PermissionUtils.getPermission(new String[]{Manifest.permission.CAMERA}, PermissionUtils.REQUEST_CAMERA_C_STATE, this)){
@@ -658,7 +698,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                     });
                 }
             }
-        }else if ("call".equals(action)){
+        }else if ("call".equals(action)){//
             phone = json;
             if (PermissionUtils.getPermission(new String[]{Manifest.permission.CALL_PHONE}, PermissionUtils.REQUEST_CALL_PHONE_STATE, this)) {
                 call(json);
@@ -673,6 +713,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         webview.reload();
     }
 
+    //打电话
     public void call(String phone){
         Intent intent = new Intent(Intent.ACTION_DIAL);
         Uri data = Uri.parse("tel:" + phone);

@@ -111,6 +111,10 @@ public class XHttpRequest implements AsyncFileLoafCallback {
     public void getTess(){
         File file = new File(Constans.getAppPath(Constans.TESSDATA_PATH) + "/eng.traineddata");
         if (file.exists()) return;
+<<<<<<< HEAD
+=======
+//        RequestParams request = new RequestParams("http://ehealth.lucland.com/eng.traineddata");//这个url待修改，来适配扫卡
+>>>>>>> refs/remotes/origin/master
         RequestParams request = new RequestParams(MyConfig.HOME_URL + "/eng.traineddata");
         request.setSaveFilePath(Constans.getAppPath(Constans.TESSDATA_PATH) + "/eng.traineddata");
         x.http().get(request, new Callback.CommonCallback<File>() {
