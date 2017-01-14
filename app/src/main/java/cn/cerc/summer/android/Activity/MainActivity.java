@@ -648,7 +648,16 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 }
             }
         });
+    }
 
+    @Override
+    public void showImage(String imgUrl) {
+        Log.i("imgUlr",imgUrl);
+        Intent intent = new Intent(MainActivity.this,ShowImageActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("imageurl",imgUrl);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     private PhotoUtils pu;//相册工具类
