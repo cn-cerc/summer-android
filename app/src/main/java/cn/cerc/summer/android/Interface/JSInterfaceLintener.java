@@ -22,5 +22,5 @@ public interface JSInterfaceLintener {
 
     void showBack(boolean flag);
 
-
+    void showImage(String imgUrl);
 }

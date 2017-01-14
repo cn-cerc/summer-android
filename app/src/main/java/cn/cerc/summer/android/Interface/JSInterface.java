@@ -155,4 +155,13 @@ public class JSInterface extends Object {
         jsInterfaceLintener.Action("", "");
     }
 
+    /**
+     * 显示图片
+     */
+    @JavascriptInterface
+    public void showimage(String imagepath){
+        jsInterfaceLintener.showImage(imagepath);
+    }
+
+
 }
