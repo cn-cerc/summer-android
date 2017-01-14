@@ -1,8 +1,10 @@
 package cn.cerc.summer.android.Utils;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Interface.AsyncFileLoafCallback;
@@ -47,7 +49,11 @@ public class XHttpRequest implements AsyncFileLoafCallback {
      * @param rc  请求回调
      */
     public void GET(final String url, final RequestCallback rc) {
-        if (!AppUtil.getNetWorkStata(rc.getContext())) return;
+        if (!AppUtil.getNetWorkStata(rc.getContext())){
+            Toast.makeText(rc.getContext(),"请检查网络",Toast.LENGTH_SHORT).show();
+            ((Activity)rc.getContext()).finish();
+            return;
+        }
         x.http().get(new RequestParams(url), new Callback.CommonCallback<JSONObject>() {
             @Override
             public void onSuccess(JSONObject result) {
@@ -105,6 +111,7 @@ public class XHttpRequest implements AsyncFileLoafCallback {
         });
     }
 
+    File eng_file = new File(Constans.getAppPath(Constans.TESSDATA_PATH) + "/eng.traineddata");
     /**
      * 获取语言识别库文件
      */
@@ -123,6 +130,7 @@ public class XHttpRequest implements AsyncFileLoafCallback {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+                if(eng_file.exists())eng_file.delete();
                 getTess(url);
             }
 

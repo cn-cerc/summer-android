@@ -14,7 +14,7 @@ android {
 
         manifestPlaceholders = [
                 JPUSH_PKGNAME : "com.huagu.ehealth",
-                JPUSH_APPKEY : "16c4218fdc2f5f85e9276721", //JPush上注册的包名对应的appkey.
+                JPUSH_APPKEY : "3cc3e3d7c7e8c1dc7cc8f003", //JPush上注册的包名对应的appkey.
                 JPUSH_CHANNEL : "developer-default"
         ]
     }

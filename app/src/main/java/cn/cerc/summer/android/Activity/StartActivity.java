@@ -151,7 +151,7 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
     public void success(String url, JSONObject json) {
         Log.i("-------config------",json.toString());
         config = JSON.parseObject(json.toString(), Config.class);
-        homeurl = AppUtil.buildDeviceUrl(MyConfig.HOME_URL);
+        homeurl = AppUtil.buildDeviceUrl(config.getRootSite());
         String msgurl = config.getRootSite() + "/" + config.getMsgManage();
         settingShared.edit().putString(Constans.HOME, homeurl)
                 .putString(Constans.SHARED_MSG_URL, msgurl)

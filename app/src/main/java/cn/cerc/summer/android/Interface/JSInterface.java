@@ -152,8 +152,10 @@ public class JSInterface extends Object {
      */
     @JavascriptInterface
     public void scancard(){
-        jsInterfaceLintener.Action("", "");
+        String action = "card";
+        jsInterfaceLintener.Action("", action);
     }
+
 
     /**
      * 显示图片

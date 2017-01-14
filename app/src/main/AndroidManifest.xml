@@ -8,7 +8,6 @@
 
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.CALL_PHONE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
@@ -153,9 +152,9 @@
         </receiver>
         <meta-data android:value="58662a3fae1bf81dce00185e" android:name="UMENG_APPKEY"></meta-data>
         <meta-data android:value="Channel ID" android:name="UMENG_CHANNEL"/>
-        <meta-data
-            android:name="JPUSH_APPKEY"
-            android:value="16c4218fdc2f5f85e9276721"/>
+        <meta-data android:name="JPUSH_CHANNEL" android:value="developer-default"/>
+        <meta-data android:name="JPUSH_APPKEY" android:value="3cc3e3d7c7e8c1dc7cc8f003"/>
+
     </application>
 
 </manifest>
