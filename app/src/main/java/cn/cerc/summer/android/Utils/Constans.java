@@ -18,7 +18,12 @@ public class Constans {
     public static String SHARED_SETTING_TAB = "setting";
 
     /**
-     *  shared 设置的 启动页
+     *  OcrDataPath路径
+     */
+    public static String OCR_PATH = "OcrDataPath";
+
+    /**
+     *
      */
     public static String SHARED_START_URL = "START";
     /**

@@ -7,6 +7,7 @@
     tools:context="cn.cerc.summer.android.Activity.ShowImageActivity">
 
 
+<<<<<<< HEAD
     <cn.cerc.summer.android.View.photoview.PhotoView
         android:id="@+id/photo"
         android:layout_width="match_parent"
@@ -15,5 +16,27 @@
 
 
 
+=======
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <cn.cerc.summer.android.View.photoview.PhotoView
+            android:id="@+id/photo"
+            android:background="#000000"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_chevron_left_white_24dp"/>
+
+    </FrameLayout>
+>>>>>>> origin/master
 
 </RelativeLayout>
