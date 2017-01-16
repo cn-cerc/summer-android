@@ -1,14 +1,17 @@
 package cn.cerc.summer.android.Utils;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Interface.AsyncFileLoafCallback;
 import cn.cerc.summer.android.Interface.ConfigFileLoafCallback;
 import cn.cerc.summer.android.Interface.GetFileCallback;
 import cn.cerc.summer.android.Interface.RequestCallback;
+import cn.cerc.summer.android.MyConfig;
 import cn.cerc.summer.android.View.ShowDialog;
 
 import org.json.JSONArray;
@@ -46,8 +49,14 @@ public class XHttpRequest implements AsyncFileLoafCallback {
      * @param rc  请求回调
      */
     public void GET(final String url, final RequestCallback rc) {
-        if (!AppUtil.getNetWorkStata(rc.getContext())) return;
-        x.http().get(new RequestParams(url), new Callback.CommonCallback<JSONObject>() {
+        if (!AppUtil.getNetWorkStata(rc.getContext())) {
+            Toast.makeText(rc.getContext(), "请检查网络", Toast.LENGTH_SHORT).show();
+            ((Activity)rc.getContext()).finish();
+            return;
+        }
+        RequestParams requestParams = new RequestParams(url);
+        requestParams.setConnectTimeout(5000);
+        x.http().get(requestParams, new Callback.CommonCallback<JSONObject>() {
             @Override
             public void onSuccess(JSONObject result) {
                 rc.success(url, result);
@@ -104,13 +113,13 @@ public class XHttpRequest implements AsyncFileLoafCallback {
         });
     }
 
+    File eng_file = new File(Constans.getAppPath(Constans.TESSDATA_PATH) + "/eng.traineddata");
     /**
      * 获取语言识别库文件
      */
     public void getTess(){
-        File file = new File(Constans.getAppPath(Constans.TESSDATA_PATH) + "/eng.traineddata");
-        if (file.exists()) return;
-        RequestParams request = new RequestParams("http://ehealth.lucland.com/eng.traineddata");
+        if (eng_file.exists()) return;
+        RequestParams request = new RequestParams(MyConfig.HOME_URL + "/eng.traineddata");
         request.setSaveFilePath(Constans.getAppPath(Constans.TESSDATA_PATH) + "/eng.traineddata");
         x.http().get(request, new Callback.CommonCallback<File>() {
             @Override
@@ -120,6 +129,7 @@ public class XHttpRequest implements AsyncFileLoafCallback {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+                if (eng_file.exists()) eng_file.delete();
                 getTess();
             }
 

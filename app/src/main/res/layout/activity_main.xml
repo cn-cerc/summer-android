@@ -93,6 +93,6 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:src="@mipmap/error"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
     </FrameLayout>
 </LinearLayout>

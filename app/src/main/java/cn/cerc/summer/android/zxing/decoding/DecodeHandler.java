@@ -70,7 +70,6 @@ final class DecodeHandler extends Handler {
                 String path = MyApplication.getInstance().getExternalFilesDir("").getAbsolutePath();
                 Log.e("path : ", path);
                 boolean bool = tessBaseAPI.init(path, "eng");//eng  /chi_sim
-                Log.e("path : ", bool+" 1111111111111111111");
             } catch (IllegalArgumentException e) {
                 Toast.makeText(activity, "初始化失败", Toast.LENGTH_SHORT).show();
                 activity.finish();
@@ -78,7 +77,6 @@ final class DecodeHandler extends Handler {
             }
         }
 //        cih = new ClearImageHelper();
-
         this.activity = activity;
     }
 

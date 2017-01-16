@@ -12,8 +12,8 @@ public class MyConfig {
      * http://ehealth.lucland.com
      * http://121.40.181.228
      */
-    public final static String HOME_URL = "http://ehealth.lucland.com";
-//    public final static String HOME_URL = "http://testehealth.zhongyinginfo.com";
+//    public final static String HOME_URL = "http://ehealth.lucland.com";
+    public final static String HOME_URL = "http://testehealth.zhongyinginfo.com";
 //    public static String HOME_URL = "http://192.168.1.113:8080";
 
 
