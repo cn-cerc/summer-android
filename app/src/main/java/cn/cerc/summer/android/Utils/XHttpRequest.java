@@ -49,23 +49,12 @@ public class XHttpRequest implements AsyncFileLoafCallback {
      * @param rc  请求回调
      */
     public void GET(final String url, final RequestCallback rc) {
-<<<<<<< HEAD
-        if (!AppUtil.getNetWorkStata(rc.getContext())) {
-            Toast.makeText(rc.getContext(), "请检查网络", Toast.LENGTH_SHORT).show();
-            ((Activity)rc.getContext()).finish();
-            return;
-        }
-        RequestParams requestParams = new RequestParams(url);
-        requestParams.setConnectTimeout(5000);
-        x.http().get(requestParams, new Callback.CommonCallback<JSONObject>() {
-=======
         if (!AppUtil.getNetWorkStata(rc.getContext())){
             Toast.makeText(rc.getContext(),"请检查网络",Toast.LENGTH_SHORT).show();
             ((Activity)rc.getContext()).finish();
             return;
         }
         x.http().get(new RequestParams(url), new Callback.CommonCallback<JSONObject>() {
->>>>>>> origin/master
             @Override
             public void onSuccess(JSONObject result) {
                 rc.success(url, result);
@@ -126,18 +115,12 @@ public class XHttpRequest implements AsyncFileLoafCallback {
     /**
      * 获取语言识别库文件
      */
-<<<<<<< HEAD
-    public void getTess(){
-        if (eng_file.exists()) return;
-        RequestParams request = new RequestParams(MyConfig.HOME_URL + "/eng.traineddata");
-=======
     public void getTess(final String url){
         File file = new File(Constans.getAppPath(Constans.TESSDATA_PATH) + "/eng.traineddata");
         if (file.exists()) return;
 
 //        RequestParams request = new RequestParams("http://ehealth.lucland.com/eng.traineddata");//这个url待修改，来适配扫卡
         RequestParams request = new RequestParams(url);
->>>>>>> origin/master
         request.setSaveFilePath(Constans.getAppPath(Constans.TESSDATA_PATH) + "/eng.traineddata");
         x.http().get(request, new Callback.CommonCallback<File>() {
             @Override
@@ -147,13 +130,8 @@ public class XHttpRequest implements AsyncFileLoafCallback {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-<<<<<<< HEAD
-                if (eng_file.exists()) eng_file.delete();
-                getTess();
-=======
                 if(eng_file.exists())eng_file.delete();
                 getTess(url);
->>>>>>> origin/master
             }
 
             @Override
