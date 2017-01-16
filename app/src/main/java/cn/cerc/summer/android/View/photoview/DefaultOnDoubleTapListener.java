@@ -8,11 +8,7 @@ import android.widget.ImageView;
 /**
  * Provided default implementation of GestureDetector.OnDoubleTapListener, to be overridden with custom behavior, if needed
  * <p>&nbsp;</p>
-<<<<<<< HEAD
- * To be used via {@link cn.cerc.summer.android.View.photoview.PhotoViewAttacher#setOnDoubleTapListener(GestureDetector.OnDoubleTapListener)}
-=======
  * To be used via {@link PhotoViewAttacher#setOnDoubleTapListener(GestureDetector.OnDoubleTapListener)}
->>>>>>> origin/master
  */
 public class DefaultOnDoubleTapListener implements GestureDetector.OnDoubleTapListener {
 
