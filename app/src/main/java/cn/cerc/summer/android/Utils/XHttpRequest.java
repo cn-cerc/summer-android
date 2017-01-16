@@ -42,36 +42,47 @@ public class XHttpRequest implements AsyncFileLoafCallback {
         return new XHttpRequest();
     }
 
+    private Handler mHandler;
+    private RequestCallback rc;
+    private Runnable mrunnable = new Runnable() {
+        @Override
+        public void run() {
+            Toast.makeText(rc.getContext(), "网络稍慢，请耐心等候...", Toast.LENGTH_SHORT).show();
+        }
+    };
+
     /**
      * get请求
      *
      * @param url 请求地址
-     * @param rc  请求回调
+     * @param rcall  请求回调
      */
-    public void GET(final String url, final RequestCallback rc) {
+    public void GET(final String url, RequestCallback rcall) {
+        this.rc = rcall;
         if (!AppUtil.getNetWorkStata(rc.getContext())){
             Toast.makeText(rc.getContext(),"请检查网络",Toast.LENGTH_SHORT).show();
             ((Activity)rc.getContext()).finish();
             return;
         }
+        if (mHandler == null)
+            mHandler = new Handler();
+        mHandler.postDelayed(mrunnable,3000);
         x.http().get(new RequestParams(url), new Callback.CommonCallback<JSONObject>() {
             @Override
             public void onSuccess(JSONObject result) {
                 rc.success(url, result);
             }
-
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 rc.Failt(url, ex.toString());
             }
-
             @Override
             public void onCancelled(CancelledException cex) {
                 rc.Failt(url, "已取消");
             }
-
             @Override
             public void onFinished() {
+                mHandler.removeCallbacks(mrunnable);
             }
         });
     }

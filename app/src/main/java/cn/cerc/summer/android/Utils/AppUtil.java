@@ -17,6 +17,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -134,6 +136,12 @@ public class AppUtil {
         return false;
     }
 
+    /**
+     * 判断静态文件是否需要更新
+     * @param url
+     * @param jsonarr
+     * @return
+     */
     public static boolean needUpdate(String url, JSONObject jsonarr){
         String remote = AppUtil.fileurl2name(url, 0);
         String savepath = Constans.getAppPath(Constans.DATA_PATH) + AppUtil.fileurl2name(url, 0);
@@ -160,5 +168,16 @@ public class AppUtil {
         return true;
     }
 
+    private static SimpleDateFormat mDateFormat;
+
+    public static String formatDateTime(long time) {
+        if (mDateFormat == null){
+            mDateFormat = new SimpleDateFormat("MM-dd HH:mm");
+        }
+        if (0 == time) {
+            return "";
+        }
+        return mDateFormat.format(new Date(time));
+    }
 
 }

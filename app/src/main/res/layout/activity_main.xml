@@ -4,6 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backgroup"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -71,8 +72,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <cn.cerc.summer.android.View.MyWebView
-                android:id="@+id/webview"
+            <cn.cerc.summer.android.View.pullTorefreshwebView.PullToRefreshWebView
+                android:id="@+id/pullTorefreshwebView"
                 android:scrollbars="none"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>

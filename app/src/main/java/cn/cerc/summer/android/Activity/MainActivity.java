@@ -61,11 +61,15 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.analytics.MobclickAgent.UMAnalyticsConfig;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import cn.cerc.summer.android.View.pullTorefreshwebView.PullToRefreshBase;
+import cn.cerc.summer.android.View.pullTorefreshwebView.PullToRefreshWebView;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 
@@ -76,6 +80,7 @@ import cn.jpush.android.api.TagAliasCallback;
 public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, JSInterfaceLintener, ActivityCompat.OnRequestPermissionsResultCallback, SoundUtils.SoundPlayerStatusLintener {
 
     public MyWebView webview;
+    private PullToRefreshWebView pullTorefreshwebView;
     private ProgressBar progress;
     private DragPointView dragpointview;//消息
     private ImageView image_tips;
@@ -235,7 +240,18 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         progress = (ProgressBar) this.findViewById(R.id.progress);
         image_tips = (ImageView) this.findViewById(R.id.image_tips);
 
-        webview = (MyWebView) this.findViewById(R.id.webview);
+        pullTorefreshwebView = (PullToRefreshWebView) this.findViewById(R.id.pullTorefreshwebView);
+        //下拉刷新
+        pullTorefreshwebView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<MyWebView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<MyWebView> refreshView) {
+                webview.reload();
+            }
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<MyWebView> refreshView) {
+            }
+        });
+        webview = pullTorefreshwebView.getRefreshableView();
 
         webview.getSettings().setTextZoom(settingShared.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this,ScreenUtils.getInches(this))));
 
@@ -332,6 +348,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 if (url != null && url.contains("FrmIndex")) {
                     MobclickAgent.onPageStart(url);
                 }
+                pullTorefreshwebView.onPullDownRefreshComplete();
+                setLastUpdateTime();
                 //webview出错判断
                 if (is_ERROR) {
                     title.setText("出错了");
@@ -404,9 +422,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                                 webview.loadUrl(homeurl);
                                 webview.clearCache(true);
                                 webview.clearHistory();
-                            }else
-                                webview.goBack();
-//                                webview.loadUrl("javascript:ReturnBtnClick()");// 返回键退回
+                            }else webview.loadUrl("javascript:ReturnBtnClick()");// 返回键退回
                         else finish();
                     }
                     return true;
@@ -416,6 +432,12 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         });
         webview.setOnLongClickListener(this);
     }
+
+    private void setLastUpdateTime() {
+        String text = AppUtil.formatDateTime(System.currentTimeMillis());
+        pullTorefreshwebView.setLastUpdatedLabel(text);
+    }
+
 
     /**
      * 退出点击的第一次的时间戳
@@ -521,7 +543,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         lpw.setAnchorView(view);
         lpw.show();
     }
-    
 
     @Override
     protected void onDestroy() {
@@ -558,40 +579,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         MobclickAgent.onPause(this);
     }
 
-    /**
-     * 清除缓存
-     */
-    private int clearCacheFolder(File dir, long numDays) {
-        int deletedFiles = 0;
-        if (dir != null && dir.isDirectory()) {
-            try {
-                for (File child : dir.listFiles()) {
-                    if (child.isDirectory())
-                        deletedFiles += clearCacheFolder(child, numDays);
-                    if (child.lastModified() < numDays)
-                        if (child.delete()) deletedFiles++;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return deletedFiles;
-    }
-
-
-//    /**
-//     * ATTENTION: This was auto-generated to implement the App Indexing API.
-//     * See https://g.co/AppIndexing/AndroidStudio for more information.
-//     */
-//    public Action getIndexApiAction() {
-//        Thing object = new Thing.Builder()
-//                .setName("Main Page") // TODO: Define a title for the content shown.
-//                // TODO: Make sure this auto-generated URL is correct.
-//                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-//                .build();
-//        return new Action.Builder(Action.TYPE_VIEW).setObject(object).setActionStatus(Action.STATUS_TYPE_COMPLETED).build();
-//    }
-
     @Override
     public void onStart() {
         super.onStart();
@@ -603,12 +590,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     @Override
     public void onStop() {
         super.onStop();
-
         if (su != null)
             su.onCompletion(null);
-
-//        AppIndex.AppIndexApi.end(client, getIndexApiAction());
-//        client.disconnect();
     }
 
     //声音播放结束的回调
@@ -648,6 +631,13 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 }
             }
         });
+    }
+
+    @Override
+    public void openAd(String url){
+        Intent intent = new Intent(this, ShowExternalActivity.class);
+        intent.putExtra("url", url);
+        startActivity(intent);
     }
 
     @Override

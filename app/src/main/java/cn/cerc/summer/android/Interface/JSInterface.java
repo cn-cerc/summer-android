@@ -166,4 +166,13 @@ public class JSInterface extends Object {
     }
 
 
+    /**
+     * 显示外部的URL
+     */
+    @JavascriptInterface
+    public void openAd(String url){
+        jsInterfaceLintener.openAd(url);
+    }
+
+
 }
