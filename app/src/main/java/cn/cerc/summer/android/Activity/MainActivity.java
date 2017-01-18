@@ -76,7 +76,7 @@ import cn.jpush.android.api.TagAliasCallback;
 /**
  * 主界面
  */
-@SuppressLint({ "JavascriptInterface", "SetJavaScriptEnabled" })
+@SuppressLint({"JavascriptInterface", "SetJavaScriptEnabled"})
 public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, JSInterfaceLintener, ActivityCompat.OnRequestPermissionsResultCallback, SoundUtils.SoundPlayerStatusLintener {
 
     public MyWebView webview;
@@ -89,7 +89,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
     private boolean isGoHome = false;//是否返回home
     private boolean is_ERROR = false;//是否错误了
-    private boolean is_info = false;
 
     private ImageView back, more;//返回/更多
     private TextView title;//标题
@@ -167,9 +166,10 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     }
 
     /**
-     *    无论什么模式，只有activity是同一个实例的情况下，intent发生了变化，
+     * 无论什么模式，只有activity是同一个实例的情况下，intent发生了变化，
      * 就会进入onNewIntent中，这个方法的作用也是让你来对旧的intent进行保存，
      * 对新的intent进行对应的处理。
+     *
      * @param intent
      */
     @Override
@@ -240,6 +240,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         progress = (ProgressBar) this.findViewById(R.id.progress);
         image_tips = (ImageView) this.findViewById(R.id.image_tips);
 
+        image_tips.setOnClickListener(this);
+
         pullTorefreshwebView = (PullToRefreshWebView) this.findViewById(R.id.pullTorefreshwebView);
         //下拉刷新
         pullTorefreshwebView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<MyWebView>() {
@@ -247,13 +249,14 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             public void onPullDownToRefresh(PullToRefreshBase<MyWebView> refreshView) {
                 webview.reload();
             }
+
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<MyWebView> refreshView) {
             }
         });
         webview = pullTorefreshwebView.getRefreshableView();
 
-        webview.getSettings().setTextZoom(settingShared.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this,ScreenUtils.getInches(this))));
+        webview.getSettings().setTextZoom(settingShared.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this, ScreenUtils.getInches(this))));
 
         //登陆和退出的js调用回调(接口：JSInterfaceLintener 方法：1.LoginOrLogout 2.Action)
         webview.addJavascriptInterface(new JSInterface(this), "JSobj");//JSobj 供web端js调用标识，修改请通知web开发者
@@ -364,8 +367,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 } else {
                     back.setVisibility(View.VISIBLE);
                 }
-                if (url.contains("FrmCardPage")) is_info = true;
-                else is_info = false;
                 progress.setVisibility(View.GONE);
                 super.onPageFinished(view, url);
             }
@@ -418,11 +419,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                         startActivity(home);
                     } else {
                         if (webview.canGoBack())
-                            if (is_info){
-                                webview.loadUrl(homeurl);
-                                webview.clearCache(true);
-                                webview.clearHistory();
-                            }else webview.loadUrl("javascript:ReturnBtnClick()");// 返回键退回
+                            webview.loadUrl("javascript:ReturnBtnClick()");// 返回键退回
                         else finish();
                     }
                     return true;
@@ -459,14 +456,13 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back://返回按钮
-                if (is_info){
-                    webview.loadUrl(homeurl);
-                    webview.clearCache(true);//清除缓存
-                    webview.clearHistory();//清除历史记录
-                }else webview.loadUrl("javascript:ReturnBtnClick()");
+                webview.loadUrl("javascript:ReturnBtnClick()");
                 break;
             case R.id.more://右上角更多按钮
                 showPopu(more);
+                break;
+            case R.id.image_tips:
+                webview.reload();
                 break;
             default:
                 break;
@@ -488,6 +484,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     /**
      * 显示菜单栏的窗口
      * 初始化菜单
+     *
      * @param view
      */
     public void showPopu(View view) {
@@ -560,8 +557,14 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             Log.e("xxxx", "mainactivity " + action);
             switch (action) {
                 case NETWORK_CHANGE://网络广播
-                    if (AppUtil.getNetWorkStata(context)) webview.reload();
-                    else ShowDialog.getDialog(context).showTips();
+                    if (AppUtil.getNetWorkStata(context)) {
+                        image_tips.setVisibility(View.GONE);
+                        webview.reload();
+                    } else{
+                        image_tips.setImageResource(R.mipmap.nonework);
+                        image_tips.setVisibility(View.VISIBLE);
+                        ShowDialog.getDialog(context).showTips();
+                    }
                     break;
                 case APP_UPDATA://有更新
                     break;
@@ -624,9 +627,9 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(flag){
+                if (flag) {
                     back.setVisibility(View.GONE);
-                }else {
+                } else {
                     back.setVisibility(View.VISIBLE);
                 }
             }
@@ -634,7 +637,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     }
 
     @Override
-    public void openAd(String url){
+    public void openAd(String url) {
         Intent intent = new Intent(this, ShowExternalActivity.class);
         intent.putExtra("url", url);
         startActivity(intent);
@@ -642,10 +645,10 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
     @Override
     public void showImage(String imgUrl) {
-        Log.i("imgUlr",imgUrl);
-        Intent intent = new Intent(MainActivity.this,ShowImageActivity.class);
+        Log.i("imgUlr", imgUrl);
+        Intent intent = new Intent(MainActivity.this, ShowImageActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString("imageurl",imgUrl);
+        bundle.putString("imageurl", imgUrl);
         intent.putExtras(bundle);
         startActivity(intent);
     }
@@ -662,23 +665,23 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             //首先判断是否有权限使用摄像头
             if (PermissionUtils.getPermission(new String[]{Manifest.permission.CAMERA}, PermissionUtils.REQUEST_CAMERA_P_STATE, this))
                 pu.Start_P(this, REQUEST_PHOTO_CAMERA);
-        }else if ("sound".equals(action)){//调用声音播放器
+        } else if ("sound".equals(action)) {//调用声音播放器
             su = SoundUtils.getInstance(this);
             su.setJson(json);
             su.startPlayer();
-        }else if ("zxing".equals(action)){//调用二维码扫描
+        } else if ("zxing".equals(action)) {//调用二维码扫描
             zxu = ZXingUtils.getInstance();
             zxu.setJson(json);
             if (PermissionUtils.getPermission(new String[]{Manifest.permission.CAMERA}, PermissionUtils.REQUEST_CAMERA_Q_STATE, this))
                 zxu.startScan(this, REQUEST_SCAN_QRCODE);
-        }else if ("card".equals(action)){//调用卡片扫描
+        } else if ("card".equals(action)) {//调用卡片扫描
             zxu = ZXingUtils.getInstance();
             zxu.setJson(json);
-            if (PermissionUtils.getPermission(new String[]{Manifest.permission.CAMERA}, PermissionUtils.REQUEST_CAMERA_C_STATE, this)){
-                File file = new File(Constans.getAppPath(Constans.TESSDATA_PATH),"eng.traineddata");
+            if (PermissionUtils.getPermission(new String[]{Manifest.permission.CAMERA}, PermissionUtils.REQUEST_CAMERA_C_STATE, this)) {
+                File file = new File(Constans.getAppPath(Constans.TESSDATA_PATH), "eng.traineddata");
                 if (file.exists()) zxu.startScan(this, REQUEST_SCAN_CARD);
                 else {
-                    XHttpRequest.getInstance().getTess(MyConfig.HOME_URL + settingShared.getString(Constans.OCR_PATH,"/data/eng.traineddata"));
+                    XHttpRequest.getInstance().getTess(MyConfig.HOME_URL + settingShared.getString(Constans.OCR_PATH, "/data/eng.traineddata"));
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -687,7 +690,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                     });
                 }
             }
-        }else if ("call".equals(action)){//
+        } else if ("call".equals(action)) {//
             phone = json;
             if (PermissionUtils.getPermission(new String[]{Manifest.permission.CALL_PHONE}, PermissionUtils.REQUEST_CALL_PHONE_STATE, this)) {
                 call(json);
@@ -703,7 +706,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     }
 
     //打电话
-    public void call(String phone){
+    public void call(String phone) {
         Intent intent = new Intent(Intent.ACTION_DIAL);
         Uri data = Uri.parse("tel:" + phone);
         intent.setData(data);
@@ -729,7 +732,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 default:
                     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             }
-        }else {
+        } else {
             ActivityCompat.requestPermissions(this, permissions, requestCode);
         }
     }
@@ -741,24 +744,27 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 homeurl = data.getStringExtra("home");
                 webview.loadUrl(homeurl);
             }
-        }else if (requestCode == REQUEST_PHOTO_CAMERA){
+        } else if (requestCode == REQUEST_PHOTO_CAMERA) {
             if (resultCode == RESULT_OK) pu.Start_Crop(REQUEST_PHOTO_CROP);
-            else if (resultCode == RESULT_CANCELED) Toast.makeText(this, "取消拍照", Toast.LENGTH_SHORT).show();;
-        }else if (requestCode == REQUEST_PHOTO_CROP){
+            else if (resultCode == RESULT_CANCELED)
+                Toast.makeText(this, "取消拍照", Toast.LENGTH_SHORT).show();
+            ;
+        } else if (requestCode == REQUEST_PHOTO_CROP) {
             // 拿到剪切数据
             Bitmap bmap = data.getParcelableExtra("data");
             if (resultCode == RESULT_OK) {
-                if (bmap != null )
+                if (bmap != null)
                     pu.Cropfinish(bmap);
                 else Toast.makeText(this, "裁剪图片失败", Toast.LENGTH_SHORT).show();
-            } else if (resultCode == RESULT_CANCELED) Toast.makeText(this, "取消裁剪图片", Toast.LENGTH_SHORT).show();
-        }else if (requestCode == REQUEST_SCAN_QRCODE){
+            } else if (resultCode == RESULT_CANCELED)
+                Toast.makeText(this, "取消裁剪图片", Toast.LENGTH_SHORT).show();
+        } else if (requestCode == REQUEST_SCAN_QRCODE) {
             if (resultCode == RESULT_OK) {
                 String Scanresult = data.getStringExtra("result");
                 Toast.makeText(this, Scanresult, Toast.LENGTH_SHORT).show();
-                webview.loadUrl(String.format("javascript:appRichScan('%s')",Scanresult));
+                webview.loadUrl(String.format("javascript:appRichScan('%s')", Scanresult));
             }
-        }else if (requestCode == REQUEST_SCAN_CARD){
+        } else if (requestCode == REQUEST_SCAN_CARD) {
             if (resultCode == RESULT_OK) {
                 String Scanresult = data.getStringExtra("result");
                 Toast.makeText(this, Scanresult, Toast.LENGTH_SHORT).show();

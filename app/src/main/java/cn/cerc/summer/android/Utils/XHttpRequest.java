@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
+import cn.cerc.summer.android.Activity.MainActivity;
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Interface.AsyncFileLoafCallback;
 import cn.cerc.summer.android.Interface.ConfigFileLoafCallback;
@@ -59,14 +60,21 @@ public class XHttpRequest implements AsyncFileLoafCallback {
      */
     public void GET(final String url, RequestCallback rcall) {
         this.rc = rcall;
-        if (!AppUtil.getNetWorkStata(rc.getContext())){
-            Toast.makeText(rc.getContext(),"请检查网络",Toast.LENGTH_SHORT).show();
-            ((Activity)rc.getContext()).finish();
-            return;
-        }
         if (mHandler == null)
             mHandler = new Handler();
         mHandler.postDelayed(mrunnable,3000);
+        if (!AppUtil.getNetWorkStata(rc.getContext())){
+            Toast.makeText(rc.getContext(),"请检查网络",Toast.LENGTH_SHORT).show();
+            mHandler.removeCallbacks(mrunnable);
+            MainActivity.getInstance().setHomeurl(AppUtil.buildDeviceUrl(MyConfig.HOME_URL));
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ((Activity)rc.getContext()).finish();
+                }
+            }, 1200);
+            return;
+        }
         x.http().get(new RequestParams(url), new Callback.CommonCallback<JSONObject>() {
             @Override
             public void onSuccess(JSONObject result) {

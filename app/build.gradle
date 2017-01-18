@@ -8,7 +8,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 24
         versionCode 1
-        versionName "1.2.2"
+        versionName "1.2.3"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -34,7 +34,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 
-//    productFlavors {
+    productFlavors {
 //        wandoujia {
 //            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "wandoujia"]
 //        }
@@ -42,19 +42,19 @@ android {
 //        baidu {
 //            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "baidu"]
 //        }
-//
-//        c360 {
-//            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "c360"]
-//        }
-//
-//        yyb {
-//            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "yyb"]
-//        }
-//
+
+        c360 {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "c360"]
+        }
+
+        yyb {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "yyb"]
+        }
+
 //        uc {
 //            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "uc"]
 //        }
-//    }
+    }
 
 }
 

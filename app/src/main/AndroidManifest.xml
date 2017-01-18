@@ -155,7 +155,7 @@
             android:value="58662a3fae1bf81dce00185e" />
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="Channel ID" />
+            android:value="${UMENG_CHANNEL_VALUE}" />
         <meta-data
             android:name="JPUSH_CHANNEL"
             android:value="developer-default" />

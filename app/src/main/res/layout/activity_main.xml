@@ -20,7 +20,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_chevron_left_white_24dp"/>
+            android:src="@mipmap/ic_chevron_left_white_24dp"/>
 
         <TextView
             android:id="@+id/title"
