@@ -314,6 +314,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             //在页面加载开始时调用
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
+//                Toast.makeText(view.getContext(), url, Toast.LENGTH_SHORT).show();
                 if (!AppUtil.getNetWorkStata(view.getContext())) return;
                 Log.e("cururl", url);
                 is_ERROR = false;
@@ -358,7 +359,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                     title.setText("出错了");
                     image_tips.setVisibility(View.VISIBLE);
                 } else {
-                    title.setText(webview.getTitle());
+                    if (webview.getTitle().length() < 10)
+                        title.setText(webview.getTitle());
                     image_tips.setVisibility(View.GONE);
                 }
                 //webview返回主界面判断（返回按钮的显示与隐藏）
@@ -522,11 +524,9 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                         break;
                     case 5://退出登录
                         if (islogin) {
-                            if (!TextUtils.isEmpty(logoutUrl)) {
-                                webview.loadUrl(logoutUrl);
-                                webview.clearCache(true);
-                                webview.clearHistory();
-                            }
+                            webview.loadUrl("javascript:exit()");
+                            webview.clearCache(true);
+                            webview.clearHistory();
                         } else
                             webview.reload();
                         break;
@@ -560,7 +560,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                     if (AppUtil.getNetWorkStata(context)) {
                         image_tips.setVisibility(View.GONE);
                         webview.reload();
-                    } else{
+                    } else {
                         image_tips.setImageResource(R.mipmap.nonework);
                         image_tips.setVisibility(View.VISIBLE);
                         ShowDialog.getDialog(context).showTips();

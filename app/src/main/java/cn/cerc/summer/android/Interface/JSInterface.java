@@ -12,6 +12,7 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import java.util.Map;
 
+import cn.cerc.summer.android.MyConfig;
 import cn.cerc.summer.android.Utils.AppUtil;
 
 /**
@@ -82,7 +83,7 @@ public class JSInterface extends Object {
      */
     @JavascriptInterface
     public void login() {
-        String loginUrl = "http://ehealth.lucland.com/forms/Login.exit";
+        String loginUrl = MyConfig.HOME_URL+"/forms/Login.exit";
         login(loginUrl);
     }
 

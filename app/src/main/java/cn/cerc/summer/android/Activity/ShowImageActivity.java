@@ -27,7 +27,7 @@ public class ShowImageActivity extends BaseActivity {
 
         photo = (PhotoView) this.findViewById(R.id.photo);
         ivBack = (ImageView) this.findViewById(R.id.ivBack);
-        ImageLoader.getInstance().displayImage(imageurl, photo, MyApplication.getInstance().options);
+        ImageLoader.getInstance().displayImage(imageurl, photo);
 
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
