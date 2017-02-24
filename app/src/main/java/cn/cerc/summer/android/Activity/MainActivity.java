@@ -89,10 +89,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     public static final String NETWORK_CHANGE = "android.net.conn.NETWORK_CHANGE";
     public static final String APP_UPDATA = "com.fmk.huagu.efitness.APP_UPDATA";
     public static final String JSON_ERROR = "com.fmk.huagu.efitness.JSON_ERROR";
-    public static final String KEY_MESSAGE = "message";
-    public static final String KEY_EXTRAS = "extras";
-    public static final String MESSAGE_RECEIVED_ACTION = "com.mimrc.vine.MESSAGE_RECEIVED_ACTION";
-    public static boolean isForeground = false;
 
     private final int REQUEST_SETTING = 101;
 
@@ -153,7 +149,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         super.onNewIntent(intent);
         if (intent.hasExtra("msgId")) {
             msgId = intent.getStringExtra("msgId");
-            String msgurl = getMsgUrl(".show") + "&msgId=" + msgId;
+            String msgurl = getMsgUrl(".show") + "&uid=" + msgId;
             Log.e("mainactivity", msgurl);
             webview.loadUrl(msgurl);
         }
