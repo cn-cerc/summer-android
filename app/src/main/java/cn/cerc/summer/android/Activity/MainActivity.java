@@ -149,7 +149,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         super.onNewIntent(intent);
         if (intent.hasExtra("msgId")) {
             msgId = intent.getStringExtra("msgId");
-            String msgurl = getMsgUrl(".show") + "&uid=" + msgId;
+            String msgurl = getMsgUrl(".show") + "&msgId=" + msgId;
             Log.e("mainactivity", msgurl);
             webview.loadUrl(msgurl);
         }
