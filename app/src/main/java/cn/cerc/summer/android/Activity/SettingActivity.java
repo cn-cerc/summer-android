@@ -33,15 +33,11 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
 
     private Button[] buttons = new Button[5];
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-
         def_scales = ScreenUtils.getScales(this,ScreenUtils.getInches(this));
-
         back = (ImageView) this.findViewById(R.id.back);
         button = (Button) this.findViewById(R.id.save);
         edittext = (EditText) this.findViewById(R.id.url);
@@ -50,7 +46,9 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
         recover = (Button) this.findViewById(R.id.recover);
         customseekbar = (CustomSeekBar) this.findViewById(R.id.customseekbar);
         customseekbar.setOnSeekBarChangeListener(this);
-        edittext.setText(settingShared.getString(Constans.HOME, ""));
+        if (null == getIntent().getStringExtra("address"))
+            edittext.setText(settingShared.getString(Constans.HOME, ""));
+        else edittext.setText(getIntent().getStringExtra("address"));
         scales = settingShared.getInt(Constans.SCALE_SHAREDKEY, def_scales);
         customseekbar.setProgress(scales);
 

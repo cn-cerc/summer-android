@@ -1,6 +1,5 @@
 package cn.cerc.summer.android.Activity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -8,16 +7,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PowerManager;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -29,7 +22,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
@@ -37,24 +29,6 @@ import android.widget.ImageView;
 import android.widget.ListPopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import cn.cerc.summer.android.Entity.Config;
-import cn.cerc.summer.android.Entity.Menu;
-import cn.cerc.summer.android.Interface.ConfigFileLoafCallback;
-import cn.cerc.summer.android.Interface.JSInterfaceLintener;
-import cn.cerc.summer.android.Receiver.MyBroadcastReceiver;
-import cn.cerc.summer.android.Utils.AppUtil;
-import cn.cerc.summer.android.Utils.Constans;
-import cn.cerc.summer.android.Interface.JSInterface;
-import cn.cerc.summer.android.Utils.PermissionUtils;
-
-import cn.cerc.summer.android.Utils.ScreenUtils;
-import cn.cerc.summer.android.Utils.XHttpRequest;
-import cn.cerc.summer.android.View.DragPointView;
-import cn.cerc.summer.android.View.MyWebView;
-import cn.cerc.summer.android.View.ShowDialog;
-import cn.cerc.summer.android.View.ShowPopupWindow;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -63,14 +37,24 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.mimrc.vine.R;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import cn.cerc.summer.android.Entity.Config;
+import cn.cerc.summer.android.Entity.Menu;
+import cn.cerc.summer.android.Interface.JSInterface;
+import cn.cerc.summer.android.Interface.JSInterfaceLintener;
+import cn.cerc.summer.android.Receiver.MyBroadcastReceiver;
+import cn.cerc.summer.android.Utils.AppUtil;
+import cn.cerc.summer.android.Utils.Constans;
+import cn.cerc.summer.android.Utils.PermissionUtils;
+import cn.cerc.summer.android.Utils.ScreenUtils;
+import cn.cerc.summer.android.View.DragPointView;
+import cn.cerc.summer.android.View.MyWebView;
+import cn.cerc.summer.android.View.ShowDialog;
+import cn.cerc.summer.android.View.ShowPopupWindow;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 
@@ -78,6 +62,7 @@ import cn.jpush.android.api.TagAliasCallback;
  * 主界面
  */
 public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, JSInterfaceLintener {
+
 
     public MyWebView webview;
     private ProgressBar progress;
@@ -104,6 +89,10 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     public static final String NETWORK_CHANGE = "android.net.conn.NETWORK_CHANGE";
     public static final String APP_UPDATA = "com.fmk.huagu.efitness.APP_UPDATA";
     public static final String JSON_ERROR = "com.fmk.huagu.efitness.JSON_ERROR";
+    public static final String KEY_MESSAGE = "message";
+    public static final String KEY_EXTRAS = "extras";
+    public static final String MESSAGE_RECEIVED_ACTION = "com.mimrc.vine.MESSAGE_RECEIVED_ACTION";
+    public static boolean isForeground = false;
 
     private final int REQUEST_SETTING = 101;
 
@@ -114,8 +103,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         //通过代码的方式动态注册MyBroadcastReceiver
         IntentFilter filter = new IntentFilter();
         filter.addAction(NETWORK_CHANGE);
-        filter.addAction(APP_UPDATA);
         filter.addAction(JSON_ERROR);
+        filter.addAction(APP_UPDATA);
         //注册receiver
         registerReceiver(receiver, filter);
     }
@@ -174,8 +163,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_SETTING) {
             if (resultCode == RESULT_OK) {
-                homeurl = data.getStringExtra("home");
-                webview.loadUrl(homeurl);
+                webview.loadUrl(data.getStringExtra("home"));
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -437,7 +425,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        webview.loadUrl(getMsgUrl("") + "&unread=1");
+                        webview.loadUrl(getMsgUrl(".unread"));
                         break;
                     case 1:
                         webview.loadUrl(getMsgUrl(""));
@@ -446,7 +434,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                         webview.loadUrl(homeurl);
                         break;
                     case 3:
-                        startActivityForResult(new Intent(MainActivity.this, SettingActivity.class), REQUEST_SETTING);
+                        startActivityForResult(new Intent(MainActivity.this, SettingActivity.class).putExtra("address", webview.getUrl()), REQUEST_SETTING);
                         break;
                     case 4:
                         clearCacheFolder(MainActivity.this.getCacheDir(), System.currentTimeMillis());

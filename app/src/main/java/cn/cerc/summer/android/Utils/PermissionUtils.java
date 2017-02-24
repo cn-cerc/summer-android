@@ -38,7 +38,7 @@ public class PermissionUtils {
             return false;
         } else {
             TelephonyManager TelephonyMgr = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
-            IMEI = TelephonyMgr.getDeviceId();
+            IMEI = "n_" + TelephonyMgr.getDeviceId();
             return true;
         }
     }
