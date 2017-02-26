@@ -41,6 +41,8 @@ public class PermissionUtils {
             ActivityCompat.requestPermissions(activity, permissions, requestcode);
             return false;
         } else {
+            TelephonyManager TelephonyMgr = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
+            IMEI = "n_" + TelephonyMgr.getDeviceId();
             return true;
         }
     }

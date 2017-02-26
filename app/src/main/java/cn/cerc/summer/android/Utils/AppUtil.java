@@ -7,7 +7,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
 
-import com.huagu.ehealth.R;
+
+import com.mimrc.vine.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
