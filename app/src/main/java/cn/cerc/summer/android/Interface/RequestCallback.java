@@ -12,7 +12,7 @@ public interface RequestCallback {
 
     void success(String url, JSONObject json);
 
-    void Failt(String url,String error);
+    void Failt(String url, String error);
 
     Context getContext();
 }

@@ -26,13 +26,13 @@ import android.util.Log;
  */
 @SuppressWarnings("WeakerAccess")
 public class Boxa {
+    private static final String TAG = Boxa.class.getSimpleName();
+
     static {
         System.loadLibrary("jpgt");
         System.loadLibrary("pngt");
         System.loadLibrary("lept");
     }
-
-    private static final String TAG = Boxa.class.getSimpleName();
 
     /**
      * A pointer to the native Boxa object. This is used internally by native
@@ -53,6 +53,12 @@ public class Boxa {
     }
 
     // TODO Add constructors.
+
+    private static native void nativeDestroy(long nativeBox);
+
+    private static native boolean nativeGetGeometry(long nativeBoxa, int index, int[] geometry);
+
+    private static native int nativeGetCount(long nativeBoxa);
 
     /**
      * Returns a pointer to the native Boxa object.
@@ -109,11 +115,15 @@ public class Boxa {
         return null;
     }
 
+    // ***************
+    // * NATIVE CODE *
+    // ***************
+
     /**
      * Fills an array containing the coordinates of this box. See INDEX_*
      * constants for indices.
      *
-     * @param index which box element to refer to
+     * @param index    which box element to refer to
      * @param geometry A 4+ element integer array to fill with coordinates.
      * @return <code>true</code> on success
      */
@@ -150,12 +160,4 @@ public class Boxa {
             super.finalize();
         }
     }
-
-    // ***************
-    // * NATIVE CODE *
-    // ***************
-
-    private static native void nativeDestroy(long nativeBox);
-    private static native boolean nativeGetGeometry(long nativeBoxa, int index,  int[] geometry);
-    private static native int nativeGetCount(long nativeBoxa);
 }

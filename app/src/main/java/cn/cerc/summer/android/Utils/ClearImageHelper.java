@@ -1,14 +1,12 @@
 package cn.cerc.summer.android.Utils;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 
-import java.io.File;
 import java.io.IOException;
 
 
@@ -43,7 +41,7 @@ public class ClearImageHelper {
     }
 
     /**
-     * @param bufferedImage   需要去噪的图像
+     * @param bufferedImage 需要去噪的图像
      * @throws IOException
      */
     public static Bitmap cleanImage(Bitmap bufferedImage) throws IOException {

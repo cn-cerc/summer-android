@@ -39,10 +39,28 @@ public class DragPointView extends TextView {
     private int x, y, r;
     private ViewGroup scrollParent;
     private int[] p = new int[2];
+    private boolean is_enable = true;
 
     public DragPointView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initbg();
+    }
+
+    /**
+     * @param radius 圆角角度
+     * @param color  填充颜色
+     * @return StateListDrawable 对象
+     * @author zy
+     */
+    public static StateListDrawable createStateListDrawable(int radius, int color) {
+        StateListDrawable bg = new StateListDrawable();
+        GradientDrawable gradientStateNormal = new GradientDrawable();
+        gradientStateNormal.setColor(color);
+        gradientStateNormal.setShape(GradientDrawable.RECTANGLE);
+        gradientStateNormal.setCornerRadius(radius);
+        gradientStateNormal.setStroke(0, 0);
+        bg.addState(View.EMPTY_STATE_SET, gradientStateNormal);
+        return bg;
     }
 
     public OnDragListencer getDragListencer() {
@@ -57,21 +75,21 @@ public class DragPointView extends TextView {
         return backgroundColor;
     }
 
+    @SuppressWarnings("deprecation")
+    public void setBackgroundColor(int backgroundColor) {
+        this.backgroundColor = backgroundColor;
+        DragPointView.this.setBackgroundDrawable(createStateListDrawable((getHeight() > getWidth() ? getHeight() : getWidth()) / 2, backgroundColor));
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int w = getMeasuredWidth();
         int h = getMeasuredHeight();
-        if(w != h){ // 简单的将宽高搞成一样的,如果有更好的方法欢迎在我博客下方留言!
+        if (w != h) { // 简单的将宽高搞成一样的,如果有更好的方法欢迎在我博客下方留言!
             int x = Math.max(w, h);
             setMeasuredDimension(x, x);
         }
-    }
-
-    @SuppressWarnings("deprecation")
-    public void setBackgroundColor(int backgroundColor) {
-        this.backgroundColor = backgroundColor;
-        DragPointView.this.setBackgroundDrawable(createStateListDrawable((getHeight() > getWidth() ? getHeight() : getWidth()) / 2, backgroundColor));
     }
 
     private void initbg() {
@@ -91,9 +109,7 @@ public class DragPointView extends TextView {
         });
     }
 
-    private boolean is_enable = true;
-
-    public void setEnable(boolean is_enable){
+    public void setEnable(boolean is_enable) {
         this.is_enable = is_enable;
     }
 
@@ -330,26 +346,6 @@ public class DragPointView extends TextView {
             }
         }
 
-    }
-
-    /**
-     *
-     * @param radius
-     *            圆角角度
-     * @param color
-     *            填充颜色
-     * @return StateListDrawable 对象
-     * @author zy
-     */
-    public static StateListDrawable createStateListDrawable(int radius, int color) {
-        StateListDrawable bg = new StateListDrawable();
-        GradientDrawable gradientStateNormal = new GradientDrawable();
-        gradientStateNormal.setColor(color);
-        gradientStateNormal.setShape(GradientDrawable.RECTANGLE);
-        gradientStateNormal.setCornerRadius(radius);
-        gradientStateNormal.setStroke(0, 0);
-        bg.addState(View.EMPTY_STATE_SET, gradientStateNormal);
-        return bg;
     }
 
 

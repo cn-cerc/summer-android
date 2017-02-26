@@ -13,9 +13,9 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         manifestPlaceholders = [
-                JPUSH_PKGNAME : "com.huagu.ehealth",
+                JPUSH_PKGNAME: "com.huagu.ehealth",
                 JPUSH_APPKEY : "3cc3e3d7c7e8c1dc7cc8f003", //JPush上注册的包名对应的appkey.
-                JPUSH_CHANNEL : "developer-default"
+                JPUSH_CHANNEL: "developer-default"
         ]
     }
     sourceSets {

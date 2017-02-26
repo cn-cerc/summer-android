@@ -16,8 +16,6 @@
 
 package cn.cerc.summer.android.zxing.decoding;
 
-import java.util.Vector;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -30,6 +28,8 @@ import android.util.Log;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.huagu.ehealth.R;
+
+import java.util.Vector;
 
 import cn.cerc.summer.android.Activity.MipcaActivityCapture;
 import cn.cerc.summer.android.zxing.camera.CameraManager;
@@ -45,12 +45,6 @@ public final class CaptureActivityHandler extends Handler {
     private final MipcaActivityCapture activity;
     private final DecodeThread decodeThread;
     private State state;
-
-    private enum State {
-        PREVIEW,
-        SUCCESS,
-        DONE
-    }
 
     public CaptureActivityHandler(MipcaActivityCapture activity, Vector<BarcodeFormat> decodeFormats, String characterSet) {
         this.activity = activity;
@@ -106,18 +100,18 @@ public final class CaptureActivityHandler extends Handler {
 
     public void quitSynchronously() {
         state = State.DONE;
-        Log.e("xxxxxx1","xxx0 : "+ System.currentTimeMillis());
+        Log.e("xxxxxx1", "xxx0 : " + System.currentTimeMillis());
         CameraManager.get().stopPreview();
         Message quit = Message.obtain(decodeThread.getHandler(), R.id.quit);
         quit.sendToTarget();
-        Log.e("xxxxxx1","xxx1 : "+ System.currentTimeMillis());
+        Log.e("xxxxxx1", "xxx1 : " + System.currentTimeMillis());
         try {
             decodeThread.join();
         } catch (InterruptedException e) {
             // continue
         }
 
-        Log.e("xxxxxx1","xxx2 : "+ System.currentTimeMillis());
+        Log.e("xxxxxx1", "xxx2 : " + System.currentTimeMillis());
         // Be absolutely sure we don't send any queued up messages
         removeMessages(R.id.decode_succeeded);
         removeMessages(R.id.decode_failed);
@@ -130,6 +124,12 @@ public final class CaptureActivityHandler extends Handler {
             CameraManager.get().requestAutoFocus(this, R.id.auto_focus);
             activity.drawViewfinder();
         }
+    }
+
+    private enum State {
+        PREVIEW,
+        SUCCESS,
+        DONE
     }
 
 }

@@ -21,11 +21,6 @@ package com.googlecode.tesseract.android;
  */
 public class TessPdfRenderer {
 
-    /**
-     * Used by the native implementation of the class.
-     */
-    private final long mNativePdfRenderer;
-
     static {
         System.loadLibrary("jpgt");
         System.loadLibrary("pngt");
@@ -33,22 +28,30 @@ public class TessPdfRenderer {
         System.loadLibrary("tess");
     }
 
+    /**
+     * Used by the native implementation of the class.
+     */
+    private final long mNativePdfRenderer;
     private boolean mRecycled;
 
     /**
      * Constructs an instance of a Tesseract PDF renderer.
-     * 
-     * When the instance of TessPdfRenderer is no longer needed, its 
+     * <p>
+     * When the instance of TessPdfRenderer is no longer needed, its
      * {@link #recycle} method must be invoked to dispose of it.
-     * 
-     * @param baseApi API instance to use for performing OCR 
+     *
+     * @param baseApi    API instance to use for performing OCR
      * @param outputPath Full path to write the resulting PDF to, not
-     *         including the ".pdf" extension 
+     *                   including the ".pdf" extension
      */
-    public TessPdfRenderer(TessBaseAPI baseApi, String outputPath) {        
+    public TessPdfRenderer(TessBaseAPI baseApi, String outputPath) {
         this.mNativePdfRenderer = nativeCreate(baseApi.getNativeData(), outputPath);
         mRecycled = false;
     }
+
+    private static native long nativeCreate(long tessBaseAPINativeData, String outputPath);
+
+    private static native void nativeRecycle(long nativePointer);
 
     /**
      * @return A pointer to the native TessPdfRenderer object.
@@ -61,16 +64,12 @@ public class TessPdfRenderer {
     }
 
     /**
-     * Releases resources and frees any memory associated with this 
+     * Releases resources and frees any memory associated with this
      * TessPdfRenderer object. Must be called on object destruction.
      */
     public void recycle() {
         nativeRecycle(mNativePdfRenderer);
         mRecycled = true;
     }
-
-    private static native long nativeCreate(long tessBaseAPINativeData, String outputPath);
-
-    private static native void nativeRecycle(long nativePointer);
 
 }

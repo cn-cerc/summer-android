@@ -11,19 +11,17 @@ import cn.cerc.summer.android.Entity.JSParam;
 public class OCRUtils extends HardwareJSUtils {
 
     private static OCRUtils ocru;
+    public JSParam jsp;
 
-    public static OCRUtils getInstance(){
+    public static OCRUtils getInstance() {
         if (ocru == null) ocru = new OCRUtils();
         return ocru;
     }
-
-    public JSParam jsp;
 
     @Override
     public void setJson(String json) {
         jsp = JSON.parseObject(json, JSParam.class);
     }
-
 
 
 }

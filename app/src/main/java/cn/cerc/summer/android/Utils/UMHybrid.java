@@ -1,23 +1,23 @@
 package cn.cerc.summer.android.Utils;
 
+import android.content.Context;
+import android.util.Log;
+import android.webkit.WebView;
+
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.analytics.MobclickAgent.EScenarioType;
+import com.umeng.analytics.game.UMGameAgent;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.umeng.analytics.MobclickAgent;
-import com.umeng.analytics.MobclickAgent.EScenarioType;
-import com.umeng.analytics.game.UMGameAgent;
-
-import android.content.Context;
-import android.util.Log;
-import android.webkit.WebView;
 
 public class UMHybrid {
     private static Context mContext = null;
@@ -26,11 +26,14 @@ public class UMHybrid {
      */
     private static boolean isGameInited = false;
 
-    private static class Holder {
-        private static final UMHybrid INSTANCE = new UMHybrid();
+    private UMHybrid() {
     }
 
-    private UMHybrid() {
+    public static UMHybrid getInstance(Context context) {
+        if (context != null) {
+            mContext = context.getApplicationContext();
+        }
+        return Holder.INSTANCE;
     }
 
     /**
@@ -41,13 +44,6 @@ public class UMHybrid {
         UMGameAgent.setPlayerLevel(1);
         MobclickAgent.setScenarioType(mContext, EScenarioType.E_UM_GAME);
         isGameInited = true;
-    }
-
-    public static UMHybrid getInstance(Context context) {
-        if (context != null) {
-            mContext = context.getApplicationContext();
-        }
-        return Holder.INSTANCE;
     }
 
     public void execute(final String url, final WebView webView) throws Exception {
@@ -83,7 +79,7 @@ public class UMHybrid {
         }
     }
 
-    @SuppressWarnings({ "unused" })
+    @SuppressWarnings({"unused"})
     private void onCCEvent(final JSONArray args) throws JSONException {
         Log.d("UMHybrid", "onCCEvent  args:" + args.toString());
         JSONArray array = args.getJSONArray(0);
@@ -111,7 +107,7 @@ public class UMHybrid {
         MobclickAgent.onEvent(mContext, eventId, label);
     }
 
-    @SuppressWarnings({ "unused" })
+    @SuppressWarnings({"unused"})
     private void onEventWithParameters(final JSONArray args) throws JSONException {
         Log.d("UMHybrid", "onEventWithParameters  args:" + args.toString());
         String eventId = args.getString(0);
@@ -132,7 +128,7 @@ public class UMHybrid {
         MobclickAgent.onEvent(mContext, eventId, map);
     }
 
-    @SuppressWarnings({ "unused" })
+    @SuppressWarnings({"unused"})
     private void onEventWithCounter(final JSONArray args) throws JSONException {
         Log.d("UMHybrid", "onEventWithCounter  args:" + args.toString());
         String eventId = args.getString(0);
@@ -154,28 +150,28 @@ public class UMHybrid {
         MobclickAgent.onEventValue(mContext, eventId, map, value);
     }
 
-    @SuppressWarnings({ "unused" })
+    @SuppressWarnings({"unused"})
     private void onPageBegin(final JSONArray args) throws JSONException {
         Log.d("UMHybrid", "onPageBegin  args:" + args.toString());
         String pageName = args.getString(0);
         MobclickAgent.onPageStart(pageName);
     }
 
-    @SuppressWarnings({ "unused" })
+    @SuppressWarnings({"unused"})
     private void onPageEnd(final JSONArray args) throws JSONException {
         Log.d("UMHybrid", "onPageEnd  args:" + args.toString());
         String pageName = args.getString(0);
         MobclickAgent.onPageEnd(pageName);
     }
 
-    @SuppressWarnings({ "unused" })
+    @SuppressWarnings({"unused"})
     private void profileSignInWithPUID(final JSONArray args) throws JSONException {
         Log.d("UMHybrid", "profileSignInWithPUID  args:" + args.toString());
         String puid = args.getString(0);
         MobclickAgent.onProfileSignIn(puid);
     }
 
-    @SuppressWarnings({ "unused" })
+    @SuppressWarnings({"unused"})
     private void profileSignInWithPUIDWithProvider(final JSONArray args) throws JSONException {
         Log.d("UMHybrid", "profileSignInWithPUIDWithProvider  args:" + args.toString());
         String puid = args.getString(0);
@@ -183,13 +179,13 @@ public class UMHybrid {
         MobclickAgent.onProfileSignIn(puid, provider);
     }
 
-    @SuppressWarnings({ "unused" })
+    @SuppressWarnings({"unused"})
     private void profileSignOff(final JSONArray args) throws JSONException {
         Log.d("UMHybrid", "profileSignOff");
         MobclickAgent.onProfileSignOff();
     }
 
-    @SuppressWarnings({ "unused" })
+    @SuppressWarnings({"unused"})
     private void setUserLevelId(final JSONArray args) throws JSONException {
         Log.d("UMHybrid", "setUserLevelId [" + isGameInited + "] args:" + args.toString());
         if (!isGameInited) {
@@ -199,7 +195,7 @@ public class UMHybrid {
         UMGameAgent.setPlayerLevel(level);
     }
 
-    @SuppressWarnings({ "unused" })
+    @SuppressWarnings({"unused"})
     private void startLevel(final JSONArray args) throws JSONException {
         Log.d("UMHybrid", "startLevel  args:" + args.toString());
         if (!isGameInited) {
@@ -209,7 +205,7 @@ public class UMHybrid {
         UMGameAgent.startLevel(level);
     }
 
-    @SuppressWarnings({ "unused" })
+    @SuppressWarnings({"unused"})
     private void failLevel(final JSONArray args) throws JSONException {
         Log.d("UMHybrid", "failLevel  args:" + args.toString());
         if (!isGameInited) {
@@ -219,7 +215,7 @@ public class UMHybrid {
         UMGameAgent.failLevel(level);
     }
 
-    @SuppressWarnings({ "unused" })
+    @SuppressWarnings({"unused"})
     private void finishLevel(final JSONArray args) throws JSONException {
         Log.d("UMHybrid", "finishLevel  args:" + args.toString());
         if (!isGameInited) {
@@ -229,7 +225,7 @@ public class UMHybrid {
         UMGameAgent.finishLevel(level);
     }
 
-    @SuppressWarnings({ "unused" })
+    @SuppressWarnings({"unused"})
     private void exchange(final JSONArray args) throws JSONException {
         Log.d("UMHybrid", "exchange  args:" + args.toString());
         if (!isGameInited) {
@@ -243,7 +239,7 @@ public class UMHybrid {
         UMGameAgent.exchange(currencyAmount, currencyType, virtualAmount, channel, orderId);
     }
 
-    @SuppressWarnings({ "unused" })
+    @SuppressWarnings({"unused"})
     private void pay(final JSONArray args) throws JSONException {
         Log.d("UMHybrid", "pay  args:" + args.toString());
         if (!isGameInited) {
@@ -255,7 +251,7 @@ public class UMHybrid {
         UMGameAgent.pay(money, coin, source);
     }
 
-    @SuppressWarnings({ "unused" })
+    @SuppressWarnings({"unused"})
     private void payWithItem(final JSONArray args) throws JSONException {
         Log.d("UMHybrid", "payWithItem  args:" + args.toString());
         if (!isGameInited) {
@@ -269,7 +265,7 @@ public class UMHybrid {
         UMGameAgent.pay(money, item, number, price, source);
     }
 
-    @SuppressWarnings({ "unused" })
+    @SuppressWarnings({"unused"})
     private void buy(final JSONArray args) throws JSONException {
         Log.d("UMHybrid", "buy  args:" + args.toString());
         if (!isGameInited) {
@@ -281,7 +277,7 @@ public class UMHybrid {
         UMGameAgent.buy(item, number, price);
     }
 
-    @SuppressWarnings({ "unused" })
+    @SuppressWarnings({"unused"})
     private void use(final JSONArray args) throws JSONException {
         Log.d("UMHybrid", "use  args:" + args.toString());
         if (!isGameInited) {
@@ -293,7 +289,7 @@ public class UMHybrid {
         UMGameAgent.use(item, number, price);
     }
 
-    @SuppressWarnings({ "unused" })
+    @SuppressWarnings({"unused"})
     private void bonus(final JSONArray args) throws JSONException {
         Log.d("UMHybrid", "bonus  args:" + args.toString());
         if (!isGameInited) {
@@ -304,7 +300,7 @@ public class UMHybrid {
         UMGameAgent.bonus(coin, source);
     }
 
-    @SuppressWarnings({ "unused" })
+    @SuppressWarnings({"unused"})
     private void bonusWithItem(final JSONArray args) throws JSONException {
         Log.d("UMHybrid", "bonusWithItem  args:" + args.toString());
         if (!isGameInited) {
@@ -315,5 +311,9 @@ public class UMHybrid {
         double price = args.getDouble(2);
         int source = args.getInt(3);
         UMGameAgent.bonus(item, number, price, source);
+    }
+
+    private static class Holder {
+        private static final UMHybrid INSTANCE = new UMHybrid();
     }
 }

@@ -3,20 +3,8 @@ package cn.cerc.summer.android.Utils;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.Toast;
 
-import cn.cerc.summer.android.Activity.MainActivity;
-import cn.cerc.summer.android.Entity.Config;
-import cn.cerc.summer.android.Interface.AsyncFileLoafCallback;
-import cn.cerc.summer.android.Interface.ConfigFileLoafCallback;
-import cn.cerc.summer.android.Interface.GetFileCallback;
-import cn.cerc.summer.android.Interface.RequestCallback;
-import cn.cerc.summer.android.MyConfig;
-import cn.cerc.summer.android.View.ShowDialog;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -28,11 +16,52 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import cn.cerc.summer.android.Activity.MainActivity;
+import cn.cerc.summer.android.Interface.AsyncFileLoafCallback;
+import cn.cerc.summer.android.Interface.ConfigFileLoafCallback;
+import cn.cerc.summer.android.Interface.GetFileCallback;
+import cn.cerc.summer.android.Interface.RequestCallback;
+import cn.cerc.summer.android.MyConfig;
+import cn.cerc.summer.android.View.ShowDialog;
+
 /**
  * Created by fff on 2016/11/30.
  * 网络请求
  */
 public class XHttpRequest implements AsyncFileLoafCallback {
+
+    File eng_file = new File(Constans.getAppPath(Constans.TESSDATA_PATH) + "/eng.traineddata");
+    private Handler mHandler;
+    private RequestCallback rc;
+    private Runnable mrunnable = new Runnable() {
+        @Override
+        public void run() {
+            Toast.makeText(rc.getContext(), "网络稍慢，请耐心等候...", Toast.LENGTH_SHORT).show();
+        }
+    };
+    private ProgressDialog progressDialog;
+    /**
+     * 单个文件下载失败次数
+     */
+    private int error_num = 0;
+    private List<String> filelist;//下载列表
+    private ConfigFileLoafCallback cflc;
+    private JSONObject jsonarr;
+    private List<String> firstlist;
+    private int firstindex = 20;
+    private int filesize = 0;
+    ConfigFileLoafCallback cfc = new ConfigFileLoafCallback() {
+        @Override
+        public void loadfinish(int size) {
+            if ((filesize += size) >= filelist.size()) {
+                cflc.loadAllfinish();
+            }
+        }
+
+        @Override
+        public void loadAllfinish() {
+        }
+    };
 
     /**
      * 获取当前实例
@@ -43,34 +72,25 @@ public class XHttpRequest implements AsyncFileLoafCallback {
         return new XHttpRequest();
     }
 
-    private Handler mHandler;
-    private RequestCallback rc;
-    private Runnable mrunnable = new Runnable() {
-        @Override
-        public void run() {
-            Toast.makeText(rc.getContext(), "网络稍慢，请耐心等候...", Toast.LENGTH_SHORT).show();
-        }
-    };
-
     /**
      * get请求
      *
-     * @param url 请求地址
-     * @param rcall  请求回调
+     * @param url   请求地址
+     * @param rcall 请求回调
      */
     public void GET(final String url, RequestCallback rcall) {
         this.rc = rcall;
         if (mHandler == null)
             mHandler = new Handler();
-        mHandler.postDelayed(mrunnable,3000);
-        if (!AppUtil.getNetWorkStata(rc.getContext())){
-            Toast.makeText(rc.getContext(),"请检查网络",Toast.LENGTH_SHORT).show();
+        mHandler.postDelayed(mrunnable, 3000);
+        if (!AppUtil.getNetWorkStata(rc.getContext())) {
+            Toast.makeText(rc.getContext(), "请检查网络", Toast.LENGTH_SHORT).show();
             mHandler.removeCallbacks(mrunnable);
             MainActivity.getInstance().setHomeurl(AppUtil.buildDeviceUrl(MyConfig.HOME_URL));
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    ((Activity)rc.getContext()).finish();
+                    ((Activity) rc.getContext()).finish();
                 }
             }, 1200);
             return;
@@ -80,14 +100,17 @@ public class XHttpRequest implements AsyncFileLoafCallback {
             public void onSuccess(JSONObject result) {
                 rc.success(url, result);
             }
+
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 rc.Failt(url, ex.toString());
             }
+
             @Override
             public void onCancelled(CancelledException cex) {
                 rc.Failt(url, "已取消");
             }
+
             @Override
             public void onFinished() {
                 mHandler.removeCallbacks(mrunnable);
@@ -130,11 +153,10 @@ public class XHttpRequest implements AsyncFileLoafCallback {
         });
     }
 
-    File eng_file = new File(Constans.getAppPath(Constans.TESSDATA_PATH) + "/eng.traineddata");
     /**
      * 获取语言识别库文件
      */
-    public void getTess(final String url){
+    public void getTess(final String url) {
         File file = new File(Constans.getAppPath(Constans.TESSDATA_PATH) + "/eng.traineddata");
         if (file.exists()) return;
 
@@ -149,7 +171,7 @@ public class XHttpRequest implements AsyncFileLoafCallback {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                if(eng_file.exists())eng_file.delete();
+                if (eng_file.exists()) eng_file.delete();
                 getTess(url);
             }
 
@@ -162,14 +184,6 @@ public class XHttpRequest implements AsyncFileLoafCallback {
             }
         });
     }
-
-
-    private ProgressDialog progressDialog;
-
-    /**
-     * 单个文件下载失败次数
-     */
-    private int error_num = 0;
 
     /**
      * 文件下载
@@ -239,13 +253,6 @@ public class XHttpRequest implements AsyncFileLoafCallback {
         return cc;
     }
 
-    private List<String> filelist;//下载列表
-    private ConfigFileLoafCallback cflc;
-    private JSONObject jsonarr;
-
-    private List<String> firstlist;
-    private int firstindex = 20;
-
     public void ConfigFileGet(List<String> filelist, ConfigFileLoafCallback cflc) {
         if (filelist != null && filelist.size() > 0) {
             this.filelist = filelist;
@@ -279,19 +286,4 @@ public class XHttpRequest implements AsyncFileLoafCallback {
             }
         }
     }
-
-    private int filesize = 0;
-
-    ConfigFileLoafCallback cfc = new ConfigFileLoafCallback() {
-        @Override
-        public void loadfinish(int size) {
-            if ((filesize += size) >= filelist.size()) {
-                cflc.loadAllfinish();
-            }
-        }
-
-        @Override
-        public void loadAllfinish() {
-        }
-    };
 }

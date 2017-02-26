@@ -1,10 +1,8 @@
 package cn.cerc.summer.android.View;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -24,6 +22,18 @@ import com.mimrc.vine.R;
 
 public class CustomSeekBar extends LinearLayout implements SeekBar.OnSeekBarChangeListener, Animation.AnimationListener {
 
+    public float wid = 0;// 进度1的距离
+    private int min = 0;//区间最小值
+    private int max = 50;//最大值
+    private int curprogress = 0;
+    private int width; //seerbar 的宽度
+    private int left = 0;   //上面显示数字的textview的左边距离
+    private TextView textview;
+    private SeekBar seekBar;
+    private Context context;
+    private SeekBar.OnSeekBarChangeListener Onseekbarchangelistener;
+    private boolean isshow_index = false;
+
     public CustomSeekBar(Context context) {
         super(context);
         init(context);
@@ -35,31 +45,19 @@ public class CustomSeekBar extends LinearLayout implements SeekBar.OnSeekBarChan
 
     public CustomSeekBar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.CustomSeekBar, defStyleAttr,0);
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.CustomSeekBar, defStyleAttr, 0);
         max = ta.getInt(R.styleable.CustomSeekBar_max, max);
         min = ta.getInt(R.styleable.CustomSeekBar_min, min);
 
         init(context);
     }
 
-    private int min = 0;//区间最小值
-    private int max = 50;//最大值
-
-    private int curprogress=0;
-
-    private int width; //seerbar 的宽度
-    private int left = 0;   //上面显示数字的textview的左边距离
-
-    private TextView textview;
-    private SeekBar seekBar;
-    private Context context;
-
     private void init(Context context) {
         this.context = context;
         RelativeLayout relativeLayout = new RelativeLayout(context);
         textview = new TextView(context);
         textview.setText(min + "");
-        textview.setPadding(20,25,20,25);
+        textview.setPadding(20, 25, 20, 25);
         textview.setTextColor(Color.parseColor("#48B2BD"));
         textview.setVisibility(View.INVISIBLE);
         textview.setGravity(Gravity.LEFT);
@@ -87,8 +85,6 @@ public class CustomSeekBar extends LinearLayout implements SeekBar.OnSeekBarChan
         wid = (width - seekBar.getPaddingLeft() - seekBar.getPaddingRight()) / (max - min);
     }
 
-    public float wid = 0;// 进度1的距离
-
     public void setMin(int min) {
         this.min = min;
     }
@@ -97,8 +93,6 @@ public class CustomSeekBar extends LinearLayout implements SeekBar.OnSeekBarChan
         this.max = max;
     }
 
-    private SeekBar.OnSeekBarChangeListener Onseekbarchangelistener;
-
     public void setOnSeekBarChangeListener(SeekBar.OnSeekBarChangeListener Onseekbarchangelistener) {
         this.Onseekbarchangelistener = Onseekbarchangelistener;
 
@@ -106,10 +100,11 @@ public class CustomSeekBar extends LinearLayout implements SeekBar.OnSeekBarChan
 
     /**
      * 设置的当前进度
-     * @param progress  进度， 需得是大于最小值的
+     *
+     * @param progress 进度， 需得是大于最小值的
      */
-    public void setProgress(int progress){
-        seekBar.setProgress(progress-min);
+    public void setProgress(int progress) {
+        seekBar.setProgress(progress - min);
         curprogress = progress;
         textview.setText((progress + min) + "");
         left = (int) ((wid * progress) + (float) seekBar.getPaddingLeft() - (getTextWidth((progress + min) + "") / 2) - textview.getPaddingLeft());
@@ -147,15 +142,14 @@ public class CustomSeekBar extends LinearLayout implements SeekBar.OnSeekBarChan
         return textview.getPaint().measureText(str);
     }
 
-    private boolean isshow_index = false;
-
     /**
      * 显示上面数值的动画效果，
-     * @param is_show   显示或者隐藏
+     *
+     * @param is_show 显示或者隐藏
      */
-    public void setShowAnim(boolean is_show){
+    public void setShowAnim(boolean is_show) {
         isshow_index = is_show;
-        ScaleAnimation scaleAnimation = is_show?new ScaleAnimation(0.1f, 1.0f,0.1f,1.0f,(getTextWidth(textview.getText().toString()) / 2  + textview.getPaddingLeft()),textview.getBottom()):new ScaleAnimation(1.0f, 0.1f,1.0f,0.1f,(getTextWidth(textview.getText().toString()) / 2  + textview.getPaddingLeft()),textview.getBottom());
+        ScaleAnimation scaleAnimation = is_show ? new ScaleAnimation(0.1f, 1.0f, 0.1f, 1.0f, (getTextWidth(textview.getText().toString()) / 2 + textview.getPaddingLeft()), textview.getBottom()) : new ScaleAnimation(1.0f, 0.1f, 1.0f, 0.1f, (getTextWidth(textview.getText().toString()) / 2 + textview.getPaddingLeft()), textview.getBottom());
         scaleAnimation.setDuration(300);
         textview.startAnimation(scaleAnimation);
         scaleAnimation.setAnimationListener(this);
@@ -165,6 +159,7 @@ public class CustomSeekBar extends LinearLayout implements SeekBar.OnSeekBarChan
     public void onAnimationStart(Animation animation) {
 
     }
+
     @Override
     public void onAnimationEnd(Animation animation) {
         if (isshow_index)
@@ -172,6 +167,7 @@ public class CustomSeekBar extends LinearLayout implements SeekBar.OnSeekBarChan
         else
             textview.setVisibility(View.INVISIBLE);
     }
+
     @Override
     public void onAnimationRepeat(Animation animation) {
     }

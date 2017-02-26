@@ -13,7 +13,7 @@
     <string name="picture_load_image_failed">点击屏幕，重新加载</string>
     <!-- 加载中提示 -->
     <string name="picture_image_loading">正在加载…</string>
-    
+
     <!-- 下拉刷新和上拉加载更多的文本 -->
     <string name="pull_to_refresh_header_hint_normal">@string/pushmsg_center_pull_down_text</string>
     <string name="pull_to_refresh_header_hint_normal2">上拉可以刷新</string>
@@ -25,5 +25,5 @@
     <string name="pull_to_refresh_no_more_data">@string/pushmsg_center_no_more_msg</string>
     <string name="pull_to_refresh_network_error">网络不给力，请检查网络</string>
 
-    
+
 </resources>

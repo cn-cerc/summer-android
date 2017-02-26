@@ -29,17 +29,20 @@ import java.io.IOException;
  */
 @SuppressWarnings("WeakerAccess")
 public class JpegIO {
+    /**
+     * Default quality is 85%, which is reasonably good.
+     */
+    public static final int DEFAULT_QUALITY = 85;
+    /**
+     * Progressive encoding is disabled by default to increase compatibility.
+     */
+    public static final boolean DEFAULT_PROGRESSIVE = false;
+
     static {
         System.loadLibrary("jpgt");
         System.loadLibrary("pngt");
         System.loadLibrary("lept");
     }
-
-    /** Default quality is 85%, which is reasonably good. */
-    public static final int DEFAULT_QUALITY = 85;
-
-    /** Progressive encoding is disabled by default to increase compatibility. */
-    public static final boolean DEFAULT_PROGRESSIVE = false;
 
     /**
      * Returns a compressed JPEG byte representation of this Pix using default
@@ -55,8 +58,8 @@ public class JpegIO {
     /**
      * Returns a compressed JPEG byte representation of this Pix.
      *
-     * @param pixs A source pix image.
-     * @param quality The quality of the compressed image. Valid range is 0-100.
+     * @param pixs        A source pix image.
+     * @param quality     The quality of the compressed image. Valid range is 0-100.
      * @param progressive Whether to use progressive compression.
      * @return a compressed JPEG byte array representation of the Pix
      */

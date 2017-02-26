@@ -16,12 +16,6 @@
 
 package cn.cerc.summer.android.zxing.decoding;
 
-import java.io.IOException;
-import java.util.Hashtable;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,7 +23,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.zxing.BinaryBitmap;
@@ -38,14 +31,15 @@ import com.google.zxing.MultiFormatReader;
 import com.google.zxing.ReaderException;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
+import com.googlecode.tesseract.android.TessBaseAPI;
 import com.huagu.ehealth.R;
 
+import java.util.Hashtable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import cn.cerc.summer.android.Activity.MipcaActivityCapture;
-
-import com.googlecode.tesseract.android.TessBaseAPI;
-
 import cn.cerc.summer.android.MyApplication;
-import cn.cerc.summer.android.Utils.ClearImageHelper;
 import cn.cerc.summer.android.zxing.camera.CameraManager;
 import cn.cerc.summer.android.zxing.camera.PlanarYUVLuminanceSource;
 
@@ -55,8 +49,9 @@ final class DecodeHandler extends Handler {
 
     private final MipcaActivityCapture activity;
     private final MultiFormatReader multiFormatReader;
-    private TessBaseAPI tessBaseAPI = null ;
+    long endtine = 0;
 //    private final ClearImageHelper cih;
+private TessBaseAPI tessBaseAPI = null;
 
     DecodeHandler(MipcaActivityCapture activity, Hashtable<DecodeHintType, Object> hints) {
         multiFormatReader = new MultiFormatReader();
@@ -147,8 +142,6 @@ final class DecodeHandler extends Handler {
                 message.sendToTarget();
             }
     }
-
-    long endtine = 0;
 
     public String decodeBitmap(PlanarYUVLuminanceSource source) {
         Bitmap bitmap = source.renderCroppedGreyscaleBitmap();//获取灰度图

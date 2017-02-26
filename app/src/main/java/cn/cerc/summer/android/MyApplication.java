@@ -2,14 +2,8 @@ package cn.cerc.summer.android;
 
 import android.app.Application;
 import android.graphics.Bitmap;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.ScaleAnimation;
-import android.widget.ImageView;
 
 import com.mimrc.vine.R;
-
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -18,12 +12,8 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.image.ImageOptions;
 import org.xutils.x;
 
-import cn.cerc.summer.android.Utils.Constans;
 import cn.jpush.android.api.JPushInterface;
 
 
@@ -33,12 +23,11 @@ import cn.jpush.android.api.JPushInterface;
 
 public class MyApplication extends Application {
 
-//    public ImageOptions imageOptions;
+    private static MyApplication instance;
+    //    public ImageOptions imageOptions;
     public DisplayImageOptions options;
 
-    private static MyApplication instance;
-
-    public static MyApplication getInstance(){
+    public static MyApplication getInstance() {
         return instance;
     }
 
@@ -79,7 +68,7 @@ public class MyApplication extends Application {
 
     }
 
-    public void init(){
+    public void init() {
         x.Ext.init(this);//xutils 初始化
         x.Ext.setDebug(true);//设置为debug
 

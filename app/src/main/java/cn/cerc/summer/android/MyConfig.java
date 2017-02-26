@@ -9,5 +9,5 @@ public class MyConfig {
      * 默认首页
      */
     public static String HOME_URL = "http://m.knowall.cn";
-    
+
 }

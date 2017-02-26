@@ -1,7 +1,5 @@
 package cn.cerc.summer.android.Utils;
 
-import android.app.Activity;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -33,11 +31,12 @@ public class DownloadTask extends AsyncTask<String, Integer, List<String>> {
     private AsyncFileLoafCallback afc;
     private ConfigFileLoafCallback cflc;
 
-    public DownloadTask(List<String> filelist, JSONObject jsonarr,AsyncFileLoafCallback afc) {
+    public DownloadTask(List<String> filelist, JSONObject jsonarr, AsyncFileLoafCallback afc) {
         this.filelist = filelist;
         this.jsonarr = jsonarr;
         this.afc = afc;
     }
+
     public DownloadTask(List<String> filelist, JSONObject jsonarr, ConfigFileLoafCallback cflc) {
         this.filelist = filelist;
         this.jsonarr = jsonarr;
@@ -58,8 +57,8 @@ public class DownloadTask extends AsyncTask<String, Integer, List<String>> {
     public void loadnext() {
         loadindex++;
         if (loadindex < filelist.size()) fileLoad(filelist.get(loadindex));
-        else if (afc != null) afc.loadfinish(filelist,fail_num);
-        else if (cflc != null)cflc.loadfinish(filelist.size());
+        else if (afc != null) afc.loadfinish(filelist, fail_num);
+        else if (cflc != null) cflc.loadfinish(filelist.size());
     }
 
     /**
@@ -71,7 +70,7 @@ public class DownloadTask extends AsyncTask<String, Integer, List<String>> {
         String remote = AppUtil.fileurl2name(url, 0);
         String savepath = Constans.getAppPath(Constans.DATA_PATH) + AppUtil.fileurl2name(url, 0);
 
-        if (!AppUtil.needUpdate(url,jsonarr)){
+        if (!AppUtil.needUpdate(url, jsonarr)) {
             loadnext();
             return;
         }
@@ -85,7 +84,7 @@ public class DownloadTask extends AsyncTask<String, Integer, List<String>> {
             public void onSuccess(File result) {
                 loadindex++;
                 if (loadindex < filelist.size()) fileLoad(filelist.get(loadindex));
-                else if (afc != null) afc.loadfinish(filelist,fail_num);
+                else if (afc != null) afc.loadfinish(filelist, fail_num);
                 else if (cflc != null) cflc.loadfinish(filelist.size());
             }
 
@@ -95,10 +94,10 @@ public class DownloadTask extends AsyncTask<String, Integer, List<String>> {
                 if (error_num >= 3) {//下载失败次数达到三次即下载下一个文件
                     loadindex++;
                     error_num = 0;
-                    fail_num ++;
+                    fail_num++;
                 }
                 if (loadindex < filelist.size()) fileLoad(filelist.get(loadindex));
-                else if (afc != null) afc.loadfinish(filelist,fail_num);
+                else if (afc != null) afc.loadfinish(filelist, fail_num);
                 else if (cflc != null) cflc.loadfinish(filelist.size());
             }
 

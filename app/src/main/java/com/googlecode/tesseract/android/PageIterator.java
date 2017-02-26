@@ -28,12 +28,20 @@ public class PageIterator {
         System.loadLibrary("tess");
     }
 
-    /** Pointer to native page iterator. */
+    /**
+     * Pointer to native page iterator.
+     */
     private final long mNativePageIterator;
 
     /* package */PageIterator(long nativePageIterator) {
         mNativePageIterator = nativePageIterator;
     }
+
+    private static native void nativeBegin(long nativeIterator);
+
+    private static native boolean nativeNext(long nativeIterator, int level);
+
+    private static native int[] nativeBoundingBox(long nativeIterator, int level);
 
     /**
      * Resets the iterator to point to the start of the page.
@@ -58,7 +66,7 @@ public class PageIterator {
      *
      * @param level the page iterator level. See {@link PageIteratorLevel}.
      * @return {@code false} if the end of the page was reached, {@code true}
-     *         otherwise.
+     * otherwise.
      */
     public boolean next(int level) {
         return nativeNext(mNativePageIterator, level);
@@ -86,28 +94,23 @@ public class PageIterator {
      * See comment on coordinate system above.
      * <p>
      * The returned bounding box may clip foreground pixels from a grey image.
-     * 
+     *
      * @param level the page iterator level. See {@link PageIteratorLevel}.
      * @return the bounding rectangle of the current object at the given level
      */
     public int[] getBoundingBox(int level) {
-    	return nativeBoundingBox(mNativePageIterator, level);
+        return nativeBoundingBox(mNativePageIterator, level);
     }
-    
+
     /**
      * Get a bounding box as an Android Rect.
-     * 
-     * @see #getBoundingBox(int)
-     * 
+     *
      * @param level the page iterator level. See {@link PageIteratorLevel}.
      * @return the bounding rectangle of the current object at the given level
+     * @see #getBoundingBox(int)
      */
     public Rect getBoundingRect(int level) {
         int[] box = getBoundingBox(level);
         return new Rect(box[0], box[1], box[2], box[3]);
     }
-    
-    private static native void nativeBegin(long nativeIterator);
-    private static native boolean nativeNext(long nativeIterator, int level);
-    private static native int[] nativeBoundingBox(long nativeIterator, int level);
 }

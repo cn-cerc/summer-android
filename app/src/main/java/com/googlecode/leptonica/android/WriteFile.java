@@ -105,7 +105,7 @@ public class WriteFile {
      *
      * @param pixs The source image.
      * @return a Bitmap containing a copy of the source image, or <code>null
-     *         </code> on failure
+     * </code> on failure
      */
     public static Bitmap writeBitmap(Pix pixs) {
         if (pixs == null)

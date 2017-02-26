@@ -25,6 +25,8 @@ public class JSInterface extends Object {
     private String appid;
 
     private JSInterfaceLintener jsInterfaceLintener;
+    private PayReq req;
+    private IWXAPI msgApi;
 
     public JSInterface(JSInterfaceLintener jsInterfaceLintener) {
         this.jsInterfaceLintener = jsInterfaceLintener;
@@ -47,9 +49,6 @@ public class JSInterface extends Object {
         }
         return 0;
     }
-
-    private PayReq req;
-    private IWXAPI msgApi;
 
     /**
      * 供html调用 微信支付
@@ -83,7 +82,7 @@ public class JSInterface extends Object {
      */
     @JavascriptInterface
     public void login() {
-        String loginUrl = MyConfig.HOME_URL+"/forms/Login.exit";
+        String loginUrl = MyConfig.HOME_URL + "/forms/Login.exit";
         login(loginUrl);
     }
 
@@ -110,20 +109,22 @@ public class JSInterface extends Object {
 
     /**
      * 拍照
-     * @param json  json格式的
+     *
+     * @param json json格式的
      */
     @JavascriptInterface
-    public void paizhao(String json){
+    public void paizhao(String json) {
         String action = JSON.parseObject(json).getString("action");
         jsInterfaceLintener.Action(json, action);
     }
 
     /**
      * 播放声音
+     *
      * @param json
      */
     @JavascriptInterface
-    public void soundplay(String json){
+    public void soundplay(String json) {
         String action = JSON.parseObject(json).getString("action");
         jsInterfaceLintener.Action(json, action);
     }
@@ -132,7 +133,7 @@ public class JSInterface extends Object {
      * 扫码
      */
     @JavascriptInterface
-    public void zxing(){
+    public void zxing() {
 //        String action = JSON.parseObject(json).getString("action");
         String action = "zxing";
         Log.e("zxing", "zxing");
@@ -141,10 +142,11 @@ public class JSInterface extends Object {
 
     /**
      * 打电话
+     *
      * @param phone
      */
     @JavascriptInterface
-    public void callphone(String phone){
+    public void callphone(String phone) {
         jsInterfaceLintener.Action(phone, "call");
     }
 
@@ -152,7 +154,7 @@ public class JSInterface extends Object {
      * 扫卡
      */
     @JavascriptInterface
-    public void scancard(){
+    public void scancard() {
         String action = "card";
         jsInterfaceLintener.Action("", action);
     }
@@ -162,7 +164,7 @@ public class JSInterface extends Object {
      * 显示图片
      */
     @JavascriptInterface
-    public void showimage(String imagepath){
+    public void showimage(String imagepath) {
         jsInterfaceLintener.showImage(imagepath);
     }
 
@@ -171,7 +173,7 @@ public class JSInterface extends Object {
      * 显示外部的URL
      */
     @JavascriptInterface
-    public void openAd(String url){
+    public void openAd(String url) {
         jsInterfaceLintener.openAd(url);
     }
 
