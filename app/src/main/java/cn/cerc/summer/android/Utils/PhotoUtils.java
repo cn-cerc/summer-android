@@ -1,9 +1,6 @@
 package cn.cerc.summer.android.Utils;
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -11,23 +8,26 @@ import android.provider.MediaStore;
 
 import com.alibaba.fastjson.JSON;
 
-import org.json.JSONObject;
-
 import java.io.File;
-import java.util.HashMap;
 
 import cn.cerc.summer.android.Entity.JSParam;
-import cn.cerc.summer.android.Interface.RequestCallback;
+
+interface PhotoCallback {
+
+    File Cropfinish(Bitmap bitmap);
+
+}
 
 /**
  * Created by fff on 2016/12/27.
  */
 
-public class PhotoUtils extends HardwareJSUtils implements PhotoCallback{
+public class PhotoUtils extends HardwareJSUtils implements PhotoCallback {
 
+    private static PhotoUtils pu;
     public JSParam jsp;
     private Activity activity;
-    private static PhotoUtils pu;
+    private File imagefile;
 
     public PhotoUtils() {
     }
@@ -44,15 +44,13 @@ public class PhotoUtils extends HardwareJSUtils implements PhotoCallback{
 
     /**
      * 传递json,
+     *
      * @param json 每次调用js时传递过来的js  注意不要漏调此方法
      */
     @Override
     public void setJson(String json) {
-        jsp = JSON.parseObject(json,JSParam.class);
+        jsp = JSON.parseObject(json, JSParam.class);
     }
-
-
-    private File imagefile;
 
     public void Start_P(Activity activity, int request) {
         this.activity = activity;
@@ -80,12 +78,6 @@ public class PhotoUtils extends HardwareJSUtils implements PhotoCallback{
         FileUtil.createFile(bitmap, file);
         return file;
     }
-
-}
-
-interface PhotoCallback {
-
-    File Cropfinish(Bitmap bitmap);
 
 }
 

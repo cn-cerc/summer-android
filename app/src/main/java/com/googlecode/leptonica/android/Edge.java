@@ -21,22 +21,26 @@ package com.googlecode.leptonica.android;
  */
 @SuppressWarnings("WeakerAccess")
 public class Edge {
+    /**
+     * Filters for horizontal edges
+     */
+    public static final int L_HORIZONTAL_EDGES = 0;
+
+    // Edge orientation flags
+    /**
+     * Filters for vertical edges
+     */
+    public static final int L_VERTICAL_EDGES = 1;
+    /**
+     * Filters for all edges
+     */
+    public static final int L_ALL_EDGES = 2;
+
     static {
         System.loadLibrary("jpgt");
         System.loadLibrary("pngt");
         System.loadLibrary("lept");
     }
-
-    // Edge orientation flags
-
-    /** Filters for horizontal edges */
-    public static final int L_HORIZONTAL_EDGES = 0;
-
-    /** Filters for vertical edges */
-    public static final int L_VERTICAL_EDGES = 1;
-
-    /** Filters for all edges */
-    public static final int L_ALL_EDGES = 2;
 
     /**
      * Performs a Sobel edge detecting filter.
@@ -60,10 +64,10 @@ public class Edge {
      * Read the data incrementally across the image and unroll the loop.
      * <li> This runs at about 45 Mpix/sec on a 3 GHz processor.
      * </ol>
-     * 
-     * @param pixs Source pix (8 bpp; no colormap)
-     * @param orientFlag Edge orientation flag (L_HORIZONTAL_EDGES, 
-     *        L_VERTICAL_EDGES, L_ALL_EDGES)
+     *
+     * @param pixs       Source pix (8 bpp; no colormap)
+     * @param orientFlag Edge orientation flag (L_HORIZONTAL_EDGES,
+     *                   L_VERTICAL_EDGES, L_ALL_EDGES)
      * @return a new Pix image (8bpp, edges are brighter), or null on error
      */
     public static Pix pixSobelEdgeFilter(Pix pixs, int orientFlag) {
@@ -74,7 +78,7 @@ public class Edge {
         if (orientFlag < 0 || orientFlag > 2)
             throw new IllegalArgumentException("Invalid orientation flag");
 
-        long nativePix = nativePixSobelEdgeFilter(pixs.getNativePix(), 
+        long nativePix = nativePixSobelEdgeFilter(pixs.getNativePix(),
                 orientFlag);
 
         if (nativePix == 0)

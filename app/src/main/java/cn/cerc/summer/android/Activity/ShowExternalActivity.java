@@ -1,44 +1,19 @@
 package cn.cerc.summer.android.Activity;
 
-import android.annotation.TargetApi;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
-import android.webkit.GeolocationPermissions;
-import android.webkit.PermissionRequest;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.huagu.ehealth.R;
-import com.umeng.analytics.MobclickAgent;
 
-import java.util.ArrayList;
-
-import cn.cerc.summer.android.Entity.Config;
-import cn.cerc.summer.android.Entity.Menu;
-import cn.cerc.summer.android.Interface.JSInterface;
-import cn.cerc.summer.android.Utils.AppUtil;
 import cn.cerc.summer.android.Utils.Constans;
 import cn.cerc.summer.android.Utils.ScreenUtils;
-import cn.cerc.summer.android.Utils.UMHybrid;
-import cn.cerc.summer.android.View.DragPointView;
 import cn.cerc.summer.android.View.MyWebView;
-import cn.cerc.summer.android.View.ShowPopupWindow;
 import cn.cerc.summer.android.View.pullTorefreshwebView.PullToRefreshBase;
 import cn.cerc.summer.android.View.pullTorefreshwebView.PullToRefreshWebView;
 
@@ -79,13 +54,14 @@ public class ShowExternalActivity extends BaseActivity implements View.OnClickLi
             public void onPullDownToRefresh(PullToRefreshBase<MyWebView> refreshView) {
                 webview.reload();
             }
+
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<MyWebView> refreshView) {
             }
         });
         webview = pullTorefreshwebView.getRefreshableView();
         webview.loadUrl(showUrl);
-        webview.getSettings().setTextZoom(settingShared.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this,ScreenUtils.getInches(this))));
+        webview.getSettings().setTextZoom(settingShared.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this, ScreenUtils.getInches(this))));
 
         webview.setWebViewClient(new WebViewClient());
 
@@ -109,7 +85,6 @@ public class ShowExternalActivity extends BaseActivity implements View.OnClickLi
                 break;
         }
     }
-
 
 
 }

@@ -18,7 +18,7 @@ package com.googlecode.leptonica.android;
 
 /**
  * Image scaling methods.
- * 
+ *
  * @author alanv@google.com (Alan Viverette)
  */
 public class Scale {
@@ -28,34 +28,15 @@ public class Scale {
         System.loadLibrary("lept");
     }
 
-    public enum ScaleType {
-        /* Scale in X and Y independently, so that src matches dst exactly. */
-        FILL,
-
-        /*
-         * Compute a scale that will maintain the original src aspect ratio, but
-         * will also ensure that src fits entirely inside dst. May shrink or
-         * expand src to fit dst.
-         */
-        FIT,
-
-        /*
-         * Compute a scale that will maintain the original src aspect ratio, but
-         * will also ensure that src fits entirely inside dst. May shrink src to
-         * fit dst, but will not expand it.
-         */
-        FIT_SHRINK,
-    }
-
     /**
      * Scales the Pix to a specified width and height using a specified scaling
      * type (fill, stretch, etc.). Returns a scaled image or a clone of the Pix
      * if no scaling is required.
      *
-     * @param pixs Source pix image
-     * @param width The desired width to scale to
+     * @param pixs   Source pix image
+     * @param width  The desired width to scale to
      * @param height The desired height to scale to
-     * @param type The desired scaling type
+     * @param type   The desired scaling type
      * @return a scaled image or a clone of the Pix if no scaling is required
      */
     public static Pix scaleToSize(Pix pixs, int width, int height, ScaleType type) {
@@ -91,7 +72,7 @@ public class Scale {
      * Scales the Pix to specified scale. If no scaling is required, returns a
      * clone of the source Pix.
      *
-     * @param pixs the source Pix
+     * @param pixs  the source Pix
      * @param scale dimension scaling factor
      * @return a Pix scaled according to the supplied factors
      */
@@ -102,7 +83,7 @@ public class Scale {
     /**
      * Scales the Pix to the specified scale without sharpening.
      *
-     * @param pixs the source Pix (1, 2, 4, 8, 16 and 32 bpp)
+     * @param pixs  the source Pix (1, 2, 4, 8, 16 and 32 bpp)
      * @param scale scaling factor for both X and Y
      * @return a Pix scaled while maintaining its aspect ratio
      */
@@ -120,7 +101,7 @@ public class Scale {
      * Scales the Pix to specified x and y scale. If no scaling is required,
      * returns a clone of the source Pix.
      *
-     * @param pixs the source Pix
+     * @param pixs   the source Pix
      * @param scaleX x-dimension (width) scaling factor
      * @param scaleY y-dimension (height) scaling factor
      * @return a Pix scaled according to the supplied factors
@@ -141,11 +122,31 @@ public class Scale {
         return new Pix(nativePix);
     }
 
+    private static native long nativeScale(long nativePix, float scaleX, float scaleY);
+
     // ***************
     // * NATIVE CODE *
     // ***************
 
-    private static native long nativeScale(long nativePix, float scaleX, float scaleY);
     private static native long nativeScaleGeneral(long nativePix, float scaleX, float scaleY, float sharpfract, int sharpwidth);
+
+    public enum ScaleType {
+        /* Scale in X and Y independently, so that src matches dst exactly. */
+        FILL,
+
+        /*
+         * Compute a scale that will maintain the original src aspect ratio, but
+         * will also ensure that src fits entirely inside dst. May shrink or
+         * expand src to fit dst.
+         */
+        FIT,
+
+        /*
+         * Compute a scale that will maintain the original src aspect ratio, but
+         * will also ensure that src fits entirely inside dst. May shrink src to
+         * fit dst, but will not expand it.
+         */
+        FIT_SHRINK,
+    }
 
 }

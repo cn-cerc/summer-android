@@ -4,66 +4,47 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.drawable.AnimationDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.annotation.UiThread;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.ant.liao.GifView;
 import com.mimrc.vine.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+
+import org.json.JSONObject;
+
+import java.util.List;
 
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Interface.ConfigFileLoafCallback;
 import cn.cerc.summer.android.Interface.RequestCallback;
 import cn.cerc.summer.android.MyApplication;
-
 import cn.cerc.summer.android.MyConfig;
 import cn.cerc.summer.android.Utils.AppUtil;
 import cn.cerc.summer.android.Utils.Constans;
-import cn.cerc.summer.android.Utils.FileUtil;
 import cn.cerc.summer.android.Utils.PermissionUtils;
-import cn.cerc.summer.android.Utils.ScreenUtils;
 import cn.cerc.summer.android.Utils.XHttpRequest;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
-
-import java.io.File;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 启动界面
  */
 public class StartActivity extends BaseActivity implements ActivityCompat.OnRequestPermissionsResultCallback, RequestCallback, ConfigFileLoafCallback {
 
-    private ImageView imageview;
-
     private static StartActivity ga;
+    /**
+     * 线上的配置参数
+     */
+    public Config config;
+    private ImageView imageview;
+    private String homeurl;
 
     public static StartActivity getInstance() {
         return ga;
@@ -100,8 +81,10 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
         imageview = (ImageView) this.findViewById(R.id.imageview);
 
         String image = settingShared.getString(Constans.SHARED_START_URL, "");
-        if (settingShared.getBoolean(Constans.IS_FIRST_SHAREDKEY, true)) imageview.setVisibility(View.INVISIBLE);
-        else ImageLoader.getInstance().displayImage(image, imageview, MyApplication.getInstance().options);
+        if (settingShared.getBoolean(Constans.IS_FIRST_SHAREDKEY, true))
+            imageview.setVisibility(View.INVISIBLE);
+        else
+            ImageLoader.getInstance().displayImage(image, imageview, MyApplication.getInstance().options);
 //            x.image().bind(imageview, image, MyApplication.getInstance().imageOptions);
 
     }
@@ -141,15 +124,9 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
         StartActivity.getInstance().finish();
     }
 
-    /**
-     * 线上的配置参数
-     */
-    public Config config;
-    private String homeurl;
-
     @Override
     public void success(String url, JSONObject json) {
-        Log.i("-------config------",json.toString());
+        Log.i("-------config------", json.toString());
         config = JSON.parseObject(json.toString(), Config.class);
         homeurl = AppUtil.buildDeviceUrl(config.getRootSite());
         String msgurl = config.getRootSite() + "/" + config.getMsgManage();
@@ -184,12 +161,12 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
     }
 
     public void prestrainImage() {
-        if (config.getWelcomeImages() != null && config.getWelcomeImages().size()>0)
+        if (config.getWelcomeImages() != null && config.getWelcomeImages().size() > 0)
             ImageLoader.getInstance().loadImage(config.getWelcomeImages().get(0), MyApplication.getInstance().options, null);
     }
 
     @Override
-    public Context getContext(){
+    public Context getContext() {
         return this;
     }
 
@@ -206,13 +183,13 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
             public void run() {
                 MainActivity.getInstance().setHomeurl(homeurl);
                 skip();
-                settingShared.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).putInt(Constans.FAIL_NUM_SHAREDKEY,fail_num).commit();
+                settingShared.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).putInt(Constans.FAIL_NUM_SHAREDKEY, fail_num).commit();
             }
         });
     }
 
     @Override
-    public void loadAllfinish(){
+    public void loadAllfinish() {
         AppUtil.saveCacheList(config);
     }
 

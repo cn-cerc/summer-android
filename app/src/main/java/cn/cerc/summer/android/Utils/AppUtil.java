@@ -7,10 +7,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
 
-
 import com.mimrc.vine.R;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,10 +29,13 @@ import cn.cerc.summer.android.Entity.Config;
 
 public class AppUtil {
 
+    private static SimpleDateFormat mDateFormat;
+
     /**
      * 获取的版本号
-     * @param context   上下文
-     * @return          版本号
+     *
+     * @param context 上下文
+     * @return 版本号
      * @throws PackageManager.NameNotFoundException
      */
     public static int getVersionCode(Context context) throws PackageManager.NameNotFoundException {
@@ -46,8 +47,9 @@ public class AppUtil {
 
     /**
      * 获取的版本名
-     * @param context   上下文
-     * @return          版本号
+     *
+     * @param context 上下文
+     * @return 版本号
      * @throws PackageManager.NameNotFoundException
      */
     public static String getVersionName(Context context) throws PackageManager.NameNotFoundException {
@@ -59,11 +61,12 @@ public class AppUtil {
 
     /**
      * 配置url
-     * @param baseUrl   host
-     * @return  url
+     *
+     * @param baseUrl host
+     * @return url
      */
-    public static String buildDeviceUrl(String baseUrl){
-        return String.format("%s?device=%s&CLIENTID=%s", baseUrl, Constans.DEVICE_TYPE,  PermissionUtils.IMEI);
+    public static String buildDeviceUrl(String baseUrl) {
+        return String.format("%s?device=%s&CLIENTID=%s", baseUrl, Constans.DEVICE_TYPE, PermissionUtils.IMEI);
     }
 
     /**
@@ -83,7 +86,8 @@ public class AppUtil {
 
     /**
      * 读取缓存的配置文件
-     * @return  返回的文件json字符串
+     *
+     * @return 返回的文件json字符串
      */
     public static JSONObject getCacheList() {
         File file = new File(Constans.getAppPath(Constans.CONFIG_PATH) + "/" + Constans.CONFIGNAME);
@@ -119,16 +123,17 @@ public class AppUtil {
 
     /**
      * 获取当前网络状态
-     * @param context   上下文
-     * @return          是否有网络
+     *
+     * @param context 上下文
+     * @return 是否有网络
      */
     public static boolean getNetWorkStata(Context context) {
         // 获取手机所有连接管理对象（包括对wi-fi,net等连接的管理）
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager != null) {
             NetworkInfo info = connectivityManager.getActiveNetworkInfo();
-            if (info != null && info.isConnected()){ // 当前网络是连接的
-                if (info.getState() == NetworkInfo.State.CONNECTED){ // 当前所连接的网络可用
+            if (info != null && info.isConnected()) { // 当前网络是连接的
+                if (info.getState() == NetworkInfo.State.CONNECTED) { // 当前所连接的网络可用
                     return true;
                 }
             }
@@ -139,11 +144,12 @@ public class AppUtil {
 
     /**
      * 判断静态文件是否需要更新
+     *
      * @param url
      * @param jsonarr
      * @return
      */
-    public static boolean needUpdate(String url, JSONObject jsonarr){
+    public static boolean needUpdate(String url, JSONObject jsonarr) {
         String remote = AppUtil.fileurl2name(url, 0);
         String savepath = Constans.getAppPath(Constans.DATA_PATH) + AppUtil.fileurl2name(url, 0);
         if (jsonarr != null && jsonarr.has(remote)) {// 此段代码用于判断文件是否需要更新或删除
@@ -161,7 +167,7 @@ public class AppUtil {
                     return false;
                 }
             }
-        }else{
+        } else {
             File file = new File(savepath);
             if (file.exists())
                 return false;
@@ -169,10 +175,8 @@ public class AppUtil {
         return true;
     }
 
-    private static SimpleDateFormat mDateFormat;
-
     public static String formatDateTime(long time) {
-        if (mDateFormat == null){
+        if (mDateFormat == null) {
             mDateFormat = new SimpleDateFormat("MM-dd HH:mm");
         }
         if (0 == time) {

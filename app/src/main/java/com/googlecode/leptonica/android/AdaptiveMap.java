@@ -23,34 +23,33 @@ package com.googlecode.leptonica.android;
  */
 @SuppressWarnings("WeakerAccess")
 public class AdaptiveMap {
+    public final static int DEFAULT_TILE_WIDTH = 10;
+
+    // Background normalization constants
+    public final static int DEFAULT_TILE_HEIGHT = 15;
+    public final static int DEFAULT_MIN_COUNT = 40;
+    public final static int DEFAULT_X_SMOOTH_SIZE = 2;
+
+    // Adaptive contrast normalization constants
+    public final static int DEFAULT_Y_SMOOTH_SIZE = 1;
+    /**
+     * Image reduction value; possible values are 1, 2, 4, 8
+     */
+    private final static int NORM_REDUCTION = 16;
+    /**
+     * Desired tile size; actual size may vary
+     */
+    private final static int NORM_SIZE = 3;
+    /**
+     * Background brightness value; values over 200 may result in clipping
+     */
+    private final static int NORM_BG_VALUE = 200;
+
     static {
         System.loadLibrary("jpgt");
         System.loadLibrary("pngt");
         System.loadLibrary("lept");
     }
-
-    // Background normalization constants
-
-    /** Image reduction value; possible values are 1, 2, 4, 8 */
-    private final static int NORM_REDUCTION = 16;
-
-    /** Desired tile size; actual size may vary */
-    private final static int NORM_SIZE = 3;
-
-    /** Background brightness value; values over 200 may result in clipping */
-    private final static int NORM_BG_VALUE = 200;
-
-    // Adaptive contrast normalization constants
-
-    public final static int DEFAULT_TILE_WIDTH = 10;
-
-    public final static int DEFAULT_TILE_HEIGHT = 15;
-
-    public final static int DEFAULT_MIN_COUNT = 40;
-
-    public final static int DEFAULT_X_SMOOTH_SIZE = 2;
-
-    public final static int DEFAULT_Y_SMOOTH_SIZE = 1;
 
     /**
      * Normalizes an image's background using default parameters.
@@ -92,10 +91,10 @@ public class AdaptiveMap {
      * in the result.
      * </ol>
      *
-     * @param pixs A source pix image.
+     * @param pixs          A source pix image.
      * @param normReduction Reduction at which morphological closings are done.
-     * @param normSize Size of square Sel for the closing.
-     * @param normBgValue Target background value.
+     * @param normSize      Size of square Sel for the closing.
+     * @param normBgValue   Target background value.
      * @return the source pix image with a normalized background
      */
     public static Pix backgroundNormMorph(
@@ -113,13 +112,12 @@ public class AdaptiveMap {
     }
 
     /**
-     * Adaptively attempts to expand the contrast to the full dynamic range in 
+     * Adaptively attempts to expand the contrast to the full dynamic range in
      * each tile using default parameters.
      *
-     * @see #pixContrastNorm(Pix, int, int, int, int, int)
-     * 
      * @param pixs A source pix image
      * @return a new image with expanded contrast range
+     * @see #pixContrastNorm(Pix, int, int, int, int, int)
      */
     public static Pix pixContrastNorm(Pix pixs) {
         return pixContrastNorm(pixs, DEFAULT_TILE_WIDTH, DEFAULT_TILE_HEIGHT,
@@ -127,40 +125,40 @@ public class AdaptiveMap {
     }
 
     /**
-     * Adaptively attempts to expand the contrast to the full dynamic range in 
+     * Adaptively attempts to expand the contrast to the full dynamic range in
      * each tile.
      * <p>
      * Notes:
      * <ol>
-     * <li>If the contrast in a tile is smaller than minDiff, it uses the min 
+     * <li>If the contrast in a tile is smaller than minDiff, it uses the min
      * and max pixel values from neighboring tiles.  It also can use
-     * convolution to smooth the min and max values from neighboring tiles.  
-     * After all that processing, it is possible that the actual pixel values 
-     * in the tile are outside the computed [min ... max] range for local 
-     * contrast normalization. Such pixels are taken to be at either 0 (if 
+     * convolution to smooth the min and max values from neighboring tiles.
+     * After all that processing, it is possible that the actual pixel values
+     * in the tile are outside the computed [min ... max] range for local
+     * contrast normalization. Such pixels are taken to be at either 0 (if
      * below the min) or 255 (if above the max).
      * <li>sizeX and sizeY give the tile size; they are typically at least 20.
-     * <li>minDiff is used to eliminate results for tiles where it is likely 
-     * that either fg or bg is missing.  A value around 50 or more is 
+     * <li>minDiff is used to eliminate results for tiles where it is likely
+     * that either fg or bg is missing.  A value around 50 or more is
      * reasonable.
      * <li>The full width and height of the convolution kernel are (2 * smoothx
-     * + 1) and (2 * smoothy + 1).  Some smoothing is typically useful, and we 
-     * limit the smoothing half-widths to the range from 0 to 8. Use 0 for no 
+     * + 1) and (2 * smoothy + 1).  Some smoothing is typically useful, and we
+     * limit the smoothing half-widths to the range from 0 to 8. Use 0 for no
      * smoothing.
-     * <li>A linear TRC (gamma = 1.0) is applied to increase the contrast in 
-     * each tile. The result can subsequently be globally corrected, by 
-     * applying pixGammaTRC() with arbitrary values of gamma and the 0 and 255 
+     * <li>A linear TRC (gamma = 1.0) is applied to increase the contrast in
+     * each tile. The result can subsequently be globally corrected, by
+     * applying pixGammaTRC() with arbitrary values of gamma and the 0 and 255
      * points of the mapping.
      * </ol>
      *
-     * @param pixs A source pix image
-     * @param sizeX Tile width
-     * @param sizeY Tile height
+     * @param pixs    A source pix image
+     * @param sizeX   Tile width
+     * @param sizeY   Tile height
      * @param minDiff Minimum difference to accept as valid
      * @param smoothX Half-width of convolution kernel applied to min and max
-     * arrays
+     *                arrays
      * @param smoothY Half-height of convolution kernel applied to min and max
-     * arrays
+     *                arrays
      * @return a new image with expanded contrast range
      */
     public static Pix pixContrastNorm(
@@ -175,7 +173,7 @@ public class AdaptiveMap {
             throw new RuntimeException("Failed to normalize image contrast");
 
         return new Pix(nativePix);
-    }    
+    }
 
     // ***************
     // * NATIVE CODE *

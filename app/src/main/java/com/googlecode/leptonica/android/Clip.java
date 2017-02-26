@@ -36,8 +36,8 @@ public class Clip {
      * <p>
      * <p>     (1) clip the box to the pix
      * <p>     (2) make a new pix equal to the full box dimensions,
-     *             but let rasterop do the clipping and positioning
-     *             of the src with respect to the dest
+     * but let rasterop do the clipping and positioning
+     * of the src with respect to the dest
      * <p>
      * Choice (2) immediately brings up the problem of what pixel values
      * to use that were not taken from the src.  For example, on a grayscale
@@ -52,7 +52,7 @@ public class Clip {
      * it is necessary to use the clipped box for alignment.
      *
      * @param source Source pix
-     * @param box Requested clipping region
+     * @param box    Requested clipping region
      * @return clipped pix, or null if rectangle doesn't intersect source pix
      */
     public static Pix clipRectangle(Pix source, Box box) {

@@ -31,24 +31,41 @@ import java.util.Iterator;
  */
 @SuppressWarnings("WeakerAccess")
 public class Pixa implements Iterable<Pix> {
+    private static final String TAG = Pixa.class.getSimpleName();
+
     static {
         System.loadLibrary("jpgt");
         System.loadLibrary("pngt");
         System.loadLibrary("lept");
     }
 
-    private static final String TAG = Pixa.class.getSimpleName();
-
-    /** A pointer to the native PIXA object. This is used internally by native code. */
-    private final long mNativePixa;
-
-    /** The specified width of this Pixa. */
+    /**
+     * The specified width of this Pixa.
+     */
     final int mWidth;
-
-    /** The specified height of this Pixa. */
+    /**
+     * The specified height of this Pixa.
+     */
     final int mHeight;
-
+    /**
+     * A pointer to the native PIXA object. This is used internally by native code.
+     */
+    private final long mNativePixa;
     private boolean mRecycled;
+
+    /**
+     * Creates a wrapper for the specified native Pixa pointer.
+     *
+     * @param nativePixa Native pointer to a PIXA object.
+     * @param width      The width of the PIXA.
+     * @param height     The height of the PIXA.
+     */
+    public Pixa(long nativePixa, int width, int height) {
+        mNativePixa = nativePixa;
+        mWidth = width;
+        mHeight = height;
+        mRecycled = false;
+    }
 
     /**
      * Creates a new Pixa with the specified minimum capacity. The Pixa will
@@ -68,8 +85,8 @@ public class Pixa implements Iterable<Pix> {
      * If non-zero, the specified width and height will be used to specify the
      * bounds of output images. *
      *
-     * @param size The minimum capacity of this Pixa.
-     * @param width (Optional) The width of this Pixa, use 0 for default.
+     * @param size   The minimum capacity of this Pixa.
+     * @param width  (Optional) The width of this Pixa, use 0 for default.
      * @param height (Optional) The height of this Pixa, use 0 for default.
      * @return a new Pixa or <code>null</code> on error
      */
@@ -83,19 +100,37 @@ public class Pixa implements Iterable<Pix> {
         return new Pixa(nativePixa, width, height);
     }
 
-    /**
-     * Creates a wrapper for the specified native Pixa pointer.
-     *
-     * @param nativePixa Native pointer to a PIXA object.
-     * @param width The width of the PIXA.
-     * @param height The height of the PIXA.
-     */
-    public Pixa(long nativePixa, int width, int height) {
-        mNativePixa = nativePixa;
-        mWidth = width;
-        mHeight = height;
-        mRecycled = false;
-    }
+    private static native int nativeCreate(int size);
+
+    private static native int nativeCopy(long nativePixa);
+
+    private static native int nativeSort(long nativePixa, int field, int order);
+
+    private static native boolean nativeJoin(long nativePixa, long otherPixa);
+
+    private static native int nativeGetCount(long nativePixa);
+
+    private static native void nativeDestroy(long nativePixa);
+
+    private static native void nativeAddPix(long nativePixa, long nativePix, int mode);
+
+    private static native void nativeAddBox(long nativePixa, long nativeBox, int mode);
+
+    private static native void nativeAdd(long nativePixa, long nativePix, long nativeBox, int mode);
+
+    private static native boolean nativeWriteToFileRandomCmap(
+            long nativePixa, String fileName, int width, int height);
+
+    private static native void nativeReplacePix(
+            long nativePixa, int index, long nativePix, long nativeBox);
+
+    private static native void nativeMergeAndReplacePix(long nativePixa, int indexA, int indexB);
+
+    private static native long nativeGetBox(long nativePix, int index);
+
+    private static native long nativeGetPix(long nativePix, int index);
+
+    private static native boolean nativeGetBoxGeometry(long nativePixa, int index, int[] dimensions);
 
     /**
      * Returns a pointer to the native PIXA object. This is used by native code.
@@ -135,7 +170,7 @@ public class Pixa implements Iterable<Pix> {
      *
      * @param field The field to sort by. See Constants.L_SORT_BY_*.
      * @param order The order in which to sort. Must be either
-     *            Constants.L_SORT_INCREASING or Constants.L_SORT_DECREASING.
+     *              Constants.L_SORT_INCREASING or Constants.L_SORT_DECREASING.
      * @return a sorted copy of this Pixa
      */
     public Pixa sort(int field, int order) {
@@ -207,9 +242,9 @@ public class Pixa implements Iterable<Pix> {
     /**
      * Adds a Pix to this Pixa.
      *
-     * @param pix The Pix to add.
+     * @param pix  The Pix to add.
      * @param mode The mode in which to add this Pix, typically
-     *            Constants.L_CLONE.
+     *             Constants.L_CLONE.
      */
     public void addPix(Pix pix, int mode) {
         if (mRecycled)
@@ -221,9 +256,9 @@ public class Pixa implements Iterable<Pix> {
     /**
      * Adds a Box to this Pixa.
      *
-     * @param box The Box to add.
+     * @param box  The Box to add.
      * @param mode The mode in which to add this Box, typically
-     *            Constants.L_CLONE.
+     *             Constants.L_CLONE.
      */
     public void addBox(Box box, int mode) {
         if (mRecycled)
@@ -232,13 +267,17 @@ public class Pixa implements Iterable<Pix> {
         nativeAddBox(mNativePixa, box.getNativeBox(), mode);
     }
 
+    // ***************
+    // * NATIVE CODE *
+    // ***************
+
     /**
      * Adds a Pix and associated Box to this Pixa.
      *
-     * @param pix The Pix to add.
-     * @param box The Box to add.
+     * @param pix  The Pix to add.
+     * @param box  The Box to add.
      * @param mode The mode in which to add this Pix and Box, typically
-     *            Constants.L_CLONE.
+     *             Constants.L_CLONE.
      */
     public void add(Pix pix, Box box, int mode) {
         if (mRecycled)
@@ -290,7 +329,7 @@ public class Pixa implements Iterable<Pix> {
      * created.
      *
      * @return the width of this Pixa, or 0 if one was not set when it was
-     *         created
+     * created
      */
     public int getWidth() {
         if (mRecycled)
@@ -304,7 +343,7 @@ public class Pixa implements Iterable<Pix> {
      * created.
      *
      * @return the height of this Pixa, or 0 if one was not set when it was
-     *         created
+     * created
      */
     public int getHeight() {
         if (mRecycled)
@@ -350,9 +389,9 @@ public class Pixa implements Iterable<Pix> {
      * Fills an array with the geometry of the Box at the specified index. See
      * Box.INDEX_* for indices.
      *
-     * @param index The index of the Box to get the geometry of.
+     * @param index      The index of the Box to get the geometry of.
      * @param dimensions The array to fill with Box geometry. Must be at least 4
-     *            elements.
+     *                   elements.
      * @return <code>true</code> on success
      */
     public boolean getBoxGeometry(int index, int[] dimensions) {
@@ -368,7 +407,7 @@ public class Pixa implements Iterable<Pix> {
      * @param index The index of the Box to get the bounding Rect of.
      * @return a bounding Rect for the Box at the specified index
      */
-    public Rect getBoxRect(int index) {        
+    public Rect getBoxRect(int index) {
         int[] dimensions = getBoxGeometry(index);
 
         if (dimensions == null) {
@@ -414,14 +453,14 @@ public class Pixa implements Iterable<Pix> {
      * and Box, both of which may be recycled after calling this method.
      *
      * @param index The index of the Pix to replace.
-     * @param pix The Pix to replace the existing Pix.
-     * @param box The Box to replace the existing Box.
+     * @param pix   The Pix to replace the existing Pix.
+     * @param box   The Box to replace the existing Box.
      */
     public void replacePix(int index, Pix pix, Box box) {
         if (mRecycled)
             throw new IllegalStateException();
 
-        nativeReplacePix(mNativePixa, index, pix.getNativePix(), 
+        nativeReplacePix(mNativePixa, index, pix.getNativePix(),
                 box.getNativeBox());
     }
 
@@ -431,7 +470,7 @@ public class Pixa implements Iterable<Pix> {
      *
      * @param indexA The index of the first Pix.
      * @param indexB The index of the second Pix, which will be removed after
-     *            merging.
+     *               merging.
      */
     public void mergeAndReplacePix(int indexA, int indexB) {
         if (mRecycled)
@@ -478,40 +517,4 @@ public class Pixa implements Iterable<Pix> {
             throw new UnsupportedOperationException();
         }
     }
-
-    // ***************
-    // * NATIVE CODE *
-    // ***************
-
-    private static native int nativeCreate(int size);
-
-    private static native int nativeCopy(long nativePixa);
-
-    private static native int nativeSort(long nativePixa, int field, int order);
-
-    private static native boolean nativeJoin(long nativePixa, long otherPixa);
-
-    private static native int nativeGetCount(long nativePixa);
-
-    private static native void nativeDestroy(long nativePixa);
-
-    private static native void nativeAddPix(long nativePixa, long nativePix, int mode);
-
-    private static native void nativeAddBox(long nativePixa, long nativeBox, int mode);
-
-    private static native void nativeAdd(long nativePixa, long nativePix, long nativeBox, int mode);
-
-    private static native boolean nativeWriteToFileRandomCmap(
-            long nativePixa, String fileName, int width, int height);
-
-    private static native void nativeReplacePix(
-            long nativePixa, int index, long nativePix, long nativeBox);
-
-    private static native void nativeMergeAndReplacePix(long nativePixa, int indexA, int indexB);
-
-    private static native long nativeGetBox(long nativePix, int index);
-
-    private static native long nativeGetPix(long nativePix, int index);
-
-    private static native boolean nativeGetBoxGeometry(long nativePixa, int index, int[] dimensions);
 }

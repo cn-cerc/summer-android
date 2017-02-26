@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011, 2012 Chris Banes.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -96,8 +96,18 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    public void setMinimumScale(float minimumScale) {
+        mAttacher.setMinimumScale(minimumScale);
+    }
+
+    @Override
     public float getMediumScale() {
         return mAttacher.getMediumScale();
+    }
+
+    @Override
+    public void setMediumScale(float mediumScale) {
+        mAttacher.setMediumScale(mediumScale);
     }
 
     @Override
@@ -106,13 +116,32 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    public void setMaximumScale(float maximumScale) {
+        mAttacher.setMaximumScale(maximumScale);
+    }
+
+    @Override
     public float getScale() {
         return mAttacher.getScale();
     }
 
     @Override
+    public void setScale(float scale) {
+        mAttacher.setScale(scale);
+    }
+
+    @Override
     public ScaleType getScaleType() {
         return mAttacher.getScaleType();
+    }
+
+    @Override
+    public void setScaleType(ScaleType scaleType) {
+        if (null != mAttacher) {
+            mAttacher.setScaleType(scaleType);
+        } else {
+            mPendingScaleType = scaleType;
+        }
     }
 
     @Override
@@ -123,21 +152,6 @@ public class PhotoView extends ImageView implements IPhotoView {
     @Override
     public void setAllowParentInterceptOnEdge(boolean allow) {
         mAttacher.setAllowParentInterceptOnEdge(allow);
-    }
-
-    @Override
-    public void setMinimumScale(float minimumScale) {
-        mAttacher.setMinimumScale(minimumScale);
-    }
-
-    @Override
-    public void setMediumScale(float mediumScale) {
-        mAttacher.setMediumScale(mediumScale);
-    }
-
-    @Override
-    public void setMaximumScale(float maximumScale) {
-        mAttacher.setMaximumScale(maximumScale);
     }
 
     @Override
@@ -208,11 +222,6 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
-    public void setScale(float scale) {
-        mAttacher.setScale(scale);
-    }
-
-    @Override
     public void setScale(float scale, boolean animate) {
         mAttacher.setScale(scale, animate);
     }
@@ -220,15 +229,6 @@ public class PhotoView extends ImageView implements IPhotoView {
     @Override
     public void setScale(float scale, float focalX, float focalY, boolean animate) {
         mAttacher.setScale(scale, focalX, focalY, animate);
-    }
-
-    @Override
-    public void setScaleType(ScaleType scaleType) {
-        if (null != mAttacher) {
-            mAttacher.setScaleType(scaleType);
-        } else {
-            mPendingScaleType = scaleType;
-        }
     }
 
     @Override

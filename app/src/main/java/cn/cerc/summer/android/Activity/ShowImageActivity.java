@@ -1,6 +1,5 @@
 package cn.cerc.summer.android.Activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -8,7 +7,6 @@ import android.widget.ImageView;
 import com.huagu.ehealth.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import cn.cerc.summer.android.MyApplication;
 import cn.cerc.summer.android.View.photoview.PhotoView;
 
 
@@ -16,7 +14,7 @@ public class ShowImageActivity extends BaseActivity {
 
     private PhotoView photo;
     private ImageView ivBack;
-    private String imageurl ;
+    private String imageurl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

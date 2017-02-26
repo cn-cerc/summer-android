@@ -9,7 +9,7 @@ public class Menu {
 
     private int res;
 
-    private int msg_num=0;
+    private int msg_num = 0;
 
     public Menu(int msg_num, String menu, int res) {
         this.msg_num = msg_num;
