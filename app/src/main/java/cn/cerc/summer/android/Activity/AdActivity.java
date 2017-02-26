@@ -12,7 +12,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.huagu.ehealth.R;
+
+import com.mimrc.vine.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import cn.cerc.summer.android.Entity.Config;

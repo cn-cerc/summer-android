@@ -1,7 +1,9 @@
 package cn.cerc.summer.android.Utils;
 
 import java.io.File;
+
 import cn.cerc.summer.android.MyApplication;
+
 /**
  * Created by fff on 2016/11/11.
  */
@@ -11,9 +13,9 @@ public class Constans {
     /**
      * 设备类型
      */
-    public static final String DEVICE_TYPE = "android";
+    public static final String DEVICE_TYPE = "phone";
     /**
-     *  shared 设置的key
+     * shared 设置的key
      */
     public static String SHARED_SETTING_TAB = "setting";
 
@@ -23,11 +25,11 @@ public class Constans {
     public static String OCR_PATH = "OcrDataPath";
 
     /**
-     *
+     * shared 设置的 启动页
      */
     public static String SHARED_START_URL = "START";
     /**
-     *  shared 设置的 消息页
+     * shared 设置的 消息页
      */
     public static String SHARED_MSG_URL = "MSG_URL";
     /**
@@ -40,7 +42,7 @@ public class Constans {
     public final static String IMAGE_PATH = "image";
     public final static String TESSDATA_PATH = "tessdata";
 
-    public static String getAppPath(String Dir){
+    public static String getAppPath(String Dir) {
         File file = MyApplication.getInstance().getExternalFilesDir(Dir);
         if (!file.exists()) file.mkdirs();
         return file.getAbsolutePath();
@@ -86,7 +88,6 @@ public class Constans {
      * 用户注册SDK的intent
      */
     public final static String REGISTRATION = "cn.jpush.android.intent.REGISTRATION";
-
 
 
 }

@@ -1,6 +1,5 @@
 package cn.cerc.summer.android.Activity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -32,7 +31,18 @@ import android.widget.ImageView;
 import android.widget.ListPopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.mimrc.vine.R;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Entity.Menu;
@@ -42,7 +52,6 @@ import cn.cerc.summer.android.MyConfig;
 import cn.cerc.summer.android.Receiver.MyBroadcastReceiver;
 import cn.cerc.summer.android.Utils.AppUtil;
 import cn.cerc.summer.android.Utils.Constans;
-import cn.cerc.summer.android.Interface.JSInterface;
 import cn.cerc.summer.android.Utils.PermissionUtils;
 
 import cn.cerc.summer.android.Utils.PhotoUtils;
@@ -78,6 +87,7 @@ import cn.jpush.android.api.TagAliasCallback;
  */
 @SuppressLint({"JavascriptInterface", "SetJavaScriptEnabled"})
 public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, JSInterfaceLintener, ActivityCompat.OnRequestPermissionsResultCallback, SoundUtils.SoundPlayerStatusLintener {
+
 
     public MyWebView webview;
     private PullToRefreshWebView pullTorefreshwebView;
@@ -120,8 +130,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         //通过代码的方式动态注册MyBroadcastReceiver
         IntentFilter filter = new IntentFilter();
         filter.addAction(NETWORK_CHANGE);
-        filter.addAction(APP_UPDATA);
         filter.addAction(JSON_ERROR);
+        filter.addAction(APP_UPDATA);
         //注册receiver
         registerReceiver(receiver, filter);
     }
@@ -181,6 +191,16 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             Log.e("mainactivity", msgurl);
             webview.loadUrl(msgurl);
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_SETTING) {
+            if (resultCode == RESULT_OK) {
+                webview.loadUrl(data.getStringExtra("home"));
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -515,8 +535,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 //                        Action("","card");//测试时使用
                         webview.loadUrl(homeurl);
                         break;
-                    case 3://设置
-                        startActivityForResult(new Intent(MainActivity.this, SettingActivity.class), REQUEST_SETTING);
+                    case 3:
+                        startActivityForResult(new Intent(MainActivity.this, SettingActivity.class).putExtra("address", webview.getUrl()), REQUEST_SETTING);
                         break;
                     case 4://清除缓存
                         clearCacheFolder(MainActivity.this.getCacheDir(), System.currentTimeMillis());
