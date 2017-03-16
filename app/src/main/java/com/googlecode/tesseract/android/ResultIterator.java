@@ -16,13 +16,13 @@
 
 package com.googlecode.tesseract.android;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.util.Log;
 import android.util.Pair;
 
 import com.googlecode.tesseract.android.TessBaseAPI.PageIteratorLevel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Java interface for the ResultIterator. Does not implement all available JNI
@@ -39,7 +39,9 @@ public class ResultIterator extends PageIterator {
         System.loadLibrary("tess");
     }
 
-    /** Pointer to native result iterator. */
+    /**
+     * Pointer to native result iterator.
+     */
     private final long mNativeResultIterator;
 
     /* package */ResultIterator(long nativeResultIterator) {
@@ -47,6 +49,14 @@ public class ResultIterator extends PageIterator {
 
         mNativeResultIterator = nativeResultIterator;
     }
+
+    private static native String[] nativeGetChoices(long nativeResultIterator, int level);
+
+    private static native String nativeGetUTF8Text(long nativeResultIterator, int level);
+
+    private static native float nativeConfidence(long nativeResultIterator, int level);
+
+    private static native void nativeDelete(long nativeIterator);
 
     /**
      * Returns the text string for the current object at the given level.
@@ -70,11 +80,11 @@ public class ResultIterator extends PageIterator {
     }
 
     /**
-     * Returns all possible matching text strings and their confidence level 
+     * Returns all possible matching text strings and their confidence level
      * for the current object at the given level.
      * <p>
-     * The default matching text is blank (""). 
-     * The default confidence level is zero (0.0) 
+     * The default matching text is blank ("").
+     * The default confidence level is zero (0.0)
      *
      * @param level the page iterator level. See {@link PageIteratorLevel}.
      * @return A list of pairs with the UTF string and the confidence
@@ -100,7 +110,7 @@ public class ResultIterator extends PageIterator {
                 try {
                     confidenceLevel = Double.parseDouble(nativeChoice.substring(separatorPosition + 1));
                 } catch (NumberFormatException e) {
-                    Log.e("ResultIterator","Invalid confidence level for " + nativeChoice);
+                    Log.e("ResultIterator", "Invalid confidence level for " + nativeChoice);
                 }
             } else {
                 // If the string contains no '|' then save the full native result as the utfString
@@ -108,7 +118,7 @@ public class ResultIterator extends PageIterator {
             }
 
             // Add the UTF string to the results
-            pairedResults.add(new Pair<String, Double> (utfString, confidenceLevel));
+            pairedResults.add(new Pair<String, Double>(utfString, confidenceLevel));
         }
 
         return pairedResults;
@@ -120,10 +130,4 @@ public class ResultIterator extends PageIterator {
     public void delete() {
         nativeDelete(mNativeResultIterator);
     }
-    
-    private static native String[] nativeGetChoices(long nativeResultIterator, int level);
-
-    private static native String nativeGetUTF8Text(long nativeResultIterator, int level);
-    private static native float nativeConfidence(long nativeResultIterator, int level);
-    private static native void nativeDelete(long nativeIterator);
 }

@@ -21,20 +21,18 @@ package com.googlecode.leptonica.android;
  */
 @SuppressWarnings("WeakerAccess")
 public class MorphApp {
+    public static final int L_TOPHAT_WHITE = 0;
+
+    // Morphological tophat flags
+    public static final int L_TOPHAT_BLACK = 1;
+    public static final int DEFAULT_WIDTH = 7;
+    public static final int DEFAULT_HEIGHT = 7;
+
     static {
         System.loadLibrary("jpgt");
         System.loadLibrary("pngt");
         System.loadLibrary("lept");
     }
-
-    // Morphological tophat flags
-
-    public static final int L_TOPHAT_WHITE = 0;
-    public static final int L_TOPHAT_BLACK = 1;
-
-    public static final int DEFAULT_WIDTH = 7;
-
-    public static final int DEFAULT_HEIGHT = 7;
 
     /**
      * Performs a tophat transform.
@@ -45,14 +43,14 @@ public class MorphApp {
      * <li> If hsize = vsize = 1, returns an image with all 0 data.
      * <li> The L_TOPHAT_WHITE flag emphasizes small bright regions, whereas
      * the L_TOPHAT_BLACK flag emphasizes small dark regions. The L_TOPHAT_WHITE
-     * tophat can be accomplished by doing a L_TOPHAT_BLACK tophat on the 
+     * tophat can be accomplished by doing a L_TOPHAT_BLACK tophat on the
      * inverse, or v.v.
      * </ol>
-     *     
-     * @param pixs Source pix (8bpp)
+     *
+     * @param pixs  Source pix (8bpp)
      * @param hsize (of Sel; must be odd; origin implicitly in center)
      * @param vsize (ditto)
-     * @param type L_TOPHAT_WHITE: image - opening or L_TOPHAT_BLACK: closing - image
+     * @param type  L_TOPHAT_WHITE: image - opening or L_TOPHAT_BLACK: closing - image
      * @return a new Pix image
      */
     public static Pix pixTophat(Pix pixs, int hsize, int vsize, int type) {
@@ -65,23 +63,22 @@ public class MorphApp {
         if (type < 0 || type > 1)
             throw new IllegalArgumentException("Type must be L_TOPHAT_BLACK or L_TOPHAT_WHITE");
 
-        long nativePix = nativePixTophat(pixs.getNativePix(), hsize, vsize, 
+        long nativePix = nativePixTophat(pixs.getNativePix(), hsize, vsize,
                 type);
 
         if (nativePix == 0)
             throw new RuntimeException("Failed to perform Tophat on image");
 
-        return new Pix(nativePix); 
+        return new Pix(nativePix);
     }
 
     /**
      * Performs a tophat-like operation emphasizing small dark regions using
      * default values.
-     * 
-     * @see #pixFastTophat(Pix, int, int, int)
-     * 
+     *
      * @param pixs Source pix (8bpp)
      * @return a new Pix image
+     * @see #pixFastTophat(Pix, int, int, int)
      */
     public static Pix pixFastTophatBlack(Pix pixs) {
         return pixFastTophat(pixs, DEFAULT_WIDTH, DEFAULT_HEIGHT, L_TOPHAT_BLACK);
@@ -90,11 +87,10 @@ public class MorphApp {
     /**
      * Performs a tophat-like operation emphasizing small bright regions using
      * default values.
-     * 
-     * @see #pixFastTophat(Pix, int, int, int)
-     * 
+     *
      * @param pixs Source pix (8bpp)
      * @return a new Pix image
+     * @see #pixFastTophat(Pix, int, int, int)
      */
     public static Pix pixFastTophatWhite(Pix pixs) {
         return pixFastTophat(pixs, DEFAULT_WIDTH, DEFAULT_HEIGHT, L_TOPHAT_WHITE);
@@ -106,25 +102,25 @@ public class MorphApp {
      * Notes:
      * <ol>
      * <li> Don't be fooled. This is NOT a tophat.  It is a tophat-like
-     * operation, where the result is similar to what you'd get if you used an 
+     * operation, where the result is similar to what you'd get if you used an
      * erosion instead of an opening, or a dilation instead of a closing.
-     * 
+     * <p>
      * <li> Instead of opening or closing at full resolution, it does a fast
-     * downscale/minmax operation, then a quick small smoothing at low res, a 
-     * replicative expansion of the "background" to full res, and finally a 
-     * removal of the background level from the input image.  The smoothing 
+     * downscale/minmax operation, then a quick small smoothing at low res, a
+     * replicative expansion of the "background" to full res, and finally a
+     * removal of the background level from the input image.  The smoothing
      * step may not be important.
-     * 
-     * <li> It does not remove noise as well as a tophat, but it is 5 to 10 
+     * <p>
+     * <li> It does not remove noise as well as a tophat, but it is 5 to 10
      * times faster. If you need the preciseness of the tophat, don't use this.
-     * <li> The L_TOPHAT_WHITE flag emphasizes small bright regions, whereas 
+     * <li> The L_TOPHAT_WHITE flag emphasizes small bright regions, whereas
      * the L_TOPHAT_BLACK flag emphasizes small dark regions.
      * </ol>
      *
-     * @param pixs Source pix (8bpp)
+     * @param pixs  Source pix (8bpp)
      * @param xsize width of max/min op, smoothing; any integer >= 1
      * @param ysize height of max/min op, smoothing; any integer >= 1
-     * @param type L_TOPHAT_WHITE: image - min, or L_TOPHAT_BLACK: max - image
+     * @param type  L_TOPHAT_WHITE: image - min, or L_TOPHAT_BLACK: max - image
      * @return a new Pix image
      */
     public static Pix pixFastTophat(Pix pixs, int xsize, int ysize, int type) {
@@ -137,13 +133,13 @@ public class MorphApp {
         if (type < 0 || type > 1)
             throw new IllegalArgumentException("Type must be L_TOPHAT_BLACK or L_TOPHAT_WHITE");
 
-        long nativePix = nativePixFastTophat(pixs.getNativePix(), xsize, ysize, 
+        long nativePix = nativePixFastTophat(pixs.getNativePix(), xsize, ysize,
                 type);
 
         if (nativePix == 0)
             throw new RuntimeException("Failed to perform pixFastTophat on image");
 
-        return new Pix(nativePix); 
+        return new Pix(nativePix);
     }
 
     // ***************

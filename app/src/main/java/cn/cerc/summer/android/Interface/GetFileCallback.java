@@ -10,6 +10,8 @@ import java.io.File;
  */
 public interface GetFileCallback {
     void success(String url, File file);
+
     void Failt(String url, String error);
+
     Context getContext();
 }

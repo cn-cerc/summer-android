@@ -1,6 +1,5 @@
 package cn.cerc.summer.android.Activity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -14,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -32,19 +30,24 @@ import android.widget.ImageView;
 import android.widget.ListPopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.mimrc.vine.R;
+import com.umeng.analytics.MobclickAgent;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Entity.Menu;
 import cn.cerc.summer.android.Interface.JSInterfaceLintener;
-import cn.cerc.summer.android.MyApplication;
 import cn.cerc.summer.android.MyConfig;
 import cn.cerc.summer.android.Receiver.MyBroadcastReceiver;
 import cn.cerc.summer.android.Utils.AppUtil;
 import cn.cerc.summer.android.Utils.Constans;
-import cn.cerc.summer.android.Interface.JSInterface;
 import cn.cerc.summer.android.Utils.PermissionUtils;
-
 import cn.cerc.summer.android.Utils.PhotoUtils;
 import cn.cerc.summer.android.Utils.ScreenUtils;
 import cn.cerc.summer.android.Utils.SoundUtils;
@@ -55,19 +58,6 @@ import cn.cerc.summer.android.View.DragPointView;
 import cn.cerc.summer.android.View.MyWebView;
 import cn.cerc.summer.android.View.ShowDialog;
 import cn.cerc.summer.android.View.ShowPopupWindow;
-
-import com.huagu.ehealth.R;
-import com.umeng.analytics.MobclickAgent;
-import com.umeng.analytics.MobclickAgent.UMAnalyticsConfig;
-
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import cn.cerc.summer.android.View.pullTorefreshwebView.PullToRefreshBase;
 import cn.cerc.summer.android.View.pullTorefreshwebView.PullToRefreshWebView;
 import cn.jpush.android.api.JPushInterface;
@@ -79,39 +69,103 @@ import cn.jpush.android.api.TagAliasCallback;
 @SuppressLint({"JavascriptInterface", "SetJavaScriptEnabled"})
 public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, JSInterfaceLintener, ActivityCompat.OnRequestPermissionsResultCallback, SoundUtils.SoundPlayerStatusLintener {
 
-    public MyWebView webview;
-    private PullToRefreshWebView pullTorefreshwebView;
-    private ProgressBar progress;
-    private DragPointView dragpointview;//消息
-    private ImageView image_tips;
-
-    private String logoutUrl = "";
-
-    private boolean isGoHome = false;//是否返回home
-    private boolean is_ERROR = false;//是否错误了
-
-    private ImageView back, more;//返回/更多
-    private TextView title;//标题
-
-    public String homeurl;//默认打开页
-
-//    private GoogleApiClient client;
-
-    private String[] menus;//菜单
-    private int[] menu_img = new int[]{R.mipmap.message, R.mipmap.msg_manager, R.mipmap.home, R.mipmap.setting, R.mipmap.wipe, R.mipmap.logout, R.mipmap.reload};
-    private List<Menu> menulist;
-    private ListPopupWindow lpw;//列表弹框
 
     public static final String NETWORK_CHANGE = "android.net.conn.NETWORK_CHANGE";//网络广播action
     public static final String APP_UPDATA = "com.fmk.huagu.efitness.APP_UPDATA";//更新广播action
     public static final String JSON_ERROR = "com.fmk.huagu.efitness.JSON_ERROR";//JSON错误广播action
-
     public static final int REQUEST_PHOTO_CAMERA = 111;//拍照请求
     public static final int REQUEST_PHOTO_CROP = 113;//裁剪请求
     public static final int REQUEST_SCAN_QRCODE = 114;//扫码请求
     public static final int REQUEST_SCAN_CARD = 115;//扫卡请求
-
+    private static MainActivity mainactivity;
     private final int REQUEST_SETTING = 101;//进入设置页面请求
+    public MyWebView webview;
+    public String homeurl;//默认打开页
+
+    //    private GoogleApiClient client;
+    public boolean islogin = false;
+    String phone = "";
+    private PullToRefreshWebView pullTorefreshwebView;
+    private ProgressBar progress;
+    private DragPointView dragpointview;//消息
+    private ImageView image_tips;
+    private String logoutUrl = "";
+    private boolean isGoHome = false;//是否返回home
+    private boolean is_ERROR = false;//是否错误了
+    private ImageView back, more;//返回/更多
+    private TextView title;//标题
+    private String[] menus;//菜单
+    private int[] menu_img = new int[]{R.mipmap.message, R.mipmap.msg_manager, R.mipmap.home, R.mipmap.setting, R.mipmap.wipe, R.mipmap.logout, R.mipmap.reload};
+    private List<Menu> menulist;
+    private ListPopupWindow lpw;//列表弹框
+    /**
+     * 推送消息的消息id， 点击通知栏打开
+     */
+    private String msgId = "";
+    private TagAliasCallback tac = new TagAliasCallback() {
+        @Override
+        public void gotResult(int i, String s, Set<String> set) {
+            switch (i) {
+                case 0://成功
+                    Log.e("regsert:", "设置成功");
+                    // 建议这里往 SharePreference 里写一个成功设置的状态。成功设置一次后，以后不必再次设置了。
+                    break;
+                case 6002://失败
+                    // 延迟 30 秒来调用 Handler 设置别名
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            //用手机设备号来注册极光别名
+                            JPushInterface.setAlias(MainActivity.this, PermissionUtils.IMEI, tac);
+                        }
+                    }, 30000);
+                    break;
+                default:
+            }
+        }
+    };
+    /**
+     * 退出点击的第一次的时间戳
+     */
+    private long timet = 0;
+    /**
+     * 是否直接退出
+     */
+    private boolean is_exit = false;
+    /**
+     * 广播接收者
+     */
+    private MyBroadcastReceiver receiver = new MyBroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            Log.e("xxxx", "mainactivity " + action);
+            switch (action) {
+                case NETWORK_CHANGE://网络广播
+                    if (AppUtil.getNetWorkStata(context)) {
+                        image_tips.setVisibility(View.GONE);
+                        webview.reload();
+                    } else {
+                        image_tips.setImageResource(R.mipmap.nonework);
+                        image_tips.setVisibility(View.VISIBLE);
+                        ShowDialog.getDialog(context).showTips();
+                    }
+                    break;
+                case APP_UPDATA://有更新
+                    break;
+                default:
+                    Log.e("mainact", "mainactivity:接收到广播");
+                    break;
+            }
+        }
+    };
+    private PhotoUtils pu;//相册工具类
+    private SoundUtils su;//声音工具类
+    private ZXingUtils zxu;//二维码工具类
+
+    public static MainActivity getInstance() {
+        return mainactivity;
+    }
 
     /**
      * 初始化广播
@@ -120,27 +174,16 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         //通过代码的方式动态注册MyBroadcastReceiver
         IntentFilter filter = new IntentFilter();
         filter.addAction(NETWORK_CHANGE);
-        filter.addAction(APP_UPDATA);
         filter.addAction(JSON_ERROR);
+        filter.addAction(APP_UPDATA);
         //注册receiver
         registerReceiver(receiver, filter);
-    }
-
-    private static MainActivity mainactivity;
-
-    public static MainActivity getInstance() {
-        return mainactivity;
     }
 
     public void setHomeurl(String homeurl) {
         this.homeurl = homeurl;
         webview.loadUrl(homeurl);
     }
-
-    /**
-     * 推送消息的消息id， 点击通知栏打开
-     */
-    private String msgId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,6 +227,16 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_SETTING) {
+            if (resultCode == RESULT_OK) {
+                webview.loadUrl(data.getStringExtra("home"));
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         JPushInterface.onResume(this);
@@ -194,29 +247,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         //用手机设备号来注册极光别名
         JPushInterface.setAlias(getApplicationContext(), PermissionUtils.IMEI, tac);//极光推送设置别名
     }
-
-    private TagAliasCallback tac = new TagAliasCallback() {
-        @Override
-        public void gotResult(int i, String s, Set<String> set) {
-            switch (i) {
-                case 0://成功
-                    Log.e("regsert:", "设置成功");
-                    // 建议这里往 SharePreference 里写一个成功设置的状态。成功设置一次后，以后不必再次设置了。
-                    break;
-                case 6002://失败
-                    // 延迟 30 秒来调用 Handler 设置别名
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            //用手机设备号来注册极光别名
-                            JPushInterface.setAlias(MainActivity.this, PermissionUtils.IMEI, tac);
-                        }
-                    }, 30000);
-                    break;
-                default:
-            }
-        }
-    };
 
     @SuppressLint("JavascriptInterface")
     private void InitView() {
@@ -437,17 +467,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         pullTorefreshwebView.setLastUpdatedLabel(text);
     }
 
-
-    /**
-     * 退出点击的第一次的时间戳
-     */
-    private long timet = 0;
-
-    /**
-     * 是否直接退出
-     */
-    private boolean is_exit = false;
-
     @Override
     public boolean onLongClick(View v) {
         //webview的长按事件，设置true后webview将不会触发长按复制动作
@@ -481,8 +500,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         }
     }
 
-    public boolean islogin = false;
-
     /**
      * 显示菜单栏的窗口
      * 初始化菜单
@@ -515,8 +532,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 //                        Action("","card");//测试时使用
                         webview.loadUrl(homeurl);
                         break;
-                    case 3://设置
-                        startActivityForResult(new Intent(MainActivity.this, SettingActivity.class), REQUEST_SETTING);
+                    case 3:
+                        startActivityForResult(new Intent(MainActivity.this, SettingActivity.class).putExtra("address", webview.getUrl()), REQUEST_SETTING);
                         break;
                     case 4://清除缓存
                         clearCacheFolder(MainActivity.this.getCacheDir(), System.currentTimeMillis());
@@ -546,34 +563,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         super.onDestroy();
         unregisterReceiver(receiver);//注销广播
     }
-
-    /**
-     * 广播接收者
-     */
-    private MyBroadcastReceiver receiver = new MyBroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            Log.e("xxxx", "mainactivity " + action);
-            switch (action) {
-                case NETWORK_CHANGE://网络广播
-                    if (AppUtil.getNetWorkStata(context)) {
-                        image_tips.setVisibility(View.GONE);
-                        webview.reload();
-                    } else {
-                        image_tips.setImageResource(R.mipmap.nonework);
-                        image_tips.setVisibility(View.VISIBLE);
-                        ShowDialog.getDialog(context).showTips();
-                    }
-                    break;
-                case APP_UPDATA://有更新
-                    break;
-                default:
-                    Log.e("mainact", "mainactivity:接收到广播");
-                    break;
-            }
-        }
-    };
 
     @Override
     protected void onPause() {
@@ -621,7 +610,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         });
     }
 
-
     @Override
     public void showBack(final boolean flag) {
         runOnUiThread(new Runnable() {
@@ -652,10 +640,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         intent.putExtras(bundle);
         startActivity(intent);
     }
-
-    private PhotoUtils pu;//相册工具类
-    private SoundUtils su;//声音工具类
-    private ZXingUtils zxu;//二维码工具类
 
     @Override
     public void Action(String json, String action) {
@@ -697,8 +681,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             }
         }
     }
-
-    String phone = "";
 
     public void reload(int scales) {
         webview.getSettings().setTextZoom(scales);

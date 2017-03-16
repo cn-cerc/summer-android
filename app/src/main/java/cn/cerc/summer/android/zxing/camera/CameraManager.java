@@ -16,8 +16,6 @@
 
 package cn.cerc.summer.android.zxing.camera;
 
-import java.io.IOException;
-
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
@@ -28,6 +26,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
+import java.io.IOException;
+
 import cn.cerc.summer.android.Utils.ScreenUtils;
 
 /**
@@ -37,19 +37,15 @@ import cn.cerc.summer.android.Utils.ScreenUtils;
  */
 public final class CameraManager {
 
+    static final int SDK_INT; // Later we can use Build.VERSION.SDK_INT
     private static final String TAG = CameraManager.class.getSimpleName();
-
     private static final int MIN_FRAME_WIDTH = 480;
     private static final int MIN_FRAME_HEIGHT = 480;
     private static final int MAX_FRAME_WIDTH = 640;
     private static final int MAX_FRAME_HEIGHT = 640;
-
     private static int CARD_WIDTH = 1080;//扫描卡的宽
     private static int CARD_HEIGHT = 678;//扫描卡的高
-
     private static CameraManager cameraManager;
-
-    static final int SDK_INT; // Later we can use Build.VERSION.SDK_INT
 
     static {
         int sdkInt;
@@ -64,12 +60,6 @@ public final class CameraManager {
 
     private final Context context;
     private final CameraConfigurationManager configManager;
-    private Camera camera;
-    private Rect framingRect;
-    private Rect card_framingRect;
-    private Rect framingRectInPreview;
-    private boolean initialized;
-    private boolean previewing;
     private final boolean useOneShotPreviewCallback;
     /**
      * Preview frames are delivered here, which we pass on to the registered handler. Make sure to
@@ -80,6 +70,28 @@ public final class CameraManager {
      * Autofocus callbacks arrive here, and are dispatched to the Handler which requested them.
      */
     private final AutoFocusCallback autoFocusCallback;
+    private Camera camera;
+    private Rect framingRect;
+    private Rect card_framingRect;
+    private Rect framingRectInPreview;
+    private boolean initialized;
+    private boolean previewing;
+    private String type;
+
+    private CameraManager(Context context) {
+        this.context = context;
+        this.configManager = new CameraConfigurationManager(context);
+
+        // Camera.setOneShotPreviewCallback() has a race condition in Cupcake, so we use the older
+        // Camera.setPreviewCallback() on 1.5 and earlier. For Donut and later, we need to use
+        // the more efficient one shot callback, as the older one can swamp the system and cause it
+        // to run out of memory. We can't use SDK_INT because it was introduced in the Donut SDK.
+        //useOneShotPreviewCallback = Integer.parseInt(Build.VERSION.SDK) > Build.VERSION_CODES.CUPCAKE;
+        useOneShotPreviewCallback = Integer.parseInt(Build.VERSION.SDK) > 3; // 3 = Cupcake
+
+        previewCallback = new PreviewCallback(configManager, useOneShotPreviewCallback);
+        autoFocusCallback = new AutoFocusCallback();
+    }
 
     /**
      * Initializes this static object with the Context of the calling Activity.
@@ -99,25 +111,8 @@ public final class CameraManager {
         return cameraManager;
     }
 
-    private String type;
-
     public void setType(String type) {
         this.type = type;
-    }
-
-    private CameraManager(Context context) {
-        this.context = context;
-        this.configManager = new CameraConfigurationManager(context);
-
-        // Camera.setOneShotPreviewCallback() has a race condition in Cupcake, so we use the older
-        // Camera.setPreviewCallback() on 1.5 and earlier. For Donut and later, we need to use
-        // the more efficient one shot callback, as the older one can swamp the system and cause it
-        // to run out of memory. We can't use SDK_INT because it was introduced in the Donut SDK.
-        //useOneShotPreviewCallback = Integer.parseInt(Build.VERSION.SDK) > Build.VERSION_CODES.CUPCAKE;
-        useOneShotPreviewCallback = Integer.parseInt(Build.VERSION.SDK) > 3; // 3 = Cupcake
-
-        previewCallback = new PreviewCallback(configManager, useOneShotPreviewCallback);
-        autoFocusCallback = new AutoFocusCallback();
     }
 
     /**
@@ -252,14 +247,14 @@ public final class CameraManager {
                 Log.d(TAG, "Calculated framing rect: " + framingRect);
             }
             return framingRect;
-        }else{
+        } else {
             if (card_framingRect == null) {
                 if (camera == null) {
                     return null;
                 }
                 if (ScreenUtils.getScreenWidth(context) < CARD_WIDTH) {
                     CARD_WIDTH = ScreenUtils.getScreenWidth(context);
-                    CARD_HEIGHT = (int)(ScreenUtils.getScreenWidth(context) / (1080f / 678f));
+                    CARD_HEIGHT = (int) (ScreenUtils.getScreenWidth(context) / (1080f / 678f));
                 }
                 int leftOffset = (screenResolution.x - CARD_WIDTH) / 2;
                 int topOffset = (screenResolution.y - CARD_HEIGHT) / 2;

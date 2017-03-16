@@ -26,25 +26,29 @@ import android.util.Log;
  */
 @SuppressWarnings("WeakerAccess")
 public class Box {
+    /**
+     * The index of the X coordinate within the geometry array.
+     */
+    public static final int INDEX_X = 0;
+    /**
+     * The index of the Y coordinate within the geometry array.
+     */
+    public static final int INDEX_Y = 1;
+    /**
+     * The index of the width within the geometry array.
+     */
+    public static final int INDEX_W = 2;
+    /**
+     * The index of the height within the geometry array.
+     */
+    public static final int INDEX_H = 3;
+    private static final String TAG = Box.class.getSimpleName();
+
     static {
         System.loadLibrary("jpgt");
         System.loadLibrary("pngt");
         System.loadLibrary("lept");
     }
-
-    private static final String TAG = Box.class.getSimpleName();
-
-    /** The index of the X coordinate within the geometry array. */
-    public static final int INDEX_X = 0;
-
-    /** The index of the Y coordinate within the geometry array. */
-    public static final int INDEX_Y = 1;
-
-    /** The index of the width within the geometry array. */
-    public static final int INDEX_W = 2;
-
-    /** The index of the height within the geometry array. */
-    public static final int INDEX_H = 3;
 
     /**
      * A pointer to the native Box object. This is used internally by native
@@ -88,6 +92,20 @@ public class Box {
         mRecycled = false;
     }
 
+    private static native long nativeCreate(int x, int y, int w, int h);
+
+    private static native int nativeGetX(long nativeBox);
+
+    private static native int nativeGetY(long nativeBox);
+
+    private static native int nativeGetWidth(long nativeBox);
+
+    private static native int nativeGetHeight(long nativeBox);
+
+    private static native void nativeDestroy(long nativeBox);
+
+    private static native boolean nativeGetGeometry(long nativeBox, int[] geometry);
+
     /**
      * Returns a pointer to the native Box object.
      *
@@ -102,7 +120,7 @@ public class Box {
 
     /**
      * Returns the box's x-coordinate in pixels.
-     * 
+     *
      * @return The box's x-coordinate in pixels.
      */
     public int getX() {
@@ -114,7 +132,7 @@ public class Box {
 
     /**
      * Returns the box's y-coordinate in pixels.
-     * 
+     *
      * @return The box's y-coordinate in pixels.
      */
     public int getY() {
@@ -124,9 +142,13 @@ public class Box {
         return nativeGetY(mNativeBox);
     }
 
+    // ***************
+    // * NATIVE CODE *
+    // ***************
+
     /**
      * Returns the box's width in pixels.
-     * 
+     *
      * @return The box's width in pixels.
      */
     public int getWidth() {
@@ -138,7 +160,7 @@ public class Box {
 
     /**
      * Returns the box's height in pixels.
-     * 
+     *
      * @return The box's height in pixels.
      */
     public int getHeight() {
@@ -219,16 +241,4 @@ public class Box {
             super.finalize();
         }
     }
-
-    // ***************
-    // * NATIVE CODE *
-    // ***************
-
-    private static native long nativeCreate(int x, int y, int w, int h);
-    private static native int nativeGetX(long nativeBox);
-    private static native int nativeGetY(long nativeBox);
-    private static native int nativeGetWidth(long nativeBox);
-    private static native int nativeGetHeight(long nativeBox);
-    private static native void nativeDestroy(long nativeBox);
-    private static native boolean nativeGetGeometry(long nativeBox, int[] geometry);
 }

@@ -10,43 +10,53 @@ import com.huagu.ehealth.R;
 
 import cn.cerc.summer.android.Entity.JSParam;
 
+interface SountPlayerLinter {
+
+    void startPlayer();
+
+    void stopPlayer();
+
+    void pausePlayer();
+
+    boolean getPlayerStatus();
+}
+
 /**
  * Created by fff on 2016/12/28.
  */
 
 public class SoundUtils extends HardwareJSUtils implements SountPlayerLinter, AudioManager.OnAudioFocusChangeListener, MediaPlayer.OnCompletionListener {
 
+    private static SoundUtils su;
     public JSParam jsp;
     private AudioManager mAm;
     private MediaPlayer player;
-
     private SoundPlayerStatusLintener spsl;
-    private static SoundUtils su;
+
+    public SoundUtils(SoundPlayerStatusLintener spsl) {
+        this.spsl = spsl;
+        player = MediaPlayer.create(spsl.getContext(), R.raw.faded);  // 在res目录下新建raw目录，复制一个test.mp3文件到此目录下。
+        player.setLooping(false);
+    }
 
     /**
      * 获取单例实例，  传递的监听只有第一次传递的有效
-     * @param spsl  播放完监听
-     * @return  返回当前实例
+     *
+     * @param spsl 播放完监听
+     * @return 返回当前实例
      */
-    public static SoundUtils getInstance(SoundPlayerStatusLintener spsl){
+    public static SoundUtils getInstance(SoundPlayerStatusLintener spsl) {
         if (su == null) su = new SoundUtils(spsl);
         return su;
     }
 
     @Override
     public void setJson(String json) {
-        jsp = JSON.parseObject(json,JSParam.class);
+        jsp = JSON.parseObject(json, JSParam.class);
     }
 
-    public void setmusic(){
+    public void setmusic() {
         player = MediaPlayer.create(spsl.getContext(), R.raw.faded);
-        player.setLooping(false);
-    }
-
-
-    public SoundUtils(SoundPlayerStatusLintener spsl) {
-        this.spsl = spsl;
-        player = MediaPlayer.create(spsl.getContext(), R.raw.faded);  // 在res目录下新建raw目录，复制一个test.mp3文件到此目录下。
         player.setLooping(false);
     }
 
@@ -57,11 +67,11 @@ public class SoundUtils extends HardwareJSUtils implements SountPlayerLinter, Au
     public void startPlayer() {
 
         mAm = (AudioManager) spsl.getContext().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-        if (mAm.isMusicActive()){
+        if (mAm.isMusicActive()) {
             int result = mAm.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);//语义就是请求声音焦点...,第三个参数：是否长期占有
 //            if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED)
             player.start();
-        }else player.start();
+        } else player.start();
         player.setOnCompletionListener(this);
     }
 
@@ -83,7 +93,8 @@ public class SoundUtils extends HardwareJSUtils implements SountPlayerLinter, Au
 
     /**
      * 获取当前是够播放
-     * @return   isPlaying
+     *
+     * @return isPlaying
      */
     @Override
     public boolean getPlayerStatus() {
@@ -102,23 +113,12 @@ public class SoundUtils extends HardwareJSUtils implements SountPlayerLinter, Au
         spsl.Completion();
     }
 
-    public interface SoundPlayerStatusLintener{
+    public interface SoundPlayerStatusLintener {
         void Completion();
 
         Context getContext();
     }
 
-}
-
-interface SountPlayerLinter{
-
-    void startPlayer();
-
-    void stopPlayer();
-
-    void pausePlayer();
-
-    boolean getPlayerStatus();
 }
 
 

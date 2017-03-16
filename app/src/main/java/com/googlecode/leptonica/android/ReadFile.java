@@ -28,13 +28,13 @@ import java.io.File;
  * @author alanv@google.com (Alan Viverette)
  */
 public class ReadFile {
+    private static final String LOG_TAG = ReadFile.class.getSimpleName();
+
     static {
         System.loadLibrary("jpgt");
         System.loadLibrary("pngt");
         System.loadLibrary("lept");
     }
-
-    private static final String LOG_TAG = ReadFile.class.getSimpleName();
 
     /**
      * Creates a 32bpp Pix object from encoded data. Supported formats are BMP,
@@ -65,8 +65,8 @@ public class ReadFile {
      * Creates an 8bpp Pix object from raw 8bpp grayscale pixels.
      *
      * @param pixelData 8bpp grayscale pixel data.
-     * @param width The width of the input image.
-     * @param height The height of the input image.
+     * @param width     The width of the input image.
+     * @param height    The height of the input image.
      * @return an 8bpp Pix object
      */
     public static Pix readBytes8(byte[] pixelData, int width, int height) {
@@ -91,10 +91,10 @@ public class ReadFile {
      * Replaces the bytes in an 8bpp Pix object with raw grayscale 8bpp pixels.
      * Width and height be identical to the input Pix.
      *
-     * @param pixs The Pix whose bytes will be replaced.
+     * @param pixs      The Pix whose bytes will be replaced.
      * @param pixelData 8bpp grayscale pixel data.
-     * @param width The width of the input image.
-     * @param height The height of the input image.
+     * @param width     The width of the input image.
+     * @param height    The height of the input image.
      * @return an 8bpp Pix object
      */
     public static boolean replaceBytes8(Pix pixs, byte[] pixelData, int width, int height) {
@@ -113,7 +113,7 @@ public class ReadFile {
         if (pixs.getHeight() != height)
             throw new IllegalArgumentException("Source pix height does not match image height");
 
-        return nativeReplaceBytes8(pixs.getNativePix(), pixelData, width, 
+        return nativeReplaceBytes8(pixs.getNativePix(), pixelData, width,
                 height);
     }
 

@@ -78,10 +78,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="常见屏幕设置"
-                android:textSize="@dimen/normal"
                 android:layout_marginTop="15dp"
-                />
+                android:text="常见屏幕设置"
+                android:textSize="@dimen/normal" />
 
             <LinearLayout
                 android:id="@+id/lin_cun"

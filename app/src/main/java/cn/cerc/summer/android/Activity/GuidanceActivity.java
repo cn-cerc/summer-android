@@ -12,17 +12,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.huagu.ehealth.R;
+import com.mimrc.vine.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
-import cn.cerc.summer.android.Entity.Config;
-import cn.cerc.summer.android.MyApplication;
-
-
-import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.cerc.summer.android.Entity.Config;
+import cn.cerc.summer.android.MyApplication;
 
 public class GuidanceActivity extends BaseActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
 
@@ -74,7 +71,7 @@ public class GuidanceActivity extends BaseActivity implements View.OnClickListen
             }
             View view = new View(this);
             view.setBackgroundResource(R.drawable.point_white);
-            if (i==0) view.setBackgroundResource(R.drawable.point_color);
+            if (i == 0) view.setBackgroundResource(R.drawable.point_color);
             LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             llp.width = 15;
             llp.height = 15;

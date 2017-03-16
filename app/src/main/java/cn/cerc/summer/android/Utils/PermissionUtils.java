@@ -28,12 +28,12 @@ public class PermissionUtils {
     /**
      * 获取权限，检查是否已获取权限
      *
-     * @param permissions  获取的权限名字数组
+     * @param permissions 获取的权限名字数组
      * @param requestcode 请求权限的请求码
      * @return 返回是否已获取了这个权限
      */
-    public static boolean getPermission(String[] permissions, int requestcode, Activity activity){
-        for (String permission : permissions){
+    public static boolean getPermission(String[] permissions, int requestcode, Activity activity) {
+        for (String permission : permissions) {
             int checkCallPhonePermission = ContextCompat.checkSelfPermission(activity, permission);
             if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) is_req = true;
         }
@@ -41,6 +41,8 @@ public class PermissionUtils {
             ActivityCompat.requestPermissions(activity, permissions, requestcode);
             return false;
         } else {
+            TelephonyManager TelephonyMgr = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
+            IMEI = "n_" + TelephonyMgr.getDeviceId();
             return true;
         }
     }

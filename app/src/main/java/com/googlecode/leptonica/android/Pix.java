@@ -25,22 +25,28 @@ import android.graphics.Rect;
  */
 @SuppressWarnings("WeakerAccess")
 public class Pix {
+    /**
+     * Index of the image width within the dimensions array.
+     */
+    public static final int INDEX_W = 0;
+    /**
+     * Index of the image height within the dimensions array.
+     */
+    public static final int INDEX_H = 1;
+    /**
+     * Index of the image bit-depth within the dimensions array.
+     */
+    public static final int INDEX_D = 2;
+
     static {
         System.loadLibrary("jpgt");
         System.loadLibrary("pngt");
         System.loadLibrary("lept");
     }
 
-    /** Index of the image width within the dimensions array. */
-    public static final int INDEX_W = 0;
-
-    /** Index of the image height within the dimensions array. */
-    public static final int INDEX_H = 1;
-
-    /** Index of the image bit-depth within the dimensions array. */
-    public static final int INDEX_D = 2;
-
-    /** Package-accessible pointer to native pix */
+    /**
+     * Package-accessible pointer to native pix
+     */
     private final long mNativePix;
 
     private boolean mRecycled;
@@ -68,6 +74,53 @@ public class Pix {
     }
 
     /**
+     * Creates a new Pix from raw Pix data obtained from getData().
+     *
+     * @param pixData Raw pix data obtained from getData().
+     * @param width   The width of the original Pix.
+     * @param height  The height of the original Pix.
+     * @param depth   The bit-depth of the original Pix.
+     * @return a new Pix or <code>null</code> on error
+     */
+    public static Pix createFromPix(byte[] pixData, int width, int height, int depth) {
+        long nativePix = nativeCreateFromData(pixData, width, height, depth);
+
+        if (nativePix == 0) {
+            throw new OutOfMemoryError();
+        }
+
+        return new Pix(nativePix);
+    }
+
+    private static native int nativeGetRefCount(long nativePix);
+
+    private static native long nativeCreatePix(int w, int h, int d);
+
+    private static native long nativeCreateFromData(byte[] data, int w, int h, int d);
+
+    private static native byte[] nativeGetData(long nativePix);
+
+    private static native long nativeClone(long nativePix);
+
+    private static native long nativeCopy(long nativePix);
+
+    private static native boolean nativeInvert(long nativePix);
+
+    private static native void nativeDestroy(long nativePix);
+
+    private static native boolean nativeGetDimensions(long nativePix, int[] dimensions);
+
+    private static native int nativeGetWidth(long nativePix);
+
+    private static native int nativeGetHeight(long nativePix);
+
+    private static native int nativeGetDepth(long nativePix);
+
+    private static native int nativeGetPixel(long nativePix, int x, int y);
+
+    private static native void nativeSetPixel(long nativePix, int x, int y, int color);
+
+    /**
      * Returns a pointer to the native Pix object. This is used by native code
      * and is only valid within the same process in which the Pix was created.
      *
@@ -79,6 +132,10 @@ public class Pix {
 
         return mNativePix;
     }
+
+    // ***************
+    // * NATIVE CODE *
+    // ***************
 
     /**
      * Return the raw bytes of the native PIX object. You can reconstruct the
@@ -103,7 +160,7 @@ public class Pix {
      * Returns an array of this image's dimensions. See Pix.INDEX_* for indices.
      *
      * @return an array of this image's dimensions or <code>null</code> on
-     *         failure
+     * failure
      */
     public int[] getDimensions() {
         if (mRecycled)
@@ -196,25 +253,6 @@ public class Pix {
     }
 
     /**
-     * Creates a new Pix from raw Pix data obtained from getData().
-     *
-     * @param pixData Raw pix data obtained from getData().
-     * @param width The width of the original Pix.
-     * @param height The height of the original Pix.
-     * @param depth The bit-depth of the original Pix.
-     * @return a new Pix or <code>null</code> on error
-     */
-    public static Pix createFromPix(byte[] pixData, int width, int height, int depth) {
-        long nativePix = nativeCreateFromData(pixData, width, height, depth);
-
-        if (nativePix == 0) {
-            throw new OutOfMemoryError();
-        }
-
-        return new Pix(nativePix);
-    }
-
-    /**
      * Returns a Rect with the width and height of this Pix.
      *
      * @return a Rect with the width and height of this Pix
@@ -272,7 +310,7 @@ public class Pix {
      * @param x The x coordinate (0...width-1) of the pixel to return.
      * @param y The y coordinate (0...height-1) of the pixel to return.
      * @return The argb {@link android.graphics.Color} at the specified
-     *         coordinate.
+     * coordinate.
      * @throws IllegalArgumentException If x, y exceeds the image bounds.
      */
     public int getPixel(int x, int y) {
@@ -290,11 +328,11 @@ public class Pix {
 
     /**
      * Sets the {@link android.graphics.Color} at the specified location.
-     * 
-     * @param x The x coordinate (0...width-1) of the pixel to set.
-     * @param y The y coordinate (0...height-1) of the pixel to set.
+     *
+     * @param x     The x coordinate (0...width-1) of the pixel to set.
+     * @param y     The y coordinate (0...height-1) of the pixel to set.
      * @param color The argb {@link android.graphics.Color} to set at the
-     *            specified coordinate.
+     *              specified coordinate.
      * @throws IllegalArgumentException If x, y exceeds the image bounds.
      */
     public void setPixel(int x, int y, int color) {
@@ -309,23 +347,4 @@ public class Pix {
 
         nativeSetPixel(mNativePix, x, y, color);
     }
-
-    // ***************
-    // * NATIVE CODE *
-    // ***************
-
-    private static native int nativeGetRefCount(long nativePix);
-    private static native long nativeCreatePix(int w, int h, int d);
-    private static native long nativeCreateFromData(byte[] data, int w, int h, int d);
-    private static native byte[] nativeGetData(long nativePix);
-    private static native long nativeClone(long nativePix);
-    private static native long nativeCopy(long nativePix);
-    private static native boolean nativeInvert(long nativePix);
-    private static native void nativeDestroy(long nativePix);
-    private static native boolean nativeGetDimensions(long nativePix, int[] dimensions);
-    private static native int nativeGetWidth(long nativePix);
-    private static native int nativeGetHeight(long nativePix);
-    private static native int nativeGetDepth(long nativePix);
-    private static native int nativeGetPixel(long nativePix, int x, int y);
-    private static native void nativeSetPixel(long nativePix, int x, int y, int color);
 }

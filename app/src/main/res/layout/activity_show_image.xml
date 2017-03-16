@@ -24,7 +24,7 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="10dp"
             android:scaleType="centerInside"
-            android:src="@mipmap/ic_chevron_left_white_24dp"/>
+            android:src="@mipmap/ic_chevron_left_white_24dp" />
 
     </FrameLayout>
 
