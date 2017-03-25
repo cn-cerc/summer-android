@@ -12,17 +12,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
 import com.mimrc.vine.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import cn.cerc.summer.android.Entity.Config;
-import cn.cerc.summer.android.MyApplication;
-
-import org.xutils.x;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.cerc.summer.android.Entity.Config;
+import cn.cerc.summer.android.MyApplication;
 
 public class AdActivity extends BaseActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
 
@@ -67,22 +64,22 @@ public class AdActivity extends BaseActivity implements View.OnClickListener, Vi
         imageview = new ArrayList<ImageView>();
         for (int i = 0; i < list.size(); i++) {
             ImageView imageView = new ImageView(this);
-            ImageLoader.getInstance().displayImage(list.get(i),imageView,MyApplication.getInstance().options);
+            ImageLoader.getInstance().displayImage(list.get(i), imageView, MyApplication.getInstance().options);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageview.add(imageView);
-            if (i == (list.size()-1))
+            if (i == (list.size() - 1))
                 imageView.setOnClickListener(this);
 
             View view = new View(this);
             view.setBackgroundResource(R.drawable.point_white);
-            if (i==0)
+            if (i == 0)
                 view.setBackgroundResource(R.drawable.point_color);
-            LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             llp.width = 15;
             llp.height = 15;
             llp.leftMargin = 20;
             llp.rightMargin = 20;
-            contan.addView(view,llp);
+            contan.addView(view, llp);
         }
 
         viewpager.setAdapter(new PagerAdapter() {
@@ -119,13 +116,15 @@ public class AdActivity extends BaseActivity implements View.OnClickListener, Vi
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
     }
+
     @Override
     public void onPageSelected(int position) {
-        for (int i=0;i<contan.getChildCount();i++){
-            if (position==i) contan.getChildAt(i).setBackgroundResource(R.drawable.point_white);
+        for (int i = 0; i < contan.getChildCount(); i++) {
+            if (position == i) contan.getChildAt(i).setBackgroundResource(R.drawable.point_white);
             else contan.getChildAt(i).setBackgroundResource(R.drawable.point_color);
         }
     }
+
     @Override
     public void onPageScrollStateChanged(int state) {
     }

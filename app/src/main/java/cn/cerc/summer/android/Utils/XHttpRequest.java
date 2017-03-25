@@ -2,17 +2,7 @@ package cn.cerc.summer.android.Utils;
 
 import android.app.ProgressDialog;
 import android.os.Handler;
-import android.util.Log;
 
-import cn.cerc.summer.android.Entity.Config;
-import cn.cerc.summer.android.Interface.AsyncFileLoafCallback;
-import cn.cerc.summer.android.Interface.ConfigFileLoafCallback;
-import cn.cerc.summer.android.Interface.GetFileCallback;
-import cn.cerc.summer.android.Interface.RequestCallback;
-import cn.cerc.summer.android.View.ShowDialog;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -22,11 +12,41 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.cerc.summer.android.Interface.AsyncFileLoafCallback;
+import cn.cerc.summer.android.Interface.ConfigFileLoafCallback;
+import cn.cerc.summer.android.Interface.GetFileCallback;
+import cn.cerc.summer.android.Interface.RequestCallback;
+import cn.cerc.summer.android.View.ShowDialog;
+
 /**
  * Created by fff on 2016/11/30.
  * 网络请求
  */
 public class XHttpRequest implements AsyncFileLoafCallback {
+
+    private ProgressDialog progressDialog;
+    /**
+     * 单个文件下载失败次数
+     */
+    private int error_num = 0;
+    private List<String> filelist;//下载列表
+    private ConfigFileLoafCallback cflc;
+    private JSONObject jsonarr;
+    private List<String> firstlist;
+    private int firstindex = 20;
+    private int filesize = 0;
+    ConfigFileLoafCallback cfc = new ConfigFileLoafCallback() {
+        @Override
+        public void loadfinish(int size) {
+            if ((filesize += size) >= filelist.size()) {
+                cflc.loadAllfinish();
+            }
+        }
+
+        @Override
+        public void loadAllfinish() {
+        }
+    };
 
     /**
      * 获取当前实例
@@ -66,14 +86,6 @@ public class XHttpRequest implements AsyncFileLoafCallback {
             }
         });
     }
-
-    private ProgressDialog progressDialog;
-
-
-    /**
-     * 单个文件下载失败次数
-     */
-    private int error_num = 0;
 
     /**
      * 文件下载
@@ -119,7 +131,7 @@ public class XHttpRequest implements AsyncFileLoafCallback {
                         public void run() {
                             GETFile(url, rc);
                         }
-                    },3000);
+                    }, 3000);
                 } else {
                     if (progressDialog != null && progressDialog.isShowing())
                         progressDialog.dismiss();
@@ -143,13 +155,6 @@ public class XHttpRequest implements AsyncFileLoafCallback {
         return cc;
     }
 
-    private List<String> filelist;//下载列表
-    private ConfigFileLoafCallback cflc;
-    private JSONObject jsonarr;
-
-    private List<String> firstlist;
-    private int firstindex = 20;
-
     public void ConfigFileGet(List<String> filelist, ConfigFileLoafCallback cflc) {
         if (filelist != null && filelist.size() > 0) {
             this.filelist = filelist;
@@ -172,7 +177,7 @@ public class XHttpRequest implements AsyncFileLoafCallback {
     }
 
     @Override
-    public void loadfinish(List<String> list,int fail) {
+    public void loadfinish(List<String> list, int fail) {
         if (list == firstlist) {
             cflc.loadfinish(fail);
             if (filelist.size() > firstindex) { //列表数量大于20则需要继续多线程下载
@@ -183,18 +188,4 @@ public class XHttpRequest implements AsyncFileLoafCallback {
             }
         }
     }
-
-    private int filesize = 0;
-
-    ConfigFileLoafCallback cfc = new ConfigFileLoafCallback(){
-        @Override
-        public void loadfinish(int size) {
-            if ((filesize += size) >= filelist.size()){
-                cflc.loadAllfinish();
-            }
-        }
-        @Override
-        public void loadAllfinish() {
-        }
-    };
 }

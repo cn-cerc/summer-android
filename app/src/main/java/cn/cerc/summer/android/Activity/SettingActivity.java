@@ -37,7 +37,7 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        def_scales = ScreenUtils.getScales(this,ScreenUtils.getInches(this));
+        def_scales = ScreenUtils.getScales(this, ScreenUtils.getInches(this));
         back = (ImageView) this.findViewById(R.id.back);
         button = (Button) this.findViewById(R.id.save);
         edittext = (EditText) this.findViewById(R.id.url);
@@ -78,7 +78,8 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
                     Toast.makeText(SettingActivity.this, R.string.no_http_tips, Toast.LENGTH_SHORT).show();
                 else
                     settingShared.edit().putString(Constans.HOME, edittext.getText().toString().trim()).commit();
-                if (scales == 0) settingShared.edit().putInt(Constans.SCALE_SHAREDKEY, scales).commit();
+                if (scales == 0)
+                    settingShared.edit().putInt(Constans.SCALE_SHAREDKEY, scales).commit();
                 else settingShared.edit().putInt(Constans.SCALE_SHAREDKEY, scales).commit();
                 MainActivity.getInstance().reload(scales);
                 Toast.makeText(v.getContext(), "保存成功", Toast.LENGTH_SHORT).show();
@@ -125,21 +126,21 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.button1:
-                scales = ScreenUtils.getScales(this,4);
+                scales = ScreenUtils.getScales(this, 4);
                 break;
             case R.id.button2:
-                scales = ScreenUtils.getScales(this,4.5);
+                scales = ScreenUtils.getScales(this, 4.5);
                 break;
             case R.id.button3:
-                scales = ScreenUtils.getScales(this,5);
+                scales = ScreenUtils.getScales(this, 5);
                 break;
             case R.id.button4:
-                scales = ScreenUtils.getScales(this,5.5);
+                scales = ScreenUtils.getScales(this, 5.5);
                 break;
             case R.id.button5:
-                scales = ScreenUtils.getScales(this,6);
+                scales = ScreenUtils.getScales(this, 6);
                 break;
         }
         customseekbar.setProgress(scales);

@@ -2,7 +2,6 @@ package cn.cerc.summer.android.Utils;
 
 import android.util.Log;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -25,7 +24,7 @@ public class MyMultiDownloadThread extends Thread {
 
     private ConfigFileLoafCallback cflc;
 
-    public MyMultiDownloadThread(List<String> filelist, JSONObject jsonarr,ConfigFileLoafCallback cflc) {
+    public MyMultiDownloadThread(List<String> filelist, JSONObject jsonarr, ConfigFileLoafCallback cflc) {
         this.filelist = filelist;
         this.jsonarr = jsonarr;
         this.cflc = cflc;
@@ -52,7 +51,7 @@ public class MyMultiDownloadThread extends Thread {
         String remote = AppUtil.fileurl2name(url, 0);
         String savepath = Constans.getAppPath(Constans.DATA_PATH) + AppUtil.fileurl2name(url, 0);
 
-        if (!AppUtil.needUpdate(url,jsonarr)){
+        if (!AppUtil.needUpdate(url, jsonarr)) {
             loadnext();
             return;
         }

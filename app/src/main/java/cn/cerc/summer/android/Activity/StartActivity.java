@@ -5,16 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.AnimationDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.annotation.UiThread;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -28,34 +23,31 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
+import org.json.JSONObject;
+
+import java.util.List;
+
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Interface.ConfigFileLoafCallback;
 import cn.cerc.summer.android.Interface.RequestCallback;
 import cn.cerc.summer.android.MyApplication;
-
 import cn.cerc.summer.android.MyConfig;
 import cn.cerc.summer.android.Utils.AppUtil;
 import cn.cerc.summer.android.Utils.Constans;
-import cn.cerc.summer.android.Utils.FileUtil;
 import cn.cerc.summer.android.Utils.PermissionUtils;
 import cn.cerc.summer.android.Utils.ScreenUtils;
 import cn.cerc.summer.android.Utils.XHttpRequest;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.xutils.x;
-
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class StartActivity extends BaseActivity implements ActivityCompat.OnRequestPermissionsResultCallback, RequestCallback, ConfigFileLoafCallback {
 
+    private static StartActivity ga;
+    /**
+     * 线上的配置参数
+     */
+    public Config config;
     private ImageView imageview;
     private GifView load_gif;
-    private static StartActivity ga;
+    private String homeurl;
 
     public static StartActivity getInstance() {
         return ga;
@@ -138,12 +130,6 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
         StartActivity.getInstance().finish();
     }
 
-    /**
-     * 线上的配置参数
-     */
-    public Config config;
-    private String homeurl;
-
     @Override
     public void success(String url, JSONObject json) {
         config = JSON.parseObject(json.toString(), Config.class);
@@ -153,7 +139,7 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
 
         MainActivity.getInstance().Update();
 
-        if (settingShared.getInt(Constans.FAIL_NUM_SHAREDKEY,1) > 0){
+        if (settingShared.getInt(Constans.FAIL_NUM_SHAREDKEY, 1) > 0) {
             load_gif.setVisibility(View.VISIBLE);
             imageview.setVisibility(View.VISIBLE);
             imageview.setImageResource(R.mipmap.init_bg);
@@ -194,10 +180,10 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
     }
 
     @Override
-    public Context getContext(){
+    public Context getContext() {
         return this;
     }
-    
+
     @Override
     public void Failt(String url, String error) {
         MainActivity.getInstance().setHomeurl(MyConfig.HOME_URL);
@@ -210,14 +196,14 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
             @Override
             public void run() {
                 MainActivity.getInstance().setHomeurl(homeurl);
-                settingShared.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).putInt(Constans.FAIL_NUM_SHAREDKEY,fail_num).commit();
+                settingShared.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).putInt(Constans.FAIL_NUM_SHAREDKEY, fail_num).commit();
                 skip();
             }
         });
     }
 
     @Override
-    public void loadAllfinish(){
+    public void loadAllfinish() {
         AppUtil.saveCacheList(config);
     }
 

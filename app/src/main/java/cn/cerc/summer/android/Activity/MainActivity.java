@@ -64,33 +64,85 @@ import cn.jpush.android.api.TagAliasCallback;
 public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, JSInterfaceLintener {
 
 
+    public static final String NETWORK_CHANGE = "android.net.conn.NETWORK_CHANGE";
+    public static final String APP_UPDATA = "com.fmk.huagu.efitness.APP_UPDATA";
+    public static final String JSON_ERROR = "com.fmk.huagu.efitness.JSON_ERROR";
+    private static MainActivity mainactivity;
+    private final int REQUEST_SETTING = 101;
     public MyWebView webview;
+    public String homeurl;//默认打开页
+    public boolean islogin = false;
     private ProgressBar progress;
     private DragPointView dragpointview;
     private ImageView image_tips;
-
     private String logoutUrl = "";
-
     private boolean isGoHome = false;//是否返回home
     private boolean is_ERROR = false;//是否错误了
-
     private ImageView back, more;
     private TextView title;
-
-    public String homeurl;//默认打开页
-
     private GoogleApiClient client;
-
     private String[] menus;//菜单
     private int[] menu_img = new int[]{R.mipmap.message, R.mipmap.msg_manager, R.mipmap.home, R.mipmap.setting, R.mipmap.wipe, R.mipmap.logout, R.mipmap.reload};
     private List<Menu> menulist;
     private ListPopupWindow lpw;//列表弹框
+    /**
+     * 推送消息的消息id， 点击通知栏打开
+     */
+    private String msgId = "";
+    private TagAliasCallback tac = new TagAliasCallback() {
+        @Override
+        public void gotResult(int i, String s, Set<String> set) {
+            switch (i) {
+                case 0://成功
+                    Log.e("regsert:", "设置成功");
+                    // 建议这里往 SharePreference 里写一个成功设置的状态。成功设置一次后，以后不必再次设置了。
+                    break;
+                case 6002://失败
+                    // 延迟 30 秒来调用 Handler 设置别名
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            JPushInterface.setAlias(MainActivity.this, PermissionUtils.IMEI, tac);
+                        }
+                    }, 30000);
+                    break;
+                default:
+            }
+        }
+    };
+    /**
+     * 退出点击的第一次的时间戳
+     */
+    private long timet = 0;
+    /**
+     * 是否直接退出
+     */
+    private boolean is_exit = false;
+    /**
+     * 广播接收者
+     */
+    private MyBroadcastReceiver receiver = new MyBroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            Log.e("xxxx", "mainactivity " + action);
+            switch (action) {
+                case NETWORK_CHANGE:
+                    if (AppUtil.getNetWorkStata(context)) webview.reload();
+                    else ShowDialog.getDialog(context).showTips();
+                    break;
+                case APP_UPDATA://有更新
+                    break;
+                default:
+                    Log.e("mainact", "mainactivity:接收到广播");
+                    break;
+            }
+        }
+    };
 
-    public static final String NETWORK_CHANGE = "android.net.conn.NETWORK_CHANGE";
-    public static final String APP_UPDATA = "com.fmk.huagu.efitness.APP_UPDATA";
-    public static final String JSON_ERROR = "com.fmk.huagu.efitness.JSON_ERROR";
-
-    private final int REQUEST_SETTING = 101;
+    public static MainActivity getInstance() {
+        return mainactivity;
+    }
 
     /**
      * 初始化广播
@@ -105,21 +157,10 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         registerReceiver(receiver, filter);
     }
 
-    private static MainActivity mainactivity;
-
-    public static MainActivity getInstance() {
-        return mainactivity;
-    }
-
     public void setHomeurl(String homeurl) {
         this.homeurl = homeurl;
         webview.loadUrl(homeurl);
     }
-
-    /**
-     * 推送消息的消息id， 点击通知栏打开
-     */
-    private String msgId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,28 +216,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         JPushInterface.setAlias(getApplicationContext(), PermissionUtils.IMEI, tac);//极光推送设置别名
     }
 
-    private TagAliasCallback tac = new TagAliasCallback() {
-        @Override
-        public void gotResult(int i, String s, Set<String> set) {
-            switch (i) {
-                case 0://成功
-                    Log.e("regsert:", "设置成功");
-                    // 建议这里往 SharePreference 里写一个成功设置的状态。成功设置一次后，以后不必再次设置了。
-                    break;
-                case 6002://失败
-                    // 延迟 30 秒来调用 Handler 设置别名
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            JPushInterface.setAlias(MainActivity.this, PermissionUtils.IMEI, tac);
-                        }
-                    }, 30000);
-                    break;
-                default:
-            }
-        }
-    };
-
     @SuppressLint("JavascriptInterface")
     private void InitView() {
         back = (ImageView) this.findViewById(R.id.back);
@@ -221,7 +240,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
         webview = (MyWebView) this.findViewById(R.id.webview);
 
-        webview.getSettings().setTextZoom(settingShared.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this,ScreenUtils.getInches(this))));
+        webview.getSettings().setTextZoom(settingShared.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this, ScreenUtils.getInches(this))));
 
         webview.addJavascriptInterface(new JSInterface(this), "JSobj");//JSobj 供web端js调用标识，修改请通知web开发者
 
@@ -359,15 +378,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         webview.setOnLongClickListener(this);
     }
 
-    /**
-     * 退出点击的第一次的时间戳
-     */
-    private long timet = 0;
-    /**
-     * 是否直接退出
-     */
-    private boolean is_exit = false;
-
     @Override
     public boolean onLongClick(View v) {
         //webview的长按事件，设置true后webview将不会触发长按复制动作
@@ -397,8 +407,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             e.printStackTrace();
         }
     }
-
-    public boolean islogin = false;
 
     /**
      * 显示菜单栏的窗口
@@ -455,35 +463,12 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         lpw.setAnchorView(view);
         lpw.show();
     }
-    
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(receiver);//注销广播
     }
-
-    /**
-     * 广播接收者
-     */
-    private MyBroadcastReceiver receiver = new MyBroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            Log.e("xxxx", "mainactivity " + action);
-            switch (action) {
-                case NETWORK_CHANGE:
-                    if (AppUtil.getNetWorkStata(context)) webview.reload();
-                    else ShowDialog.getDialog(context).showTips();
-                    break;
-                case APP_UPDATA://有更新
-                    break;
-                default:
-                    Log.e("mainact", "mainactivity:接收到广播");
-                    break;
-            }
-        }
-    };
 
     @Override
     protected void onPause() {

@@ -11,58 +11,26 @@ import java.util.List;
 
 public class Config {
     private static Config conf;
-
+    private String rootSite;
+    private String webVersion;
+    private String appVersion;
+    private String appUpgrade;
+    private String startImage;
+    private List<String> welcomeImages;
+    private List<String> adImages;
+    private List<String> cacheFiles;
+    private HashMap<String, Boolean> homePages;
+    private List<HomePager> homePagers;
+    private String msgService;
+    private String msgConfig;
+    private String msgManage;
+    private boolean debug;
     public Config() {
         conf = this;
     }
 
     public static Config getConfig() {
         return conf;
-    }
-
-    private String rootSite;
-    private String webVersion;
-    private String appVersion;
-    private String appUpgrade;
-
-    private String startImage;
-    private List<String> welcomeImages;
-    private List<String> adImages;
-    private List<String> cacheFiles;
-
-    private HashMap<String, Boolean> homePages;
-    private List<HomePager> homePagers;
-
-    private String msgService;
-    private String msgConfig;
-    private String msgManage;
-    private boolean debug;
-
-    public class HomePager {
-
-        public HomePager(String homeurl, boolean is_home) {
-            this.homeurl = homeurl;
-            this.is_home = is_home;
-        }
-
-        private String homeurl;
-        private boolean is_home;
-
-        public String getHomeurl() {
-            return homeurl;
-        }
-
-        public void setHomeurl(String homeurl) {
-            this.homeurl = homeurl;
-        }
-
-        public boolean is_home() {
-            return is_home;
-        }
-
-        public void setIs_home(boolean is_home) {
-            this.is_home = is_home;
-        }
     }
 
     public List<String> getCacheFiles() {
@@ -185,5 +153,31 @@ public class Config {
 
     public void setDebug(boolean debug) {
         this.debug = debug;
+    }
+
+    public class HomePager {
+
+        private String homeurl;
+        private boolean is_home;
+        public HomePager(String homeurl, boolean is_home) {
+            this.homeurl = homeurl;
+            this.is_home = is_home;
+        }
+
+        public String getHomeurl() {
+            return homeurl;
+        }
+
+        public void setHomeurl(String homeurl) {
+            this.homeurl = homeurl;
+        }
+
+        public boolean is_home() {
+            return is_home;
+        }
+
+        public void setIs_home(boolean is_home) {
+            this.is_home = is_home;
+        }
     }
 }

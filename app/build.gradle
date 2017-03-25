@@ -13,9 +13,9 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         manifestPlaceholders = [
-                JPUSH_PKGNAME : "com.mimrc.vine",
+                JPUSH_PKGNAME: "com.mimrc.vine",
                 JPUSH_APPKEY : "cc92570c841a688af5adc5b0", //JPush上注册的包名对应的appkey.//cc92570c841a688af5adc5b0 //7502239d02e7247478fc1a42
-                JPUSH_CHANNEL : "developer-default"
+                JPUSH_CHANNEL: "developer-default"
         ]
     }
     buildTypes {

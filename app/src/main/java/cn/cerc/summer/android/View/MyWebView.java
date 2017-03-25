@@ -1,36 +1,27 @@
 package cn.cerc.summer.android.View;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import cn.cerc.summer.android.Activity.MainActivity;
-import cn.cerc.summer.android.Entity.Config;
-import cn.cerc.summer.android.Utils.AppUtil;
 import cn.cerc.summer.android.Utils.Constans;
-import cn.cerc.summer.android.Utils.XHttpRequest;
 
 /**
  * Created by fff on 2016/12/3.
  */
 
 public class MyWebView extends WebView {
+
+    private WebSettings websetting;
 
     public MyWebView(Context context) {
         super(context);
@@ -52,8 +43,6 @@ public class MyWebView extends WebView {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
     }
-
-    private WebSettings websetting;
 
     public void init(Context context) {
         websetting = getSettings();
@@ -98,7 +87,6 @@ public class MyWebView extends WebView {
         }
         return null;
     }
-
 
 
 }

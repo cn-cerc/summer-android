@@ -1,6 +1,5 @@
 package cn.cerc.summer.android.Interface;
 
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
@@ -24,6 +23,8 @@ public class JSInterface extends Object {
     private String appid;
 
     private JSInterfaceLintener jsInterfaceLintener;
+    private PayReq req;
+    private IWXAPI msgApi;
 
     public JSInterface(JSInterfaceLintener jsInterfaceLintener) {
         this.jsInterfaceLintener = jsInterfaceLintener;
@@ -46,9 +47,6 @@ public class JSInterface extends Object {
         }
         return 0;
     }
-
-    private PayReq req;
-    private IWXAPI msgApi;
 
     /**
      * 供html调用 微信支付

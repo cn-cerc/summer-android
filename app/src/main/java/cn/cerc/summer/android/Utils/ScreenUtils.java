@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.WindowManager;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 
 /**
  * Created by fff on 2016/11/14.
@@ -130,9 +129,9 @@ public class ScreenUtils {
         return total;
     }
 
-    public static int getScales(Context context,double Inches) {
-        if (Inches <= 4) return  85;
-        if (Inches <= 4.5) return  90;
+    public static int getScales(Context context, double Inches) {
+        if (Inches <= 4) return 85;
+        if (Inches <= 4.5) return 90;
         else if (Inches <= 5) return 95;
         else if (Inches <= 5.5) return 95;
         else return 100;
