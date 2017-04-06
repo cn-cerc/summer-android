@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activity_main"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -13,12 +12,13 @@
 
         <ImageView
             android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
-            android:src="@drawable/ic_chevron_left_white_24dp"/>
+            android:layout_marginLeft="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_chevron_left_white_24dp" />
 
         <TextView
             android:id="@+id/title"
@@ -30,7 +30,7 @@
             android:gravity="center"
             android:text="@string/app_name"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/super_big"/>
+            android:textSize="@dimen/super_big" />
 
         <RelativeLayout
             android:layout_width="45dp"
@@ -45,7 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:src="@drawable/ic_more_vert_white_24dp"/>
+                android:src="@drawable/ic_more_vert_white_24dp" />
 
             <cn.cerc.summer.android.View.DragPointView
                 android:id="@+id/dragpointview"
@@ -56,7 +56,7 @@
                 android:padding="2dp"
                 android:text="12"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/small"/>
+                android:textSize="@dimen/small" />
 
         </RelativeLayout>
     </RelativeLayout>
@@ -65,31 +65,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <cn.cerc.summer.android.View.RefreshLayout
-            android:id="@+id/refresh"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
+            <cn.cerc.summer.android.View.MyWebView
+                android:id="@+id/webview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:scrollbars="none" />
 
-                <ProgressBar
-                    android:id="@+id/progress"
-                    style="@android:style/Widget.Holo.ProgressBar.Horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="3dp"
-                    android:max="100"
-                    android:visibility="invisible"/>
+            <ProgressBar
+                android:id="@+id/progress"
+                style="@android:style/Widget.Holo.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:max="100"
+                android:visibility="invisible" />
 
-                <WebView
-                    android:id="@+id/webview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-            </LinearLayout>
-        </cn.cerc.summer.android.View.RefreshLayout>
+        </RelativeLayout>
 
         <ImageView
             android:id="@+id/image_tips"
@@ -97,6 +91,6 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:src="@mipmap/error"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </FrameLayout>
 </LinearLayout>

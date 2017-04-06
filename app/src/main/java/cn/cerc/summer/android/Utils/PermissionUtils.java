@@ -17,24 +17,30 @@ public class PermissionUtils {
     public static String IMEI;
 
     /**
+     * 是否需要请求权限
+     */
+    private static boolean is_req = false;
+
+    /**
      * 获取权限，检查是否已获取权限
      *
-     * @param permission  获取的权限名字
+     * @param permissions 获取的权限名字数组
      * @param requestcode 请求权限的请求码
      * @return 返回是否以获取了这个权限
      */
-    public static boolean getPermission(String permission, int requestcode, Activity activity){
-        int checkCallPhonePermission = ContextCompat.checkSelfPermission(activity, permission);
-        if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity, new String[]{permission}, requestcode);
+    public static boolean getPermission(String[] permissions, int requestcode, Activity activity) {
+        for (String permission : permissions) {
+            int checkCallPhonePermission = ContextCompat.checkSelfPermission(activity, permission);
+            if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) is_req = true;
+        }
+        if (is_req) {
+            ActivityCompat.requestPermissions(activity, permissions, requestcode);
             return false;
         } else {
             TelephonyManager TelephonyMgr = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
-            IMEI = TelephonyMgr.getDeviceId();
+            IMEI = "n_" + TelephonyMgr.getDeviceId();
             return true;
         }
     }
-
-
 
 }

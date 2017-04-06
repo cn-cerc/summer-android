@@ -1,4 +1,6 @@
-/** Automatically generated file. DO NOT MODIFY */
+/**
+ * Automatically generated file. DO NOT MODIFY
+ */
 package cn.cerc.android;
 
 public final class BuildConfig {
