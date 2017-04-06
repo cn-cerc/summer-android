@@ -30,6 +30,8 @@ import android.widget.ListPopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.alipay.sdk.app.PayTask;
+import com.alipay.sdk.util.H5PayResultModel;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
@@ -244,89 +246,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
         webview.addJavascriptInterface(new JSInterface(this), "JSobj");//JSobj 供web端js调用标识，修改请通知web开发者
 
-        webview.setWebViewClient(new WebViewClient() {
-
-            @Override
-            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-                WebResourceResponse webreq = webview.WebResponseO(request.getUrl().toString());
-                return webreq != null ? webreq : super.shouldInterceptRequest(view, request);
-            }
-
-            @Override
-            public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-                WebResourceResponse webreq = webview.WebResponseO(url);
-                return webreq != null ? webreq : super.shouldInterceptRequest(view, url);
-            }
-
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    if (request.getUrl().toString().startsWith("http:") || request.getUrl().toString().startsWith("https:")) {
-                        return super.shouldOverrideUrlLoading(view, request);
-                    }
-                }
-                return true;
-            }
-
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.toString().startsWith("http:") || url.startsWith("https:")) {
-                    return super.shouldOverrideUrlLoading(view, url);
-                }
-                return true;
-            }
-
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                if (!AppUtil.getNetWorkStata(view.getContext())) return;
-                Log.e("cururl", url);
-                is_ERROR = false;
-                if (Config.getConfig() == null) return;
-                is_exit = false;
-                isGoHome = false;
-                for (int i = 0; i < Config.getConfig().getHomePagers().size(); i++) {
-                    if (url.contains(Config.getConfig().getHomePagers().get(i).getHomeurl())) {
-                        isGoHome = true;
-                        is_exit = Config.getConfig().getHomePagers().get(i).is_home();
-                    }
-                }
-                progress.setVisibility(View.VISIBLE);
-                super.onPageStarted(view, url, favicon);
-            }
-
-            @Override
-            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                is_ERROR = true;
-                super.onReceivedError(view, request, error);
-            }
-
-            @Override
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                is_ERROR = true;
-                super.onReceivedError(view, errorCode, description, failingUrl);
-            }
-
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                if (is_ERROR) {
-                    title.setText("出错了");
-                    image_tips.setVisibility(View.VISIBLE);
-                } else {
-                    title.setText(webview.getTitle());
-                    image_tips.setVisibility(View.GONE);
-                }
-                if (isGoHome) {
-                    webview.clearHistory();
-                    webview.clearCache(true);
-                    back.setVisibility(View.INVISIBLE);
-                } else {
-                    back.setVisibility(View.VISIBLE);
-                }
-                progress.setVisibility(View.GONE);
-                super.onPageFinished(view, url);
-            }
-        });
+        webview.setWebViewClient(new MyWebViewClient());
 
         webview.setWebChromeClient(new WebChromeClient() {
             @Override
@@ -541,5 +461,125 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     public void reload(int scales) {
         webview.getSettings().setTextZoom(Integer.valueOf(settingShared.getInt(Constans.SCALE_SHAREDKEY, 90)));
         webview.reload();
+    }
+
+    private class MyWebViewClient extends WebViewClient {
+
+        @Override
+        public boolean shouldOverrideUrlLoading(final WebView view, String url) {
+            if (!(url.startsWith("http") || url.startsWith("https"))) {
+                return true;
+            }
+
+            final PayTask task = new PayTask(MainActivity.this);
+            final String ex = task.fetchOrderInfoFromH5PayUrl(url);
+            Log.e("ex", ex);
+
+            if (!TextUtils.isEmpty(ex)) {
+                System.out.println("paytask:::::" + url);
+                new Thread(new Runnable() {
+                    public void run() {
+                        System.out.println("payTask:::" + ex);
+                        final H5PayResultModel result = task.h5Pay(ex, true);
+                        if (TextUtils.equals(result.getResultCode(), "9000")) {
+                            Log.e("alipay", "success");
+                            MainActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.e("alipay", result.getReturnUrl());
+                                    view.loadUrl(result.getReturnUrl());
+//                                    webview.loadUrl("javascript:ReturnForApp(" + "success" + ")");
+                                }
+                            });
+                        } else {
+                            Log.e("alipay", "faild");
+                            MainActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    webview.loadUrl("javascript:ReturnForApp(" + "faild" + ")");
+                                }
+                            });
+                        }
+                    }
+                }).start();
+            } else {
+                view.loadUrl(url);
+            }
+            return true;
+        }
+
+        @Override
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+            WebResourceResponse webreq = webview.WebResponseO(request.getUrl().toString());
+            return webreq != null ? webreq : super.shouldInterceptRequest(view, request);
+        }
+
+        @Override
+        public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+            WebResourceResponse webreq = webview.WebResponseO(url);
+            return webreq != null ? webreq : super.shouldInterceptRequest(view, url);
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                if (request.getUrl().toString().startsWith("http:") || request.getUrl().toString().startsWith("https:")) {
+                    return super.shouldOverrideUrlLoading(view, request);
+                }
+            }
+            return true;
+        }
+
+
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            if (!AppUtil.getNetWorkStata(view.getContext())) return;
+            Log.e("cururl", url);
+            is_ERROR = false;
+            if (Config.getConfig() == null) return;
+            is_exit = false;
+            isGoHome = false;
+            for (int i = 0; i < Config.getConfig().getHomePagers().size(); i++) {
+                if (url.contains(Config.getConfig().getHomePagers().get(i).getHomeurl())) {
+                    isGoHome = true;
+                    is_exit = Config.getConfig().getHomePagers().get(i).is_home();
+                }
+            }
+            progress.setVisibility(View.VISIBLE);
+            super.onPageStarted(view, url, favicon);
+        }
+
+        @Override
+        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            is_ERROR = true;
+            super.onReceivedError(view, request, error);
+        }
+
+        @Override
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+            is_ERROR = true;
+            super.onReceivedError(view, errorCode, description, failingUrl);
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            if (is_ERROR) {
+                title.setText("出错了");
+                image_tips.setVisibility(View.VISIBLE);
+            } else {
+                title.setText(webview.getTitle());
+                image_tips.setVisibility(View.GONE);
+            }
+            if (isGoHome) {
+                webview.clearHistory();
+                webview.clearCache(true);
+                back.setVisibility(View.INVISIBLE);
+            } else {
+                back.setVisibility(View.VISIBLE);
+            }
+            progress.setVisibility(View.GONE);
+            super.onPageFinished(view, url);
+        }
     }
 }
