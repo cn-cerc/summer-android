@@ -466,37 +466,35 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     private class MyWebViewClient extends WebViewClient {
 
         @Override
-        public boolean shouldOverrideUrlLoading(final WebView view, String url) {
+        public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
             if (!(url.startsWith("http") || url.startsWith("https"))) {
                 return true;
             }
 
             final PayTask task = new PayTask(MainActivity.this);
             final String ex = task.fetchOrderInfoFromH5PayUrl(url);
-            Log.e("ex", ex);
-
             if (!TextUtils.isEmpty(ex)) {
-                System.out.println("paytask:::::" + url);
+                Log.e("paytask", url);
                 new Thread(new Runnable() {
                     public void run() {
-                        System.out.println("payTask:::" + ex);
+                        Log.e("ex:::", ex);
                         final H5PayResultModel result = task.h5Pay(ex, true);
                         if (TextUtils.equals(result.getResultCode(), "9000")) {
                             Log.e("alipay", "success");
                             MainActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Log.e("alipay", result.getReturnUrl());
+                                    Log.e("alipay success url", result.getReturnUrl());
                                     view.loadUrl(result.getReturnUrl());
-//                                    webview.loadUrl("javascript:ReturnForApp(" + "success" + ")");
                                 }
                             });
                         } else {
-                            Log.e("alipay", "faild");
+                            Log.e("alipay", "failed");
                             MainActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    webview.loadUrl("javascript:ReturnForApp(" + "faild" + ")");
+                                    Log.e("alipay failed url", result.getReturnUrl());
+                                    view.loadUrl(result.getReturnUrl());
                                 }
                             });
                         }
@@ -520,17 +518,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             WebResourceResponse webreq = webview.WebResponseO(url);
             return webreq != null ? webreq : super.shouldInterceptRequest(view, url);
         }
-
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                if (request.getUrl().toString().startsWith("http:") || request.getUrl().toString().startsWith("https:")) {
-                    return super.shouldOverrideUrlLoading(view, request);
-                }
-            }
-            return true;
-        }
-
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
