@@ -493,8 +493,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                             MainActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Log.e("alipay failed url", result.getReturnUrl());
-                                    view.loadUrl(result.getReturnUrl());
+                                    view.goBack();
                                 }
                             });
                         }
