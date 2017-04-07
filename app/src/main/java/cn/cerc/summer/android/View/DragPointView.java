@@ -348,5 +348,4 @@ public class DragPointView extends TextView {
 
     }
 
-
 }

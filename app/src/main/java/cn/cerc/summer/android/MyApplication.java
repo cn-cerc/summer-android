@@ -16,7 +16,6 @@ import org.xutils.x;
 
 import cn.jpush.android.api.JPushInterface;
 
-
 /**
  * Created by huagu on 2016/11/2.
  */

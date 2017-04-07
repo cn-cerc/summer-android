@@ -7,13 +7,11 @@ import android.support.v7.app.AppCompatActivity;
 
 import cn.cerc.summer.android.Utils.Constans;
 
-
 /**
  * Created by huagu on 2016/11/2.
  */
 
 public abstract class BaseActivity extends AppCompatActivity {
-
 
     protected SharedPreferences settingShared;
 

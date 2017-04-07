@@ -65,7 +65,6 @@ import cn.jpush.android.api.TagAliasCallback;
  */
 public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, JSInterfaceLintener {
 
-
     public static final String NETWORK_CHANGE = "android.net.conn.NETWORK_CHANGE";
     public static final String APP_UPDATA = "com.fmk.huagu.efitness.APP_UPDATA";
     public static final String JSON_ERROR = "com.fmk.huagu.efitness.JSON_ERROR";
@@ -416,7 +415,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         return deletedFiles;
     }
 
-
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -445,7 +443,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
     }
-
 
     @Override
     public Context getContext() {

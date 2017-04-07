@@ -12,7 +12,6 @@ import cn.cerc.summer.android.Activity.MainActivity;
 import cn.cerc.summer.android.Utils.Constans;
 import cn.jpush.android.api.JPushInterface;
 
-
 /**
  * Created by fff on 2016/11/28.
  */

@@ -97,5 +97,4 @@ public class JSInterface extends Object {
         jsInterfaceLintener.LoginOrLogout(false, "");
     }
 
-
 }

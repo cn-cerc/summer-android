@@ -17,5 +17,4 @@ public interface JSInterfaceLintener {
      */
     void LoginOrLogout(boolean islogin, String rul);
 
-
 }

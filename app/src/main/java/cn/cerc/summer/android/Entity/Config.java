@@ -25,6 +25,7 @@ public class Config {
     private String msgConfig;
     private String msgManage;
     private boolean debug;
+
     public Config() {
         conf = this;
     }
@@ -159,6 +160,7 @@ public class Config {
 
         private String homeurl;
         private boolean is_home;
+
         public HomePager(String homeurl, boolean is_home) {
             this.homeurl = homeurl;
             this.is_home = is_home;

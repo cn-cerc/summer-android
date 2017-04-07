@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.mimrc.vine.R;
 
-
 /**
  * Created by fff on 2016/11/24.
  */

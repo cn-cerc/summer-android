@@ -24,7 +24,6 @@ import cn.cerc.summer.android.Utils.XHttpRequest;
 
 public class ShowDialog extends AlertDialog.Builder implements DialogInterface.OnDismissListener, GetFileCallback {
 
-
     private Context context;
     /**
      * 取消显示的dialog对象
@@ -42,11 +41,13 @@ public class ShowDialog extends AlertDialog.Builder implements DialogInterface.O
      * 下载的文件路径
      */
     private File file;
+
     public ShowDialog(Context context) {
         super(context);
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.context = context;
     }
+
     public ShowDialog(Context context, int themeResId) {
         super(context, themeResId);
         this.context = context;
@@ -117,7 +118,6 @@ public class ShowDialog extends AlertDialog.Builder implements DialogInterface.O
         DelayedClose();
         return this;
     }
-
 
     /**
      * 延迟关闭提示的dialog

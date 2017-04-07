@@ -20,7 +20,6 @@ import java.io.IOException;
 
 import cn.cerc.summer.android.MyApplication;
 
-
 /**
  * 文件工具类
  */
@@ -34,7 +33,6 @@ public class FileUtil {
         /* cannot be instantiated */
         throw new UnsupportedOperationException("cannot be instantiated");
     }
-
 
     /**
      * 创建临时文件
@@ -51,14 +49,12 @@ public class FileUtil {
         }
     }
 
-
     /**
      * 获取缓存文件地址
      */
     public static String getCacheFilePath(String fileName) {
         return cacheDir.getAbsolutePath() + pathDiv + fileName;
     }
-
 
     /**
      * 判断缓存文件是否存在
@@ -67,7 +63,6 @@ public class FileUtil {
         File file = new File(getCacheFilePath(fileName));
         return file.exists();
     }
-
 
     /**
      * 将图片存储为文件
@@ -123,7 +118,6 @@ public class FileUtil {
             file.delete();
     }
 
-
     /**
      * 判断缓存文件是否存在
      */
@@ -137,7 +131,6 @@ public class FileUtil {
         }
         return false;
     }
-
 
     /**
      * 将数据存储为文件
@@ -167,7 +160,6 @@ public class FileUtil {
         }
         return null;
     }
-
 
     /**
      * 从URI获取图片文件地址
@@ -212,7 +204,6 @@ public class FileUtil {
         }
         return path;
     }
-
 
     /**
      * 从URI获取文件地址
@@ -281,7 +272,6 @@ public class FileUtil {
         return null;
     }
 
-
     /**
      * Get the value of the data column for this Uri. This is useful for
      * MediaStore Uris, and other file-based ContentProviders.
@@ -309,7 +299,6 @@ public class FileUtil {
         }
         return null;
     }
-
 
     public static String getconfigTime(String url) {
         if (!url.contains(",")) return "0";
@@ -344,13 +333,11 @@ public class FileUtil {
         return "com.android.providers.downloads.documents".equals(uri.getAuthority());
     }
 
-
     public enum FileType {
         IMG,
         AUDIO,
         VIDEO,
         FILE,
     }
-
 
 }
