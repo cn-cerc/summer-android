@@ -88,6 +88,7 @@ import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 
 /**
+ * 通用框架
  * 主界面
  */
 @SuppressLint({"JavascriptInterface", "SetJavaScriptEnabled"})

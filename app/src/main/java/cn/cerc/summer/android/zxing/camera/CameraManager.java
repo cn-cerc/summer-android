@@ -16,8 +16,6 @@
 
 package cn.cerc.summer.android.zxing.camera;
 
-import java.io.IOException;
-
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
@@ -27,6 +25,8 @@ import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 import android.view.SurfaceHolder;
+
+import java.io.IOException;
 
 import cn.cerc.summer.android.Utils.ScreenUtils;
 

@@ -2,14 +2,10 @@ package com.huagu.ehealth.wxapi;
 
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
+import android.support.v4.content.LocalBroadcastManager;
 
-import com.huagu.ehealth.R;
 import com.tencent.mm.sdk.constants.ConstantsAPI;
 import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
@@ -17,62 +13,57 @@ import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
-import cn.cerc.summer.android.Activity.MainActivity;
-import cn.cerc.summer.android.MyConfig;
+
+
+
+/**
+ * 微信支付回调Activity
+ */
 
 
 public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
-	
-	private static final String TAG = "MicroMsg.SDKSample.WXPayEntryActivity";
-	
-    private IWXAPI api;
-	
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.pay_result);
-        
-    	api = WXAPIFactory.createWXAPI(this, MyConfig.WX_appId);
-        api.handleIntent(getIntent(), this);
-    }
+
+
+	private IWXAPI wxAPI;
 
 	@Override
-	protected void onNewIntent(Intent intent) {
-		super.onNewIntent(intent);
-		setIntent(intent);
-        api.handleIntent(intent, this);
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		wxAPI = WXAPIFactory.createWXAPI(this, WeiXinPresenter.APP_ID);
+		wxAPI.handleIntent(getIntent(), this);
 	}
 
 	@Override
-	public void onReq(BaseReq req) {
+	protected void onNewIntent(Intent intent){
+		super.onNewIntent(intent);
+		setIntent(intent);
+		wxAPI.handleIntent(intent, this);
+	}
+
+	@Override
+	public void onReq(BaseReq arg0) {
 	}
 
 	@Override
 	public void onResp(BaseResp resp) {
-		Log.e("resp", resp.getType() + "");
-		if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
-			String str = "";
-			if (resp.errCode == 0) str = "支付成功";
-			else if (resp.errCode == -2) str = "用户取消";
-			else str = "支付失败";
-			MainActivity.getInstance().webview.loadUrl("javascript:ReturnForApp('"+str+"')");
-
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle(R.string.app_tip);
-			builder.setMessage(getString(R.string.pay_result_callback_msg, str));
-			builder.setNegativeButton("返回我的页面", null);
-			builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-				@Override
-				public void onDismiss(DialogInterface dialog) {
-					WXPayEntryActivity.this.finish();
-				}
-			});
-			builder.show();
+		MLog.i("微信支付回调..", "ansen onResp");
+		if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX){//微信支付回调
+			if(resp.errCode==BaseResp.ErrCode.ERR_OK){//微信支付成功
+				Intent intent = new Intent();
+				intent.setAction(APIDefineConst.BROADCAST_ACTION_WEIXIN_PAY);
+				LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+				lbm.sendBroadcast(intent);
+				//成功
+//				Toast.makeText(this,R.string.wxpay_success, 0).show();
+			}else{
+//				Toast.makeText(this,R.string.wxpay_success, 0).show();
+			}
 		}
-		switch (resp.errCode){
-			case BaseResp.ErrCode.ERR_OK:
-				Log.i("ERR_OK","success");
-				break;
-		}
+		finish();
 	}
+
+
+
+
+
 }

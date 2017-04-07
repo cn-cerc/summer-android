@@ -6,6 +6,29 @@
         android:name="com.huagu.ehealth.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" />
 
+
+
+
+
+
+    <!--  微信登录  所需权限  -->
+
+
+
+    <!--  微信登录  activity配置  -->
+
+
+
+
+
+
+
+
+
+
+
+
+
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.INTERNET" />
