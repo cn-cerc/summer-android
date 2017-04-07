@@ -1,4 +1,4 @@
-package cn.cerc.summer.android.wxapi;
+package com.mimrc.vine.wxapi;
 
 
 import android.app.Activity;
