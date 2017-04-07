@@ -480,7 +480,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                         Log.e("ex:::", ex);
                         final H5PayResultModel result = task.h5Pay(ex, true);
                         if (TextUtils.equals(result.getResultCode(), "9000")) {
-                            Log.e("alipay", "success");
                             MainActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -489,7 +488,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                                 }
                             });
                         } else {
-                            Log.e("alipay", "failed");
                             MainActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
