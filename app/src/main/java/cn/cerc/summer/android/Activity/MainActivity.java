@@ -421,8 +421,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
      */
     public Action getIndexApiAction() {
         Thing object = new Thing.Builder()
-                .setName("Main Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
+                .setName("Main Page")
                 .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
                 .build();
         return new Action.Builder(Action.TYPE_VIEW).setObject(object).setActionStatus(Action.STATUS_TYPE_COMPLETED).build();
@@ -471,7 +470,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             final PayTask task = new PayTask(MainActivity.this);
             final String ex = task.fetchOrderInfoFromH5PayUrl(url);
             if (!TextUtils.isEmpty(ex)) {
-                Log.e("paytask", url);
+                Log.e("url:::", url);
                 new Thread(new Runnable() {
                     public void run() {
                         Log.e("ex:::", ex);
@@ -480,7 +479,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                             MainActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Log.e("alipay success url", result.getReturnUrl());
+                                    Log.e("return url:::", result.getReturnUrl());
                                     view.loadUrl(result.getReturnUrl());
                                 }
                             });
