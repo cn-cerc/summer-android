@@ -12,16 +12,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.huagu.ehealth.R;
-
-import cn.cerc.summer.android.Entity.Config;
-import cn.cerc.summer.android.MyApplication;
-
-
-import org.xutils.x;
+import com.mimrc.vine.R;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.cerc.summer.android.Entity.Config;
+import cn.cerc.summer.android.MyApplication;
 
 public class GuidanceActivity extends BaseActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
 
@@ -36,15 +34,24 @@ public class GuidanceActivity extends BaseActivity implements View.OnClickListen
     private List<String> list;
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        MainActivity.getInstance().finish();
+        finish();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {//?device=android&clientId=44444444
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//撑满全屏
         setContentView(R.layout.activity_start);
 
         viewpager = (ViewPager) this.findViewById(R.id.viewpager);
+        viewpager.setOffscreenPageLimit(2);
         contan = (LinearLayout) this.findViewById(R.id.contan);
         skip = (TextView) this.findViewById(R.id.skip);
+        skip.setVisibility(View.INVISIBLE);
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,7 +63,7 @@ public class GuidanceActivity extends BaseActivity implements View.OnClickListen
         imageview = new ArrayList<ImageView>();
         for (int i = 0; i < list.size(); i++) {
             ImageView imageView = new ImageView(this);
-            x.image().bind(imageView, list.get(i), MyApplication.getInstance().imageOptions);
+            ImageLoader.getInstance().displayImage(list.get(i), imageView, MyApplication.getInstance().options);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageview.add(imageView);
             if (i == (list.size() - 1)) {
@@ -64,6 +71,7 @@ public class GuidanceActivity extends BaseActivity implements View.OnClickListen
             }
             View view = new View(this);
             view.setBackgroundResource(R.drawable.point_white);
+            if (i == 0) view.setBackgroundResource(R.drawable.point_color);
             LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             llp.width = 15;
             llp.height = 15;
@@ -105,25 +113,19 @@ public class GuidanceActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
     }
 
     @Override
     public void onPageSelected(int position) {
         for (int i = 0; i < contan.getChildCount(); i++) {
-            if (position == i) {
-                contan.getChildAt(i).setBackgroundResource(R.drawable.point_white);
-            } else {
-                contan.getChildAt(i).setBackgroundResource(R.drawable.point_color);
-            }
+            if (position == i) contan.getChildAt(i).setBackgroundResource(R.drawable.point_white);
+            else contan.getChildAt(i).setBackgroundResource(R.drawable.point_color);
         }
         if (position == (imageview.size() - 1)) skip.setVisibility(View.VISIBLE);
         else skip.setVisibility(View.INVISIBLE);
-
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
-
     }
 }

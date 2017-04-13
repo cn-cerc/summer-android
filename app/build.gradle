@@ -8,22 +8,20 @@ android {
         minSdkVersion 17
         targetSdkVersion 24
         versionCode 1
-        versionName "1.0.1"
+        versionName "1.2.31"
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-//        externalNativeBuild {
-//            cmake {
-//                cppFlags "-frtti -fexceptions"
-//            }
-//        }
-//        ndk{
-//            moduleName "native-lib"
-//            abiFilters 'armeabi', 'armeabi-v7a','x86','x86_64'
-//        }
+
         manifestPlaceholders = [
-                JPUSH_PKGNAME : "com.huagu.ehealth",
-                JPUSH_APPKEY : "16c4218fdc2f5f85e9276721", //JPush上注册的包名对应的appkey.
-                JPUSH_CHANNEL : "developer-default"
+                JPUSH_PKGNAME: "com.huagu.ehealth",
+                JPUSH_APPKEY : "3cc3e3d7c7e8c1dc7cc8f003", //JPush上注册的包名对应的appkey.
+                JPUSH_CHANNEL: "developer-default"
         ]
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
     }
     buildTypes {
         release {
@@ -31,26 +29,44 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-//    externalNativeBuild {
-//        cmake {
-//            path "CMakeLists.txt"
-//        }
-//    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+
+    productFlavors {
+//        wandoujia {
+//            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "wandoujia"]
+//        }
+//
+//        baidu {
+//            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "baidu"]
+//        }
+
+        c360 {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "c360"]
+        }
+
+        yyb {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "yyb"]
+        }
+
+//        uc {
+//            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "uc"]
+//        }
+    }
+
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-//    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-//        exclude group: 'com.android.support', module: 'support-annotations'
-//    })
     compile 'com.android.support:appcompat-v7:24.2.1'
     testCompile 'junit:junit:4.12'
     compile 'com.alibaba:fastjson:1.2.16'
     compile 'org.xutils:xutils:3.3.36'
     compile 'cn.jiguang:jpush:2.2.0'
-    compile 'com.google.android.gms:play-services-appindexing:9.2.1'
+    compile files('libs/libammsdk.jar')
+    compile files('libs/universal-image-loader-1.9.5.jar')
+    compile 'com.google.zxing:core:3.3.0'
+    compile 'com.umeng.analytics:analytics:6.0.6'
 }

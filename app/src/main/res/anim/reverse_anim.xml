@@ -6,6 +6,6 @@
     android:pivotX="50%"
     android:pivotY="50%"
     android:repeatCount="0"
-    android:toDegrees="180" >
+    android:toDegrees="180">
 
 </rotate>

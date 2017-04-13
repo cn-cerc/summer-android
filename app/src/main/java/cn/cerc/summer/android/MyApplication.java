@@ -1,15 +1,17 @@
 package cn.cerc.summer.android;
 
 import android.app.Application;
-import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.ScaleAnimation;
-import android.widget.ImageView;
+import android.graphics.Bitmap;
 
+import com.mimrc.vine.R;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
-import com.huagu.ehealth.R;
-
-import org.xutils.image.ImageOptions;
 import org.xutils.x;
 
 import cn.jpush.android.api.JPushInterface;
@@ -21,11 +23,11 @@ import cn.jpush.android.api.JPushInterface;
 
 public class MyApplication extends Application {
 
-    public ImageOptions imageOptions;
-
     private static MyApplication instance;
+    //    public ImageOptions imageOptions;
+    public DisplayImageOptions options;
 
-    public static MyApplication getInstance(){
+    public static MyApplication getInstance() {
         return instance;
     }
 
@@ -35,29 +37,45 @@ public class MyApplication extends Application {
 
         instance = this;
 
-        x.Ext.init(this);//xutils 初始化
-        x.Ext.setDebug(true);//设置为debug
+        init();
 
-        ScaleAnimation magnifImage = new ScaleAnimation(0.8f, 1.0f, 0.8f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        magnifImage.setDuration((long)1000);
-        magnifImage.setInterpolator(new DecelerateInterpolator());
+        options = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.mipmap.init_bg) // 设置图片下载期间显示的图片
+                .showImageForEmptyUri(R.mipmap.error) // 设置图片Uri为空或是错误的时候显示的图片
+                .showImageOnFail(R.mipmap.error) // 设置图片加载或解码过程中发生错误显示的图片
+                .resetViewBeforeLoading(false)  // default 设置图片在加载前是否重置、复位
+                .cacheInMemory(true) // default  设置下载的图片是否缓存在内存中
+                .cacheOnDisk(true) // default  设置下载的图片是否缓存在SD卡中
+                .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2) // default 设置图片以如何的编码方式显示
+                .bitmapConfig(Bitmap.Config.RGB_565) // default 设置图片的解码类型
+                .displayer(new FadeInBitmapDisplayer(500))
+                .build();
+    }
 
-        imageOptions = new ImageOptions.Builder()
-                .setLoadingDrawableId(R.mipmap.ic_launcher)
-                .setFailureDrawableId(R.mipmap.ic_launcher)
-                .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
-                .setUseMemCache(true)
-                .setAnimation(magnifImage)
-                .setIgnoreGif(true)
-                .setAutoRotate(true).build();
+    /**
+     * ImageLoader 初始化
+     */
+    private void InitImageLoader() {
 
-        JPushInterface.init(this);
-        JPushInterface.setDebugMode(true);
-
-
+        ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(this);
+        config.threadPriority(Thread.NORM_PRIORITY - 2);
+        config.denyCacheImageMultipleSizesInMemory();
+        config.discCacheFileCount(100);//缓存的文件数量
+        config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
+        config.diskCacheSize(200 * 1024 * 1024); // 100 MiB
+        config.tasksProcessingOrder(QueueProcessingType.LIFO);
+        ImageLoader.getInstance().init(config.build());
 
     }
 
+    public void init() {
+        x.Ext.init(this);//xutils 初始化
+        x.Ext.setDebug(true);//设置为debug
 
+        InitImageLoader();
+
+        JPushInterface.init(this);
+        JPushInterface.setDebugMode(true);
+    }
 
 }

@@ -13,28 +13,38 @@ import android.telephony.TelephonyManager;
 
 public class PermissionUtils {
 
-    public static final int REQUEST_READ_PHONE_STATE = 123;
+    public static final int REQUEST_READ_PHONE_STATE = 123;//获取手机读的权限标志
+    public static final int REQUEST_CAMERA_P_STATE = 124;//获取手机相机的权限标志
+    public static final int REQUEST_CAMERA_C_STATE = 125;//获取手机相机的权限标志
+    public static final int REQUEST_CAMERA_Q_STATE = 126;//获取手机相机的权限标志
+    public static final int REQUEST_CALL_PHONE_STATE = 127;//获取手机打电话的权限标志
     public static String IMEI;
+
+    /**
+     * 是否需要请求权限
+     */
+    private static boolean is_req = false;
 
     /**
      * 获取权限，检查是否已获取权限
      *
-     * @param permission  获取的权限名字
+     * @param permissions 获取的权限名字数组
      * @param requestcode 请求权限的请求码
-     * @return 返回是否以获取了这个权限
+     * @return 返回是否已获取了这个权限
      */
-    public static boolean getPermission(String permission, int requestcode, Activity activity){
-        int checkCallPhonePermission = ContextCompat.checkSelfPermission(activity, permission);
-        if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity, new String[]{permission}, requestcode);
+    public static boolean getPermission(String[] permissions, int requestcode, Activity activity) {
+        for (String permission : permissions) {
+            int checkCallPhonePermission = ContextCompat.checkSelfPermission(activity, permission);
+            if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) is_req = true;
+        }
+        if (is_req) {
+            ActivityCompat.requestPermissions(activity, permissions, requestcode);
             return false;
         } else {
             TelephonyManager TelephonyMgr = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
-            IMEI = TelephonyMgr.getDeviceId();
+            IMEI = "n_" + TelephonyMgr.getDeviceId();
             return true;
         }
     }
-
-
 
 }
