@@ -475,7 +475,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                     public void run() {
                         Log.e("ex:::", ex);
                         final H5PayResultModel result = task.h5Pay(ex, true);
-                        if (TextUtils.equals(result.getResultCode(), "9000")) {
+                        if (!TextUtils.isEmpty(result.getReturnUrl())) {
                             MainActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
