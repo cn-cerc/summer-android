@@ -8,7 +8,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 24
         versionCode 1
-        versionName "1.0.4"
+        versionName "1.0.5"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -41,5 +41,5 @@ dependencies {
     compile files('libs/libammsdk.jar')
     compile files('libs/GifView.jar')
     compile files('libs/universal-image-loader-1.9.5.jar')
-    compile files('libs/alipaySdk-20170407.jar')
+    compile files('libs/alipaySdk-20170420.jar')
 }
