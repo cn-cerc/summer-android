@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/activity_setting"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/activity_setting"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/white"
+              android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:src="@drawable/ic_chevron_left_white_24dp" />
+            android:src="@drawable/ic_chevron_left_white_24dp"/>
 
         <TextView
             android:id="@+id/title"
@@ -31,7 +31,7 @@
             android:gravity="center"
             android:text="@string/app_name"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/big" />
+            android:textSize="@dimen/big"/>
 
     </RelativeLayout>
 
@@ -52,12 +52,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:text="首页URL"
-                android:textSize="@dimen/normal" />
+                android:textSize="@dimen/normal"/>
 
             <EditText
                 android:id="@+id/url"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:id="@+id/scale"
@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:text="界面缩放比例（70 -- 120）"
-                android:textSize="@dimen/normal" />
+                android:textSize="@dimen/normal"/>
 
             <cn.cerc.summer.android.View.CustomSeekBar
                 android:id="@+id/customseekbar"
@@ -73,14 +73,14 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 app:max="100"
-                app:min="80" />
+                app:min="80"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="15dp"
                 android:text="常见屏幕设置"
-                android:textSize="@dimen/normal" />
+                android:textSize="@dimen/normal"/>
 
             <LinearLayout
                 android:id="@+id/lin_cun"
@@ -93,35 +93,35 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="4寸以下" />
+                    android:text="4寸以下"/>
 
                 <Button
                     android:id="@+id/button2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="4寸--5寸以下" />
+                    android:text="4寸--5寸以下"/>
 
                 <Button
                     android:id="@+id/button3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="5寸" />
+                    android:text="5寸"/>
 
                 <Button
                     android:id="@+id/button4"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="5.5寸" />
+                    android:text="5.5寸"/>
 
                 <Button
                     android:id="@+id/button5"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="6寸及以上" />
+                    android:text="6寸及以上"/>
 
             </LinearLayout>
 
@@ -135,13 +135,13 @@
                     android:id="@+id/save"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="保存" />
+                    android:text="保存"/>
 
                 <Button
                     android:id="@+id/recover"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="恢复默认" />
+                    android:text="恢复默认"/>
 
             </LinearLayout>
         </LinearLayout>
