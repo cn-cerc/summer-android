@@ -7,7 +7,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
+import android.support.v4.content.FileProvider;
 import android.widget.Toast;
 
 import org.xutils.common.Callback;
@@ -134,10 +136,21 @@ public class ShowDialog extends AlertDialog.Builder implements DialogInterface.O
     @Override
     public void success(String url, File file) {
         this.file = file;
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+        Intent localIntent = new Intent(Intent.ACTION_VIEW);
+        localIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Uri uri;
+        /**
+         * Android7.0+禁止应用对外暴露file://uri，改为content://uri；具体参考FileProvider
+         */
+        if (Build.VERSION.SDK_INT >= 24) {
+            uri = FileProvider.getUriForFile(context, "com.mimrc.vine.fileprovider", file);
+            localIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        } else {
+            uri = Uri.fromFile(file);
+        }
+        localIntent.setDataAndType(uri, "application/vnd.android.package-archive"); //打开apk文件
+        context.startActivity(localIntent);
+
     }
 
     @Override
