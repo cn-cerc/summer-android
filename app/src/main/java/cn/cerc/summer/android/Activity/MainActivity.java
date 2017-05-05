@@ -66,8 +66,8 @@ import cn.jpush.android.api.TagAliasCallback;
 public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, JSInterfaceLintener {
 
     public static final String NETWORK_CHANGE = "android.net.conn.NETWORK_CHANGE";
-    public static final String APP_UPDATA = "com.fmk.huagu.efitness.APP_UPDATA";
-    public static final String JSON_ERROR = "com.fmk.huagu.efitness.JSON_ERROR";
+    public static final String APP_UPDATA = "com.mimrc.vine.APP_UPDATA";
+    public static final String JSON_ERROR = "com.mimrc.vine.JSON_ERROR";
     private static MainActivity mainactivity;
     private final int REQUEST_SETTING = 101;
     public MyWebView webview;
