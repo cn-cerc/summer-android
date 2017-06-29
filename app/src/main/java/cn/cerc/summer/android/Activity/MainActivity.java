@@ -69,11 +69,15 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     public static final String NETWORK_CHANGE = "android.net.conn.NETWORK_CHANGE";
     public static final String APP_UPDATA = "com.mimrc.vine.APP_UPDATA";
     public static final String JSON_ERROR = "com.mimrc.vine.JSON_ERROR";
+    public final static int FILECHOOSER_RESULTCODE = 41;
+    public final static int FILECHOOSER_RESULTCODE_FOR_ANDROID_5 = 42;
     private static MainActivity mainactivity;
     private final int REQUEST_SETTING = 101;
     public MyWebView webview;
     public String homeurl;//默认打开页
     public boolean islogin = false;
+    public ValueCallback<Uri> mUploadMessage;
+    public ValueCallback<Uri[]> mUploadMessageForAndroid5;
     private ProgressBar progress;
     private DragPointView dragpointview;
     private ImageView image_tips;
@@ -87,10 +91,6 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
     private int[] menu_img = new int[]{R.mipmap.message, R.mipmap.msg_manager, R.mipmap.home, R.mipmap.setting, R.mipmap.wipe, R.mipmap.logout, R.mipmap.reload};
     private List<Menu> menulist;
     private ListPopupWindow lpw;//列表弹框
-    public ValueCallback<Uri> mUploadMessage;
-    public ValueCallback<Uri[]> mUploadMessageForAndroid5;
-    public final static int FILECHOOSER_RESULTCODE = 41;
-    public final static int FILECHOOSER_RESULTCODE_FOR_ANDROID_5 = 42;
     /**
      * 推送消息的消息id， 点击通知栏打开
      */
@@ -211,14 +211,14 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         } else if (requestCode == FILECHOOSER_RESULTCODE) {
             if (null == mUploadMessage)
                 return;
-            Uri result = data == null || resultCode != RESULT_OK ? null: data.getData();
+            Uri result = data == null || resultCode != RESULT_OK ? null : data.getData();
             mUploadMessage.onReceiveValue(result);
             mUploadMessage = null;
 
-        } else if (requestCode == FILECHOOSER_RESULTCODE_FOR_ANDROID_5){
+        } else if (requestCode == FILECHOOSER_RESULTCODE_FOR_ANDROID_5) {
             if (null == mUploadMessageForAndroid5)
                 return;
-            Uri result = (data == null || resultCode != RESULT_OK) ? null: data.getData();
+            Uri result = (data == null || resultCode != RESULT_OK) ? null : data.getData();
             if (result != null) {
                 mUploadMessageForAndroid5.onReceiveValue(new Uri[]{result});
             } else {
@@ -276,6 +276,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 openFileChooserImpl(uploadMsg);
                 mUploadMessage = uploadMsg;
             }
+
             // For Android  > 3.0
             public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType) {
                 if (mUploadMessage != null) return;
@@ -289,6 +290,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 openFileChooserImplForAndroid5(filePathCallback);
                 return true;
             }
+
             @Override
             public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
                 callback.invoke(origin, true, false);
@@ -500,6 +502,33 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         webview.reload();
     }
 
+    /*
+   *android 4.1以上webview调用的图片方法
+   * @param uploadMsg 回调方法
+    */
+    private void openFileChooserImpl(ValueCallback<Uri> uploadMsg) {
+        mUploadMessage = uploadMsg;
+        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.setType("image/*");
+        startActivityForResult(Intent.createChooser(i, "File Chooser"), FILECHOOSER_RESULTCODE);
+    }
+
+    /*
+    android 5.0以上webview调用的图片方法
+    @param uploadMsg 回调方法
+     */
+    private void openFileChooserImplForAndroid5(ValueCallback<Uri[]> uploadMsg) {
+        mUploadMessageForAndroid5 = uploadMsg;
+        Intent contentSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
+        contentSelectionIntent.setType("image/*");
+        Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
+        chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
+        chooserIntent.putExtra(Intent.EXTRA_TITLE, "Image Chooser");
+        startActivityForResult(chooserIntent, FILECHOOSER_RESULTCODE_FOR_ANDROID_5);
+    }
+
     private class MyWebViewClient extends WebViewClient {
 
         @Override
@@ -602,30 +631,5 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
             progress.setVisibility(View.GONE);
             super.onPageFinished(view, url);
         }
-    }
-    /*
-   *android 4.1以上webview调用的图片方法
-   * @param uploadMsg 回调方法
-    */
-    private void openFileChooserImpl(ValueCallback<Uri> uploadMsg) {
-        mUploadMessage = uploadMsg;
-        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-        i.addCategory(Intent.CATEGORY_OPENABLE);
-        i.setType("image/*");
-        startActivityForResult(Intent.createChooser(i, "File Chooser"), FILECHOOSER_RESULTCODE);
-    }
-    /*
-    android 5.0以上webview调用的图片方法
-    @param uploadMsg 回调方法
-     */
-    private void openFileChooserImplForAndroid5(ValueCallback<Uri[]> uploadMsg) {
-        mUploadMessageForAndroid5 = uploadMsg;
-        Intent contentSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
-        contentSelectionIntent.setType("image/*");
-        Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
-        chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
-        chooserIntent.putExtra(Intent.EXTRA_TITLE, "Image Chooser");
-        startActivityForResult(chooserIntent, FILECHOOSER_RESULTCODE_FOR_ANDROID_5);
     }
 }
