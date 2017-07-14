@@ -54,8 +54,6 @@ public class MyWebView extends WebView {
         websetting.setAppCacheEnabled(true);
         websetting.setCacheMode(WebSettings.LOAD_DEFAULT);
         websetting.setRenderPriority(WebSettings.RenderPriority.HIGH);
-        //自适应屏幕
-        websetting.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         websetting.setLoadWithOverviewMode(true);
 
         //TODO Android5.0以上默认不允许加载非https站点内容 2017-07-13_黄荣君，升级服务器完成后需删除

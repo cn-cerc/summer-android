@@ -5,7 +5,7 @@ android {
     buildToolsVersion '25.0.0'
     defaultConfig {
         applicationId "com.mimrc.vine"
-        minSdkVersion 19
+        minSdkVersion 18
         targetSdkVersion 25
         versionCode 8
         versionName "1.0.11"
