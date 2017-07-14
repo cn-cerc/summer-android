@@ -45,7 +45,6 @@ public class MyWebView extends WebView {
         webSettings.setJavaScriptEnabled(true);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setDomStorageEnabled(true);
-        webSettings.setGeolocationEnabled(true);
         webSettings.setUseWideViewPort(true);
         webSettings.setAppCacheEnabled(true);
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
