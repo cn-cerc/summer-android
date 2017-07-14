@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
+import android.view.View;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -53,7 +54,6 @@ public class MyWebView extends WebView {
         websetting.setUseWideViewPort(true);
         websetting.setAppCacheEnabled(true);
         websetting.setCacheMode(WebSettings.LOAD_DEFAULT);
-        websetting.setRenderPriority(WebSettings.RenderPriority.HIGH);
         websetting.setLoadWithOverviewMode(true);
 
         //TODO Android5.0以上默认不允许加载非https站点内容 2017-07-13_黄荣君，升级服务器完成后需删除
