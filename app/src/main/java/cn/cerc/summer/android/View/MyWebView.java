@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
-import android.view.View;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -16,13 +15,9 @@ import java.io.InputStream;
 
 import cn.cerc.summer.android.Utils.Constans;
 
-/**
- * Created by fff on 2016/12/3.
- */
-
 public class MyWebView extends WebView {
 
-    private WebSettings websetting;
+    private WebSettings webSettings;
 
     public MyWebView(Context context) {
         super(context);
@@ -46,19 +41,19 @@ public class MyWebView extends WebView {
     }
 
     public void init(Context context) {
-        websetting = getSettings();
-        websetting.setJavaScriptEnabled(true);
-        websetting.setJavaScriptCanOpenWindowsAutomatically(true);
-        websetting.setDomStorageEnabled(true);
-        websetting.setGeolocationEnabled(true);
-        websetting.setUseWideViewPort(true);
-        websetting.setAppCacheEnabled(true);
-        websetting.setCacheMode(WebSettings.LOAD_DEFAULT);
-        websetting.setLoadWithOverviewMode(true);
+        webSettings = getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setGeolocationEnabled(true);
+        webSettings.setUseWideViewPort(true);
+        webSettings.setAppCacheEnabled(true);
+        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        webSettings.setLoadWithOverviewMode(true);
 
         //TODO Android5.0以上默认不允许加载非https站点内容 2017-07-13_黄荣君，升级服务器完成后需删除
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            websetting.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+            webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
     }
 
