@@ -17,8 +17,6 @@ import cn.cerc.summer.android.Utils.Constans;
 
 public class MyWebView extends WebView {
 
-    private WebSettings webSettings;
-
     public MyWebView(Context context) {
         super(context);
         init(context);
@@ -41,7 +39,7 @@ public class MyWebView extends WebView {
     }
 
     public void init(Context context) {
-        webSettings = getSettings();
+        WebSettings webSettings = getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setDomStorageEnabled(true);
