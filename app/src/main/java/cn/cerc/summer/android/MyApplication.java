@@ -16,14 +16,8 @@ import org.xutils.x;
 
 import cn.jpush.android.api.JPushInterface;
 
-/**
- * Created by huagu on 2016/11/2.
- */
-
 public class MyApplication extends Application {
-
     private static MyApplication instance;
-    //    public ImageOptions imageOptions;
     public DisplayImageOptions options;
 
     public static MyApplication getInstance() {

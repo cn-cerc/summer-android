@@ -19,7 +19,6 @@ import cn.cerc.summer.android.Interface.RequestCallback;
 import cn.cerc.summer.android.View.ShowDialog;
 
 /**
- * Created by fff on 2016/11/30.
  * 网络请求
  */
 public class XHttpRequest implements AsyncFileLoafCallback {

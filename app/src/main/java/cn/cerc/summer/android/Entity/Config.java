@@ -5,10 +5,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Created by fff on 2016/12/1.
- */
-
 public class Config {
     private static Config conf;
     private String rootSite;

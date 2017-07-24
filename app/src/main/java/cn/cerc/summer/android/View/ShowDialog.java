@@ -20,10 +20,6 @@ import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Interface.GetFileCallback;
 import cn.cerc.summer.android.Utils.XHttpRequest;
 
-/**
- * Created by fff on 2016/11/28.
- */
-
 public class ShowDialog extends AlertDialog.Builder implements DialogInterface.OnDismissListener, GetFileCallback {
 
     private Context context;

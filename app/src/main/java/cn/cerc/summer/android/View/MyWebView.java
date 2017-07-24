@@ -16,7 +16,6 @@ import java.io.InputStream;
 import cn.cerc.summer.android.Utils.Constans;
 
 public class MyWebView extends WebView {
-
     public MyWebView(Context context) {
         super(context);
         init(context);

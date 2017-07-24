@@ -13,9 +13,6 @@ import java.util.List;
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Interface.ConfigFileLoafCallback;
 
-/**
- * Created by fff on 2016/12/22.
- */
 public class MyMultiDownloadThread extends Thread {
     private List<String> filelist;
     private JSONObject jsonarr;

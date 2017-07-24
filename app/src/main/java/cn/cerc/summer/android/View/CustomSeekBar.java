@@ -15,10 +15,6 @@ import android.widget.TextView;
 
 import com.mimrc.vine.R;
 
-/**
- * Created by fff on 2016/11/24.
- */
-
 public class CustomSeekBar extends LinearLayout implements SeekBar.OnSeekBarChangeListener, Animation.AnimationListener {
 
     public float wid = 0;// 进度1的距离

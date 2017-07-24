@@ -11,10 +11,6 @@ import android.view.WindowManager;
 
 import java.math.BigDecimal;
 
-/**
- * Created by fff on 2016/11/14.
- */
-
 public class ScreenUtils {
     private ScreenUtils() {
         /* cannot be instantiated */
