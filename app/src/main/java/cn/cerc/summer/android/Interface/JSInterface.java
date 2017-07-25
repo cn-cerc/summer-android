@@ -12,10 +12,10 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import java.util.Map;
 
 import cn.cerc.summer.android.Utils.AppUtil;
+import cn.cerc.summer.android.Utils.PermissionUtils;
 
 /**
- * 供js调用的js
- * Created by fff on 2016/11/11.
+ * 供js调用的对象信息
  */
 public class JSInterface extends Object {
     private Map<String, String> resultunifiedorder;
@@ -30,6 +30,7 @@ public class JSInterface extends Object {
         this.jsInterfaceLintener = jsInterfaceLintener;
     }
 
+    @JavascriptInterface
     public String hello2Html() {
         return "Hello Html";
     }
@@ -97,4 +98,13 @@ public class JSInterface extends Object {
         jsInterfaceLintener.LoginOrLogout(false, "");
     }
 
+    @JavascriptInterface
+    public String send(String cmd, String dataIn) {
+        if (cmd.equals("getClientId")) {
+            String json = String.format("{\"result\":\"true\", \"message\": \"%s\"}", PermissionUtils.IMEI);
+            return json;
+        } else{
+            return null;
+        }
+    }
 }
