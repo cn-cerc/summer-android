@@ -110,7 +110,7 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         scales = (progress + 80);//其中70是设置的最小值
-        String str = String.format("界面缩放比例（80%% -- 100%%）当前值：%d%%", scales);
+        String str = String.format("界面缩放比例（80%% -- 120%%）当前值：%d%%", scales);
         scale.setText(str);
     }
 
@@ -144,7 +144,7 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
                 break;
         }
         customseekbar.setProgress(scales);
-        String str = String.format("界面缩放比例（80%% -- 100%%）当前值：%d%%", scales);
+        String str = String.format("界面缩放比例（80%% -- 120%%）当前值：%d%%", scales);
         scale.setText(str);
     }
 }
