@@ -4,10 +4,6 @@ import java.io.File;
 
 import cn.cerc.summer.android.MyApplication;
 
-/**
- * Created by fff on 2016/11/11.
- */
-
 public class Constans {
 
     /**

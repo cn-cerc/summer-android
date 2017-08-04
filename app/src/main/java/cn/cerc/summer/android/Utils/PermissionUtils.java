@@ -7,12 +7,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 
-/**
- * Created by fff on 2016/12/2.
- */
-
 public class PermissionUtils {
-
     public static final int REQUEST_READ_PHONE_STATE = 123;
     public static String IMEI;
 

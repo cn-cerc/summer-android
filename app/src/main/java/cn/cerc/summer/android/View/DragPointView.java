@@ -26,10 +26,6 @@ import android.widget.AbsListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-/**
- * Created by fff on 2016/11/21.
- */
-
 public class DragPointView extends TextView {
 
     private boolean initBgFlag;

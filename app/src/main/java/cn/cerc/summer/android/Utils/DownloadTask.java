@@ -15,10 +15,6 @@ import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Interface.AsyncFileLoafCallback;
 import cn.cerc.summer.android.Interface.ConfigFileLoafCallback;
 
-/**
- * Created by fengm on 2016/12/23.
- */
-
 public class DownloadTask extends AsyncTask<String, Integer, List<String>> {
 
     private List<String> filelist;

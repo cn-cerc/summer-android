@@ -265,7 +265,8 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
 
         webview.getSettings().setTextZoom(settingShared.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this, ScreenUtils.getInches(this))));
 
-        webview.addJavascriptInterface(new JSInterface(this), "JSobj");//JSobj 供web端js调用标识，修改请通知web开发者
+        // jsAndroid 供web端js调用标识
+        webview.addJavascriptInterface(new JSInterface(this), "jsAndroid");
 
         webview.setWebViewClient(new MyWebViewClient());
 

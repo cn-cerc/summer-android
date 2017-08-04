@@ -21,10 +21,6 @@ import java.util.Map;
 
 import cn.cerc.summer.android.Entity.Config;
 
-/**
- * Created by fff on 2016/11/28.
- */
-
 public class AppUtil {
 
     /**

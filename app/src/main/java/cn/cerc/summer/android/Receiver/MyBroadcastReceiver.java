@@ -12,13 +12,7 @@ import cn.cerc.summer.android.Activity.MainActivity;
 import cn.cerc.summer.android.Utils.Constans;
 import cn.jpush.android.api.JPushInterface;
 
-/**
- * Created by fff on 2016/11/28.
- */
-
 public class MyBroadcastReceiver extends BroadcastReceiver {
-//https://www.pgyer.com/app/install/9c2b21c08cee498109cfc02913ad6a64
-
     private static final String ACTION_NOTIFICATION_OPENED = JPushInterface.ACTION_NOTIFICATION_OPENED;
     private final String EXTRA = "cn.jpush.android.EXTRA";
     private final String NOTIFI_ID = "cn.jpush.android.NOTIFICATION_ID";

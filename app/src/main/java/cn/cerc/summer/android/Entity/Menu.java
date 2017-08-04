@@ -1,9 +1,5 @@
 package cn.cerc.summer.android.Entity;
 
-/**
- * Created by fff on 2016/11/22.
- */
-
 public class Menu {
     private String menu;
 

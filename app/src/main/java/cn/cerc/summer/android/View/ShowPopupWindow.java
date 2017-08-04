@@ -16,10 +16,6 @@ import java.util.List;
 import cn.cerc.summer.android.Entity.Menu;
 import cn.cerc.summer.android.Utils.ScreenUtils;
 
-/**
- * Created by fff on 2016/11/22.
- */
-
 public class ShowPopupWindow {
 
     private static ShowPopupWindow popupWindow;

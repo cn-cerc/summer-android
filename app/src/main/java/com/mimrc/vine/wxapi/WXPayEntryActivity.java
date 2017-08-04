@@ -17,9 +17,7 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import cn.cerc.summer.android.Activity.MainActivity;
 
 public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
-
     private static final String TAG = "MicroMsg.SDKSample.WXPayEntryActivity";
-
     private IWXAPI api;
 
     @Override
