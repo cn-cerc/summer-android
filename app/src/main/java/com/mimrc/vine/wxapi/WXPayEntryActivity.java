@@ -14,7 +14,7 @@ import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
-import cn.cerc.summer.android.Activity.MainActivity;
+import cn.cerc.summer.android.basis.forms.FrmMain;
 
 public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
 
@@ -56,7 +56,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
             if (resp.errCode == 0) str = "success";
             else if (resp.errCode == -2) str = "用户取消";
             else str = "failed";
-            MainActivity.getInstance().webview.loadUrl("javascript:ReturnForApp('" + str + "')");
+            FrmMain.getInstance().webview.loadUrl("javascript:ReturnForApp('" + str + "')");
             WXPayEntryActivity.this.finish();
         }
 
