@@ -3,6 +3,7 @@ package cn.cerc.summer.android.Activity;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -21,7 +22,7 @@ import java.util.List;
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.MyApplication;
 
-public class FrmAD extends BaseForm implements View.OnClickListener, ViewPager.OnPageChangeListener {
+public class FrmAD extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
 
     private ViewPager viewpager;
     private LinearLayout contan;
