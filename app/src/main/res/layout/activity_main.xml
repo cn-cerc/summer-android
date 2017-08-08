@@ -47,7 +47,7 @@
                 android:layout_centerInParent="true"
                 android:src="@drawable/ic_more_vert_white_24dp"/>
 
-            <cn.cerc.summer.android.View.DragPointView
+            <cn.cerc.summer.android.basis.view.DragPointView
                 android:id="@+id/dragpointview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <cn.cerc.summer.android.View.BrowserView
+            <cn.cerc.summer.android.basis.view.BrowserView
                 android:id="@+id/webview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

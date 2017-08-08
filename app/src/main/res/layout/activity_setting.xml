@@ -67,7 +67,7 @@
                 android:text="界面缩放比例（80 -- 120）"
                 android:textSize="@dimen/normal"/>
 
-            <cn.cerc.summer.android.View.CustomSeekBar
+            <cn.cerc.summer.android.basis.view.CustomSeekBar
                 android:id="@+id/customseekbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

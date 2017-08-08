@@ -28,14 +28,15 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    testCompile 'junit:junit:4.12'
-    compile 'com.alibaba:fastjson:1.2.16'
-    compile 'org.xutils:xutils:3.3.36'
-    compile 'cn.jiguang:jpush:2.2.0'
-    compile 'com.google.android.gms:play-services-appindexing:9.2.1'
     compile files('libs/libammsdk.jar')
     compile files('libs/GifView.jar')
     compile files('libs/universal-image-loader-1.9.5.jar')
     compile files('libs/alipaySdk-20170420.jar')
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.alibaba:fastjson:1.2.16'
+    compile 'org.xutils:xutils:3.3.36'
+    compile 'cn.jiguang:jpush:2.2.0'
+    compile 'com.google.android.gms:play-services-appindexing:9.2.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    testCompile 'junit:junit:4.12'
 }
