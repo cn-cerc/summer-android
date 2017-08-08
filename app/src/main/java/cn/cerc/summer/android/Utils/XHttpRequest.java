@@ -16,6 +16,7 @@ import cn.cerc.summer.android.Interface.AsyncFileLoadCallback;
 import cn.cerc.summer.android.Interface.ConfigFileLoadCallback;
 import cn.cerc.summer.android.Interface.GetFileCallback;
 import cn.cerc.summer.android.Interface.RequestCallback;
+import cn.cerc.summer.android.MyApp;
 import cn.cerc.summer.android.View.ShowDialog;
 
 /**
@@ -64,7 +65,7 @@ public class XHttpRequest implements AsyncFileLoadCallback {
      * @param rc  请求回调
      */
     public void GET(final String url, final RequestCallback rc) {
-        if (!AppUtil.getNetWorkStata(rc.getContext())) return;
+        if (!MyApp.getNetWorkStata(rc.getContext())) return;
         x.http().get(new RequestParams(url), new Callback.CommonCallback<JSONObject>() {
             @Override
             public void onSuccess(JSONObject result) {
@@ -95,7 +96,7 @@ public class XHttpRequest implements AsyncFileLoadCallback {
      * @return 可取消的回调
      */
     public Callback.Cancelable GETFile(final String url, final GetFileCallback rc) {
-        if (!AppUtil.getNetWorkStata(rc.getContext())) return null;
+        if (!MyApp.getNetWorkStata(rc.getContext())) return null;
         RequestParams rp = new RequestParams(url);
         rp.setSaveFilePath(Constans.getAppPath(Constans.APP_PATH) + "app.apk");
         Callback.Cancelable cc = x.http().get(rp, new Callback.ProgressCallback<File>() {
@@ -159,7 +160,7 @@ public class XHttpRequest implements AsyncFileLoadCallback {
         if (filelist != null && filelist.size() > 0) {
             this.filelist = filelist;
             this.cflc = cflc;
-            jsonarr = AppUtil.getCacheList();
+            jsonarr = MyApp.getCacheList();
             loadfile();
         } else
             cflc.loadfinish(0);

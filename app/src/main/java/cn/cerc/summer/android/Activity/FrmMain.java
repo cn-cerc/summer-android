@@ -50,8 +50,8 @@ import java.util.Set;
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Entity.Menu;
 import cn.cerc.summer.android.Interface.JavaScriptProxy;
+import cn.cerc.summer.android.MyApp;
 import cn.cerc.summer.android.Receiver.MyBroadcastReceiver;
-import cn.cerc.summer.android.Utils.AppUtil;
 import cn.cerc.summer.android.Utils.Constans;
 import cn.cerc.summer.android.Utils.PermissionUtils;
 import cn.cerc.summer.android.Utils.ScreenUtils;
@@ -73,7 +73,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     public static final String JSON_ERROR = "com.mimrc.vine.JSON_ERROR";
     public final static int FILECHOOSER_RESULTCODE = 41;
     public final static int FILECHOOSER_RESULTCODE_FOR_ANDROID_5 = 42;
-    private static FrmMain mainactivity;
+    private static FrmMain instance;
     private final int REQUEST_SETTING = 101;
     public BrowserView webview;
     public String homeurl;//默认打开页
@@ -133,23 +133,23 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            Log.e("xxxx", "mainactivity " + action);
+            Log.e("xxxx", "instance " + action);
             switch (action) {
                 case NETWORK_CHANGE:
-                    if (AppUtil.getNetWorkStata(context)) webview.reload();
+                    if (MyApp.getNetWorkStata(context)) webview.reload();
                     else ShowDialog.getDialog(context).showTips();
                     break;
                 case APP_UPDATA://有更新
                     break;
                 default:
-                    Log.e("mainact", "mainactivity:接收到广播");
+                    Log.e("mainact", "instance:接收到广播");
                     break;
             }
         }
     };
 
     public static FrmMain getInstance() {
-        return mainactivity;
+        return instance;
     }
 
     /**
@@ -177,7 +177,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
         settings = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
 
-        mainactivity = this;
+        instance = this;
 
         initbro();
         InitView();
@@ -192,7 +192,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
      */
     private String getMsgUrl(String read) {
         String url = settings.getString(Constans.SHARED_MSG_URL, "") + read;
-        return AppUtil.buildDeviceUrl(url);
+        return MyApp.buildDeviceUrl(url);
     }
 
     @Override
@@ -201,7 +201,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         if (intent.hasExtra("msgId")) {
             msgId = intent.getStringExtra("msgId");
             String msgurl = getMsgUrl(".show") + "&msgId=" + msgId;
-            Log.e("mainactivity", msgurl);
+            Log.e("instance", msgurl);
             webview.loadUrl(msgurl);
         }
     }
@@ -366,7 +366,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
     public void Update() {
         try {//检查是否需要更新
-            if (!AppUtil.getVersionName(this).equals(Config.getConfig().getAppVersion())) {
+            if (!MyApp.getVersionName(this).equals(Config.getConfig().getAppVersion())) {
                 ShowDialog.getDialog(this).UpDateDialogShow();
             }
         } catch (PackageManager.NameNotFoundException e) {
@@ -583,7 +583,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            if (!AppUtil.getNetWorkStata(view.getContext())) return;
+            if (!MyApp.getNetWorkStata(view.getContext())) return;
             Log.e("cururl", url);
             is_ERROR = false;
             if (Config.getConfig() == null) return;

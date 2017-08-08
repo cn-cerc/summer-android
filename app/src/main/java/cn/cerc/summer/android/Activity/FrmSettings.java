@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.mimrc.vine.R;
 
 import cn.cerc.summer.android.Entity.Config;
-import cn.cerc.summer.android.Application;
+import cn.cerc.summer.android.MyApp;
 import cn.cerc.summer.android.Utils.Constans;
 import cn.cerc.summer.android.Utils.ScreenUtils;
 import cn.cerc.summer.android.View.CustomSeekBar;
@@ -95,7 +95,7 @@ public class FrmSettings extends AppCompatActivity implements SeekBar.OnSeekBarC
         recover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                settings.edit().putString(Constans.HOME, Application.HOME_URL).putInt(Constans.SCALE_SHAREDKEY, def_scales).commit();
+                settings.edit().putString(Constans.HOME, MyApp.HOME_URL).putInt(Constans.SCALE_SHAREDKEY, def_scales).commit();
                 customseekbar.setProgress(def_scales);
                 FrmMain.getInstance().reload(def_scales);
                 Toast.makeText(v.getContext(), "已恢复默认", Toast.LENGTH_SHORT).show();

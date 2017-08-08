@@ -29,11 +29,10 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import cn.cerc.summer.android.Application;
+import cn.cerc.summer.android.MyApp;
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Interface.ConfigFileLoadCallback;
 import cn.cerc.summer.android.Interface.RequestCallback;
-import cn.cerc.summer.android.Utils.AppUtil;
 import cn.cerc.summer.android.Utils.Constans;
 import cn.cerc.summer.android.Utils.PermissionUtils;
 import cn.cerc.summer.android.Utils.ScreenUtils;
@@ -73,7 +72,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
         settings = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
 
         if (PermissionUtils.getPermission(new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PermissionUtils.REQUEST_READ_PHONE_STATE, this)) {
-            XHttpRequest.getInstance().GET(AppUtil.buildDeviceUrl(Application.HOME_URL + "/MobileConfig"), this);
+            XHttpRequest.getInstance().GET(MyApp.buildDeviceUrl(MyApp.HOME_URL + "/MobileConfig"), this);
         }
 
         initView();
@@ -97,8 +96,8 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
         if (settings.getBoolean(Constans.IS_FIRST_SHAREDKEY, true))
             imageview.setVisibility(View.INVISIBLE);
         else
-            ImageLoader.getInstance().displayImage(image, imageview, Application.getInstance().getImageOptions());
-//            x.image().bind(imageview, image, Application.getInstance().imageOptions);
+            ImageLoader.getInstance().displayImage(image, imageview, MyApp.getInstance().getImageOptions());
+//            x.image().bind(imageview, image, MyApp.getInstance().imageOptions);
 
     }
 
@@ -109,7 +108,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     TelephonyManager TelephonyMgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
                     PermissionUtils.IMEI = TelephonyMgr.getDeviceId();
-                    XHttpRequest.getInstance().GET(AppUtil.buildDeviceUrl(Application.HOME_URL + "/MobileConfig"), this);
+                    XHttpRequest.getInstance().GET(MyApp.buildDeviceUrl(MyApp.HOME_URL + "/MobileConfig"), this);
                 } else {
                     ActivityCompat.requestPermissions(this, permissions, requestCode);
                 }
@@ -138,7 +137,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
     @Override
     public void success(String url, JSONObject json) {
         config = JSON.parseObject(json.toString(), Config.class);
-        homeurl = AppUtil.buildDeviceUrl(Application.HOME_URL);
+        homeurl = MyApp.buildDeviceUrl(MyApp.HOME_URL);
         String msgurl = config.getRootSite() + "/" + config.getMsgManage();
         settings.edit().putString(Constans.HOME, homeurl).putString(Constans.SHARED_MSG_URL, msgurl).putString(Constans.SHARED_START_URL, config.getStartImage()).commit();
 
@@ -165,7 +164,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
     }
 
     public void prestrainImage() {
-        ImageLoader.getInstance().loadImage(config.getWelcomeImages().get(0), Application.getInstance().getImageOptions(), new ImageLoadingListener() {
+        ImageLoader.getInstance().loadImage(config.getWelcomeImages().get(0), MyApp.getInstance().getImageOptions(), new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
             }
@@ -191,7 +190,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
 
     @Override
     public void failt(String url, String error) {
-        FrmMain.getInstance().setHomeurl(Application.HOME_URL);
+        FrmMain.getInstance().setHomeurl(MyApp.HOME_URL);
         skip();
     }
 
@@ -209,7 +208,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
 
     @Override
     public void loadAllfinish() {
-        AppUtil.saveCacheList(config);
+        MyApp.saveCacheList(config);
     }
 
 }

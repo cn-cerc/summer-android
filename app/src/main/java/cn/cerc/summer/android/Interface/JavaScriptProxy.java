@@ -13,7 +13,7 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import java.util.Map;
 
 import cn.cerc.summer.android.Activity.FrmMain;
-import cn.cerc.summer.android.Utils.AppUtil;
+import cn.cerc.summer.android.MyApp;
 
 /**
  * 供js调用的js
@@ -43,7 +43,7 @@ public class JavaScriptProxy extends Object {
      */
     public int getVersion() {
         try {
-            return AppUtil.getVersionCode(this.owner);
+            return MyApp.getVersionCode(this.owner);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }

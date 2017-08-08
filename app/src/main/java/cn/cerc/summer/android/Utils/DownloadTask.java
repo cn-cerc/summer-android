@@ -14,6 +14,7 @@ import java.util.List;
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Interface.AsyncFileLoadCallback;
 import cn.cerc.summer.android.Interface.ConfigFileLoadCallback;
+import cn.cerc.summer.android.MyApp;
 
 /**
  * Created by fengm on 2016/12/23.
@@ -67,10 +68,10 @@ public class DownloadTask extends AsyncTask<String, Integer, List<String>> {
      * @param url 文件url
      */
     private void fileLoad(String url) {
-        String remote = AppUtil.fileurl2name(url, 0);
-        String savepath = Constans.getAppPath(Constans.DATA_PATH) + AppUtil.fileurl2name(url, 0);
+        String remote = MyApp.fileurl2name(url, 0);
+        String savepath = Constans.getAppPath(Constans.DATA_PATH) + MyApp.fileurl2name(url, 0);
 
-        if (!AppUtil.needUpdate(url, jsonarr)) {
+        if (!MyApp.needUpdate(url, jsonarr)) {
             loadnext();
             return;
         }

@@ -19,7 +19,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.cerc.summer.android.Application;
+import cn.cerc.summer.android.MyApp;
 import cn.cerc.summer.android.Entity.Config;
 
 public class FrmWelcome extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
@@ -63,7 +63,7 @@ public class FrmWelcome extends AppCompatActivity implements View.OnClickListene
         imageview = new ArrayList<ImageView>();
         for (int i = 0; i < list.size(); i++) {
             ImageView imageView = new ImageView(this);
-            ImageLoader.getInstance().displayImage(list.get(i), imageView, Application.getInstance().getImageOptions());
+            ImageLoader.getInstance().displayImage(list.get(i), imageView, MyApp.getInstance().getImageOptions());
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageview.add(imageView);
             if (i == (list.size() - 1)) {
