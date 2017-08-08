@@ -269,7 +269,8 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
         webview.getSettings().setTextZoom(settings.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this, ScreenUtils.getInches(this))));
 
-        webview.addJavascriptInterface(new JavaScriptProxy(this), "JSobj");//JSobj 供web端js调用标识，修改请通知web开发者
+        //jsAndroid 供web端js调用标识，修改请通知web开发者
+        webview.addJavascriptInterface(new JavaScriptProxy(this), "jsAndroid");
 
         webview.setWebViewClient(new MyWebViewClient());
 
