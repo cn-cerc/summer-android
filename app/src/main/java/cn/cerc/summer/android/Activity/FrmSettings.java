@@ -81,7 +81,7 @@ public class FrmSettings extends BaseActivity implements SeekBar.OnSeekBarChange
                 if (scales == 0)
                     settingShared.edit().putInt(Constans.SCALE_SHAREDKEY, scales).commit();
                 else settingShared.edit().putInt(Constans.SCALE_SHAREDKEY, scales).commit();
-                MainActivity.getInstance().reload(scales);
+                FrmMain.getInstance().reload(scales);
                 Toast.makeText(v.getContext(), "保存成功", Toast.LENGTH_SHORT).show();
             }
         });
@@ -91,7 +91,7 @@ public class FrmSettings extends BaseActivity implements SeekBar.OnSeekBarChange
             public void onClick(View v) {
                 settingShared.edit().putString(Constans.HOME, MyConfig.HOME_URL).putInt(Constans.SCALE_SHAREDKEY, def_scales).commit();
                 customseekbar.setProgress(def_scales);
-                MainActivity.getInstance().reload(def_scales);
+                FrmMain.getInstance().reload(def_scales);
                 Toast.makeText(v.getContext(), "已恢复默认", Toast.LENGTH_SHORT).show();
             }
         });

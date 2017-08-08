@@ -36,7 +36,7 @@ public class AdActivity extends BaseActivity implements View.OnClickListener, Vi
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        MainActivity.getInstance().finish();
+        FrmMain.getInstance().finish();
         finish();
     }
 

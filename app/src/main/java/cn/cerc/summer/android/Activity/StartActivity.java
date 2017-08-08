@@ -56,7 +56,7 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        MainActivity.getInstance().finish();
+        FrmMain.getInstance().finish();
         finish();
     }
 
@@ -137,7 +137,7 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
         String msgurl = config.getRootSite() + "/" + config.getMsgManage();
         settingShared.edit().putString(Constans.HOME, homeurl).putString(Constans.SHARED_MSG_URL, msgurl).putString(Constans.SHARED_START_URL, config.getStartImage()).commit();
 
-        MainActivity.getInstance().Update();
+        FrmMain.getInstance().Update();
 
         if (settingShared.getInt(Constans.FAIL_NUM_SHAREDKEY, 1) > 0) {
             load_gif.setVisibility(View.VISIBLE);
@@ -186,7 +186,7 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
 
     @Override
     public void Failt(String url, String error) {
-        MainActivity.getInstance().setHomeurl(MyConfig.HOME_URL);
+        FrmMain.getInstance().setHomeurl(MyConfig.HOME_URL);
         skip();
     }
 
@@ -195,7 +195,7 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                MainActivity.getInstance().setHomeurl(homeurl);
+                FrmMain.getInstance().setHomeurl(homeurl);
                 settingShared.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).putInt(Constans.FAIL_NUM_SHAREDKEY, fail_num).commit();
                 skip();
             }

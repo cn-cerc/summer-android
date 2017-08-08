@@ -8,7 +8,7 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cn.cerc.summer.android.Activity.MainActivity;
+import cn.cerc.summer.android.Activity.FrmMain;
 import cn.cerc.summer.android.Utils.Constans;
 import cn.jpush.android.api.JPushInterface;
 
@@ -32,14 +32,14 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
             case Constans.CONNECTION:
                 if (JPushInterface.isPushStopped(context))
                     JPushInterface.onResume(context);
-                Intent networkintent = new Intent(MainActivity.NETWORK_CHANGE);
+                Intent networkintent = new Intent(FrmMain.NETWORK_CHANGE);
                 context.sendBroadcast(networkintent);
                 break;
             case Constans.NOTIFICATION_OPENED:
                 //打开自定义的Activity
                 try {
                     JSONObject jsonObject = new JSONObject(intent.getExtras().getString("cn.jpush.android.EXTRA"));
-                    Intent i = new Intent(context, MainActivity.class);
+                    Intent i = new Intent(context, FrmMain.class);
                     i.putExtra("msgId", jsonObject.getString("msgId"));
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     context.startActivity(i);
@@ -52,11 +52,11 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
                     try {
                         JSONObject jsonObject = new JSONObject(intent.getStringExtra(EXTRA));
                         if ("update".equals(jsonObject.getString("action"))) {
-                            Intent updateintent = new Intent(MainActivity.APP_UPDATA);
+                            Intent updateintent = new Intent(FrmMain.APP_UPDATA);
                             context.sendBroadcast(updateintent);
                         }
                     } catch (JSONException e) {
-                        Intent updateintent = new Intent(MainActivity.JSON_ERROR);
+                        Intent updateintent = new Intent(FrmMain.JSON_ERROR);
                         context.sendBroadcast(updateintent);
                         e.printStackTrace();
                     }

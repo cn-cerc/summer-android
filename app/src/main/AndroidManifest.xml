@@ -35,7 +35,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="cn.cerc.summer.android.Activity.MainActivity"
+            android:name="cn.cerc.summer.android.Activity.FrmMain"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>

@@ -64,14 +64,14 @@ import cn.jpush.android.api.TagAliasCallback;
 /**
  * 主界面
  */
-public class MainActivity extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, JSInterfaceLintener {
+public class FrmMain extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, JSInterfaceLintener {
 
     public static final String NETWORK_CHANGE = "android.net.conn.NETWORK_CHANGE";
     public static final String APP_UPDATA = "com.mimrc.vine.APP_UPDATA";
     public static final String JSON_ERROR = "com.mimrc.vine.JSON_ERROR";
     public final static int FILECHOOSER_RESULTCODE = 41;
     public final static int FILECHOOSER_RESULTCODE_FOR_ANDROID_5 = 42;
-    private static MainActivity mainactivity;
+    private static FrmMain mainactivity;
     private final int REQUEST_SETTING = 101;
     public MyWebView webview;
     public String homeurl;//默认打开页
@@ -108,7 +108,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            JPushInterface.setAlias(MainActivity.this, PermissionUtils.IMEI, tac);
+                            JPushInterface.setAlias(FrmMain.this, PermissionUtils.IMEI, tac);
                         }
                     }, 30000);
                     break;
@@ -146,7 +146,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
         }
     };
 
-    public static MainActivity getInstance() {
+    public static FrmMain getInstance() {
         return mainactivity;
     }
 
@@ -400,10 +400,10 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                         webview.loadUrl(homeurl);
                         break;
                     case 3:
-                        startActivityForResult(new Intent(MainActivity.this, FrmSettings.class).putExtra("address", webview.getUrl()), REQUEST_SETTING);
+                        startActivityForResult(new Intent(FrmMain.this, FrmSettings.class).putExtra("address", webview.getUrl()), REQUEST_SETTING);
                         break;
                     case 4:
-                        clearCacheFolder(MainActivity.this.getCacheDir(), System.currentTimeMillis());
+                        clearCacheFolder(FrmMain.this.getCacheDir(), System.currentTimeMillis());
                         break;
                     case 5:
                         if (islogin) {
@@ -537,7 +537,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                 return true;
             }
 
-            final PayTask task = new PayTask(MainActivity.this);
+            final PayTask task = new PayTask(FrmMain.this);
             final String ex = task.fetchOrderInfoFromH5PayUrl(url);
             if (!TextUtils.isEmpty(ex)) {
                 Log.e("url:::", url);
@@ -546,7 +546,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                         Log.e("ex:::", ex);
                         final H5PayResultModel result = task.h5Pay(ex, true);
                         if (!TextUtils.isEmpty(result.getReturnUrl())) {
-                            MainActivity.this.runOnUiThread(new Runnable() {
+                            FrmMain.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     Log.e("return url:::", result.getReturnUrl());
@@ -554,7 +554,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                                 }
                             });
                         } else {
-                            MainActivity.this.runOnUiThread(new Runnable() {
+                            FrmMain.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     view.goBack();
