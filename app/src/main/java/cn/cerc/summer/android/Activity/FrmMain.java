@@ -136,7 +136,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             Log.e("xxxx", "instance " + action);
             switch (action) {
                 case NETWORK_CHANGE:
-                    if (MyApp.getNetWorkStata(context)) webview.reload();
+                    if (MyApp.getNetworkState(context)) webview.reload();
                     else ShowDialog.getDialog(context).showTips();
                     break;
                 case APP_UPDATA://有更新
@@ -583,7 +583,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            if (!MyApp.getNetWorkStata(view.getContext())) return;
+            if (!MyApp.getNetworkState(view.getContext())) return;
             Log.e("cururl", url);
             is_ERROR = false;
             if (Config.getConfig() == null) return;

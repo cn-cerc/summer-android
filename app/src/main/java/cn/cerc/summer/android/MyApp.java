@@ -30,7 +30,7 @@ import java.util.Map;
 
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Utils.Constans;
-import cn.cerc.summer.android.Utils.FileUtil;
+import cn.cerc.summer.android.Utils.FileUtils;
 import cn.cerc.summer.android.Utils.PermissionUtils;
 import cn.jpush.android.api.JPushInterface;
 
@@ -144,7 +144,7 @@ public class MyApp extends android.app.Application {
             map.put(args[0], args.length == 2 ? args[1] : "0");
         }
         JSONObject jsonObject = new JSONObject(map);
-        FileUtil.createFile(jsonObject.toString().getBytes(Charset.forName("utf-8")), Constans.CONFIGNAME);
+        FileUtils.createFile(jsonObject.toString().getBytes(Charset.forName("utf-8")), Constans.CONFIGNAME);
     }
 
     /**
@@ -190,7 +190,7 @@ public class MyApp extends android.app.Application {
      * @param context 上下文
      * @return 是否有网络
      */
-    public static boolean getNetWorkStata(Context context) {
+    public static boolean getNetworkState(Context context) {
         // 获取手机所有连接管理对象（包括对wi-fi,net等连接的管理）
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager != null) {
@@ -215,11 +215,11 @@ public class MyApp extends android.app.Application {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            if ("delete".equals(FileUtil.getconfigTime(url))) {
-                FileUtil.deleteFile(savepath);
+            if ("delete".equals(FileUtils.getconfigTime(url))) {
+                FileUtils.deleteFile(savepath);
                 return false;
             } else {
-                if (FileUtil.getconfigTime(url).equals(modis)) {
+                if (FileUtils.getconfigTime(url).equals(modis)) {
                     return false;
                 }
             }

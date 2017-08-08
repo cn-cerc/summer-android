@@ -23,13 +23,13 @@ import cn.cerc.summer.android.MyApp;
 /**
  * 文件工具类
  */
-public class FileUtil {
+public class FileUtils {
 
-    private static final String TAG = "FileUtil";
+    private static final String TAG = "FileUtils";
     private static String pathDiv = "/";
     private static File cacheDir = new File(Constans.getAppPath(Constans.CONFIG_PATH));
 
-    private FileUtil() {
+    private FileUtils() {
         /* cannot be instantiated */
         throw new UnsupportedOperationException("cannot be instantiated");
     }

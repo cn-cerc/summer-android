@@ -65,7 +65,7 @@ public class XHttpRequest implements AsyncFileLoadCallback {
      * @param rc  请求回调
      */
     public void GET(final String url, final RequestCallback rc) {
-        if (!MyApp.getNetWorkStata(rc.getContext())) return;
+        if (!MyApp.getNetworkState(rc.getContext())) return;
         x.http().get(new RequestParams(url), new Callback.CommonCallback<JSONObject>() {
             @Override
             public void onSuccess(JSONObject result) {
@@ -96,7 +96,7 @@ public class XHttpRequest implements AsyncFileLoadCallback {
      * @return 可取消的回调
      */
     public Callback.Cancelable GETFile(final String url, final GetFileCallback rc) {
-        if (!MyApp.getNetWorkStata(rc.getContext())) return null;
+        if (!MyApp.getNetworkState(rc.getContext())) return null;
         RequestParams rp = new RequestParams(url);
         rp.setSaveFilePath(Constans.getAppPath(Constans.APP_PATH) + "app.apk");
         Callback.Cancelable cc = x.http().get(rp, new Callback.ProgressCallback<File>() {
