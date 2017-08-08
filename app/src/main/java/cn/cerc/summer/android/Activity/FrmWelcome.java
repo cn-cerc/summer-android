@@ -19,7 +19,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.cerc.summer.android.MyApp;
+import cn.cerc.summer.android.Utils.MyApp;
 import cn.cerc.summer.android.Entity.Config;
 
 public class FrmWelcome extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {

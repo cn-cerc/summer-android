@@ -1,4 +1,4 @@
-package cn.cerc.summer.android;
+package cn.cerc.summer.android.Utils;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -29,9 +29,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cn.cerc.summer.android.Entity.Config;
-import cn.cerc.summer.android.Utils.Constans;
-import cn.cerc.summer.android.Utils.FileUtils;
-import cn.cerc.summer.android.Utils.PermissionUtils;
 import cn.jpush.android.api.JPushInterface;
 
 /**

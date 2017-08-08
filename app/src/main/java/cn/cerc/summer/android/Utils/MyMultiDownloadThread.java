@@ -12,7 +12,6 @@ import java.util.List;
 
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Interface.ConfigFileLoadCallback;
-import cn.cerc.summer.android.MyApp;
 
 /**
  * Created by fff on 2016/12/22.

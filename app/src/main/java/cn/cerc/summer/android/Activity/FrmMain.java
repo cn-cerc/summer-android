@@ -50,7 +50,7 @@ import java.util.Set;
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Entity.Menu;
 import cn.cerc.summer.android.Interface.JavaScriptProxy;
-import cn.cerc.summer.android.MyApp;
+import cn.cerc.summer.android.Utils.MyApp;
 import cn.cerc.summer.android.Receiver.MyBroadcastReceiver;
 import cn.cerc.summer.android.Utils.Constans;
 import cn.cerc.summer.android.Utils.PermissionUtils;

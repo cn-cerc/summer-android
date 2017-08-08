@@ -2,8 +2,6 @@ package cn.cerc.summer.android.Utils;
 
 import java.io.File;
 
-import cn.cerc.summer.android.MyApp;
-
 /**
  * Created by fff on 2016/11/11.
  */

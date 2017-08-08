@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.mimrc.vine.R;
 
 import cn.cerc.summer.android.Entity.Config;
-import cn.cerc.summer.android.MyApp;
+import cn.cerc.summer.android.Utils.MyApp;
 import cn.cerc.summer.android.Utils.Constans;
 import cn.cerc.summer.android.Utils.ScreenUtils;
 import cn.cerc.summer.android.View.CustomSeekBar;

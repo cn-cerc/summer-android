@@ -29,7 +29,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import cn.cerc.summer.android.MyApp;
+import cn.cerc.summer.android.Utils.MyApp;
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Interface.ConfigFileLoadCallback;
 import cn.cerc.summer.android.Interface.RequestCallback;

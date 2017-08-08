@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.cerc.summer.android.Entity.Config;
-import cn.cerc.summer.android.MyApp;
+import cn.cerc.summer.android.Utils.MyApp;
 
 public class FrmAD extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
 

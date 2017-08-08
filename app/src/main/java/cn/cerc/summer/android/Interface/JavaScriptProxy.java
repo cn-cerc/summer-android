@@ -13,7 +13,7 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import java.util.Map;
 
 import cn.cerc.summer.android.Activity.FrmMain;
-import cn.cerc.summer.android.MyApp;
+import cn.cerc.summer.android.Utils.MyApp;
 
 /**
  * 供js调用的js

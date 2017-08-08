@@ -16,7 +16,6 @@ import cn.cerc.summer.android.Interface.AsyncFileLoadCallback;
 import cn.cerc.summer.android.Interface.ConfigFileLoadCallback;
 import cn.cerc.summer.android.Interface.GetFileCallback;
 import cn.cerc.summer.android.Interface.RequestCallback;
-import cn.cerc.summer.android.MyApp;
 import cn.cerc.summer.android.View.ShowDialog;
 
 /**
