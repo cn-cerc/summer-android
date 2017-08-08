@@ -56,8 +56,8 @@ public class DownloadTask extends AsyncTask<String, Integer, List<String>> {
     public void loadnext() {
         loadindex++;
         if (loadindex < filelist.size()) fileLoad(filelist.get(loadindex));
-        else if (afc != null) afc.loadfinish(filelist, fail_num);
-        else if (cflc != null) cflc.loadfinish(filelist.size());
+        else if (afc != null) afc.loadFinish(filelist, fail_num);
+        else if (cflc != null) cflc.loadFinish(filelist.size());
     }
 
     /**
@@ -83,8 +83,8 @@ public class DownloadTask extends AsyncTask<String, Integer, List<String>> {
             public void onSuccess(File result) {
                 loadindex++;
                 if (loadindex < filelist.size()) fileLoad(filelist.get(loadindex));
-                else if (afc != null) afc.loadfinish(filelist, fail_num);
-                else if (cflc != null) cflc.loadfinish(filelist.size());
+                else if (afc != null) afc.loadFinish(filelist, fail_num);
+                else if (cflc != null) cflc.loadFinish(filelist.size());
             }
 
             @Override
@@ -96,8 +96,8 @@ public class DownloadTask extends AsyncTask<String, Integer, List<String>> {
                     fail_num++;
                 }
                 if (loadindex < filelist.size()) fileLoad(filelist.get(loadindex));
-                else if (afc != null) afc.loadfinish(filelist, fail_num);
-                else if (cflc != null) cflc.loadfinish(filelist.size());
+                else if (afc != null) afc.loadFinish(filelist, fail_num);
+                else if (cflc != null) cflc.loadFinish(filelist.size());
             }
 
             @Override

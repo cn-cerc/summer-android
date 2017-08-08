@@ -37,14 +37,14 @@ public class XHttpRequest implements AsyncFileLoadCallback {
     private int filesize = 0;
     ConfigFileLoadCallback cfc = new ConfigFileLoadCallback() {
         @Override
-        public void loadfinish(int size) {
+        public void loadFinish(int size) {
             if ((filesize += size) >= filelist.size()) {
-                cflc.loadAllfinish();
+                cflc.loadAllFinish();
             }
         }
 
         @Override
-        public void loadAllfinish() {
+        public void loadAllFinish() {
         }
     };
 
@@ -162,7 +162,7 @@ public class XHttpRequest implements AsyncFileLoadCallback {
             jsonarr = MyApp.getCacheList();
             loadfile();
         } else
-            cflc.loadfinish(0);
+            cflc.loadFinish(0);
     }
 
     public void loadfile() {
@@ -177,9 +177,9 @@ public class XHttpRequest implements AsyncFileLoadCallback {
     }
 
     @Override
-    public void loadfinish(List<String> list, int fail) {
+    public void loadFinish(List<String> list, int fail) {
         if (list == firstlist) {
-            cflc.loadfinish(fail);
+            cflc.loadFinish(fail);
             if (filelist.size() > firstindex) { //列表数量大于20则需要继续多线程下载
                 filelist = filelist.subList(firstindex, filelist.size());
                 for (int i = 0; i < (filelist.size() / 50); i++) {

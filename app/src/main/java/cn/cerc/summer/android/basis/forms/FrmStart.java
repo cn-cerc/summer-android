@@ -152,7 +152,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    loadfinish(0);
+                    loadFinish(0);
                 }
             }, 2000);
         }
@@ -192,7 +192,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
     }
 
     @Override
-    public void loadfinish(final int fail_num) {
+    public void loadFinish(final int fail_num) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -204,7 +204,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
     }
 
     @Override
-    public void loadAllfinish() {
+    public void loadAllFinish() {
         MyApp.saveCacheList(webConfig);
     }
 
