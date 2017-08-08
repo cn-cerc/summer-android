@@ -53,7 +53,7 @@
             android:name="cn.cerc.summer.android.basis.forms.FrmAD"
             android:screenOrientation="portrait" />
         <activity
-            android:name="cn.cerc.summer.android.parts.wxapi.WXPayEntryActivity"
+            android:name=".wxapi.WXPayEntryActivity"
             android:exported="true"
             android:launchMode="singleTop" />
 
