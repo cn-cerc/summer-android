@@ -154,7 +154,7 @@ public class ShowDialog extends AlertDialog.Builder implements DialogInterface.O
     }
 
     @Override
-    public void Failt(String url, String error) {
+    public void failt(String url, String error) {
         Toast.makeText(context, "下载失败", Toast.LENGTH_SHORT).show();
     }
 

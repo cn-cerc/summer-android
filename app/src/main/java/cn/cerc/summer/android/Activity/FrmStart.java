@@ -31,7 +31,7 @@ import java.util.List;
 
 import cn.cerc.summer.android.Application;
 import cn.cerc.summer.android.Entity.Config;
-import cn.cerc.summer.android.Interface.ConfigFileLoafCallback;
+import cn.cerc.summer.android.Interface.ConfigFileLoadCallback;
 import cn.cerc.summer.android.Interface.RequestCallback;
 import cn.cerc.summer.android.Utils.AppUtil;
 import cn.cerc.summer.android.Utils.Constans;
@@ -39,9 +39,9 @@ import cn.cerc.summer.android.Utils.PermissionUtils;
 import cn.cerc.summer.android.Utils.ScreenUtils;
 import cn.cerc.summer.android.Utils.XHttpRequest;
 
-public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, RequestCallback, ConfigFileLoafCallback {
+public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, RequestCallback, ConfigFileLoadCallback {
 
-    private SharedPreferences settingShared;
+    private SharedPreferences settings;
     private static FrmStart ga;
     /**
      * 线上的配置参数
@@ -70,7 +70,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_guidance);
 
-        settingShared = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
+        settings = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
 
         if (PermissionUtils.getPermission(new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PermissionUtils.REQUEST_READ_PHONE_STATE, this)) {
             XHttpRequest.getInstance().GET(AppUtil.buildDeviceUrl(Application.HOME_URL + "/MobileConfig"), this);
@@ -93,8 +93,8 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
         load_gif.setGifImage(R.mipmap.start_init);
         load_gif.setGifImageType(GifView.GifImageType.WAIT_FINISH);
 
-        String image = settingShared.getString(Constans.SHARED_START_URL, "");
-        if (settingShared.getBoolean(Constans.IS_FIRST_SHAREDKEY, true))
+        String image = settings.getString(Constans.SHARED_START_URL, "");
+        if (settings.getBoolean(Constans.IS_FIRST_SHAREDKEY, true))
             imageview.setVisibility(View.INVISIBLE);
         else
             ImageLoader.getInstance().displayImage(image, imageview, Application.getInstance().getImageOptions());
@@ -123,7 +123,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
      * 跳转
      */
     public void skip() {
-        if (settingShared.getBoolean(Constans.IS_FIRST_SHAREDKEY, true)) {
+        if (settings.getBoolean(Constans.IS_FIRST_SHAREDKEY, true)) {
             if (config != null && config.getWelcomeImages() != null && config.getWelcomeImages().size() > 0) {
                 startActivity(new Intent(this, FrmWelcome.class));
             }
@@ -140,11 +140,11 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
         config = JSON.parseObject(json.toString(), Config.class);
         homeurl = AppUtil.buildDeviceUrl(Application.HOME_URL);
         String msgurl = config.getRootSite() + "/" + config.getMsgManage();
-        settingShared.edit().putString(Constans.HOME, homeurl).putString(Constans.SHARED_MSG_URL, msgurl).putString(Constans.SHARED_START_URL, config.getStartImage()).commit();
+        settings.edit().putString(Constans.HOME, homeurl).putString(Constans.SHARED_MSG_URL, msgurl).putString(Constans.SHARED_START_URL, config.getStartImage()).commit();
 
         FrmMain.getInstance().Update();
 
-        if (settingShared.getInt(Constans.FAIL_NUM_SHAREDKEY, 1) > 0) {
+        if (settings.getInt(Constans.FAIL_NUM_SHAREDKEY, 1) > 0) {
             load_gif.setVisibility(View.VISIBLE);
             imageview.setVisibility(View.VISIBLE);
             imageview.setImageResource(R.mipmap.init_bg);
@@ -190,7 +190,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
     }
 
     @Override
-    public void Failt(String url, String error) {
+    public void failt(String url, String error) {
         FrmMain.getInstance().setHomeurl(Application.HOME_URL);
         skip();
     }
@@ -201,7 +201,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
             @Override
             public void run() {
                 FrmMain.getInstance().setHomeurl(homeurl);
-                settingShared.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).putInt(Constans.FAIL_NUM_SHAREDKEY, fail_num).commit();
+                settings.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).putInt(Constans.FAIL_NUM_SHAREDKEY, fail_num).commit();
                 skip();
             }
         });

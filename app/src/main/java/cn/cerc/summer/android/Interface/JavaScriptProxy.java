@@ -1,6 +1,7 @@
 package cn.cerc.summer.android.Interface;
 
 import android.content.pm.PackageManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
@@ -11,23 +12,24 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import java.util.Map;
 
+import cn.cerc.summer.android.Activity.FrmMain;
 import cn.cerc.summer.android.Utils.AppUtil;
 
 /**
  * 供js调用的js
  * Created by fff on 2016/11/11.
  */
-public class JSInterface extends Object {
+public class JavaScriptProxy extends Object {
+    private AppCompatActivity owner;
     private Map<String, String> resultunifiedorder;
     private StringBuffer sb;
     private String appid;
 
-    private JSInterfaceLintener jsInterfaceLintener;
     private PayReq req;
     private IWXAPI msgApi;
 
-    public JSInterface(JSInterfaceLintener jsInterfaceLintener) {
-        this.jsInterfaceLintener = jsInterfaceLintener;
+    public JavaScriptProxy(AppCompatActivity owner) {
+        this.owner = owner;
     }
 
     public String hello2Html() {
@@ -41,7 +43,7 @@ public class JSInterface extends Object {
      */
     public int getVersion() {
         try {
-            return AppUtil.getVersionCode(jsInterfaceLintener.getContext());
+            return AppUtil.getVersionCode(this.owner);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -60,9 +62,9 @@ public class JSInterface extends Object {
      */
     @JavascriptInterface
     public void wxPay(String appId, String partnerId, String prepayId, String nonceStr, String timeStamp, String sign) {
-        Toast.makeText(jsInterfaceLintener.getContext(), "正在支付，请等待...", Toast.LENGTH_SHORT).show();
-        Log.e("JSInterface", appId + " " + partnerId + " " + prepayId + " " + nonceStr + " " + timeStamp + " " + sign);
-        msgApi = WXAPIFactory.createWXAPI(jsInterfaceLintener.getContext(), appId);
+        Toast.makeText(owner, "正在支付，请等待...", Toast.LENGTH_SHORT).show();
+        Log.e("JavaScriptProxy", appId + " " + partnerId + " " + prepayId + " " + nonceStr + " " + timeStamp + " " + sign);
+        msgApi = WXAPIFactory.createWXAPI(owner, appId);
         req = new PayReq();
         req.appId = appId;
         req.partnerId = partnerId;
@@ -86,7 +88,10 @@ public class JSInterface extends Object {
 
     @JavascriptInterface
     public void login(String loginUrl) {
-        jsInterfaceLintener.LoginOrLogout(true, loginUrl);
+        if (owner instanceof FrmMain) {
+            FrmMain aintf = (FrmMain) owner;
+            aintf.LoginOrLogout(true, loginUrl);
+        }
     }
 
     /**
@@ -94,7 +99,10 @@ public class JSInterface extends Object {
      */
     @JavascriptInterface
     public void logout() {
-        jsInterfaceLintener.LoginOrLogout(false, "");
+        if (owner instanceof FrmMain) {
+            FrmMain aintf = (FrmMain) owner;
+            aintf.LoginOrLogout(false, "");
+        }
     }
 
 }

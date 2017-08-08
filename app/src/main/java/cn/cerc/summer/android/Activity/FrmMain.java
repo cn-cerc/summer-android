@@ -49,8 +49,7 @@ import java.util.Set;
 
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.Entity.Menu;
-import cn.cerc.summer.android.Interface.JSInterface;
-import cn.cerc.summer.android.Interface.JSInterfaceLintener;
+import cn.cerc.summer.android.Interface.JavaScriptProxy;
 import cn.cerc.summer.android.Receiver.MyBroadcastReceiver;
 import cn.cerc.summer.android.Utils.AppUtil;
 import cn.cerc.summer.android.Utils.Constans;
@@ -66,8 +65,8 @@ import cn.jpush.android.api.TagAliasCallback;
 /**
  * 主界面
  */
-public class FrmMain extends AppCompatActivity implements View.OnLongClickListener, View.OnClickListener, JSInterfaceLintener {
-    private SharedPreferences settingShared;
+public class FrmMain extends AppCompatActivity implements View.OnLongClickListener, View.OnClickListener {
+    private SharedPreferences settings;
 
     public static final String NETWORK_CHANGE = "android.net.conn.NETWORK_CHANGE";
     public static final String APP_UPDATA = "com.mimrc.vine.APP_UPDATA";
@@ -176,7 +175,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        settingShared = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
+        settings = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
 
         mainactivity = this;
 
@@ -192,7 +191,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
      * 查看消息的url
      */
     private String getMsgUrl(String read) {
-        String url = settingShared.getString(Constans.SHARED_MSG_URL, "") + read;
+        String url = settings.getString(Constans.SHARED_MSG_URL, "") + read;
         return AppUtil.buildDeviceUrl(url);
     }
 
@@ -268,9 +267,9 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
         webview = (BrowserView) this.findViewById(R.id.webview);
 
-        webview.getSettings().setTextZoom(settingShared.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this, ScreenUtils.getInches(this))));
+        webview.getSettings().setTextZoom(settings.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this, ScreenUtils.getInches(this))));
 
-        webview.addJavascriptInterface(new JSInterface(this), "JSobj");//JSobj 供web端js调用标识，修改请通知web开发者
+        webview.addJavascriptInterface(new JavaScriptProxy(this), "JSobj");//JSobj 供web端js调用标识，修改请通知web开发者
 
         webview.setWebViewClient(new MyWebViewClient());
 
@@ -491,19 +490,14 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         client.disconnect();
     }
 
-    @Override
-    public Context getContext() {
-        return this;
-    }
-
-    @Override
+    //在系统进行登入、登出时通知
     public void LoginOrLogout(boolean islogin, String url) {
         this.logoutUrl = url;
         this.islogin = islogin;
     }
 
     public void reload(int scales) {
-        webview.getSettings().setTextZoom(Integer.valueOf(settingShared.getInt(Constans.SCALE_SHAREDKEY, 90)));
+        webview.getSettings().setTextZoom(Integer.valueOf(settings.getInt(Constans.SCALE_SHAREDKEY, 90)));
         webview.reload();
     }
 

@@ -7,7 +7,7 @@ import java.util.List;
  * Created by fff on 2016/12/6.
  */
 
-public interface AsyncFileLoafCallback {
+public interface AsyncFileLoadCallback {
 
     void loadfinish(List<String> filelist, int fail);
 

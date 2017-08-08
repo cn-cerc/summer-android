@@ -12,8 +12,8 @@ import java.io.File;
 import java.util.List;
 
 import cn.cerc.summer.android.Entity.Config;
-import cn.cerc.summer.android.Interface.AsyncFileLoafCallback;
-import cn.cerc.summer.android.Interface.ConfigFileLoafCallback;
+import cn.cerc.summer.android.Interface.AsyncFileLoadCallback;
+import cn.cerc.summer.android.Interface.ConfigFileLoadCallback;
 
 /**
  * Created by fengm on 2016/12/23.
@@ -28,16 +28,16 @@ public class DownloadTask extends AsyncTask<String, Integer, List<String>> {
 
     private int fail_num = 0;//下载失败的文件数
 
-    private AsyncFileLoafCallback afc;
-    private ConfigFileLoafCallback cflc;
+    private AsyncFileLoadCallback afc;
+    private ConfigFileLoadCallback cflc;
 
-    public DownloadTask(List<String> filelist, JSONObject jsonarr, AsyncFileLoafCallback afc) {
+    public DownloadTask(List<String> filelist, JSONObject jsonarr, AsyncFileLoadCallback afc) {
         this.filelist = filelist;
         this.jsonarr = jsonarr;
         this.afc = afc;
     }
 
-    public DownloadTask(List<String> filelist, JSONObject jsonarr, ConfigFileLoafCallback cflc) {
+    public DownloadTask(List<String> filelist, JSONObject jsonarr, ConfigFileLoadCallback cflc) {
         this.filelist = filelist;
         this.jsonarr = jsonarr;
         this.cflc = cflc;

@@ -12,8 +12,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.cerc.summer.android.Interface.AsyncFileLoafCallback;
-import cn.cerc.summer.android.Interface.ConfigFileLoafCallback;
+import cn.cerc.summer.android.Interface.AsyncFileLoadCallback;
+import cn.cerc.summer.android.Interface.ConfigFileLoadCallback;
 import cn.cerc.summer.android.Interface.GetFileCallback;
 import cn.cerc.summer.android.Interface.RequestCallback;
 import cn.cerc.summer.android.View.ShowDialog;
@@ -22,7 +22,7 @@ import cn.cerc.summer.android.View.ShowDialog;
  * Created by fff on 2016/11/30.
  * 网络请求
  */
-public class XHttpRequest implements AsyncFileLoafCallback {
+public class XHttpRequest implements AsyncFileLoadCallback {
 
     private ProgressDialog progressDialog;
     /**
@@ -30,12 +30,12 @@ public class XHttpRequest implements AsyncFileLoafCallback {
      */
     private int error_num = 0;
     private List<String> filelist;//下载列表
-    private ConfigFileLoafCallback cflc;
+    private ConfigFileLoadCallback cflc;
     private JSONObject jsonarr;
     private List<String> firstlist;
     private int firstindex = 20;
     private int filesize = 0;
-    ConfigFileLoafCallback cfc = new ConfigFileLoafCallback() {
+    ConfigFileLoadCallback cfc = new ConfigFileLoadCallback() {
         @Override
         public void loadfinish(int size) {
             if ((filesize += size) >= filelist.size()) {
@@ -73,12 +73,12 @@ public class XHttpRequest implements AsyncFileLoafCallback {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                rc.Failt(url, ex.toString());
+                rc.failt(url, ex.toString());
             }
 
             @Override
             public void onCancelled(CancelledException cex) {
-                rc.Failt(url, "已取消");
+                rc.failt(url, "已取消");
             }
 
             @Override
@@ -135,7 +135,7 @@ public class XHttpRequest implements AsyncFileLoafCallback {
                 } else {
                     if (progressDialog != null && progressDialog.isShowing())
                         progressDialog.dismiss();
-                    rc.Failt(url, ex.toString());
+                    rc.failt(url, ex.toString());
                 }
             }
 
@@ -143,7 +143,7 @@ public class XHttpRequest implements AsyncFileLoafCallback {
             public void onCancelled(CancelledException cex) {
                 if (progressDialog != null && progressDialog.isShowing())
                     progressDialog.dismiss();
-                rc.Failt(url, "已取消下载");
+                rc.failt(url, "已取消下载");
             }
 
             @Override
@@ -155,7 +155,7 @@ public class XHttpRequest implements AsyncFileLoafCallback {
         return cc;
     }
 
-    public void ConfigFileGet(List<String> filelist, ConfigFileLoafCallback cflc) {
+    public void ConfigFileGet(List<String> filelist, ConfigFileLoadCallback cflc) {
         if (filelist != null && filelist.size() > 0) {
             this.filelist = filelist;
             this.cflc = cflc;

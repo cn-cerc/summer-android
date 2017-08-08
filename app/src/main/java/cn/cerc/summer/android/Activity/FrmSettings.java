@@ -24,7 +24,7 @@ import cn.cerc.summer.android.View.CustomSeekBar;
 
 public class FrmSettings extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener {
 
-    private SharedPreferences settingShared;
+    private SharedPreferences settings;
     private TextView url_tit, scale;
     private EditText edittext;
     private CustomSeekBar customseekbar;
@@ -40,7 +40,7 @@ public class FrmSettings extends AppCompatActivity implements SeekBar.OnSeekBarC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        settingShared = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
+        settings = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
 
 
         def_scales = ScreenUtils.getScales(this, ScreenUtils.getInches(this));
@@ -53,9 +53,9 @@ public class FrmSettings extends AppCompatActivity implements SeekBar.OnSeekBarC
         customseekbar = (CustomSeekBar) this.findViewById(R.id.customseekbar);
         customseekbar.setOnSeekBarChangeListener(this);
         if (null == getIntent().getStringExtra("address"))
-            edittext.setText(settingShared.getString(Constans.HOME, ""));
+            edittext.setText(settings.getString(Constans.HOME, ""));
         else edittext.setText(getIntent().getStringExtra("address"));
-        scales = settingShared.getInt(Constans.SCALE_SHAREDKEY, def_scales);
+        scales = settings.getInt(Constans.SCALE_SHAREDKEY, def_scales);
         customseekbar.setProgress(scales);
 
         lin_cun = (LinearLayout) this.findViewById(R.id.lin_cun);
@@ -83,10 +83,10 @@ public class FrmSettings extends AppCompatActivity implements SeekBar.OnSeekBarC
                 if (!TextUtils.isEmpty(edittext.getText().toString().trim()) && !edittext.getText().toString().trim().contains("http"))
                     Toast.makeText(FrmSettings.this, R.string.no_http_tips, Toast.LENGTH_SHORT).show();
                 else
-                    settingShared.edit().putString(Constans.HOME, edittext.getText().toString().trim()).commit();
+                    settings.edit().putString(Constans.HOME, edittext.getText().toString().trim()).commit();
                 if (scales == 0)
-                    settingShared.edit().putInt(Constans.SCALE_SHAREDKEY, scales).commit();
-                else settingShared.edit().putInt(Constans.SCALE_SHAREDKEY, scales).commit();
+                    settings.edit().putInt(Constans.SCALE_SHAREDKEY, scales).commit();
+                else settings.edit().putInt(Constans.SCALE_SHAREDKEY, scales).commit();
                 FrmMain.getInstance().reload(scales);
                 Toast.makeText(v.getContext(), "保存成功", Toast.LENGTH_SHORT).show();
             }
@@ -95,7 +95,7 @@ public class FrmSettings extends AppCompatActivity implements SeekBar.OnSeekBarC
         recover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                settingShared.edit().putString(Constans.HOME, Application.HOME_URL).putInt(Constans.SCALE_SHAREDKEY, def_scales).commit();
+                settings.edit().putString(Constans.HOME, Application.HOME_URL).putInt(Constans.SCALE_SHAREDKEY, def_scales).commit();
                 customseekbar.setProgress(def_scales);
                 FrmMain.getInstance().reload(def_scales);
                 Toast.makeText(v.getContext(), "已恢复默认", Toast.LENGTH_SHORT).show();
