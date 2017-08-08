@@ -19,19 +19,17 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.cerc.summer.android.basis.core.WebConfig;
 import cn.cerc.summer.android.basis.core.MyApp;
+import cn.cerc.summer.android.basis.core.WebConfig;
 
 public class FrmAD extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
 
-    private ViewPager viewpager;
+    private ViewPager viewPager;
     private LinearLayout contan;
     private TextView skip;
     private boolean is_skip;//是否跳转
     private Animation animation;//渐变动画
-
-    private List<ImageView> imageview;
-
+    private List<ImageView> imageViews;
     private List<String> list;
 
     @Override
@@ -48,8 +46,8 @@ public class FrmAD extends AppCompatActivity implements View.OnClickListener, Vi
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_ad);
 
-        viewpager = (ViewPager) this.findViewById(R.id.viewpager);
-        viewpager.setOffscreenPageLimit(2);
+        viewPager = (ViewPager) this.findViewById(R.id.viewpager);
+        viewPager.setOffscreenPageLimit(2);
         contan = (LinearLayout) this.findViewById(R.id.contan);
         skip = (TextView) this.findViewById(R.id.skip);
 
@@ -62,12 +60,12 @@ public class FrmAD extends AppCompatActivity implements View.OnClickListener, Vi
 
         list = WebConfig.getInstance().getAdImages();
 
-        imageview = new ArrayList<ImageView>();
+        imageViews = new ArrayList<ImageView>();
         for (int i = 0; i < list.size(); i++) {
             ImageView imageView = new ImageView(this);
             ImageLoader.getInstance().displayImage(list.get(i), imageView, MyApp.getInstance().getImageOptions());
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageview.add(imageView);
+            imageViews.add(imageView);
             if (i == (list.size() - 1))
                 imageView.setOnClickListener(this);
 
@@ -83,21 +81,21 @@ public class FrmAD extends AppCompatActivity implements View.OnClickListener, Vi
             contan.addView(view, llp);
         }
 
-        viewpager.setAdapter(new PagerAdapter() {
+        viewPager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
-                return imageview.size();
+                return imageViews.size();
             }
 
             @Override
             public Object instantiateItem(ViewGroup container, int position) {
-                container.addView(imageview.get(position));
-                return imageview.get(position);
+                container.addView(imageViews.get(position));
+                return imageViews.get(position);
             }
 
             @Override
             public void destroyItem(ViewGroup container, int position, Object object) {
-                container.removeView(imageview.get(position));
+                container.removeView(imageViews.get(position));
             }
 
             @Override
@@ -106,7 +104,7 @@ public class FrmAD extends AppCompatActivity implements View.OnClickListener, Vi
             }
         });
 
-        viewpager.addOnPageChangeListener(this);
+        viewPager.addOnPageChangeListener(this);
     }
 
     @Override
