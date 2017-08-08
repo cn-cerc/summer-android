@@ -44,7 +44,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="cn.cerc.summer.android.forms.FrmGuidance"
+            android:name="cn.cerc.summer.android.forms.FrmWelcome"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name="cn.cerc.summer.android.forms.FrmStart"

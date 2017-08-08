@@ -120,7 +120,7 @@ public class FrmStart extends BaseForm implements ActivityCompat.OnRequestPermis
     public void skip() {
         if (settingShared.getBoolean(Constans.IS_FIRST_SHAREDKEY, true)) {
             if (config != null && config.getWelcomeImages() != null && config.getWelcomeImages().size() > 0) {
-                startActivity(new Intent(this, FrmGuidance.class));
+                startActivity(new Intent(this, FrmWelcome.class));
             }
         } else {
             if (config != null && config.getAdImages() != null && config.getAdImages().size() > 0) {

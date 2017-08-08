@@ -21,7 +21,7 @@ import java.util.List;
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.MyApplication;
 
-public class FrmGuidance extends BaseForm implements View.OnClickListener, ViewPager.OnPageChangeListener {
+public class FrmWelcome extends BaseForm implements View.OnClickListener, ViewPager.OnPageChangeListener {
 
     private ViewPager viewpager;
     private LinearLayout contan;
