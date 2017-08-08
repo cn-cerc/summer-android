@@ -1,7 +1,9 @@
-package cn.cerc.summer.android.forms;
+package cn.cerc.summer.android.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -20,8 +22,11 @@ import cn.cerc.summer.android.Utils.Constans;
 import cn.cerc.summer.android.Utils.ScreenUtils;
 import cn.cerc.summer.android.View.CustomSeekBar;
 
-public class FrmSettings extends BaseForm implements SeekBar.OnSeekBarChangeListener, View.OnClickListener {
+import static android.content.Context.MODE_PRIVATE;
 
+public class FrmSettings extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener {
+
+    private SharedPreferences settingShared;
     private TextView url_tit, scale;
     private EditText edittext;
     private CustomSeekBar customseekbar;
@@ -37,6 +42,9 @@ public class FrmSettings extends BaseForm implements SeekBar.OnSeekBarChangeList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+        settingShared = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
+
+
         def_scales = ScreenUtils.getScales(this, ScreenUtils.getInches(this));
         back = (ImageView) this.findViewById(R.id.back);
         button = (Button) this.findViewById(R.id.save);

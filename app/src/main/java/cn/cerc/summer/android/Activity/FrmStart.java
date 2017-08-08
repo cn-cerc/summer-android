@@ -1,14 +1,16 @@
-package cn.cerc.summer.android.forms;
+package cn.cerc.summer.android.Activity;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.Window;
@@ -38,8 +40,11 @@ import cn.cerc.summer.android.Utils.PermissionUtils;
 import cn.cerc.summer.android.Utils.ScreenUtils;
 import cn.cerc.summer.android.Utils.XHttpRequest;
 
-public class FrmStart extends BaseForm implements ActivityCompat.OnRequestPermissionsResultCallback, RequestCallback, ConfigFileLoafCallback {
+import static android.content.Context.MODE_PRIVATE;
 
+public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, RequestCallback, ConfigFileLoafCallback {
+
+    private SharedPreferences settingShared;
     private static FrmStart ga;
     /**
      * 线上的配置参数
@@ -67,6 +72,9 @@ public class FrmStart extends BaseForm implements ActivityCompat.OnRequestPermis
         ga = this;
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_guidance);
+
+        settingShared = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
+
         if (PermissionUtils.getPermission(new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PermissionUtils.REQUEST_READ_PHONE_STATE, this)) {
             XHttpRequest.getInstance().GET(AppUtil.buildDeviceUrl(MyConfig.HOME_URL + "/MobileConfig"), this);
         }

@@ -8,7 +8,7 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cn.cerc.summer.android.forms.FrmMain;
+import cn.cerc.summer.android.Activity.FrmMain;
 import cn.cerc.summer.android.Utils.Constans;
 import cn.jpush.android.api.JPushInterface;
 

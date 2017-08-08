@@ -1,16 +1,18 @@
-package cn.cerc.summer.android.forms;
+package cn.cerc.summer.android.Activity;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -64,7 +66,8 @@ import cn.jpush.android.api.TagAliasCallback;
 /**
  * 主界面
  */
-public class FrmMain extends BaseForm implements View.OnLongClickListener, View.OnClickListener, JSInterfaceLintener {
+public class FrmMain extends AppCompatActivity implements View.OnLongClickListener, View.OnClickListener, JSInterfaceLintener {
+    private SharedPreferences settingShared;
 
     public static final String NETWORK_CHANGE = "android.net.conn.NETWORK_CHANGE";
     public static final String APP_UPDATA = "com.mimrc.vine.APP_UPDATA";
@@ -172,6 +175,8 @@ public class FrmMain extends BaseForm implements View.OnLongClickListener, View.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        settingShared = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
 
         mainactivity = this;
 
