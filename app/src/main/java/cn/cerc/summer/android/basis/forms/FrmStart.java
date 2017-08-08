@@ -41,7 +41,7 @@ import cn.cerc.summer.android.basis.core.XHttpRequest;
 public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, RequestCallback, ConfigFileLoadCallback {
 
     private SharedPreferences settings;
-    private static FrmStart ga;
+    private static FrmStart instance;
     /**
      * 线上的配置参数
      */
@@ -51,7 +51,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
     private String homeurl;
 
     public static FrmStart getInstance() {
-        return ga;
+        return instance;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
     protected void onCreate(Bundle savedInstanceState) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        ga = this;
+        instance = this;
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_guidance);
 
