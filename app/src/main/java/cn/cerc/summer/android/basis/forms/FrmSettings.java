@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.mimrc.vine.R;
 
-import cn.cerc.summer.android.basis.utils.Config;
+import cn.cerc.summer.android.basis.core.WebConfig;
 import cn.cerc.summer.android.basis.core.MyApp;
 import cn.cerc.summer.android.basis.core.Constans;
 import cn.cerc.summer.android.basis.core.ScreenUtils;
@@ -60,7 +60,7 @@ public class FrmSettings extends AppCompatActivity implements SeekBar.OnSeekBarC
 
         lin_cun = (LinearLayout) this.findViewById(R.id.lin_cun);
 
-        if (!Config.getConfig().isDebug()) {
+        if (!WebConfig.getConfig().isDebug()) {
             url_tit.setVisibility(View.GONE);
             edittext.setVisibility(View.GONE);
 //            lin_cun.setVisibility(View.GONE);

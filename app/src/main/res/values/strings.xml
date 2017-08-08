@@ -21,7 +21,7 @@
     <string name="load_succeed">加载成功</string>
     <string name="load_fail">加载失败</string>
 
-    <string-array name="menu">
+    <string-array name="mainPopupMenu">
         <item>@string/unread_msg</item>
         <item>@string/msg_manager</item>
         <item>@string/home</item>

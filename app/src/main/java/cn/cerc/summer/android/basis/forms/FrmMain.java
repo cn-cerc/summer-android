@@ -47,11 +47,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import cn.cerc.summer.android.basis.utils.Config;
-import cn.cerc.summer.android.basis.utils.Menu;
+import cn.cerc.summer.android.basis.core.WebConfig;
+import cn.cerc.summer.android.basis.core.MainPopupMenu;
 import cn.cerc.summer.android.basis.utils.JavaScriptProxy;
 import cn.cerc.summer.android.basis.core.MyApp;
-import cn.cerc.summer.android.basis.utils.MyBroadcastReceiver;
+import cn.cerc.summer.android.basis.core.MyBroadcastReceiver;
 import cn.cerc.summer.android.basis.core.Constans;
 import cn.cerc.summer.android.basis.core.PermissionUtils;
 import cn.cerc.summer.android.basis.core.ScreenUtils;
@@ -91,7 +91,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private GoogleApiClient client;
     private String[] menus;//菜单
     private int[] menu_img = new int[]{R.mipmap.message, R.mipmap.msg_manager, R.mipmap.home, R.mipmap.setting, R.mipmap.wipe, R.mipmap.logout, R.mipmap.reload};
-    private List<Menu> menulist;
+    private List<MainPopupMenu> menulist;
     private ListPopupWindow lpw;//列表弹框
     /**
      * 推送消息的消息id， 点击通知栏打开
@@ -366,7 +366,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
     public void Update() {
         try {//检查是否需要更新
-            if (!MyApp.getVersionName(this).equals(Config.getConfig().getAppVersion())) {
+            if (!MyApp.getVersionName(this).equals(WebConfig.getConfig().getAppVersion())) {
                 ShowDialog.getDialog(this).UpDateDialogShow();
             }
         } catch (PackageManager.NameNotFoundException e) {
@@ -380,13 +380,13 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
      * @param view
      */
     public void showPopu(View view) {
-        menulist = new ArrayList<Menu>();
-        menus = getResources().getStringArray(R.array.menu);
+        menulist = new ArrayList<MainPopupMenu>();
+        menus = getResources().getStringArray(R.array.mainPopupMenu);
 
         for (int i = 0; i < menus.length; i++) {
             if ("退出登录".equals(menus[i]) && !islogin) continue;
-            Menu menu = new Menu(i == 0 ? 12 : 0, menus[i], menu_img[i]);
-            menulist.add(menu);
+            MainPopupMenu mainPopupMenu = new MainPopupMenu(i == 0 ? 12 : 0, menus[i], menu_img[i]);
+            menulist.add(mainPopupMenu);
         }
 
         lpw = ShowPopupWindow.getPopupwindow().show(this, menulist);
@@ -586,13 +586,13 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             if (!MyApp.getNetworkState(view.getContext())) return;
             Log.e("cururl", url);
             is_ERROR = false;
-            if (Config.getConfig() == null) return;
+            if (WebConfig.getConfig() == null) return;
             is_exit = false;
             isGoHome = false;
-            for (int i = 0; i < Config.getConfig().getHomePagers().size(); i++) {
-                if (url.contains(Config.getConfig().getHomePagers().get(i).getHomeurl())) {
+            for (int i = 0; i < WebConfig.getConfig().getHomePagers().size(); i++) {
+                if (url.contains(WebConfig.getConfig().getHomePagers().get(i).getHomeurl())) {
                     isGoHome = true;
-                    is_exit = Config.getConfig().getHomePagers().get(i).is_home();
+                    is_exit = WebConfig.getConfig().getHomePagers().get(i).is_home();
                 }
             }
             progress.setVisibility(View.VISIBLE);

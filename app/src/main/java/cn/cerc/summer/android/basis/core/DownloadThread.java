@@ -10,7 +10,6 @@ import org.xutils.x;
 import java.io.File;
 import java.util.List;
 
-import cn.cerc.summer.android.basis.utils.Config;
 import cn.cerc.summer.android.basis.utils.ConfigFileLoadCallback;
 
 /**
@@ -56,7 +55,7 @@ public class DownloadThread extends Thread {
             return;
         }
 
-        String urls = Config.getConfig().getRootSite() + remote;
+        String urls = WebConfig.getConfig().getRootSite() + remote;
         Log.e("url", urls);
         RequestParams rp = new RequestParams(urls);
         rp.setSaveFilePath(savepath);

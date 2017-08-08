@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.cerc.summer.android.basis.core.MyApp;
-import cn.cerc.summer.android.basis.utils.Config;
+import cn.cerc.summer.android.basis.core.WebConfig;
 
 public class FrmWelcome extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
 
@@ -58,7 +58,7 @@ public class FrmWelcome extends AppCompatActivity implements View.OnClickListene
                 finish();
             }
         });
-        list = Config.getConfig().getWelcomeImages();
+        list = WebConfig.getConfig().getWelcomeImages();
 
         imageview = new ArrayList<ImageView>();
         for (int i = 0; i < list.size(); i++) {

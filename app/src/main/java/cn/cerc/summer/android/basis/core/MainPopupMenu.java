@@ -1,17 +1,17 @@
-package cn.cerc.summer.android.basis.utils;
+package cn.cerc.summer.android.basis.core;
 
 /**
  * Created by fff on 2016/11/22.
  */
 
-public class Menu {
+public class MainPopupMenu {
     private String menu;
 
     private int res;
 
     private int msg_num = 0;
 
-    public Menu(int msg_num, String menu, int res) {
+    public MainPopupMenu(int msg_num, String menu, int res) {
         this.msg_num = msg_num;
         this.menu = menu;
         this.res = res;

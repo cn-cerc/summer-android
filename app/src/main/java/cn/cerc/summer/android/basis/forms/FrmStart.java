@@ -30,7 +30,7 @@ import org.json.JSONObject;
 import java.util.List;
 
 import cn.cerc.summer.android.basis.core.MyApp;
-import cn.cerc.summer.android.basis.utils.Config;
+import cn.cerc.summer.android.basis.core.WebConfig;
 import cn.cerc.summer.android.basis.utils.ConfigFileLoadCallback;
 import cn.cerc.summer.android.basis.utils.RequestCallback;
 import cn.cerc.summer.android.basis.core.Constans;
@@ -45,7 +45,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
     /**
      * 线上的配置参数
      */
-    public Config config;
+    public WebConfig webConfig;
     private ImageView imageview;
     private GifView load_gif;
     private String homeurl;
@@ -123,11 +123,11 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
      */
     public void skip() {
         if (settings.getBoolean(Constans.IS_FIRST_SHAREDKEY, true)) {
-            if (config != null && config.getWelcomeImages() != null && config.getWelcomeImages().size() > 0) {
+            if (webConfig != null && webConfig.getWelcomeImages() != null && webConfig.getWelcomeImages().size() > 0) {
                 startActivity(new Intent(this, FrmWelcome.class));
             }
         } else {
-            if (config != null && config.getAdImages() != null && config.getAdImages().size() > 0) {
+            if (webConfig != null && webConfig.getAdImages() != null && webConfig.getAdImages().size() > 0) {
                 startActivity(new Intent(this, FrmAD.class));
             }
         }
@@ -136,10 +136,10 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
 
     @Override
     public void success(String url, JSONObject json) {
-        config = JSON.parseObject(json.toString(), Config.class);
+        webConfig = JSON.parseObject(json.toString(), WebConfig.class);
         homeurl = MyApp.buildDeviceUrl(MyApp.HOME_URL);
-        String msgurl = config.getRootSite() + "/" + config.getMsgManage();
-        settings.edit().putString(Constans.HOME, homeurl).putString(Constans.SHARED_MSG_URL, msgurl).putString(Constans.SHARED_START_URL, config.getStartImage()).commit();
+        String msgurl = webConfig.getRootSite() + "/" + webConfig.getMsgManage();
+        settings.edit().putString(Constans.HOME, homeurl).putString(Constans.SHARED_MSG_URL, msgurl).putString(Constans.SHARED_START_URL, webConfig.getStartImage()).commit();
 
         FrmMain.getInstance().Update();
 
@@ -148,7 +148,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
             imageview.setVisibility(View.VISIBLE);
             imageview.setImageResource(R.mipmap.init_bg);
         }
-        List<String> list = config.getCacheFiles();
+        List<String> list = webConfig.getCacheFiles();
         if (list != null && list.size() > 0) {
             XHttpRequest.getInstance().ConfigFileGet(list, FrmStart.this);
         } else {
@@ -164,7 +164,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
     }
 
     public void prestrainImage() {
-        ImageLoader.getInstance().loadImage(config.getWelcomeImages().get(0), MyApp.getInstance().getImageOptions(), new ImageLoadingListener() {
+        ImageLoader.getInstance().loadImage(webConfig.getWelcomeImages().get(0), MyApp.getInstance().getImageOptions(), new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
             }
@@ -208,7 +208,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
 
     @Override
     public void loadAllfinish() {
-        MyApp.saveCacheList(config);
+        MyApp.saveCacheList(webConfig);
     }
 
 }

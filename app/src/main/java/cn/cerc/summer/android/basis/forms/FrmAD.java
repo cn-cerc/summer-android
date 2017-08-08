@@ -19,7 +19,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.cerc.summer.android.basis.utils.Config;
+import cn.cerc.summer.android.basis.core.WebConfig;
 import cn.cerc.summer.android.basis.core.MyApp;
 
 public class FrmAD extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
@@ -60,7 +60,7 @@ public class FrmAD extends AppCompatActivity implements View.OnClickListener, Vi
             }
         });
 
-        list = Config.getConfig().getAdImages();
+        list = WebConfig.getConfig().getAdImages();
 
         imageview = new ArrayList<ImageView>();
         for (int i = 0; i < list.size(); i++) {

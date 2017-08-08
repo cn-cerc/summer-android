@@ -13,7 +13,7 @@ import com.mimrc.vine.R;
 
 import java.util.List;
 
-import cn.cerc.summer.android.basis.utils.Menu;
+import cn.cerc.summer.android.basis.core.MainPopupMenu;
 import cn.cerc.summer.android.basis.core.ScreenUtils;
 
 /**
@@ -24,7 +24,7 @@ public class ShowPopupWindow {
 
     private static ShowPopupWindow popupWindow;
     private View popupView;
-    private List<Menu> menulist;
+    private List<MainPopupMenu> menulist;
     private BaseAdapter baseAdapter = new BaseAdapter() {
         @Override
         public int getCount() {
@@ -79,7 +79,7 @@ public class ShowPopupWindow {
         return popupWindow = new ShowPopupWindow();
     }
 
-    public ListPopupWindow show(Context context, List<Menu> menulist) {
+    public ListPopupWindow show(Context context, List<MainPopupMenu> menulist) {
         this.menulist = menulist;
         if (menulist.size() <= 0)
             throw new IllegalArgumentException("menulist.size()为0,请先初始化menulist");

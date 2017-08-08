@@ -123,7 +123,7 @@
         <!-- Required. AppKey copied from Portal -->
         <!-- User defined. 用户自定义的广播接收器 -->
         <receiver
-            android:name="cn.cerc.summer.android.basis.utils.MyBroadcastReceiver"
+            android:name="cn.cerc.summer.android.basis.core.MyBroadcastReceiver"
             android:enabled="true">
             <intent-filter>
 

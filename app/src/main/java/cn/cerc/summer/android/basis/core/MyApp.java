@@ -28,7 +28,6 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
-import cn.cerc.summer.android.basis.utils.Config;
 import cn.jpush.android.api.JPushInterface;
 
 /**
@@ -86,7 +85,7 @@ public class MyApp extends android.app.Application {
         config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
         config.diskCacheSize(200 * 1024 * 1024); // 100 MiB
         config.tasksProcessingOrder(QueueProcessingType.LIFO);
-        // config.writeDebugLogs(); // Remove for release app
+        // webConfig.writeDebugLogs(); // Remove for release app
         ImageLoader.getInstance().init(config.build());
 
     }
@@ -132,11 +131,11 @@ public class MyApp extends android.app.Application {
     /**
      * 储存缓存配置列表
      *
-     * @param config 配置文件类
+     * @param webConfig 配置文件类
      */
-    public static void saveCacheList(Config config) {
+    public static void saveCacheList(WebConfig webConfig) {
         Map<String, String> map = new HashMap<String, String>();
-        for (String str : config.getCacheFiles()) {
+        for (String str : webConfig.getCacheFiles()) {
             String[] args = str.split(",");
             map.put(args[0], args.length == 2 ? args[1] : "0");
         }

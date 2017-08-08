@@ -1,4 +1,4 @@
-package cn.cerc.summer.android.basis.utils;
+package cn.cerc.summer.android.basis.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,8 +9,8 @@ import java.util.List;
  * Created by fff on 2016/12/1.
  */
 
-public class Config {
-    private static Config conf;
+public class WebConfig {
+    private static WebConfig conf;
     private String rootSite;
     private String webVersion;
     private String appVersion;
@@ -26,11 +26,11 @@ public class Config {
     private String msgManage;
     private boolean debug;
 
-    public Config() {
+    public WebConfig() {
         conf = this;
     }
 
-    public static Config getConfig() {
+    public static WebConfig getConfig() {
         return conf;
     }
 
