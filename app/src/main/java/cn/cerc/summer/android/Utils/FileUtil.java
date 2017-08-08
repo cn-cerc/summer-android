@@ -18,7 +18,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import cn.cerc.summer.android.MyApplication;
+import cn.cerc.summer.android.Application;
 
 /**
  * 文件工具类
@@ -123,7 +123,7 @@ public class FileUtil {
      */
     public static boolean isFileExist(String fileName, String type) {
         if (isExternalStorageWritable()) {
-            File dir = MyApplication.getInstance().getExternalFilesDir(type);
+            File dir = Application.getInstance().getExternalFilesDir(type);
             if (dir != null) {
                 File f = new File(dir, fileName);
                 return f.exists();
@@ -141,7 +141,7 @@ public class FileUtil {
      */
     public static File createFile(byte[] data, String fileName, String type) {
         if (isExternalStorageWritable()) {
-            File dir = MyApplication.getInstance().getExternalFilesDir(type);
+            File dir = Application.getInstance().getExternalFilesDir(type);
             if (dir != null) {
                 File f = new File(dir, fileName);
                 try {

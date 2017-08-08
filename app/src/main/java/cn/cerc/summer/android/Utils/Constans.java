@@ -2,7 +2,7 @@ package cn.cerc.summer.android.Utils;
 
 import java.io.File;
 
-import cn.cerc.summer.android.MyApplication;
+import cn.cerc.summer.android.Application;
 
 /**
  * Created by fff on 2016/11/11.
@@ -73,7 +73,7 @@ public class Constans {
     public static String SCALE_SHAREDKEY = "InitialScale";
 
     public static String getAppPath(String Dir) {
-        File file = MyApplication.getInstance().getExternalFilesDir(Dir);
+        File file = Application.getInstance().getExternalFilesDir(Dir);
         if (!file.exists()) file.mkdirs();
         return file.getAbsolutePath();
     }

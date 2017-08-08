@@ -1,6 +1,5 @@
 package cn.cerc.summer.android;
 
-import android.app.Application;
 import android.graphics.Bitmap;
 
 import com.mimrc.vine.R;
@@ -20,13 +19,14 @@ import cn.jpush.android.api.JPushInterface;
  * Created by huagu on 2016/11/2.
  */
 
-public class MyApplication extends Application {
+public class Application extends android.app.Application {
+    public static String HOME_URL = "https://m.knowall.cn";
 
-    private static MyApplication instance;
-    //    public ImageOptions imageOptions;
-    public DisplayImageOptions options;
+    private static Application instance;
 
-    public static MyApplication getInstance() {
+    private DisplayImageOptions options;
+
+    public static Application getInstance() {
         return instance;
     }
 
@@ -39,7 +39,8 @@ public class MyApplication extends Application {
         x.Ext.init(this);//xutils 初始化
         x.Ext.setDebug(true);//设置为debug
 
-        InitImageLoader();
+        initImageLoader();
+
         options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.mipmap.start) // 设置图片下载期间显示的图片
                 .showImageForEmptyUri(R.mipmap.error) // 设置图片Uri为空或是错误的时候显示的图片
@@ -54,14 +55,12 @@ public class MyApplication extends Application {
 
         JPushInterface.init(this);
         JPushInterface.setDebugMode(true);
-
     }
 
     /**
      * ImageLoader 初始化
      */
-    private void InitImageLoader() {
-
+    private void initImageLoader() {
         ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(this);
         config.threadPriority(Thread.NORM_PRIORITY - 2);
         config.denyCacheImageMultipleSizesInMemory();
@@ -74,4 +73,7 @@ public class MyApplication extends Application {
 
     }
 
+    public DisplayImageOptions getImageOptions() {
+        return options;
+    }
 }
