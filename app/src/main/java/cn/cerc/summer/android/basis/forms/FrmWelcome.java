@@ -23,16 +23,13 @@ import cn.cerc.summer.android.basis.core.MyApp;
 import cn.cerc.summer.android.basis.core.WebConfig;
 
 public class FrmWelcome extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
-
-    private ViewPager viewpager;
-    private LinearLayout contan;
-    private TextView skip;
+    private ViewPager viewPager;
+    private LinearLayout boxContan;
+    private TextView lblSkip;
     private boolean is_skip;//是否跳转
     private Animation animation;//渐变动画
-
-    private List<ImageView> imageview;
-
-    private List<String> list;
+    private List<ImageView> imageViewList;
+    private List<String> imageUrlList;
 
     @Override
     public void onBackPressed() {
@@ -48,25 +45,25 @@ public class FrmWelcome extends AppCompatActivity implements View.OnClickListene
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_start);
 
-        viewpager = (ViewPager) this.findViewById(R.id.viewpager);
-        viewpager.setOffscreenPageLimit(2);
-        contan = (LinearLayout) this.findViewById(R.id.contan);
-        skip = (TextView) this.findViewById(R.id.skip);
-        skip.setOnClickListener(new View.OnClickListener() {
+        viewPager = (ViewPager) this.findViewById(R.id.viewpager);
+        viewPager.setOffscreenPageLimit(2);
+        boxContan = (LinearLayout) this.findViewById(R.id.contan);
+        lblSkip = (TextView) this.findViewById(R.id.skip);
+        lblSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        list = WebConfig.getInstance().getWelcomeImages();
+        imageUrlList = WebConfig.getInstance().getWelcomeImages();
 
-        imageview = new ArrayList<ImageView>();
-        for (int i = 0; i < list.size(); i++) {
+        imageViewList = new ArrayList<ImageView>();
+        for (int i = 0; i < imageUrlList.size(); i++) {
             ImageView imageView = new ImageView(this);
-            ImageLoader.getInstance().displayImage(list.get(i), imageView, MyApp.getInstance().getImageOptions());
+            ImageLoader.getInstance().displayImage(imageUrlList.get(i), imageView, MyApp.getInstance().getImageOptions());
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageview.add(imageView);
-            if (i == (list.size() - 1)) {
+            imageViewList.add(imageView);
+            if (i == (imageUrlList.size() - 1)) {
                 imageView.setOnClickListener(this);
             }
             View view = new View(this);
@@ -77,24 +74,24 @@ public class FrmWelcome extends AppCompatActivity implements View.OnClickListene
             llp.height = 15;
             llp.leftMargin = 20;
             llp.rightMargin = 20;
-            contan.addView(view, llp);
+            boxContan.addView(view, llp);
         }
 
-        viewpager.setAdapter(new PagerAdapter() {
+        viewPager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
-                return imageview.size();
+                return imageViewList.size();
             }
 
             @Override
             public Object instantiateItem(ViewGroup container, int position) {
-                container.addView(imageview.get(position));
-                return imageview.get(position);
+                container.addView(imageViewList.get(position));
+                return imageViewList.get(position);
             }
 
             @Override
             public void destroyItem(ViewGroup container, int position, Object object) {
-                container.removeView(imageview.get(position));
+                container.removeView(imageViewList.get(position));
             }
 
             @Override
@@ -103,7 +100,7 @@ public class FrmWelcome extends AppCompatActivity implements View.OnClickListene
             }
         });
 
-        viewpager.addOnPageChangeListener(this);
+        viewPager.addOnPageChangeListener(this);
     }
 
     @Override
@@ -117,12 +114,12 @@ public class FrmWelcome extends AppCompatActivity implements View.OnClickListene
 
     @Override
     public void onPageSelected(int position) {
-        for (int i = 0; i < contan.getChildCount(); i++) {
-            if (position == i) contan.getChildAt(i).setBackgroundResource(R.drawable.point_white);
-            else contan.getChildAt(i).setBackgroundResource(R.drawable.point_color);
+        for (int i = 0; i < boxContan.getChildCount(); i++) {
+            if (position == i) boxContan.getChildAt(i).setBackgroundResource(R.drawable.point_white);
+            else boxContan.getChildAt(i).setBackgroundResource(R.drawable.point_color);
         }
-        if (position == (imageview.size() - 1)) skip.setVisibility(View.VISIBLE);
-        else skip.setVisibility(View.INVISIBLE);
+        if (position == (imageViewList.size() - 1)) lblSkip.setVisibility(View.VISIBLE);
+        else lblSkip.setVisibility(View.INVISIBLE);
     }
 
     @Override

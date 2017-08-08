@@ -56,7 +56,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
             if (resp.errCode == 0) str = "success";
             else if (resp.errCode == -2) str = "用户取消";
             else str = "failed";
-            FrmMain.getInstance().browser.loadUrl("javascript:ReturnForApp('" + str + "')");
+            FrmMain.getInstance().getBrowser().loadUrl("javascript:ReturnForApp('" + str + "')");
             WXPayEntryActivity.this.finish();
         }
 

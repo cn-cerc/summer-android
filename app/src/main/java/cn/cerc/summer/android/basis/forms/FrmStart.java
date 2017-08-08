@@ -39,13 +39,9 @@ import cn.cerc.summer.android.basis.core.ScreenUtils;
 import cn.cerc.summer.android.basis.core.XHttpRequest;
 
 public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, RequestCallback, ConfigFileLoadCallback {
-
     private SharedPreferences settings;
     private static FrmStart instance;
-    /**
-     * 线上的配置参数
-     */
-    private WebConfig webConfig;
+    private WebConfig webConfig; //线上的配置参数
     private ImageView imageview;
     private GifView load_gif;
     private String homeurl;

@@ -66,20 +66,21 @@ import cn.jpush.android.api.TagAliasCallback;
  * 主界面
  */
 public class FrmMain extends AppCompatActivity implements View.OnLongClickListener, View.OnClickListener {
-    private SharedPreferences settings;
-
     public static final String NETWORK_CHANGE = "android.net.conn.NETWORK_CHANGE";
     public static final String APP_UPDATA = "com.mimrc.vine.APP_UPDATA";
     public static final String JSON_ERROR = "com.mimrc.vine.JSON_ERROR";
     public final static int FILECHOOSER_RESULTCODE = 41;
     public final static int FILECHOOSER_RESULTCODE_FOR_ANDROID_5 = 42;
-    private static FrmMain instance;
+
     private final int REQUEST_SETTING = 101;
-    public BrowserView browser;
-    public String homeUrl;//默认打开页
-    public boolean islogin = false;
-    public ValueCallback<Uri> mUploadMessage;
-    public ValueCallback<Uri[]> mUploadMessageForAndroid5;
+    private static FrmMain instance;
+
+    private SharedPreferences settings;
+    private BrowserView browser; //浏览器
+    private String homeUrl;//Web系统首页
+    private boolean islogin = false;
+    private ValueCallback<Uri> mUploadMessage;
+    private ValueCallback<Uri[]> mUploadMessageForAndroid5;
     private ProgressBar progress;
     private DragPointView dragpointview;
     private ImageView tipsImage;
@@ -92,7 +93,10 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private String[] menus;//菜单
     private int[] menu_img = new int[]{R.mipmap.message, R.mipmap.msg_manager, R.mipmap.home, R.mipmap.setting, R.mipmap.wipe, R.mipmap.logout, R.mipmap.reload};
     private List<MainPopupMenu> menuList;
-    private ListPopupWindow lpw;//列表弹框
+    private ListPopupWindow popupWindow;//列表弹框
+
+    public BrowserView getBrowser(){return browser;};
+
     /**
      * 推送消息的消息id， 点击通知栏打开
      */
@@ -389,8 +393,8 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             menuList.add(mainPopupMenu);
         }
 
-        lpw = ShowPopupWindow.getPopupwindow().show(this, menuList);
-        lpw.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        popupWindow = ShowPopupWindow.getPopupwindow().show(this, menuList);
+        popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
@@ -423,11 +427,11 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                         browser.reload();
                         break;
                 }
-                lpw.dismiss();
+                popupWindow.dismiss();
             }
         });
-        lpw.setAnchorView(view);
-        lpw.show();
+        popupWindow.setAnchorView(view);
+        popupWindow.show();
     }
 
     @Override
