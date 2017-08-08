@@ -23,7 +23,7 @@ import java.io.IOException;
  */
 public class FileUtils {
 
-    private static final String TAG = "FileUtils";
+    private static final String LOG_TAG = "FileUtils";
     private static String pathDiv = "/";
     private static File cacheDir = new File(Constans.getAppPath(Constans.CONFIG_PATH));
 
@@ -80,7 +80,7 @@ public class FileUtils {
                 fos.close();
             }
         } catch (IOException e) {
-            Log.e(TAG, "create bitmap file error" + e);
+            Log.e(LOG_TAG, "create bitmap file error" + e);
         }
         if (f.exists()) {
             return f.getAbsolutePath();
@@ -101,7 +101,7 @@ public class FileUtils {
             fos.flush();
             fos.close();
         } catch (IOException e) {
-            Log.e(TAG, "create file error" + e);
+            Log.e(LOG_TAG, "create file error" + e);
         }
     }
 
@@ -151,7 +151,7 @@ public class FileUtils {
                         return f;
                     }
                 } catch (IOException e) {
-                    Log.e(TAG, "create file error" + e);
+                    Log.e(LOG_TAG, "create file error" + e);
                     return null;
                 }
             }
@@ -311,7 +311,7 @@ public class FileUtils {
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             return true;
         }
-        Log.e(TAG, "ExternalStorage not mounted");
+        Log.e(LOG_TAG, "ExternalStorage not mounted");
         return false;
     }
 
