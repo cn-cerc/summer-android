@@ -45,7 +45,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
     /**
      * 线上的配置参数
      */
-    public WebConfig webConfig;
+    private WebConfig webConfig;
     private ImageView imageview;
     private GifView load_gif;
     private String homeurl;
@@ -137,6 +137,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
     @Override
     public void success(String url, JSONObject json) {
         webConfig = JSON.parseObject(json.toString(), WebConfig.class);
+
         homeurl = MyApp.buildDeviceUrl(MyApp.HOME_URL);
         String msgurl = webConfig.getRootSite() + "/" + webConfig.getMsgManage();
         settings.edit().putString(Constans.HOME, homeurl).putString(Constans.SHARED_MSG_URL, msgurl).putString(Constans.SHARED_START_URL, webConfig.getStartImage()).commit();
