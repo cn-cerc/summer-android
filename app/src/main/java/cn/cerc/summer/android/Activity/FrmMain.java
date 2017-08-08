@@ -57,7 +57,7 @@ import cn.cerc.summer.android.Utils.Constans;
 import cn.cerc.summer.android.Utils.PermissionUtils;
 import cn.cerc.summer.android.Utils.ScreenUtils;
 import cn.cerc.summer.android.View.DragPointView;
-import cn.cerc.summer.android.View.MyWebView;
+import cn.cerc.summer.android.View.BrowserView;
 import cn.cerc.summer.android.View.ShowDialog;
 import cn.cerc.summer.android.View.ShowPopupWindow;
 import cn.jpush.android.api.JPushInterface;
@@ -76,7 +76,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     public final static int FILECHOOSER_RESULTCODE_FOR_ANDROID_5 = 42;
     private static FrmMain mainactivity;
     private final int REQUEST_SETTING = 101;
-    public MyWebView webview;
+    public BrowserView webview;
     public String homeurl;//默认打开页
     public boolean islogin = false;
     public ValueCallback<Uri> mUploadMessage;
@@ -266,7 +266,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         progress = (ProgressBar) this.findViewById(R.id.progress);
         image_tips = (ImageView) this.findViewById(R.id.image_tips);
 
-        webview = (MyWebView) this.findViewById(R.id.webview);
+        webview = (BrowserView) this.findViewById(R.id.webview);
 
         webview.getSettings().setTextZoom(settingShared.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this, ScreenUtils.getInches(this))));
 

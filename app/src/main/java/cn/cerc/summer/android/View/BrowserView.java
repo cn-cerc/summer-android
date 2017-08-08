@@ -15,25 +15,25 @@ import java.io.InputStream;
 
 import cn.cerc.summer.android.Utils.Constans;
 
-public class MyWebView extends WebView {
+public class BrowserView extends WebView {
 
-    public MyWebView(Context context) {
+    public BrowserView(Context context) {
         super(context);
         init(context);
     }
 
-    public MyWebView(Context context, AttributeSet attrs) {
+    public BrowserView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public MyWebView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BrowserView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public MyWebView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public BrowserView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
     }
