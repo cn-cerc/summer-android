@@ -12,6 +12,7 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import java.util.Map;
 
+import cn.cerc.summer.android.basis.core.PermissionUtils;
 import cn.cerc.summer.android.basis.forms.FrmMain;
 import cn.cerc.summer.android.basis.core.MyApp;
 
@@ -102,6 +103,16 @@ public class JavaScriptProxy extends Object {
         if (owner instanceof FrmMain) {
             FrmMain aintf = (FrmMain) owner;
             aintf.LoginOrLogout(false, "");
+        }
+    }
+
+    @JavascriptInterface
+    public String send(String cmd, String dataIn) {
+        if (cmd.equals("getClientId")) {
+            String json = String.format("{\"result\":\"true\", \"message\": \"%s\"}", PermissionUtils.IMEI);
+            return json;
+        } else {
+            return null;
         }
     }
 
