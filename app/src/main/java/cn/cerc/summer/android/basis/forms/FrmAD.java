@@ -60,7 +60,7 @@ public class FrmAD extends AppCompatActivity implements View.OnClickListener, Vi
             }
         });
 
-        list = WebConfig.getConfig().getAdImages();
+        list = WebConfig.getInstance().getAdImages();
 
         imageview = new ArrayList<ImageView>();
         for (int i = 0; i < list.size(); i++) {

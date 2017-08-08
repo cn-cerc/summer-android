@@ -58,7 +58,7 @@ public class FrmWelcome extends AppCompatActivity implements View.OnClickListene
                 finish();
             }
         });
-        list = WebConfig.getConfig().getWelcomeImages();
+        list = WebConfig.getInstance().getWelcomeImages();
 
         imageview = new ArrayList<ImageView>();
         for (int i = 0; i < list.size(); i++) {

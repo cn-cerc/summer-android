@@ -366,7 +366,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
     public void Update() {
         try {//检查是否需要更新
-            if (!MyApp.getVersionName(this).equals(WebConfig.getConfig().getAppVersion())) {
+            if (!MyApp.getVersionName(this).equals(WebConfig.getInstance().getAppVersion())) {
                 ShowDialog.getDialog(this).UpDateDialogShow();
             }
         } catch (PackageManager.NameNotFoundException e) {
@@ -586,13 +586,13 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             if (!MyApp.getNetworkState(view.getContext())) return;
             Log.e("cururl", url);
             is_ERROR = false;
-            if (WebConfig.getConfig() == null) return;
+            if (WebConfig.getInstance() == null) return;
             is_exit = false;
             isGoHome = false;
-            for (int i = 0; i < WebConfig.getConfig().getHomePagers().size(); i++) {
-                if (url.contains(WebConfig.getConfig().getHomePagers().get(i).getHomeurl())) {
+            for (int i = 0; i < WebConfig.getInstance().getHomePagers().size(); i++) {
+                if (url.contains(WebConfig.getInstance().getHomePagers().get(i).getHomeurl())) {
                     isGoHome = true;
-                    is_exit = WebConfig.getConfig().getHomePagers().get(i).is_home();
+                    is_exit = WebConfig.getInstance().getHomePagers().get(i).is_home();
                 }
             }
             progress.setVisibility(View.VISIBLE);

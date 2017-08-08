@@ -10,7 +10,7 @@ import java.util.List;
  */
 
 public class WebConfig {
-    private static WebConfig conf;
+    private static WebConfig instance;
     private String rootSite;
     private String webVersion;
     private String appVersion;
@@ -27,11 +27,11 @@ public class WebConfig {
     private boolean debug;
 
     public WebConfig() {
-        conf = this;
+        instance = this;
     }
 
-    public static WebConfig getConfig() {
-        return conf;
+    public static WebConfig getInstance() {
+        return instance;
     }
 
     public List<String> getCacheFiles() {

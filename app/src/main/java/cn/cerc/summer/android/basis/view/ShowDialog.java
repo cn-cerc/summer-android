@@ -69,7 +69,7 @@ public class ShowDialog extends AlertDialog.Builder implements DialogInterface.O
         setPositiveButton("更新", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                c_cancel = XHttpRequest.getInstance().GETFile(WebConfig.getConfig().getAppUpgrade(), ShowDialog.this);
+                c_cancel = XHttpRequest.getInstance().GETFile(WebConfig.getInstance().getAppUpgrade(), ShowDialog.this);
             }
         });
         setNegativeButton("下次再说", new DialogInterface.OnClickListener() {

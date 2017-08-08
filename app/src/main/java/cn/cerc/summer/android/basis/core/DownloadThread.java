@@ -55,7 +55,7 @@ public class DownloadThread extends Thread {
             return;
         }
 
-        String urls = WebConfig.getConfig().getRootSite() + remote;
+        String urls = WebConfig.getInstance().getRootSite() + remote;
         Log.e("url", urls);
         RequestParams rp = new RequestParams(urls);
         rp.setSaveFilePath(savepath);

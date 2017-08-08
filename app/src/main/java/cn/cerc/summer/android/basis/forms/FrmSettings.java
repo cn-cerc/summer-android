@@ -60,7 +60,7 @@ public class FrmSettings extends AppCompatActivity implements SeekBar.OnSeekBarC
 
         lin_cun = (LinearLayout) this.findViewById(R.id.lin_cun);
 
-        if (!WebConfig.getConfig().isDebug()) {
+        if (!WebConfig.getInstance().isDebug()) {
             url_tit.setVisibility(View.GONE);
             edittext.setVisibility(View.GONE);
 //            lin_cun.setVisibility(View.GONE);
