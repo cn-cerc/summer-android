@@ -38,9 +38,9 @@ import cn.cerc.summer.android.Utils.PermissionUtils;
 import cn.cerc.summer.android.Utils.ScreenUtils;
 import cn.cerc.summer.android.Utils.XHttpRequest;
 
-public class StartActivity extends BaseActivity implements ActivityCompat.OnRequestPermissionsResultCallback, RequestCallback, ConfigFileLoafCallback {
+public class FrmStart extends BaseForm implements ActivityCompat.OnRequestPermissionsResultCallback, RequestCallback, ConfigFileLoafCallback {
 
-    private static StartActivity ga;
+    private static FrmStart ga;
     /**
      * 线上的配置参数
      */
@@ -49,7 +49,7 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
     private GifView load_gif;
     private String homeurl;
 
-    public static StartActivity getInstance() {
+    public static FrmStart getInstance() {
         return ga;
     }
 
@@ -120,14 +120,14 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
     public void skip() {
         if (settingShared.getBoolean(Constans.IS_FIRST_SHAREDKEY, true)) {
             if (config != null && config.getWelcomeImages() != null && config.getWelcomeImages().size() > 0) {
-                startActivity(new Intent(this, GuidanceActivity.class));
+                startActivity(new Intent(this, FrmGuidance.class));
             }
         } else {
             if (config != null && config.getAdImages() != null && config.getAdImages().size() > 0) {
-                startActivity(new Intent(this, AdActivity.class));
+                startActivity(new Intent(this, FrmAD.class));
             }
         }
-        StartActivity.getInstance().finish();
+        FrmStart.getInstance().finish();
     }
 
     @Override
@@ -146,7 +146,7 @@ public class StartActivity extends BaseActivity implements ActivityCompat.OnRequ
         }
         List<String> list = config.getCacheFiles();
         if (list != null && list.size() > 0) {
-            XHttpRequest.getInstance().ConfigFileGet(list, StartActivity.this);
+            XHttpRequest.getInstance().ConfigFileGet(list, FrmStart.this);
         } else {
             new Handler().postDelayed(new Runnable() {
                 @Override

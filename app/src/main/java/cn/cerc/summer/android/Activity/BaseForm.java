@@ -11,7 +11,7 @@ import cn.cerc.summer.android.Utils.Constans;
  * Created by huagu on 2016/11/2.
  */
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseForm extends AppCompatActivity {
 
     protected SharedPreferences settingShared;
 

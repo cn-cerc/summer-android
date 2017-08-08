@@ -21,7 +21,7 @@ import java.util.List;
 import cn.cerc.summer.android.Entity.Config;
 import cn.cerc.summer.android.MyApplication;
 
-public class AdActivity extends BaseActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
+public class FrmGuidance extends BaseForm implements View.OnClickListener, ViewPager.OnPageChangeListener {
 
     private ViewPager viewpager;
     private LinearLayout contan;
@@ -45,21 +45,19 @@ public class AdActivity extends BaseActivity implements View.OnClickListener, Vi
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_ad);
+        setContentView(R.layout.activity_start);
 
         viewpager = (ViewPager) this.findViewById(R.id.viewpager);
         viewpager.setOffscreenPageLimit(2);
         contan = (LinearLayout) this.findViewById(R.id.contan);
         skip = (TextView) this.findViewById(R.id.skip);
-
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-
-        list = Config.getConfig().getAdImages();
+        list = Config.getConfig().getWelcomeImages();
 
         imageview = new ArrayList<ImageView>();
         for (int i = 0; i < list.size(); i++) {
@@ -67,13 +65,12 @@ public class AdActivity extends BaseActivity implements View.OnClickListener, Vi
             ImageLoader.getInstance().displayImage(list.get(i), imageView, MyApplication.getInstance().options);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageview.add(imageView);
-            if (i == (list.size() - 1))
+            if (i == (list.size() - 1)) {
                 imageView.setOnClickListener(this);
-
+            }
             View view = new View(this);
             view.setBackgroundResource(R.drawable.point_white);
-            if (i == 0)
-                view.setBackgroundResource(R.drawable.point_color);
+            if (i == 0) view.setBackgroundResource(R.drawable.point_color);
             LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             llp.width = 15;
             llp.height = 15;
@@ -123,6 +120,8 @@ public class AdActivity extends BaseActivity implements View.OnClickListener, Vi
             if (position == i) contan.getChildAt(i).setBackgroundResource(R.drawable.point_white);
             else contan.getChildAt(i).setBackgroundResource(R.drawable.point_color);
         }
+        if (position == (imageview.size() - 1)) skip.setVisibility(View.VISIBLE);
+        else skip.setVisibility(View.INVISIBLE);
     }
 
     @Override

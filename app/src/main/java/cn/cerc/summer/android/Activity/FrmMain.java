@@ -64,7 +64,7 @@ import cn.jpush.android.api.TagAliasCallback;
 /**
  * 主界面
  */
-public class FrmMain extends BaseActivity implements View.OnLongClickListener, View.OnClickListener, JSInterfaceLintener {
+public class FrmMain extends BaseForm implements View.OnLongClickListener, View.OnClickListener, JSInterfaceLintener {
 
     public static final String NETWORK_CHANGE = "android.net.conn.NETWORK_CHANGE";
     public static final String APP_UPDATA = "com.mimrc.vine.APP_UPDATA";
@@ -178,7 +178,7 @@ public class FrmMain extends BaseActivity implements View.OnLongClickListener, V
         initbro();
         InitView();
 
-        startActivity(new Intent(this, StartActivity.class));
+        startActivity(new Intent(this, FrmStart.class));
 
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }

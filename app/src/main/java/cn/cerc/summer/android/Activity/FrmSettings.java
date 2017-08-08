@@ -20,7 +20,7 @@ import cn.cerc.summer.android.Utils.Constans;
 import cn.cerc.summer.android.Utils.ScreenUtils;
 import cn.cerc.summer.android.View.CustomSeekBar;
 
-public class FrmSettings extends BaseActivity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener {
+public class FrmSettings extends BaseForm implements SeekBar.OnSeekBarChangeListener, View.OnClickListener {
 
     private TextView url_tit, scale;
     private EditText edittext;
