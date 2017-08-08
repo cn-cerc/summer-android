@@ -1,4 +1,4 @@
-package cn.cerc.summer.android.Activity;
+package cn.cerc.summer.android.forms;
 
 import android.content.Intent;
 import android.os.Bundle;

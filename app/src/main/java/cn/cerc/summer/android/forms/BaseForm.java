@@ -1,4 +1,4 @@
-package cn.cerc.summer.android.Activity;
+package cn.cerc.summer.android.forms;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -20,7 +20,6 @@ public abstract class BaseForm extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         settingShared = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
-
     }
 
 }
