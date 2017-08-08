@@ -61,7 +61,7 @@
             android:name="android.webkit.WebView.MetricsOptOut"
             android:value="true"/>
         <activity
-            android:name="cn.cerc.summer.android.Activity.SettingActivity"
+            android:name="cn.cerc.summer.android.Activity.FrmSettings"
             android:screenOrientation="portrait"></activity>
 
         <!--JPush-->

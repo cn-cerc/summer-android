@@ -20,7 +20,7 @@ import cn.cerc.summer.android.Utils.Constans;
 import cn.cerc.summer.android.Utils.ScreenUtils;
 import cn.cerc.summer.android.View.CustomSeekBar;
 
-public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener {
+public class FrmSettings extends BaseActivity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener {
 
     private TextView url_tit, scale;
     private EditText edittext;
@@ -75,7 +75,7 @@ public class SettingActivity extends BaseActivity implements SeekBar.OnSeekBarCh
             @Override
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(edittext.getText().toString().trim()) && !edittext.getText().toString().trim().contains("http"))
-                    Toast.makeText(SettingActivity.this, R.string.no_http_tips, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FrmSettings.this, R.string.no_http_tips, Toast.LENGTH_SHORT).show();
                 else
                     settingShared.edit().putString(Constans.HOME, edittext.getText().toString().trim()).commit();
                 if (scales == 0)

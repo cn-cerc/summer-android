@@ -400,7 +400,7 @@ public class MainActivity extends BaseActivity implements View.OnLongClickListen
                         webview.loadUrl(homeurl);
                         break;
                     case 3:
-                        startActivityForResult(new Intent(MainActivity.this, SettingActivity.class).putExtra("address", webview.getUrl()), REQUEST_SETTING);
+                        startActivityForResult(new Intent(MainActivity.this, FrmSettings.class).putExtra("address", webview.getUrl()), REQUEST_SETTING);
                         break;
                     case 4:
                         clearCacheFolder(MainActivity.this.getCacheDir(), System.currentTimeMillis());
