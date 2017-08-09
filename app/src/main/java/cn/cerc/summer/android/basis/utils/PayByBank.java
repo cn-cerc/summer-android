@@ -8,7 +8,7 @@ import cn.cerc.summer.android.basis.forms.JavaScriptService;
  * Created by Jason<sz9214e@qq.com> on 2017/8/9.
  */
 
-public class GetTokenByWeibo implements JavaScriptService {
+public class PayByBank implements JavaScriptService {
     @Override
     public void execute(Context context, String dataIn) {
         //TODO: 此功能还未准备好

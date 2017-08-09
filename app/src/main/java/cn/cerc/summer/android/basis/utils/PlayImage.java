@@ -9,7 +9,7 @@ import cn.cerc.summer.android.parts.image.FrmZoomImage;
  * Created by Jason<sz9214e@qq.com> on 2017/8/9.
  */
 
-public class ZoomImage implements JavaScriptService {
+public class PlayImage implements JavaScriptService {
     @Override
     public void execute(Context context, String dataIn) {
         //TODO: 此功能还未准备好

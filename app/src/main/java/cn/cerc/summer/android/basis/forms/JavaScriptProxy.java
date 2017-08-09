@@ -17,10 +17,22 @@ import cn.cerc.summer.android.basis.core.MyApp;
 import cn.cerc.summer.android.basis.utils.CallTel;
 import cn.cerc.summer.android.basis.utils.CaptureImage;
 import cn.cerc.summer.android.basis.utils.CaptureMovie;
+import cn.cerc.summer.android.basis.utils.GetClientGPS;
 import cn.cerc.summer.android.basis.utils.GetClientId;
+import cn.cerc.summer.android.basis.utils.GetClientVersion;
+import cn.cerc.summer.android.basis.utils.GetTokenByAlipay;
+import cn.cerc.summer.android.basis.utils.GetTokenByQQ;
+import cn.cerc.summer.android.basis.utils.GetTokenByWeibo;
+import cn.cerc.summer.android.basis.utils.GetTokenByWeixin;
+import cn.cerc.summer.android.basis.utils.PayByAlipay;
+import cn.cerc.summer.android.basis.utils.PayByBank;
+import cn.cerc.summer.android.basis.utils.PayByWeixin;
 import cn.cerc.summer.android.basis.utils.PlayMovie;
+import cn.cerc.summer.android.basis.utils.PlayMusic;
 import cn.cerc.summer.android.basis.utils.ScanBarcode;
-import cn.cerc.summer.android.basis.utils.ZoomImage;
+import cn.cerc.summer.android.basis.utils.ScanProduct;
+import cn.cerc.summer.android.basis.utils.PlayImage;
+import cn.cerc.summer.android.basis.utils.ShareToWeixin;
 
 /**
  * 供js调用的js
@@ -33,10 +45,28 @@ public class JavaScriptProxy extends Object {
         services.put(CallTel.class, "拔打指定的电话号码");
         services.put(CaptureImage.class, "拍照或选取本地图片，并上传到指定的位置");
         services.put(CaptureMovie.class, "录像或选择本地视频，并上传到指定的位置");
+        //
+        services.put(GetClientGPS.class, "取得当前的GPS地址");
         services.put(GetClientId.class, "取得当前设备ID");
+        services.put(GetClientVersion.class, "取得当前软件版本号");
+        //
+        services.put(GetTokenByAlipay.class, "使用支付宝帐号登录");
+        services.put(GetTokenByQQ.class, "使用QQ帐号登录");
+        services.put(GetTokenByWeibo.class, "使用微博帐号登录");
+        services.put(GetTokenByWeixin.class, "使用微信帐号登录");
+        //
+        services.put(PayByAlipay.class, "呼叫支付宝付款");
+        services.put(PayByBank.class, "呼叫银联付款");
+        services.put(PayByWeixin.class, "呼叫微信付款");
+        //
+        services.put(PlayImage.class, "取得网上图片文件并进行缩放");
         services.put(PlayMovie.class, "取得网上视频文件并进行播放");
+        services.put(PlayMusic.class, "取得网上音频文件并进行播放");
+        //
         services.put(ScanBarcode.class, "扫一扫功能，扫描成功后上传到指定网址");
-        services.put(ZoomImage.class, "取得网上图片文件并进行缩放");
+        services.put(ScanProduct.class, "批次扫描商品条码");
+        //
+        services.put(ShareToWeixin.class, "分享到微信");
     }
 
     private AppCompatActivity owner;
