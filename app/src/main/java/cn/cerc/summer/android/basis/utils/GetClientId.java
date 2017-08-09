@@ -11,12 +11,11 @@ import cn.cerc.summer.android.basis.core.PermissionUtils;
 public class GetClientId implements JavaScriptService {
 
     @Override
-    public void setContent(Context context, String dataIn) {
-
+    public void execute(Context context, String dataIn) {
     }
 
     @Override
-    public String getData(){
+    public String getDataOut() {
         return PermissionUtils.IMEI;
     }
 

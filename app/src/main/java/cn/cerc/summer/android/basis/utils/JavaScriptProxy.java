@@ -117,7 +117,7 @@ public class JavaScriptProxy extends Object {
     private Class getClazz(String classCode) {
         for (Class clazz : kinds.keySet()) {
             String args[] = clazz.getName().split("\\.");
-            String temp = args[args.length-1];
+            String temp = args[args.length - 1];
             if (temp.toUpperCase().equals(classCode.toUpperCase())) {
                 return clazz;
             }
@@ -147,8 +147,13 @@ public class JavaScriptProxy extends Object {
                 Object object = clazz.newInstance();
                 if (object instanceof JavaScriptService) {
                     JavaScriptService object1 = (JavaScriptService) object;
-                    json.setData(object1.getData());
-                    json.setResult(true);
+                    try {
+                        object1.execute(this.owner, dataIn);
+                        json.setData(object1.getData());
+                        json.setResult(true);
+                    } catch (Exception e) {
+                        json.setMessage(e.getMessage());
+                    }
                 } else {
                     json.setMessage("not support JavascriptInterface");
                 }

@@ -7,7 +7,7 @@ import android.content.Context;
  */
 
 public interface JavaScriptService {
-    public void setContent(Context context, String dataIn);
+    public void execute(Context context, String dataIn);
 
-    public String getData();
+    public String getDataOut();
 }
