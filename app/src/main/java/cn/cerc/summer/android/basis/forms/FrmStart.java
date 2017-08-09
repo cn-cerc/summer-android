@@ -31,8 +31,8 @@ import java.util.List;
 
 import cn.cerc.summer.android.basis.core.MyApp;
 import cn.cerc.summer.android.basis.core.WebConfig;
-import cn.cerc.summer.android.basis.utils.ConfigFileLoadCallback;
-import cn.cerc.summer.android.basis.utils.RequestCallback;
+import cn.cerc.summer.android.basis.core.ConfigFileLoadCallback;
+import cn.cerc.summer.android.basis.core.RequestCallback;
 import cn.cerc.summer.android.basis.core.Constans;
 import cn.cerc.summer.android.basis.core.PermissionUtils;
 import cn.cerc.summer.android.basis.core.ScreenUtils;

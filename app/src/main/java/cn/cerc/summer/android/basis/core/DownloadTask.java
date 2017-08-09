@@ -11,9 +11,6 @@ import org.xutils.x;
 import java.io.File;
 import java.util.List;
 
-import cn.cerc.summer.android.basis.utils.AsyncFileLoadCallback;
-import cn.cerc.summer.android.basis.utils.ConfigFileLoadCallback;
-
 /**
  * Created by fengm on 2016/12/23.
  */
