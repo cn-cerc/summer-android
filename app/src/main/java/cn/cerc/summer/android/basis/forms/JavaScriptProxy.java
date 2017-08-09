@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cn.cerc.summer.android.basis.core.MyApp;
+import cn.cerc.summer.android.basis.utils.CallLoginByAccount;
+import cn.cerc.summer.android.basis.utils.CallLoginByPhone;
 import cn.cerc.summer.android.basis.utils.CallTel;
 import cn.cerc.summer.android.basis.utils.CaptureImage;
 import cn.cerc.summer.android.basis.utils.CaptureMovie;
@@ -43,6 +45,9 @@ public class JavaScriptProxy extends Object {
 
     static {
         services.put(CallTel.class, "拔打指定的电话号码");
+        services.put(CallLoginByAccount.class, "使用标准的帐号、密码进行登录");
+        services.put(CallLoginByPhone.class, "使用手机号及验证码进行登录");
+        //
         services.put(CaptureImage.class, "拍照或选取本地图片，并上传到指定的位置");
         services.put(CaptureMovie.class, "录像或选择本地视频，并上传到指定的位置");
         //
