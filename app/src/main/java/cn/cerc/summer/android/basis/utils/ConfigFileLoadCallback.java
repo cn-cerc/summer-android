@@ -7,8 +7,8 @@ package cn.cerc.summer.android.basis.utils;
 
 public interface ConfigFileLoadCallback {
 
-    void loadfinish(int size);
+    void loadFinish(int size);
 
-    void loadAllfinish();
+    void loadAllFinish();
 
 }

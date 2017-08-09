@@ -38,7 +38,7 @@ public class DownloadThread extends Thread {
     public void loadnext() {
         loadindex++;
         if (loadindex < filelist.size()) fileLoad(filelist.get(loadindex));
-        else cflc.loadfinish(filelist.size());
+        else cflc.loadFinish(filelist.size());
     }
 
     /**
@@ -64,7 +64,7 @@ public class DownloadThread extends Thread {
             public void onSuccess(File result) {
                 loadindex++;
                 if (loadindex < filelist.size()) fileLoad(filelist.get(loadindex));
-                else cflc.loadfinish(filelist.size());
+                else cflc.loadFinish(filelist.size());
             }
 
             @Override
@@ -75,7 +75,7 @@ public class DownloadThread extends Thread {
                     error_num = 0;
                 }
                 if (loadindex < filelist.size()) fileLoad(filelist.get(loadindex));
-                else cflc.loadfinish(filelist.size());
+                else cflc.loadFinish(filelist.size());
             }
 
             @Override

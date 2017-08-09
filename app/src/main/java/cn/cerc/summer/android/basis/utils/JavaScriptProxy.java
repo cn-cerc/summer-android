@@ -33,8 +33,9 @@ public class JavaScriptProxy extends Object {
         this.owner = owner;
     }
 
+    @JavascriptInterface
     public String hello2Html() {
-        return "Hello Html";
+        return "Hello Browser, from android.";
     }
 
     /**

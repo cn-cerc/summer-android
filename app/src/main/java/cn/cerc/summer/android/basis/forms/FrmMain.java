@@ -66,33 +66,37 @@ import cn.jpush.android.api.TagAliasCallback;
  * 主界面
  */
 public class FrmMain extends AppCompatActivity implements View.OnLongClickListener, View.OnClickListener {
-    private SharedPreferences settings;
-
     public static final String NETWORK_CHANGE = "android.net.conn.NETWORK_CHANGE";
     public static final String APP_UPDATA = "com.mimrc.vine.APP_UPDATA";
     public static final String JSON_ERROR = "com.mimrc.vine.JSON_ERROR";
     public final static int FILECHOOSER_RESULTCODE = 41;
     public final static int FILECHOOSER_RESULTCODE_FOR_ANDROID_5 = 42;
-    private static FrmMain instance;
+
     private final int REQUEST_SETTING = 101;
-    public BrowserView webview;
-    public String homeurl;//默认打开页
-    public boolean islogin = false;
-    public ValueCallback<Uri> mUploadMessage;
-    public ValueCallback<Uri[]> mUploadMessageForAndroid5;
+    private static FrmMain instance;
+
+    private SharedPreferences settings;
+    private BrowserView browser; //浏览器
+    private String homeUrl;//Web系统首页
+    private boolean islogin = false;
+    private ValueCallback<Uri> mUploadMessage;
+    private ValueCallback<Uri[]> mUploadMessageForAndroid5;
     private ProgressBar progress;
     private DragPointView dragpointview;
-    private ImageView image_tips;
+    private ImageView tipsImage;
     private String logoutUrl = "";
     private boolean isGoHome = false;//是否返回home
     private boolean is_ERROR = false;//是否错误了
-    private ImageView back, more;
+    private ImageView backImage, moreImage;
     private TextView title;
     private GoogleApiClient client;
     private String[] menus;//菜单
     private int[] menu_img = new int[]{R.mipmap.message, R.mipmap.msg_manager, R.mipmap.home, R.mipmap.setting, R.mipmap.wipe, R.mipmap.logout, R.mipmap.reload};
-    private List<MainPopupMenu> menulist;
-    private ListPopupWindow lpw;//列表弹框
+    private List<MainPopupMenu> menuList;
+    private ListPopupWindow popupWindow;//列表弹框
+
+    public BrowserView getBrowser(){return browser;};
+
     /**
      * 推送消息的消息id， 点击通知栏打开
      */
@@ -136,7 +140,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             Log.e("xxxx", "instance " + action);
             switch (action) {
                 case NETWORK_CHANGE:
-                    if (MyApp.getNetworkState(context)) webview.reload();
+                    if (MyApp.getNetworkState(context)) browser.reload();
                     else ShowDialog.getDialog(context).showTips();
                     break;
                 case APP_UPDATA://有更新
@@ -165,9 +169,9 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         registerReceiver(receiver, filter);
     }
 
-    public void setHomeurl(String homeurl) {
-        this.homeurl = homeurl;
-        webview.loadUrl(homeurl);
+    public void setHomeUrl(String homeUrl) {
+        this.homeUrl = homeUrl;
+        browser.loadUrl(homeUrl);
     }
 
     @Override
@@ -202,7 +206,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             msgId = intent.getStringExtra("msgId");
             String msgurl = getMsgUrl(".show") + "&msgId=" + msgId;
             Log.e("instance", msgurl);
-            webview.loadUrl(msgurl);
+            browser.loadUrl(msgurl);
         }
     }
 
@@ -210,7 +214,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_SETTING) {
             if (resultCode == RESULT_OK) {
-                webview.loadUrl(data.getStringExtra("home"));
+                browser.loadUrl(data.getStringExtra("home"));
             }
         } else if (requestCode == FILECHOOSER_RESULTCODE) {
             if (null == mUploadMessage)
@@ -245,11 +249,11 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
     @SuppressLint("JavascriptInterface")
     private void InitView() {
-        back = (ImageView) this.findViewById(R.id.back);
-        more = (ImageView) this.findViewById(R.id.more);
+        backImage = (ImageView) this.findViewById(R.id.back);
+        moreImage = (ImageView) this.findViewById(R.id.more);
         title = (TextView) this.findViewById(R.id.title);
-        back.setOnClickListener(this);
-        more.setOnClickListener(this);
+        backImage.setOnClickListener(this);
+        moreImage.setOnClickListener(this);
 
         dragpointview = (DragPointView) this.findViewById(R.id.dragpointview);
         dragpointview.setEnable(false);
@@ -263,18 +267,18 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         dragpointview.setVisibility(View.INVISIBLE);
 
         progress = (ProgressBar) this.findViewById(R.id.progress);
-        image_tips = (ImageView) this.findViewById(R.id.image_tips);
+        tipsImage = (ImageView) this.findViewById(R.id.image_tips);
 
-        webview = (BrowserView) this.findViewById(R.id.webview);
+        browser = (BrowserView) this.findViewById(R.id.webview);
 
-        webview.getSettings().setTextZoom(settings.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this, ScreenUtils.getInches(this))));
+        browser.getSettings().setTextZoom(settings.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this, ScreenUtils.getInches(this))));
 
         //jsAndroid 供web端js调用标识，修改请通知web开发者
-        webview.addJavascriptInterface(new JavaScriptProxy(this), "jsAndroid");
+        browser.addJavascriptInterface(new JavaScriptProxy(this), "JSobj");
 
-        webview.setWebViewClient(new MyWebViewClient());
+        browser.setWebViewClient(new MyWebViewClient());
 
-        webview.setWebChromeClient(new WebChromeClient() {
+        browser.setWebChromeClient(new WebChromeClient() {
 
             // For Android  > 4.1.1
             public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
@@ -325,7 +329,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 super.onReceivedTouchIconUrl(view, url, precomposed);
             }
         });
-        webview.setOnKeyListener(new View.OnKeyListener() {
+        browser.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((keyCode == KeyEvent.KEYCODE_BACK) && event.getAction() == KeyEvent.ACTION_UP) {
@@ -334,7 +338,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                         home.addCategory(Intent.CATEGORY_HOME);
                         startActivity(home);
                     } else {
-                        if (webview.canGoBack()) webview.goBack();// 返回键退回
+                        if (browser.canGoBack()) browser.goBack();// 返回键退回
                         else finish();
                     }
                     return true;
@@ -342,7 +346,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     return false;
             }
         });
-        webview.setOnLongClickListener(this);
+        browser.setOnLongClickListener(this);
     }
 
     @Override
@@ -355,17 +359,17 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
-                webview.goBack();
+                browser.goBack();
                 break;
             case R.id.more:
-                showPopu(more);
+                showPopupMenu(moreImage);
                 break;
             default:
                 break;
         }
     }
 
-    public void Update() {
+    public void checkUpdate() {
         try {//检查是否需要更新
             if (!MyApp.getVersionName(this).equals(WebConfig.getInstance().getAppVersion())) {
                 ShowDialog.getDialog(this).UpDateDialogShow();
@@ -380,32 +384,32 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
      *
      * @param view
      */
-    public void showPopu(View view) {
-        menulist = new ArrayList<MainPopupMenu>();
+    public void showPopupMenu(View view) {
+        menuList = new ArrayList<MainPopupMenu>();
         menus = getResources().getStringArray(R.array.mainPopupMenu);
 
         for (int i = 0; i < menus.length; i++) {
             if ("退出登录".equals(menus[i]) && !islogin) continue;
             MainPopupMenu mainPopupMenu = new MainPopupMenu(i == 0 ? 12 : 0, menus[i], menu_img[i]);
-            menulist.add(mainPopupMenu);
+            menuList.add(mainPopupMenu);
         }
 
-        lpw = ShowPopupWindow.getPopupwindow().show(this, menulist);
-        lpw.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        popupWindow = ShowPopupWindow.getPopupwindow().show(this, menuList);
+        popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        webview.loadUrl(getMsgUrl(".unread"));
+                        browser.loadUrl(getMsgUrl(".unread"));
                         break;
                     case 1:
-                        webview.loadUrl(getMsgUrl(""));
+                        browser.loadUrl(getMsgUrl(""));
                         break;
                     case 2:
-                        webview.loadUrl(homeurl);
+                        browser.loadUrl(homeUrl);
                         break;
                     case 3:
-                        startActivityForResult(new Intent(FrmMain.this, FrmSettings.class).putExtra("address", webview.getUrl()), REQUEST_SETTING);
+                        startActivityForResult(new Intent(FrmMain.this, FrmSettings.class).putExtra("address", browser.getUrl()), REQUEST_SETTING);
                         break;
                     case 4:
                         clearCacheFolder(FrmMain.this.getCacheDir(), System.currentTimeMillis());
@@ -413,22 +417,22 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     case 5:
                         if (islogin) {
                             if (!TextUtils.isEmpty(logoutUrl)) {
-                                webview.loadUrl(logoutUrl);
-                                webview.clearCache(true);
-                                webview.clearHistory();
+                                browser.loadUrl(logoutUrl);
+                                browser.clearCache(true);
+                                browser.clearHistory();
                             }
                         } else
-                            webview.reload();
+                            browser.reload();
                         break;
                     case 6:
-                        webview.reload();
+                        browser.reload();
                         break;
                 }
-                lpw.dismiss();
+                popupWindow.dismiss();
             }
         });
-        lpw.setAnchorView(view);
-        lpw.show();
+        popupWindow.setAnchorView(view);
+        popupWindow.show();
     }
 
     @Override
@@ -465,7 +469,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     * See https://g.co/AppIndexing/AndroidStudio for moreImage information.
      */
     public Action getIndexApiAction() {
         Thing object = new Thing.Builder()
@@ -498,8 +502,8 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     }
 
     public void reload(int scales) {
-        webview.getSettings().setTextZoom(Integer.valueOf(settings.getInt(Constans.SCALE_SHAREDKEY, 90)));
-        webview.reload();
+        browser.getSettings().setTextZoom(Integer.valueOf(settings.getInt(Constans.SCALE_SHAREDKEY, 90)));
+        browser.reload();
     }
 
     /*
@@ -572,13 +576,13 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         @Override
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-            WebResourceResponse webreq = webview.WebResponseO(request.getUrl().toString());
+            WebResourceResponse webreq = browser.WebResponseO(request.getUrl().toString());
             return webreq != null ? webreq : super.shouldInterceptRequest(view, request);
         }
 
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-            WebResourceResponse webreq = webview.WebResponseO(url);
+            WebResourceResponse webreq = browser.WebResponseO(url);
             return webreq != null ? webreq : super.shouldInterceptRequest(view, url);
         }
 
@@ -616,17 +620,17 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         public void onPageFinished(WebView view, String url) {
             if (is_ERROR) {
                 title.setText("出错了");
-                image_tips.setVisibility(View.VISIBLE);
+                tipsImage.setVisibility(View.VISIBLE);
             } else {
-                title.setText(webview.getTitle());
-                image_tips.setVisibility(View.GONE);
+                title.setText(browser.getTitle());
+                tipsImage.setVisibility(View.GONE);
             }
             if (isGoHome) {
-                webview.clearHistory();
-                webview.clearCache(true);
-                back.setVisibility(View.INVISIBLE);
+                browser.clearHistory();
+                browser.clearCache(true);
+                backImage.setVisibility(View.INVISIBLE);
             } else {
-                back.setVisibility(View.VISIBLE);
+                backImage.setVisibility(View.VISIBLE);
             }
             progress.setVisibility(View.GONE);
             super.onPageFinished(view, url);

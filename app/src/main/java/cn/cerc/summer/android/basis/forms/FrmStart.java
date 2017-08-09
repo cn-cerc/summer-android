@@ -39,13 +39,9 @@ import cn.cerc.summer.android.basis.core.ScreenUtils;
 import cn.cerc.summer.android.basis.core.XHttpRequest;
 
 public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, RequestCallback, ConfigFileLoadCallback {
-
     private SharedPreferences settings;
     private static FrmStart instance;
-    /**
-     * 线上的配置参数
-     */
-    private WebConfig webConfig;
+    private WebConfig webConfig; //线上的配置参数
     private ImageView imageview;
     private GifView load_gif;
     private String homeurl;
@@ -142,7 +138,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
         String msgurl = webConfig.getRootSite() + "/" + webConfig.getMsgManage();
         settings.edit().putString(Constans.HOME, homeurl).putString(Constans.SHARED_MSG_URL, msgurl).putString(Constans.SHARED_START_URL, webConfig.getStartImage()).commit();
 
-        FrmMain.getInstance().Update();
+        FrmMain.getInstance().checkUpdate();
 
         if (settings.getInt(Constans.FAIL_NUM_SHAREDKEY, 1) > 0) {
             load_gif.setVisibility(View.VISIBLE);
@@ -156,7 +152,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    loadfinish(0);
+                    loadFinish(0);
                 }
             }, 2000);
         }
@@ -191,16 +187,16 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
 
     @Override
     public void failt(String url, String error) {
-        FrmMain.getInstance().setHomeurl(MyApp.HOME_URL);
+        FrmMain.getInstance().setHomeUrl(MyApp.HOME_URL);
         skip();
     }
 
     @Override
-    public void loadfinish(final int fail_num) {
+    public void loadFinish(final int fail_num) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                FrmMain.getInstance().setHomeurl(homeurl);
+                FrmMain.getInstance().setHomeUrl(homeurl);
                 settings.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).putInt(Constans.FAIL_NUM_SHAREDKEY, fail_num).commit();
                 skip();
             }
@@ -208,7 +204,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
     }
 
     @Override
-    public void loadAllfinish() {
+    public void loadAllFinish() {
         MyApp.saveCacheList(webConfig);
     }
 

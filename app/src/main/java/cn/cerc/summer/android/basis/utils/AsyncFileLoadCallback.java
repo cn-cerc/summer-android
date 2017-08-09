@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface AsyncFileLoadCallback {
 
-    void loadfinish(List<String> filelist, int fail);
+    void loadFinish(List<String> filelist, int fail);
 
 }
