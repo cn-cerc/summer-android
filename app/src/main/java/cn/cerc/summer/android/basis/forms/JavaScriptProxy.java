@@ -1,4 +1,4 @@
-package cn.cerc.summer.android.basis.utils;
+package cn.cerc.summer.android.basis.forms;
 
 import android.content.pm.PackageManager;
 import android.support.v7.app.AppCompatActivity;
@@ -14,17 +14,29 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cn.cerc.summer.android.basis.core.MyApp;
-import cn.cerc.summer.android.basis.forms.FrmMain;
+import cn.cerc.summer.android.basis.utils.CallTel;
+import cn.cerc.summer.android.basis.utils.CaptureImage;
+import cn.cerc.summer.android.basis.utils.CaptureMovie;
+import cn.cerc.summer.android.basis.utils.GetClientId;
+import cn.cerc.summer.android.basis.utils.PlayMovie;
+import cn.cerc.summer.android.basis.utils.ScanBarcode;
+import cn.cerc.summer.android.basis.utils.ZoomImage;
 
 /**
  * 供js调用的js
  * Created by fff on 2016/11/11.
  */
 public class JavaScriptProxy extends Object {
-    private static Map<Class, String> kinds = new HashMap<>();
+    private static Map<Class, String> services = new HashMap<>();
 
     static {
-        kinds.put(GetClientId.class, "取得当前设备ID");
+        services.put(CallTel.class, "拔打指定的电话号码");
+        services.put(CaptureImage.class, "拍照或选取本地图片，并上传到指定的位置");
+        services.put(CaptureMovie.class, "录像或选择本地视频，并上传到指定的位置");
+        services.put(GetClientId.class, "取得当前设备ID");
+        services.put(PlayMovie.class, "取得网上视频文件并进行播放");
+        services.put(ScanBarcode.class, "扫一扫功能，扫描成功后上传到指定网址");
+        services.put(ZoomImage.class, "取得网上图片文件并进行缩放");
     }
 
     private AppCompatActivity owner;
@@ -115,7 +127,7 @@ public class JavaScriptProxy extends Object {
 
     //根据名称取得相应的函数名
     private Class getClazz(String classCode) {
-        for (Class clazz : kinds.keySet()) {
+        for (Class clazz : services.keySet()) {
             String args[] = clazz.getName().split("\\.");
             String temp = args[args.length - 1];
             if (temp.toUpperCase().equals(classCode.toUpperCase())) {
@@ -130,7 +142,7 @@ public class JavaScriptProxy extends Object {
         Class clazz = getClazz(classCode);
         JavaScriptResult json = new JavaScriptResult();
         if (clazz != null) {
-            json.setData(kinds.get(clazz));
+            json.setData(services.get(clazz));
             json.setResult(true);
         } else {
             json.setMessage("当前版本不支持: " + classCode);
@@ -149,7 +161,7 @@ public class JavaScriptProxy extends Object {
                     JavaScriptService object1 = (JavaScriptService) object;
                     try {
                         object1.execute(this.owner, dataIn);
-                        json.setData(object1.getData());
+                        json.setData(object1.getDataOut());
                         json.setResult(true);
                     } catch (Exception e) {
                         json.setMessage(e.getMessage());

@@ -1,24 +1,26 @@
-package cn.cerc.summer.android.parts.image;
+package cn.cerc.summer.android.parts.movie;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 
 import com.mimrc.vine.R;
 
-public class FrmZoomImage extends AppCompatActivity {
+import cn.cerc.summer.android.parts.image.FrmZoomImage;
+
+public class FrmPlayMovie extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_frm_zoom_image);
+        setContentView(R.layout.activity_frm_play_movie);
     }
 
-    public static void startForm(Context context, String urlImage) {
+    public static void startForm(Context context, String urlMovie) {
         Intent intent = new Intent();
         intent.setClass(context, FrmZoomImage.class);
-        intent.putExtra("url", urlImage);
+        intent.putExtra("url", urlMovie);
         context.startActivity(intent);
     }
 }
