@@ -16,7 +16,7 @@ import java.util.Map;
 import cn.cerc.summer.android.basis.core.MyApp;
 import cn.cerc.summer.android.basis.utils.CallLoginByAccount;
 import cn.cerc.summer.android.basis.utils.CallLoginByPhone;
-import cn.cerc.summer.android.basis.utils.CallTel;
+import cn.cerc.summer.android.basis.utils.CallPhoneNumber;
 import cn.cerc.summer.android.basis.utils.CaptureImage;
 import cn.cerc.summer.android.basis.utils.CaptureMovie;
 import cn.cerc.summer.android.basis.utils.GetClientGPS;
@@ -34,6 +34,7 @@ import cn.cerc.summer.android.basis.utils.PlayMusic;
 import cn.cerc.summer.android.basis.utils.ScanBarcode;
 import cn.cerc.summer.android.basis.utils.ScanProduct;
 import cn.cerc.summer.android.basis.utils.PlayImage;
+import cn.cerc.summer.android.basis.utils.ShareToWeibo;
 import cn.cerc.summer.android.basis.utils.ShareToWeixin;
 
 /**
@@ -44,7 +45,7 @@ public class JavaScriptProxy extends Object {
     private static Map<Class, String> services = new HashMap<>();
 
     static {
-        services.put(CallTel.class, "拔打指定的电话号码");
+        services.put(CallPhoneNumber.class, "拔打指定的电话号码");
         services.put(CallLoginByAccount.class, "使用标准的帐号、密码进行登录");
         services.put(CallLoginByPhone.class, "使用手机号及验证码进行登录");
         //
@@ -72,6 +73,7 @@ public class JavaScriptProxy extends Object {
         services.put(ScanProduct.class, "批次扫描商品条码");
         //
         services.put(ShareToWeixin.class, "分享到微信");
+        services.put(ShareToWeibo.class, "分享到微博");
     }
 
     private AppCompatActivity owner;
