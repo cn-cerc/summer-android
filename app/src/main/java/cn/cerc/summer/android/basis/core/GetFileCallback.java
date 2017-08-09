@@ -1,4 +1,4 @@
-package cn.cerc.summer.android.basis.utils;
+package cn.cerc.summer.android.basis.core;
 
 import android.content.Context;
 

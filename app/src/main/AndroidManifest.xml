@@ -178,7 +178,8 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name="cn.cerc.summer.android.parts.image.FrmZoomImage"></activity>
+        <activity android:name="cn.cerc.summer.android.parts.image.FrmZoomImage" />
+        <activity android:name="cn.cerc.summer.android.parts.movie.FrmPlayMovie"></activity>
     </application>
 
 </manifest>

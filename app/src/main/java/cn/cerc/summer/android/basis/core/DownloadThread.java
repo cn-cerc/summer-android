@@ -10,8 +10,6 @@ import org.xutils.x;
 import java.io.File;
 import java.util.List;
 
-import cn.cerc.summer.android.basis.utils.ConfigFileLoadCallback;
-
 /**
  * Created by fff on 2016/12/22.
  */

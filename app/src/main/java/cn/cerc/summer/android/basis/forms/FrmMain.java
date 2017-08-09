@@ -49,7 +49,6 @@ import java.util.Set;
 
 import cn.cerc.summer.android.basis.core.WebConfig;
 import cn.cerc.summer.android.basis.core.MainPopupMenu;
-import cn.cerc.summer.android.basis.utils.JavaScriptProxy;
 import cn.cerc.summer.android.basis.core.MyApp;
 import cn.cerc.summer.android.basis.core.MyBroadcastReceiver;
 import cn.cerc.summer.android.basis.core.Constans;

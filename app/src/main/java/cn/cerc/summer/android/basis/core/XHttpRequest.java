@@ -12,10 +12,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.cerc.summer.android.basis.utils.AsyncFileLoadCallback;
-import cn.cerc.summer.android.basis.utils.ConfigFileLoadCallback;
-import cn.cerc.summer.android.basis.utils.GetFileCallback;
-import cn.cerc.summer.android.basis.utils.RequestCallback;
 import cn.cerc.summer.android.basis.view.ShowDialog;
 
 /**

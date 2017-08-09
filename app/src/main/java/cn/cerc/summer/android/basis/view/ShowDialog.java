@@ -17,7 +17,7 @@ import org.xutils.common.Callback;
 import java.io.File;
 
 import cn.cerc.summer.android.basis.core.WebConfig;
-import cn.cerc.summer.android.basis.utils.GetFileCallback;
+import cn.cerc.summer.android.basis.core.GetFileCallback;
 import cn.cerc.summer.android.basis.core.XHttpRequest;
 
 /**
