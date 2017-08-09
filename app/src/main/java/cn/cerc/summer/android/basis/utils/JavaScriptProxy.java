@@ -145,8 +145,8 @@ public class JavaScriptProxy extends Object {
         if (clazz != null) {
             try {
                 Object object = clazz.newInstance();
-                if (object instanceof IJavaScript) {
-                    IJavaScript object1 = (IJavaScript) object;
+                if (object instanceof JavaScriptService) {
+                    JavaScriptService object1 = (JavaScriptService) object;
                     json.setData(object1.getData());
                     json.setResult(true);
                 } else {

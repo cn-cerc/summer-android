@@ -8,7 +8,7 @@ import cn.cerc.summer.android.basis.core.PermissionUtils;
  * Created by Jason<sz9214e@qq.com> on 2017/8/9.
  */
 
-public class GetClientId implements IJavaScript {
+public class GetClientId implements JavaScriptService {
 
     @Override
     public void setContent(Context context, String dataIn) {
