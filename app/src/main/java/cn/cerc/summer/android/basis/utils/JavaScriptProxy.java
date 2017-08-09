@@ -10,17 +10,23 @@ import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
+import java.util.HashMap;
 import java.util.Map;
 
-import cn.cerc.summer.android.basis.core.PermissionUtils;
-import cn.cerc.summer.android.basis.forms.FrmMain;
 import cn.cerc.summer.android.basis.core.MyApp;
+import cn.cerc.summer.android.basis.forms.FrmMain;
 
 /**
  * 供js调用的js
  * Created by fff on 2016/11/11.
  */
 public class JavaScriptProxy extends Object {
+    private static Map<Class, String> kinds = new HashMap<>();
+
+    static {
+        kinds.put(GetClientId.class, "取得当前设备ID");
+    }
+
     private AppCompatActivity owner;
     private Map<String, String> resultunifiedorder;
     private StringBuffer sb;
@@ -107,14 +113,54 @@ public class JavaScriptProxy extends Object {
         }
     }
 
-    @JavascriptInterface
-    public String send(String cmd, String dataIn) {
-        if (cmd.equals("getClientId")) {
-            String json = String.format("{\"result\":\"true\", \"message\": \"%s\"}", PermissionUtils.IMEI);
-            return json;
-        } else {
-            return null;
+    //根据名称取得相应的函数名
+    private Class getClazz(String classCode) {
+        for (Class clazz : kinds.keySet()) {
+            String args[] = clazz.getName().split("\\.");
+            String temp = args[args.length-1];
+            if (temp.toUpperCase().equals(classCode.toUpperCase())) {
+                return clazz;
+            }
         }
+        return null;
+    }
+
+    @JavascriptInterface
+    public String support(String classCode) {
+        Class clazz = getClazz(classCode);
+        JavaScriptResult json = new JavaScriptResult();
+        if (clazz != null) {
+            json.setData(kinds.get(clazz));
+            json.setResult(true);
+        } else {
+            json.setMessage("当前版本不支持: " + classCode);
+        }
+        return json.toString();
+    }
+
+    @JavascriptInterface
+    public String send(String classCode, String dataIn) {
+        Class clazz = getClazz(classCode);
+        JavaScriptResult json = new JavaScriptResult();
+        if (clazz != null) {
+            try {
+                Object object = clazz.newInstance();
+                if (object instanceof IJavaScript) {
+                    IJavaScript object1 = (IJavaScript) object;
+                    json.setData(object1.getData());
+                    json.setResult(true);
+                } else {
+                    json.setMessage("not support JavascriptInterface");
+                }
+            } catch (InstantiationException e) {
+                json.setMessage("InstantiationException");
+            } catch (IllegalAccessException e) {
+                json.setMessage("IllegalAccessException");
+            }
+        } else {
+            json.setMessage("当前版本不支持: " + classCode);
+        }
+        return json.toString();
     }
 
 }
