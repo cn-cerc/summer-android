@@ -11,13 +11,9 @@ import cn.cerc.summer.android.parts.movie.FrmPlayMovie;
 
 public class PlayMovie implements JavaScriptService {
     @Override
-    public void execute(Context context, String dataIn) {
+    public String execute(Context context, String dataIn) {
         //TODO: 此功能还未准备好
         FrmPlayMovie.startForm(context, dataIn);
-    }
-
-    @Override
-    public String getDataOut() {
-        return null;
+        return "还没有做完呢。。。";
     }
 }

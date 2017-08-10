@@ -6,6 +6,7 @@ import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
@@ -174,6 +175,20 @@ public class JavaScriptProxy extends Object {
         return null;
     }
 
+    //列出所有可用的服务
+    @JavascriptInterface
+    public String list(){
+        Map<String, String> items = new HashMap<>();
+        JSONObject json = new JSONObject();
+        for(Class clazz : services.keySet()){
+            String args[] = clazz.getName().split("\\.");
+            String temp = args[args.length - 1];
+            json.put(temp, services.get(clazz));
+        }
+        return json.toString();
+    }
+
+    //判断是否支持指定的服务
     @JavascriptInterface
     public String support(String classCode) {
         Class clazz = getClazz(classCode);
@@ -187,6 +202,7 @@ public class JavaScriptProxy extends Object {
         return json.toString();
     }
 
+    //调用指定的服务，须立即返回
     @JavascriptInterface
     public String send(String classCode, String dataIn) {
         Class clazz = getClazz(classCode);
@@ -197,8 +213,7 @@ public class JavaScriptProxy extends Object {
                 if (object instanceof JavaScriptService) {
                     JavaScriptService object1 = (JavaScriptService) object;
                     try {
-                        object1.execute(this.owner, dataIn);
-                        json.setData(object1.getDataOut());
+                        json.setData(object1.execute(this.owner, dataIn));
                         json.setResult(true);
                     } catch (Exception e) {
                         json.setMessage(e.getMessage());

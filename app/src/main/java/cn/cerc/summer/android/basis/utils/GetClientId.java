@@ -12,12 +12,7 @@ import cn.cerc.summer.android.basis.forms.JavaScriptService;
 public class GetClientId implements JavaScriptService {
 
     @Override
-    public void execute(Context context, String dataIn) {
-    }
-
-    @Override
-    public String getDataOut() {
+    public String execute(Context context, String dataIn) {
         return PermissionUtils.IMEI;
     }
-
 }

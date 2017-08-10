@@ -11,20 +11,15 @@ import cn.cerc.summer.android.basis.forms.JavaScriptService;
  */
 
 public class GetClientVersion implements JavaScriptService {
-    private Context context;
-
     @Override
-    public void execute(Context context, String dataIn) {
-        this.context = context;
-    }
+    public String execute(Context context, String dataIn) {
 
-    @Override
-    public String getDataOut() {
         try {
-            return "" + MyApp.getVersionCode(this.context);
+            return "" + MyApp.getVersionCode(context);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
         return "0";
+
     }
 }

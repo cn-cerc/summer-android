@@ -13,6 +13,17 @@ public class FrmZoomImage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frm_zoom_image);
+//
+//        RemoteServer service = new RemoteServer("SvrLogin.check");
+//        service.getDataIn().setString("account", "user01");
+//        service.getDataIn().setString("password", "password");
+//        if(service.exec()){
+//            String state = service.getDataOut().getHead().getString("state");
+//        }else{
+//            Toast.makeText(getApplicationContext(), service.getMessage()).show();
+//        }
+//
+//        String ver = new SampleService("SvrServer.getVersion").exec().getString("state");
     }
 
     public static void startForm(Context context, String urlImage) {
