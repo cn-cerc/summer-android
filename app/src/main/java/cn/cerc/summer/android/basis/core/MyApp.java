@@ -35,7 +35,7 @@ import cn.jpush.android.api.JPushInterface;
  */
 
 public class MyApp extends android.app.Application {
-    public static String HOME_URL = "https://m.knowall.cn";
+    public static String HOME_URL = "http://192.168.1.178/forms/FrmRobotHome";
 
     private static MyApp instance;
     private DisplayImageOptions options;
