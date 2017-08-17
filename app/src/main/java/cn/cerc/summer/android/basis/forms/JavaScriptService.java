@@ -8,6 +8,6 @@ import android.content.Context;
 
 public interface JavaScriptService {
 
-    public String execute(Context context, String dataIn);
+    public String execute(Context context, String dataIn) throws Exception;
 
 }
