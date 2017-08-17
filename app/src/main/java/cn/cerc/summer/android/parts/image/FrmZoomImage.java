@@ -39,7 +39,7 @@ public class FrmZoomImage extends AppCompatActivity implements View.OnClickListe
 
         //加入网络图片地址
         String url = getIntent().getStringExtra("url");
-        new Task().execute(url);
+        new DownloadTask().execute(url);
     }
 
     public static void startForm(Context context, String urlImage) {
@@ -49,18 +49,60 @@ public class FrmZoomImage extends AppCompatActivity implements View.OnClickListe
         context.startActivity(intent);
     }
 
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.imgZoomBack:
+                finish();
+                break;
+            case R.id.imgZoomView:
+                //点击图片后将图片保存到SD卡跟目录下的Test文件夹内
+                savaImage(bitmap, Environment.getExternalStorageDirectory().getPath() + "/Test");
+                Toast.makeText(getBaseContext(), "图片保存", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                break;
+        }
+    }
+
+
+    /**
+     * 异步线程下载图片
+     */
+    class DownloadTask extends AsyncTask<String, Integer, Void> {
+
+        protected Void doInBackground(String... params) {
+            bitmap = getImageInputStream((String) params[0]);
+            return null;
+        }
+
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            Message message = new Message();
+            message.what = 0x123;
+            handler.sendMessage(message);
+        }
+    }
+
+    private Handler handler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            if (msg.what == 0x123) {
+                image.setImageBitmap(bitmap);
+            }
+        }
+    };
+
     /**
      * 获取网络图片
      *
-     * @param imageurl 图片网络地址
+     * @param imageUrl 图片网络地址
      * @return Bitmap 返回位图
      */
-    public Bitmap GetImageInputStream(String imageurl) {
+    private Bitmap getImageInputStream(String imageUrl) {
         URL url;
         HttpURLConnection connection = null;
         Bitmap bitmap = null;
         try {
-            url = new URL(imageurl);
+            url = new URL(imageUrl);
             connection = (HttpURLConnection) url.openConnection();
             connection.setConnectTimeout(6000); //超时设置
             connection.setDoInput(true);
@@ -74,48 +116,6 @@ public class FrmZoomImage extends AppCompatActivity implements View.OnClickListe
         return bitmap;
     }
 
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.imgZoomBack:
-                finish();
-                break;
-            case R.id.imgZoomView:
-                //点击图片后将图片保存到SD卡跟目录下的Test文件夹内
-                SavaImage(bitmap, Environment.getExternalStorageDirectory().getPath() + "/Test");
-                Toast.makeText(getBaseContext(), "图片保存", Toast.LENGTH_SHORT).show();
-                break;
-            default:
-                break;
-        }
-    }
-
-    Handler handler = new Handler() {
-        public void handleMessage(android.os.Message msg) {
-            if (msg.what == 0x123) {
-                image.setImageBitmap(bitmap);
-            }
-        }
-    };
-
-
-    /**
-     * 异步线程下载图片
-     */
-    class Task extends AsyncTask<String, Integer, Void> {
-
-        protected Void doInBackground(String... params) {
-            bitmap = GetImageInputStream((String) params[0]);
-            return null;
-        }
-
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            Message message = new Message();
-            message.what = 0x123;
-            handler.sendMessage(message);
-        }
-    }
-
     /**
      * 保存位图到本地
      *
@@ -123,7 +123,7 @@ public class FrmZoomImage extends AppCompatActivity implements View.OnClickListe
      * @param path   本地路径
      * @return void
      */
-    public void SavaImage(Bitmap bitmap, String path) {
+    private void savaImage(Bitmap bitmap, String path) {
         File file = new File(path);
         FileOutputStream fileOutputStream = null;
         //文件夹不存在，则创建它
