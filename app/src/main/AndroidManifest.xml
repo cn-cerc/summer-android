@@ -23,7 +23,7 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <!--获取手机录音机使用权限，听写、识别、语义理解需要用到此权限 -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!-- SD卡权限  -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- 在SDCard中创建与删除文件权限 -->
@@ -181,7 +181,8 @@
         </provider>
 
         <activity android:name="cn.cerc.summer.android.parts.image.FrmZoomImage" />
-        <activity android:name="cn.cerc.summer.android.parts.movie.FrmPlayMovie"></activity>
+        <activity android:name="cn.cerc.summer.android.parts.movie.FrmPlayMovie" />
+        <activity android:name="cn.cerc.summer.android.parts.music.FrmCaptureMusic" />
     </application>
 
 </manifest>

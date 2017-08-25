@@ -22,6 +22,7 @@ import cn.cerc.summer.android.basis.utils.CallLoginByPhone;
 import cn.cerc.summer.android.basis.utils.CallPhoneNumber;
 import cn.cerc.summer.android.basis.utils.CaptureImage;
 import cn.cerc.summer.android.basis.utils.CaptureMovie;
+import cn.cerc.summer.android.basis.utils.CaptureMusic;
 import cn.cerc.summer.android.basis.utils.GetClientGPS;
 import cn.cerc.summer.android.basis.utils.GetClientId;
 import cn.cerc.summer.android.basis.utils.GetClientVersion;
