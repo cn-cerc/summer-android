@@ -3,9 +3,12 @@ package cn.cerc.summer.android.parts.barcode;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.mimrc.vine.R;
 
@@ -27,7 +30,21 @@ public class DlgScanProduct extends AppCompatActivity implements View.OnClickLis
 
         edtNum = (EditText) findViewById(R.id.edtNum);
         edtNum.setText("" + num);
-        edtNum.requestFocus((""+num).length());
+        edtNum.requestFocus(("" + num).length());
+        edtNum.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE  || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    Intent intent = new Intent();
+                    intent.putExtra("recordIndex", recordIndex);
+                    intent.putExtra("num", Integer.parseInt(edtNum.getText().toString()));
+                    setResult(RESULT_OK, intent);
+                    finish();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         for (int index : buttons)
             ((Button) findViewById(index)).setOnClickListener(this);

@@ -15,6 +15,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -32,6 +33,7 @@ import cn.cerc.summer.android.basis.tools.Record;
 import static cn.cerc.summer.android.parts.music.FrmCaptureMusic.url;
 
 public class FrmScanProduct extends AppCompatActivity implements View.OnClickListener, ListViewInterface {
+    ImageView imgBack;
     TextView lblTitle;
     EditText edtBarcode;
     Button btnSave;
@@ -71,6 +73,9 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frm_scan_product);
         Intent intent = getIntent();
+
+        imgBack = (ImageView) findViewById(R.id.imgBack);
+
 
         lblTitle = (TextView) findViewById(R.id.lblTitle);
         lblTitle.setText(intent.getStringExtra("title"));
@@ -114,6 +119,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                     btnSave.callOnClick();
+                    return true;
                 }
                 return false;
             }
@@ -133,10 +139,13 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnSave:
-                dataSet.insert(0);
-                dataSet.setField("barcode", edtBarcode.getText().toString());
-                dataSet.setField("num", 1);
-                adapter.notifyDataSetChanged();
+                String barcode = edtBarcode.getText().toString().trim();
+                if(barcode.length() > 0) {
+                    dataSet.insert(0);
+                    dataSet.setField("barcode", edtBarcode.getText().toString());
+                    dataSet.setField("num", 1);
+                    adapter.notifyDataSetChanged();
+                }
                 edtBarcode.setText("");
                 edtBarcode.requestFocus();
                 break;
