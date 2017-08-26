@@ -17,6 +17,10 @@ public class Record extends HashMap<String, Object> {
     }
 
     public int getInt(String fieldCode) {
-        return (int) get(fieldCode);
+        Object obj = get(fieldCode);
+        if (obj != null)
+            return (int) obj;
+        else
+            return 0;
     }
 }
