@@ -16,10 +16,10 @@ import android.widget.Toast;
 
 import com.mimrc.vine.R;
 
-import cn.cerc.summer.android.basis.core.WebConfig;
-import cn.cerc.summer.android.basis.core.MyApp;
 import cn.cerc.summer.android.basis.core.Constans;
+import cn.cerc.summer.android.basis.core.MyApp;
 import cn.cerc.summer.android.basis.core.ScreenUtils;
+import cn.cerc.summer.android.basis.core.WebConfig;
 import cn.cerc.summer.android.basis.view.CustomSeekBar;
 
 public class FrmSettings extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener {
@@ -152,5 +152,11 @@ public class FrmSettings extends AppCompatActivity implements SeekBar.OnSeekBarC
         customseekbar.setProgress(scales);
         String str = String.format("界面缩放比例（80%% -- 120%%）当前值：%d%%", scales);
         scale.setText(str);
+    }
+
+    public static void startFormForResult(AppCompatActivity content, int requestNo, String address) {
+        Intent intent = new Intent(content, FrmSettings.class);
+        intent.putExtra("address", address);
+        content.startActivityForResult(intent, requestNo);
     }
 }

@@ -11,10 +11,8 @@ import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import cn.cerc.summer.android.basis.core.MyApp;
 import cn.cerc.summer.android.basis.utils.CallLoginByAccount;
@@ -33,11 +31,12 @@ import cn.cerc.summer.android.basis.utils.GetTokenByWeixin;
 import cn.cerc.summer.android.basis.utils.PayByAlipay;
 import cn.cerc.summer.android.basis.utils.PayByBank;
 import cn.cerc.summer.android.basis.utils.PayByWeixin;
+import cn.cerc.summer.android.basis.utils.PlayImage;
 import cn.cerc.summer.android.basis.utils.PlayMovie;
 import cn.cerc.summer.android.basis.utils.PlayMusic;
 import cn.cerc.summer.android.basis.utils.ScanBarcode;
 import cn.cerc.summer.android.basis.utils.ScanProduct;
-import cn.cerc.summer.android.basis.utils.PlayImage;
+import cn.cerc.summer.android.basis.utils.SetTitle;
 import cn.cerc.summer.android.basis.utils.ShareToWeibo;
 import cn.cerc.summer.android.basis.utils.ShareToWeixin;
 
@@ -76,6 +75,8 @@ public class JavaScriptProxy extends Object {
         //
         services.put(ScanBarcode.class, "扫一扫功能，扫描成功后上传到指定网址");
         services.put(ScanProduct.class, "批次扫描商品条码");
+        //
+        services.put(SetTitle.class, "设置浏览器标题");
         //
         services.put(ShareToWeixin.class, "分享到微信");
         services.put(ShareToWeibo.class, "分享到微博");
@@ -181,10 +182,10 @@ public class JavaScriptProxy extends Object {
 
     //列出所有可用的服务
     @JavascriptInterface
-    public String list(){
+    public String list() {
         Map<String, String> items = new LinkedHashMap<>();
         JSONObject json = new JSONObject();
-        for(Class clazz : services.keySet()){
+        for (Class clazz : services.keySet()) {
             String args[] = clazz.getName().split("\\.");
             String temp = args[args.length - 1];
             json.put(temp, services.get(clazz));
