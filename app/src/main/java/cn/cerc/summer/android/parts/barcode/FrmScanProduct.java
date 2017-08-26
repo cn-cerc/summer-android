@@ -40,6 +40,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
     ListView lstView;
     WebView webView;
 
+    private String homeUrl;
     private String viewUrl;
     private String postUrl;
     private DataSet dataSet = new DataSet();
@@ -59,11 +60,12 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
      * @param postUrl 数据上传到指定的url
      * @param viewUrl 显示相应的记录之url
      */
-    public static void startForm(Context context, String title, String postUrl, String viewUrl) {
+    public static void startForm(Context context, String title, String homeUrl, String viewUrl, String postUrl) {
         Intent intent = new Intent();
         intent.putExtra("title", title);
-        intent.putExtra("postUrl", postUrl);
+        intent.putExtra("homeUrl", homeUrl);
         intent.putExtra("viewUrl", viewUrl);
+        intent.putExtra("postUrl", postUrl);
         intent.setClass(context, FrmScanProduct.class);
         context.startActivity(intent);
     }
@@ -81,18 +83,19 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
         lblTitle = (TextView) findViewById(R.id.lblTitle);
         lblTitle.setText(intent.getStringExtra("title"));
 
-        this.postUrl = intent.getStringExtra("postUrl");
+        this.homeUrl = intent.getStringExtra("homeUrl");
         this.viewUrl = intent.getStringExtra("viewUrl");
+        this.postUrl = intent.getStringExtra("postUrl");
 
         edtBarcode = (EditText) findViewById(R.id.edtBarcode);
         btnSave = (Button) findViewById(R.id.btnSave);
         btnSave.setOnClickListener(this);
 
-        for (int i = 0; i < 2; i++) {
-            dataSet.append();
-            dataSet.setField("barcode", "123424123412");
-            dataSet.setField("num", 1 + i);
-        }
+//        for (int i = 0; i < 2; i++) {
+//            dataSet.append();
+//            dataSet.setField("barcode", "123424123412");
+//            dataSet.setField("num", 1 + i);
+//        }
 
         adapter = new ListViewAdapter(this, R.layout.activity_list_scan_product, dataSet, this);
         lstView = (ListView) findViewById(R.id.lstView);
@@ -111,7 +114,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         //打开指定的网页
-        webView.loadUrl(MyApp.HOME_URL);
+        webView.loadUrl(MyApp.HOME_URL + homeUrl);
 
         //关闭软键盘
         edtBarcode.setInputType(InputType.TYPE_NULL);
@@ -140,7 +143,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btnSave:
+            case R.id.btnSave: {
                 String barcode = edtBarcode.getText().toString().trim();
                 if (barcode.length() > 0) {
                     if (dataSet.locate("barcode", barcode)) {
@@ -155,7 +158,13 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
                 edtBarcode.setText("");
                 edtBarcode.requestFocus();
                 break;
-            case R.id.lblBarcode:
+            }
+            case R.id.lblBarcode: {
+                int recordIndex = (Integer) view.getTag();
+                Record item = dataSet.get((Integer) view.getTag());
+                webView.loadUrl(MyApp.HOME_URL + viewUrl + "?barcode=" + item.getString("barcode"));
+                break;
+            }
             case R.id.lblNum: {
                 int recordIndex = (Integer) view.getTag();
                 Record item = dataSet.get((Integer) view.getTag());
@@ -165,6 +174,8 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
             case R.id.imgView: {
                 int recordIndex = (Integer) view.getTag();
                 Record item = dataSet.get((Integer) view.getTag());
+                webView.loadUrl(String.format("%s%s?barcode=%s&num=%d", MyApp.HOME_URL, postUrl,
+                        item.getString("barcode"), item.getInt("num")));
                 switch (item.getInt("state")) {
                     case 0:
                         item.setField("state", 1);
@@ -185,6 +196,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
             default:
                 break;
         }
+
     }
 
     @Override

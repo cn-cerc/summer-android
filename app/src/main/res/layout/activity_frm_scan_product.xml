@@ -23,20 +23,23 @@
             android:id="@+id/lblTitle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginRight="45dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@android:color/white" />
+            android:text="Title"
+            android:textColor="@android:color/white"
+            android:textSize="30dp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
         <EditText
             android:id="@+id/edtBarcode"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:layout_weight="1"
             android:imeOptions="actionDone"
             android:maxLines="1" />
@@ -49,15 +52,16 @@
 
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/lstView"
-        android:layout_width="match_parent"
-        android:layout_height="200dp" />
-
     <WebView
         android:id="@+id/webView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="5" />
 
+    <ListView
+        android:id="@+id/lstView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4" />
 
 </LinearLayout>

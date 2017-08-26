@@ -18,7 +18,8 @@ public class ScanProduct implements JavaScriptService {
         Log.d("ScanProduct", dataIn);
         JSONObject json = new JSONObject(dataIn);
         Log.d("ScanProduct", json.getString("title"));
-        FrmScanProduct.startForm(context, json.getString("title"), json.getString("postUrl"), json.getString("viewUrl"));
+        FrmScanProduct.startForm(context, json.getString("title"), json.getString("homeUrl"),
+                json.getString("viewUrl"), json.getString("postUrl"));
         return "true";
     }
 }

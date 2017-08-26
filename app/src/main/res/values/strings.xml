@@ -51,4 +51,5 @@
     <string name="button_ok_text">确定</string>
     <string name="button_cancel_text">取消</string>
     <string name="button_delete_text">删除</string>
+    <string name="num_modify">修改数量</string>
 </resources>
