@@ -75,6 +75,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
         Intent intent = getIntent();
 
         imgBack = (ImageView) findViewById(R.id.imgBack);
+        imgBack.setOnClickListener(this);
 
 
         lblTitle = (TextView) findViewById(R.id.lblTitle);
@@ -125,6 +126,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
             }
         });
 
+        //自动归位焦点
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -140,20 +142,45 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
         switch (view.getId()) {
             case R.id.btnSave:
                 String barcode = edtBarcode.getText().toString().trim();
-                if(barcode.length() > 0) {
-                    dataSet.insert(0);
-                    dataSet.setField("barcode", edtBarcode.getText().toString());
-                    dataSet.setField("num", 1);
+                if (barcode.length() > 0) {
+                    if (dataSet.locate("barcode", barcode)) {
+                        dataSet.setField("num", dataSet.getInt("num") + 1);
+                    } else {
+                        dataSet.insert(0);
+                        dataSet.setField("barcode", barcode);
+                        dataSet.setField("num", 1);
+                    }
                     adapter.notifyDataSetChanged();
                 }
                 edtBarcode.setText("");
                 edtBarcode.requestFocus();
                 break;
             case R.id.lblBarcode:
-            case R.id.lblNum:
+            case R.id.lblNum: {
                 int recordIndex = (Integer) view.getTag();
                 Record item = dataSet.get((Integer) view.getTag());
                 DlgScanProduct.startFormForResult(this, recordIndex, item.getInt("num"));
+                break;
+            }
+            case R.id.imgView: {
+                int recordIndex = (Integer) view.getTag();
+                Record item = dataSet.get((Integer) view.getTag());
+                switch (item.getInt("state")) {
+                    case 0:
+                        item.setField("state", 1);
+                        break;
+                    case 1:
+                        item.setField("state", 2);
+                        break;
+                    default:
+                        item.setField("state", 0);
+                        break;
+                }
+                adapter.notifyDataSetChanged();
+                break;
+            }
+            case R.id.imgBack:
+                finish();
                 break;
             default:
                 break;
@@ -191,6 +218,19 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
         lblNum.setOnClickListener(this);
         lblNum.setTag(position);
 
-//      ImageView imageView = (ImageView) view.findViewById(R.id.imgView);
+        ImageView imgView = (ImageView) view.findViewById(R.id.imgView);
+        imgView.setOnClickListener(this);
+        imgView.setTag(position);
+        switch (item.getInt("state")) {
+            case 0:
+                imgView.setImageResource(R.mipmap.reload);
+                break;
+            case 1:
+                imgView.setImageResource(R.mipmap.refresh_succeed);
+                break;
+            default:
+                imgView.setImageResource(R.mipmap.refresh_failed);
+                break;
+        }
     }
 }
