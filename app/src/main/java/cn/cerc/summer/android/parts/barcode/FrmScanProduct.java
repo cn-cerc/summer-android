@@ -2,13 +2,19 @@ package cn.cerc.summer.android.parts.barcode;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -18,8 +24,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mimrc.vine.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -33,6 +43,9 @@ import cn.cerc.summer.android.basis.tools.Record;
 import static cn.cerc.summer.android.parts.music.FrmCaptureMusic.url;
 
 public class FrmScanProduct extends AppCompatActivity implements View.OnClickListener, ListViewInterface {
+    private static final int MSG_TIMER = 1;
+    private static final int MSG_UPLOAD = 2;
+
     ImageView imgBack;
     TextView lblTitle;
     EditText edtBarcode;
@@ -49,7 +62,23 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            edtBarcode.requestFocus();
+            switch (msg.what) {
+                case MSG_TIMER:
+                    edtBarcode.requestFocus();
+                    break;
+                case MSG_UPLOAD:
+                    String barcode = msg.getData().getString("barcode");
+                    if (dataSet.locate("barcode", barcode)) {
+                        Record item = dataSet.getCurrent();
+                        webView.loadUrl(String.format("%s%s?barcode=%s", MyApp.HOME_URL, viewUrl,
+                                item.getString("barcode")));
+                        item.setField("state", msg.arg1);
+                        adapter.notifyDataSetChanged();
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     };
 
@@ -121,8 +150,8 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
         edtBarcode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    btnSave.callOnClick();
+                if (actionId == EditorInfo.IME_ACTION_DONE || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    saveBarcode();
                     return true;
                 }
                 return false;
@@ -135,6 +164,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
             @Override
             public void run() {
                 Message msg = new Message();
+                msg.what = MSG_TIMER;
                 handler.sendMessage(msg);
             }
         }, 1000, 200);
@@ -144,19 +174,16 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnSave: {
-                String barcode = edtBarcode.getText().toString().trim();
-                if (barcode.length() > 0) {
-                    if (dataSet.locate("barcode", barcode)) {
-                        dataSet.setField("num", dataSet.getInt("num") + 1);
-                    } else {
-                        dataSet.insert(0);
-                        dataSet.setField("barcode", barcode);
-                        dataSet.setField("num", 1);
-                    }
-                    adapter.notifyDataSetChanged();
+                if (edtBarcode.getInputType() == InputType.TYPE_NULL) {
+                    edtBarcode.setInputType(InputType.TYPE_CLASS_TEXT);
+                    InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.showSoftInput(edtBarcode, 0);
+                } else {
+                    edtBarcode.setInputType(InputType.TYPE_NULL);
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null)
+                        imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
                 }
-                edtBarcode.setText("");
-                edtBarcode.requestFocus();
                 break;
             }
             case R.id.lblBarcode: {
@@ -174,20 +201,10 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
             case R.id.imgView: {
                 int recordIndex = (Integer) view.getTag();
                 Record item = dataSet.get((Integer) view.getTag());
-                webView.loadUrl(String.format("%s%s?barcode=%s&num=%d", MyApp.HOME_URL, postUrl,
-                        item.getString("barcode"), item.getInt("num")));
-                switch (item.getInt("state")) {
-                    case 0:
-                        item.setField("state", 1);
-                        break;
-                    case 1:
-                        item.setField("state", 2);
-                        break;
-                    default:
-                        item.setField("state", 0);
-                        break;
+                if (item.getInt("state") == 2) {//出错状态
+                    item.setField("state", 0);
+                    requestUpload(item.getString("barcode"), item.getInt("num"));
                 }
-                adapter.notifyDataSetChanged();
                 break;
             }
             case R.id.imgBack:
@@ -197,6 +214,61 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
                 break;
         }
 
+    }
+
+    private void saveBarcode() {
+        String barcode = edtBarcode.getText().toString().trim();
+        if (barcode.length() > 0) {
+            if (dataSet.locate("barcode", barcode)) {
+                dataSet.setField("num", dataSet.getInt("num") + 1);
+                dataSet.setField("state", 0);
+            } else {
+                dataSet.insert(0);
+                dataSet.setField("barcode", barcode);
+                dataSet.setField("num", 1);
+            }
+            adapter.notifyDataSetChanged();
+            requestUpload(barcode, dataSet.getInt("num"));
+        }
+//        edtBarcode.setText("");
+//        edtBarcode.getFocusedRect();
+        edtBarcode.setSelection(0, edtBarcode.getText().toString().length() - 1);
+        edtBarcode.requestFocus();
+    }
+
+    private void requestUpload(final String barcode, final int num) {
+        //通知进行上传
+        Bundle bundle = new Bundle();
+        bundle.putString("barcode", barcode);
+        final Message msg = new Message();
+        msg.what = MSG_UPLOAD;
+        msg.setData(bundle);
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                HttpUtils http = new HttpUtils(MyApp.HOME_URL + postUrl);
+                http.put("barcode", barcode);
+                http.put("num", "" + num);
+
+                String dataOut = http.post();
+                Log.d("FrmScanProduct", dataOut);
+                JSONObject json = null;
+                try {
+                    json = new JSONObject(dataOut);
+                    if (json.has("result") && json.getBoolean("result"))
+                        msg.arg1 = 1; //更新state为msg.arg1
+                    else {
+                        Toast.makeText(getApplicationContext(), json.getString("message"), Toast.LENGTH_SHORT).show();
+                        msg.arg1 = 2;
+                    }
+                    handler.sendMessage(msg);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 0);
     }
 
     @Override
@@ -231,17 +303,30 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
         lblNum.setTag(position);
 
         ImageView imgView = (ImageView) view.findViewById(R.id.imgView);
-        imgView.setOnClickListener(this);
-        imgView.setTag(position);
         switch (item.getInt("state")) {
             case 0:
                 imgView.setImageResource(R.mipmap.reload);
+                //设置动画效果
+                RotateAnimation animation = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF,
+                        0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                animation.setDuration(3000);//设置动画持续时间
+                animation.setRepeatCount(Animation.INFINITE);//设定无限循环
+                animation.setRepeatMode(Animation.RESTART);//设定重复模式
+                imgView.setOnClickListener(this);
+                imgView.setTag(position);
+                imgView.startAnimation(animation);
+                imgView.setBackgroundColor(Color.WHITE);
+                animation.startNow();
                 break;
             case 1:
+                imgView.clearAnimation();
                 imgView.setImageResource(R.mipmap.refresh_succeed);
+                imgView.setBackgroundColor(Color.BLUE);
                 break;
             default:
+                imgView.clearAnimation();
                 imgView.setImageResource(R.mipmap.refresh_failed);
+                imgView.setBackgroundColor(Color.RED);
                 break;
         }
     }

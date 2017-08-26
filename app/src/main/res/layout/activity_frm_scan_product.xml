@@ -42,13 +42,14 @@
             android:layout_marginTop="4dp"
             android:layout_weight="1"
             android:imeOptions="actionDone"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:selectAllOnFocus="true" />
 
         <Button
             android:id="@+id/btnSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_save_text" />
+            android:text="@string/button_keyboard_text" />
 
     </LinearLayout>
 

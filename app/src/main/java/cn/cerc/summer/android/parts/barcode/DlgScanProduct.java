@@ -56,9 +56,6 @@ public class DlgScanProduct extends AppCompatActivity implements View.OnClickLis
             }
         });
 
-//        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//        inputMethodManager.showSoftInput(edtNum, 0);
-
         Timer timer = new Timer();
         timer.schedule(new TimerTask()   {
             public void run() {

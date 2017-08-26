@@ -52,4 +52,5 @@
     <string name="button_cancel_text">取消</string>
     <string name="button_delete_text">删除</string>
     <string name="num_modify">修改数量</string>
+    <string name="button_keyboard_text">键盘</string>
 </resources>
