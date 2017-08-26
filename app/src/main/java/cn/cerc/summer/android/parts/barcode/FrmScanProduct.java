@@ -50,8 +50,8 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
     TextView lblTitle;
     EditText edtBarcode;
     Button btnSave;
-    ListView lstView;
     WebView webView;
+    ListView lstView;
 
     private String homeUrl;
     private String viewUrl;
@@ -237,38 +237,36 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
     }
 
     private void requestUpload(final String barcode, final int num) {
-        //通知进行上传
-        Bundle bundle = new Bundle();
-        bundle.putString("barcode", barcode);
-        final Message msg = new Message();
-        msg.what = MSG_UPLOAD;
-        msg.setData(bundle);
-
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
-                HttpUtils http = new HttpUtils(MyApp.HOME_URL + postUrl);
+                //通知进行上传
+                Bundle bundle = new Bundle();
+                bundle.putString("barcode", barcode);
+                final Message msg = new Message();
+                msg.what = MSG_UPLOAD;
+                msg.setData(bundle);
+
+                HttpClient http = new HttpClient(MyApp.HOME_URL + postUrl);
                 http.put("barcode", barcode);
                 http.put("num", "" + num);
 
-                String dataOut = http.post();
-                Log.d("FrmScanProduct", dataOut);
+                String response = http.post();
+                Log.d("FrmScanProduct", response);
+
+                int state = 2; //更新state为失败
                 JSONObject json = null;
                 try {
-                    json = new JSONObject(dataOut);
+                    json = new JSONObject(response);
                     if (json.has("result") && json.getBoolean("result"))
-                        msg.arg1 = 1; //更新state为msg.arg1
-                    else {
-                        Toast.makeText(getApplicationContext(), json.getString("message"), Toast.LENGTH_SHORT).show();
-                        msg.arg1 = 2;
-                    }
-                    handler.sendMessage(msg);
+                        state = 1; //更新state为成功
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                msg.arg1 = state;
+                handler.sendMessage(msg);
             }
-        }, 0);
+        }).start();
     }
 
     @Override

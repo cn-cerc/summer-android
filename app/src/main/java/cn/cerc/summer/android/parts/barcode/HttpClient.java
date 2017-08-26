@@ -1,8 +1,11 @@
 package cn.cerc.summer.android.parts.barcode;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -15,7 +18,7 @@ import java.util.Map;
  * Created by Jason<sz9214e@qq.com> on 2017/8/26.
  */
 
-class HttpUtils {
+class HttpClient {
     private String ENCODE = "utf-8";
     //要提交的网址
     private String webUrl;
@@ -23,7 +26,7 @@ class HttpUtils {
     private Map<String, String> params = new HashMap<>();
     private URL url;
 
-    public HttpUtils(String urlPath) {
+    public HttpClient(String urlPath) {
         try {
             url = new URL(urlPath);
         } catch (MalformedURLException e) {
@@ -61,6 +64,34 @@ class HttpUtils {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public static String post(String webUrl, String dataOut) {
+        HttpURLConnection connection = null;
+        try {
+            URL url = new URL(webUrl);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(3000);
+            connection.setReadTimeout(3000);
+            connection.setRequestMethod("POST");
+            //传出数据
+            DataOutputStream out = new DataOutputStream(connection.getOutputStream());
+            out.writeBytes(dataOut);
+            //接收数据
+            InputStream in = connection.getInputStream();
+            //将接收到的数据转成String
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null)
+                response.append(line);
+            return response.toString();
+        } catch (Exception e) {
+            return e.getMessage();
+        } finally {
+            if (connection != null)
+                connection.disconnect();
+        }
     }
 
     /**
