@@ -47,4 +47,8 @@
     <string name="pay_result_callback_msg" formatted="false">微信支付结果：%s</string>
 
     <string name="no_http_tips">请填写正确的协议</string>
+    <string name="button_save_text">保存</string>
+    <string name="button_ok_text">确定</string>
+    <string name="button_cancel_text">取消</string>
+    <string name="button_delete_text">删除</string>
 </resources>

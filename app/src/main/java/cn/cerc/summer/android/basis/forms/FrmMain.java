@@ -272,7 +272,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         progress = (ProgressBar) this.findViewById(R.id.progress);
         tipsImage = (ImageView) this.findViewById(R.id.image_tips);
 
-        browser = (BrowserView) this.findViewById(R.id.webview);
+        browser = (BrowserView) this.findViewById(R.id.webView);
 
         browser.getSettings().setTextZoom(settings.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this, ScreenUtils.getInches(this))));
 

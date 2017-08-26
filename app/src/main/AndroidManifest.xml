@@ -22,9 +22,9 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
-    <!--获取手机录音机使用权限，听写、识别、语义理解需要用到此权限 -->
+    <!-- 获取手机录音机使用权限，听写、识别、语义理解需要用到此权限 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <!-- SD卡权限  -->
+    <!-- SD卡权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- 在SDCard中创建与删除文件权限 -->
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
@@ -42,6 +42,7 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -183,6 +184,8 @@
         <activity android:name="cn.cerc.summer.android.parts.image.FrmZoomImage" />
         <activity android:name="cn.cerc.summer.android.parts.movie.FrmPlayMovie" />
         <activity android:name="cn.cerc.summer.android.parts.music.FrmCaptureMusic" />
+        <activity android:name="cn.cerc.summer.android.parts.barcode.FrmScanProduct" />
+        <activity android:name="cn.cerc.summer.android.parts.barcode.DlgScanProduct" />
     </application>
 
 </manifest>
