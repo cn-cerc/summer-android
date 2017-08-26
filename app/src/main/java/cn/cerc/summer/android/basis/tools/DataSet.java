@@ -29,7 +29,7 @@ public class DataSet {
         getCurrent().setField(fieldCode, fieldValue);
     }
 
-    private Record getCurrent() {
+    public Record getCurrent() {
         return records.get(position);
     }
 
@@ -49,5 +49,20 @@ public class DataSet {
         Record record = new Record();
         records.add(index, record);
         this.position = index;
+    }
+
+    public int getInt(String num) {
+        return getCurrent().getInt(num);
+    }
+
+    public boolean locate(String fieldCode, String fieldValue) {
+        position = -1;
+        for (int i = 0; i < records.size(); i++) {
+            if (records.get(i).getString(fieldCode).equals(fieldValue)) {
+                position = i;
+                return true;
+            }
+        }
+        return false;
     }
 }
