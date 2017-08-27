@@ -13,9 +13,8 @@ import cn.cerc.summer.android.basis.forms.JavaScriptService;
 
 public class SetTitle implements JavaScriptService {
     @Override
-    public String execute(Context context, String dataIn) throws Exception {
+    public String execute(Context context, JSONObject json) throws Exception {
         FrmMain main = (FrmMain) context;
-        JSONObject json = new JSONObject(dataIn);
         if (json.has("visibility"))
             main.setTitleVisibility(json.getBoolean("visibility"));
         if (json.has("title"))

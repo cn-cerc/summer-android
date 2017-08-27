@@ -6,10 +6,12 @@ import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSONObject;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -185,10 +187,14 @@ public class JavaScriptProxy extends Object {
     public String list() {
         Map<String, String> items = new LinkedHashMap<>();
         JSONObject json = new JSONObject();
-        for (Class clazz : services.keySet()) {
-            String args[] = clazz.getName().split("\\.");
-            String temp = args[args.length - 1];
-            json.put(temp, services.get(clazz));
+        try {
+            for (Class clazz : services.keySet()) {
+                String args[] = clazz.getName().split("\\.");
+                String temp = args[args.length - 1];
+                json.put(temp, services.get(clazz));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         return json.toString();
     }
@@ -218,7 +224,8 @@ public class JavaScriptProxy extends Object {
                 if (object instanceof JavaScriptService) {
                     JavaScriptService object1 = (JavaScriptService) object;
                     try {
-                        json.setData(object1.execute(this.owner, dataIn));
+                        JSONObject request = new JSONObject(dataIn);
+                        json.setData(object1.execute(this.owner, request));
                         json.setResult(true);
                     } catch (Exception e) {
                         json.setMessage(e.getMessage());

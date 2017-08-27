@@ -2,6 +2,8 @@ package cn.cerc.summer.android.basis.utils;
 
 import android.content.Context;
 
+import org.json.JSONObject;
+
 import cn.cerc.summer.android.basis.forms.JavaScriptService;
 
 /**
@@ -10,7 +12,7 @@ import cn.cerc.summer.android.basis.forms.JavaScriptService;
 
 public class CallPhoneNumber implements JavaScriptService {
     @Override
-    public String execute(Context context, String dataIn) {
+    public String execute(Context context, JSONObject request) {
         //TODO: 此功能还未准备好
         throw new RuntimeException("此功能还未准备好");
     }

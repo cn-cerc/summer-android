@@ -26,8 +26,9 @@ public class FrmLoginByAccount extends AppCompatActivity implements View.OnClick
     Button btnLogin;
     TextView lblMessage;
     CheckBox chkSave;
-    private final int MSG_LOGIN = 1;
+    private String loginUrl;
 
+    private final int MSG_LOGIN = 1;
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -65,10 +66,14 @@ public class FrmLoginByAccount extends AppCompatActivity implements View.OnClick
         btnLogin.setOnClickListener(this);
         lblMessage = (TextView) findViewById(R.id.lblMessage);
         chkSave = (CheckBox) findViewById(R.id.chkSave);
+
+        Intent intent = getIntent();
+        loginUrl = intent.getStringExtra("loginUrl");
     }
 
-    public static void startForm(AppCompatActivity content) {
+    public static void startForm(AppCompatActivity content, String loginUrl) {
         Intent intent = new Intent();
+        intent.putExtra("loginUrl", loginUrl);
         intent.setClass(content, FrmLoginByAccount.class);
         content.startActivity(intent);
     }
@@ -92,7 +97,7 @@ public class FrmLoginByAccount extends AppCompatActivity implements View.OnClick
                     @Override
                     public void run() {
                         try {
-                            HttpClient client = new HttpClient(String.format("%s/services/SvrUserLogin.Check", MyApp.HOME_URL));
+                            HttpClient client = new HttpClient(String.format("%s%s", MyApp.HOME_URL, loginUrl));
                             client.put("account", edtAccount.getText().toString());
                             String response = client.post();
                             Message msg = new Message();

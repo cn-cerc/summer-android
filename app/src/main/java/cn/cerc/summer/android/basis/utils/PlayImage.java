@@ -14,14 +14,13 @@ import cn.cerc.summer.android.parts.image.FrmZoomImage;
 
 public class PlayImage implements JavaScriptService {
     @Override
-    public String execute(Context context, String dataIn) throws Exception {
+    public String execute(Context context, JSONObject request) throws Exception {
         //{"url":"http://pic.4j4j.cn/upload/pic/20130617/55695c3c95.jpg"}
-        JSONObject json = new JSONObject(dataIn);
-        if (!json.has("url"))
+        if (!request.has("url"))
             throw new RuntimeException("params error: url is null.");
 
-        Log.d("PlayImage", "url:" + json.get("url"));
-        FrmZoomImage.startForm(context, json.getString("url"));
+        Log.d("PlayImage", "url:" + request.get("url"));
+        FrmZoomImage.startForm(context, request.getString("url"));
         return "ok";
     }
 }

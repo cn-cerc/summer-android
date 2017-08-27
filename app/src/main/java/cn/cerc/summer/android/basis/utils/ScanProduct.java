@@ -14,9 +14,7 @@ import cn.cerc.summer.android.parts.barcode.FrmScanProduct;
 
 public class ScanProduct implements JavaScriptService {
     @Override
-    public String execute(Context context, String dataIn) throws Exception {
-        Log.d("ScanProduct", dataIn);
-        JSONObject json = new JSONObject(dataIn);
+    public String execute(Context context, JSONObject json) throws Exception {
         Log.d("ScanProduct", json.getString("title"));
         FrmScanProduct.startForm(context, json.getString("title"), json.getString("homeUrl"),
                 json.getString("viewUrl"), json.getString("postUrl"));

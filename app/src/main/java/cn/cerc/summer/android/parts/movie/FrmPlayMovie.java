@@ -17,10 +17,10 @@ public class FrmPlayMovie extends AppCompatActivity {
         setContentView(R.layout.activity_frm_play_movie);
     }
 
-    public static void startForm(Context context, String urlMovie) {
+    public static void startForm(Context context, String movieUrl) {
         Intent intent = new Intent();
         intent.setClass(context, FrmZoomImage.class);
-        intent.putExtra("url", urlMovie);
+        intent.putExtra("url", movieUrl);
         context.startActivity(intent);
     }
 }

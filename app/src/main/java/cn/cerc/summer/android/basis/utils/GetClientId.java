@@ -2,6 +2,8 @@ package cn.cerc.summer.android.basis.utils;
 
 import android.content.Context;
 
+import org.json.JSONObject;
+
 import cn.cerc.summer.android.basis.core.PermissionUtils;
 import cn.cerc.summer.android.basis.forms.JavaScriptService;
 
@@ -12,7 +14,7 @@ import cn.cerc.summer.android.basis.forms.JavaScriptService;
 public class GetClientId implements JavaScriptService {
 
     @Override
-    public String execute(Context context, String dataIn) {
+    public String execute(Context context, JSONObject request) {
         return PermissionUtils.IMEI;
     }
 }
