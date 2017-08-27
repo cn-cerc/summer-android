@@ -34,6 +34,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.alipay.sdk.app.PayTask;
 import com.alipay.sdk.util.H5PayResultModel;
 import com.google.android.gms.appindexing.Action;
@@ -59,6 +60,7 @@ import cn.cerc.summer.android.basis.view.BrowserView;
 import cn.cerc.summer.android.basis.view.DragPointView;
 import cn.cerc.summer.android.basis.view.ShowDialog;
 import cn.cerc.summer.android.basis.view.ShowPopupWindow;
+import cn.cerc.summer.android.parts.login.FrmLoginByAccount;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 
@@ -373,7 +375,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 showPopupMenu(imgMore);
                 break;
             case R.id.lblTitle:
-//                setTitleVisibility(false);
+                FrmLoginByAccount.startForm(this, "/service/SvrUserLogin.check");
                 break;
             default:
                 break;

@@ -99,6 +99,7 @@ public class FrmLoginByAccount extends AppCompatActivity implements View.OnClick
                         try {
                             HttpClient client = new HttpClient(String.format("%s%s", MyApp.HOME_URL, loginUrl));
                             client.put("account", edtAccount.getText().toString());
+                            client.put("password", edtPassword.getText().toString());
                             String response = client.post();
                             Message msg = new Message();
                             msg.what = MSG_LOGIN;

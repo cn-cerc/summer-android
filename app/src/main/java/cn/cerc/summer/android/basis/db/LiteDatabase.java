@@ -1,12 +1,9 @@
-package cn.cerc.summer.android.basis.tools;
+package cn.cerc.summer.android.basis.db;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.ContextWrapper;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.EditText;
 
 import static android.database.sqlite.SQLiteDatabase.openOrCreateDatabase;

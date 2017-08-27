@@ -1,4 +1,4 @@
-package cn.cerc.summer.android.basis.tools;
+package cn.cerc.summer.android.basis.db;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;

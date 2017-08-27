@@ -1,4 +1,7 @@
-package cn.cerc.summer.android.basis.tools;
+package cn.cerc.summer.android.basis.db;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +12,18 @@ import java.util.List;
 
 public class DataSet {
     private List<Record> records = new ArrayList<>();
+    private Record head = null;
     private int position = -1;
+
+    public Record getHead() {
+        if (head == null)
+            head = new Record();
+        return head;
+    }
+
+    public void setHead(Record head) {
+        this.head = head;
+    }
 
     public List<Record> getRecords() {
         return records;
@@ -64,5 +78,25 @@ public class DataSet {
             }
         }
         return false;
+    }
+
+    public JSONObject getJSON() {
+        JSONObject json = new JSONObject();
+        try {
+            if (head != null) {
+                json.put("head", head.getJSON());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+
+    public static void main(String[] args) {
+        DataSet dataSet = new DataSet();
+        Record headIn = dataSet.getHead();
+        headIn.setField("account", "admin");
+        headIn.setField("password", "123456");
+        System.out.print("ok?" + dataSet.getJSON().toString());
     }
 }

@@ -1,4 +1,7 @@
-package cn.cerc.summer.android.basis.tools;
+package cn.cerc.summer.android.basis.db;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -22,5 +25,17 @@ public class Record extends HashMap<String, Object> {
             return (int) obj;
         else
             return 0;
+    }
+
+    public JSONObject getJSON() {
+        JSONObject json = new JSONObject();
+        try {
+            for (String key : this.keySet()) {
+                json.put(key, get(key));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
     }
 }

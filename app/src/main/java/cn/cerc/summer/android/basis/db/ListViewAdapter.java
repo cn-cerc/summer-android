@@ -1,4 +1,4 @@
-package cn.cerc.summer.android.basis.tools;
+package cn.cerc.summer.android.basis.db;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
