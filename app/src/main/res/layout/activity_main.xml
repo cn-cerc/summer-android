@@ -6,12 +6,13 @@
               android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/boxTitle"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:background="@color/colorPrimary">
 
         <ImageView
-            android:id="@+id/back"
+            android:id="@+id/imgBack"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_alignParentLeft="true"
@@ -21,7 +22,7 @@
             android:src="@drawable/ic_chevron_left_white_24dp"/>
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/lblTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -41,7 +42,7 @@
             android:layout_marginRight="15dp">
 
             <ImageView
-                android:id="@+id/more"
+                android:id="@+id/imgMore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -70,7 +71,7 @@
             android:layout_height="match_parent">
 
             <cn.cerc.summer.android.basis.view.BrowserView
-                android:id="@+id/webview"
+                android:id="@+id/webView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="none"/>

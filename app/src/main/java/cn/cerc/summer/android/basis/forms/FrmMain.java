@@ -31,6 +31,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListPopupWindow;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alipay.sdk.app.PayTask;
@@ -71,6 +72,10 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     public final static int FILECHOOSER_RESULTCODE = 41;
     public final static int FILECHOOSER_RESULTCODE_FOR_ANDROID_5 = 42;
 
+    ImageView imgBack, imgMore;
+    TextView lblTitle;
+    RelativeLayout boxTitle;
+
     private final int REQUEST_SETTING = 101;
     private static FrmMain instance;
 
@@ -86,8 +91,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private String logoutUrl = "";
     private boolean isGoHome = false;//是否返回home
     private boolean is_ERROR = false;//是否错误了
-    private ImageView backImage, moreImage;
-    private TextView title;
     private GoogleApiClient client;
     private String[] menus;//菜单
     private int[] menu_img = new int[]{R.mipmap.message, R.mipmap.msg_manager, R.mipmap.home, R.mipmap.setting, R.mipmap.wipe, R.mipmap.logout, R.mipmap.reload};
@@ -252,11 +255,13 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
     @SuppressLint("JavascriptInterface")
     private void InitView() {
-        backImage = (ImageView) this.findViewById(R.id.back);
-        moreImage = (ImageView) this.findViewById(R.id.more);
-        title = (TextView) this.findViewById(R.id.title);
-        backImage.setOnClickListener(this);
-        moreImage.setOnClickListener(this);
+        imgBack = (ImageView) this.findViewById(R.id.imgBack);
+        imgMore = (ImageView) this.findViewById(R.id.imgMore);
+        lblTitle = (TextView) this.findViewById(R.id.lblTitle);
+        boxTitle = (RelativeLayout) findViewById(R.id.boxTitle);
+        imgBack.setOnClickListener(this);
+        imgMore.setOnClickListener(this);
+        lblTitle.setOnClickListener(this);
 
         dragpointview = (DragPointView) this.findViewById(R.id.dragpointview);
         dragpointview.setEnable(false);
@@ -272,7 +277,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         progress = (ProgressBar) this.findViewById(R.id.progress);
         tipsImage = (ImageView) this.findViewById(R.id.image_tips);
 
-        browser = (BrowserView) this.findViewById(R.id.webview);
+        browser = (BrowserView) this.findViewById(R.id.webView);
 
         browser.getSettings().setTextZoom(settings.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this, ScreenUtils.getInches(this))));
 
@@ -361,11 +366,14 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back:
+            case R.id.imgBack:
                 browser.goBack();
                 break;
-            case R.id.more:
-                showPopupMenu(moreImage);
+            case R.id.imgMore:
+                showPopupMenu(imgMore);
+                break;
+            case R.id.lblTitle:
+//                setTitleVisibility(false);
                 break;
             default:
                 break;
@@ -412,7 +420,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                         browser.loadUrl(homeUrl);
                         break;
                     case 3:
-                        startActivityForResult(new Intent(FrmMain.this, FrmSettings.class).putExtra("address", browser.getUrl()), REQUEST_SETTING);
+                        FrmSettings.startFormForResult(FrmMain.getInstance(), REQUEST_SETTING, browser.getUrl());
                         break;
                     case 4:
                         clearCacheFolder(FrmMain.this.getCacheDir(), System.currentTimeMillis());
@@ -473,7 +481,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for moreImage information.
+     * See https://g.co/AppIndexing/AndroidStudio for imgMore information.
      */
     public Action getIndexApiAction() {
         Thing object = new Thing.Builder()
@@ -535,6 +543,10 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
         chooserIntent.putExtra(Intent.EXTRA_TITLE, "Image Chooser");
         startActivityForResult(chooserIntent, FILECHOOSER_RESULTCODE_FOR_ANDROID_5);
+    }
+
+    public void setTitleVisibility(boolean visibility) {
+        boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
     }
 
     private class MyWebViewClient extends WebViewClient {
@@ -623,18 +635,18 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         @Override
         public void onPageFinished(WebView view, String url) {
             if (is_ERROR) {
-                title.setText("出错了");
+                lblTitle.setText("出错了");
                 tipsImage.setVisibility(View.VISIBLE);
             } else {
-                title.setText(browser.getTitle());
+                lblTitle.setText(browser.getTitle());
                 tipsImage.setVisibility(View.GONE);
             }
             if (isGoHome) {
                 browser.clearHistory();
                 browser.clearCache(true);
-                backImage.setVisibility(View.INVISIBLE);
+                imgBack.setVisibility(View.INVISIBLE);
             } else {
-                backImage.setVisibility(View.VISIBLE);
+                imgBack.setVisibility(View.VISIBLE);
             }
             progress.setVisibility(View.GONE);
             super.onPageFinished(view, url);

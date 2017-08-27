@@ -75,7 +75,7 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
     }
 
     private void initView() {
-        imageview = (ImageView) this.findViewById(R.id.imageview);
+        imageview = (ImageView) this.findViewById(R.id.imageView);
         load_gif = (GifView) this.findViewById(R.id.load_gif);
         RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         rlp.leftMargin = ScreenUtils.getScreenWidth(this) / 2;
