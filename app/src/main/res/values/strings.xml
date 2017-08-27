@@ -53,4 +53,8 @@
     <string name="button_delete_text">删除</string>
     <string name="num_modify">修改数量</string>
     <string name="button_keyboard_text">键盘</string>
+    <string name="label_account">用户帐号：</string>
+    <string name="label_password">登录密码：</string>
+    <string name="button_login_text">登录系统</string>
+    <string name="label_save">记住我的密码</string>
 </resources>

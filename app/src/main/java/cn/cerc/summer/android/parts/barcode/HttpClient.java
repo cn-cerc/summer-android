@@ -14,11 +14,13 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import static android.R.attr.data;
+
 /**
  * Created by Jason<sz9214e@qq.com> on 2017/8/26.
  */
 
-class HttpClient {
+public class HttpClient {
     private String ENCODE = "utf-8";
     //要提交的网址
     private String webUrl;
@@ -39,7 +41,6 @@ class HttpClient {
      * Param     :   params请求体内容，encode编码格式
      */
     public String post() {
-        byte[] data = getRequestData(params, ENCODE).toString().getBytes();//获得请求体
         try {
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setConnectTimeout(3000);        //设置连接超时时间
@@ -49,12 +50,14 @@ class HttpClient {
             httpURLConnection.setUseCaches(false);               //使用Post方式不能使用缓存
             //设置请求体的类型是文本类型
             httpURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            //设置请求体的长度
-            httpURLConnection.setRequestProperty("Content-Length", String.valueOf(data.length));
             //获得输出流，向服务器写入数据
-            OutputStream outputStream = httpURLConnection.getOutputStream();
-            outputStream.write(data);
-
+            if (this.params.size() > 0) {
+                byte[] data = getRequestData(params, ENCODE).toString().getBytes();//获得请求体
+                //设置请求体的长度
+                httpURLConnection.setRequestProperty("Content-Length", String.valueOf(data.length));
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(data);
+            }
             int response = httpURLConnection.getResponseCode();            //获得服务器的响应码
             if (response == HttpURLConnection.HTTP_OK) {
                 InputStream inptStream = httpURLConnection.getInputStream();
