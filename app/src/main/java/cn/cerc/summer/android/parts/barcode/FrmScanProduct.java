@@ -33,11 +33,11 @@ import org.json.JSONObject;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cn.cerc.jdb.core.DataSet;
+import cn.cerc.jdb.core.Record;
 import cn.cerc.summer.android.basis.core.MyApp;
-import cn.cerc.summer.android.basis.db.DataSet;
 import cn.cerc.summer.android.basis.db.ListViewAdapter;
 import cn.cerc.summer.android.basis.db.ListViewInterface;
-import cn.cerc.summer.android.basis.db.Record;
 
 import static cn.cerc.summer.android.parts.music.FrmCaptureMusic.url;
 
@@ -187,19 +187,19 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
             }
             case R.id.lblBarcode: {
                 int recordIndex = (Integer) view.getTag();
-                Record item = dataSet.get((Integer) view.getTag());
+                Record item = dataSet.setIndex((Integer) view.getTag());
                 webView.loadUrl(MyApp.HOME_URL + viewUrl + "?barcode=" + item.getString("barcode"));
                 break;
             }
             case R.id.lblNum: {
                 int recordIndex = (Integer) view.getTag();
-                Record item = dataSet.get((Integer) view.getTag());
+                Record item = dataSet.setIndex((Integer) view.getTag());
                 DlgScanProduct.startFormForResult(this, recordIndex, item.getInt("num"));
                 break;
             }
             case R.id.imgView: {
                 int recordIndex = (Integer) view.getTag();
-                Record item = dataSet.get((Integer) view.getTag());
+                Record item = dataSet.setIndex((Integer) view.getTag());
                 if (item.getInt("state") == 2) {//出错状态
                     item.setField("state", 0);
                     requestUpload(item.getString("barcode"), item.getInt("num"));
@@ -222,7 +222,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
                 dataSet.setField("num", dataSet.getInt("num") + 1);
                 dataSet.setField("state", 0);
             } else {
-                dataSet.insert(0);
+                dataSet.append(0);
                 dataSet.setField("barcode", barcode);
                 dataSet.setField("num", 1);
             }
@@ -280,9 +280,10 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
         if (resultCode == RESULT_OK) {
             int index = data.getIntExtra("recordIndex", -1);
             int num = data.getIntExtra("num", 0);
-            dataSet.get(index).setField("num", num);
+            dataSet.setRecNo(index+1);
+            dataSet.setField("num", num);
             if (num == 0)
-                dataSet.remove(index);
+                dataSet.delete();
             adapter.notifyDataSetChanged();
         }
     }

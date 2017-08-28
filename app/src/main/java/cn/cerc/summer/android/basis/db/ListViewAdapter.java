@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
+import cn.cerc.jdb.core.DataSet;
+import cn.cerc.jdb.core.Record;
+
 /**
  * Created by Jason<sz9214e@qq.com> on 2017/8/24.
  */
