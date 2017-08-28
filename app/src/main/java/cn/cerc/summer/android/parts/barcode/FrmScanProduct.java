@@ -187,19 +187,19 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
             }
             case R.id.lblBarcode: {
                 int recordIndex = (Integer) view.getTag();
-                Record item = dataSet.setIndex((Integer) view.getTag());
+                Record item = dataSet.getIndex((Integer) view.getTag());
                 webView.loadUrl(MyApp.HOME_URL + viewUrl + "?barcode=" + item.getString("barcode"));
                 break;
             }
             case R.id.lblNum: {
                 int recordIndex = (Integer) view.getTag();
-                Record item = dataSet.setIndex((Integer) view.getTag());
+                Record item = dataSet.getIndex((Integer) view.getTag());
                 DlgScanProduct.startFormForResult(this, recordIndex, item.getInt("num"));
                 break;
             }
             case R.id.imgView: {
                 int recordIndex = (Integer) view.getTag();
-                Record item = dataSet.setIndex((Integer) view.getTag());
+                Record item = dataSet.getIndex((Integer) view.getTag());
                 if (item.getInt("state") == 2) {//出错状态
                     item.setField("state", 0);
                     requestUpload(item.getString("barcode"), item.getInt("num"));
