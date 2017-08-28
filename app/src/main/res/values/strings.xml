@@ -21,7 +21,7 @@
     <string name="load_succeed">加载成功</string>
     <string name="load_fail">加载失败</string>
 
-    <string-array name="menu">
+    <string-array name="mainPopupMenu">
         <item>@string/unread_msg</item>
         <item>@string/msg_manager</item>
         <item>@string/home</item>
@@ -47,4 +47,14 @@
     <string name="pay_result_callback_msg" formatted="false">微信支付结果：%s</string>
 
     <string name="no_http_tips">请填写正确的协议</string>
+    <string name="button_save_text">保存</string>
+    <string name="button_ok_text">确定</string>
+    <string name="button_cancel_text">取消</string>
+    <string name="button_delete_text">删除</string>
+    <string name="num_modify">修改数量</string>
+    <string name="button_keyboard_text">键盘</string>
+    <string name="label_account">用户帐号：</string>
+    <string name="label_password">登录密码：</string>
+    <string name="button_login_text">登录系统</string>
+    <string name="label_save">记住我的密码</string>
 </resources>

@@ -1,0 +1,13 @@
+package cn.cerc.summer.android.basis.db;
+
+import android.view.View;
+
+import cn.cerc.jdb.core.Record;
+
+/**
+ * Created by Jason<sz9214e@qq.com> on 2017/8/24.
+ */
+
+public interface ListViewInterface {
+    public void onGetText(View view, Record item, int position);
+}
