@@ -41,6 +41,7 @@ import cn.cerc.summer.android.basis.core.MyApp;
 import cn.cerc.summer.android.basis.db.HttpClient;
 import cn.cerc.summer.android.basis.db.ListViewAdapter;
 import cn.cerc.summer.android.basis.db.ListViewInterface;
+import cn.cerc.summer.android.basis.db.RemoteForm;
 
 import static cn.cerc.summer.android.parts.music.FrmCaptureMusic.url;
 
@@ -69,7 +70,8 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
                     edtBarcode.requestFocus();
                     break;
                 case MSG_UPLOAD:
-                    String barcode = msg.getData().getString("barcode");
+                    RemoteForm rf = (RemoteForm) msg.obj;
+                    String barcode = rf.getParam("barcode");
                     if (dataSet.locate("barcode", barcode)) {
                         Record item = dataSet.getCurrent();
                         webView.loadUrl(String.format("%s%s?barcode=%s", MyApp.HOME_URL, viewUrl,
@@ -242,31 +244,10 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
         new Thread(new Runnable() {
             @Override
             public void run() {
-                //通知进行上传
-                Bundle bundle = new Bundle();
-                bundle.putString("barcode", barcode);
-                final Message msg = new Message();
-                msg.what = MSG_UPLOAD;
-                msg.setData(bundle);
-
-                Map<String, String> params = new HashMap<String, String>();
-                HttpClient http = new HttpClient(MyApp.HOME_URL + postUrl);
-                params.put("barcode", barcode);
-                params.put("num", "" + num);
-                String response = http.post(params);
-                Log.d("FrmScanProduct", response);
-
-                int state = 2; //更新state为失败
-                JSONObject json = null;
-                try {
-                    json = new JSONObject(response);
-                    if (json.has("result") && json.getBoolean("result"))
-                        state = 1; //更新state为成功
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                msg.arg1 = state;
-                handler.sendMessage(msg);
+                RemoteForm rf = new RemoteForm(postUrl);
+                rf.putParam("barcode", barcode);
+                rf.putParam("num", "" + num);
+                handler.sendMessage(rf.execByMessage(MSG_UPLOAD));
             }
         }).start();
     }
