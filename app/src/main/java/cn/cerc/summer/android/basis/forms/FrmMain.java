@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -55,11 +56,11 @@ import cn.cerc.summer.android.basis.core.MyBroadcastReceiver;
 import cn.cerc.summer.android.basis.core.PermissionUtils;
 import cn.cerc.summer.android.basis.core.ScreenUtils;
 import cn.cerc.summer.android.basis.core.WebConfig;
+import cn.cerc.summer.android.basis.db.RemoteForm;
 import cn.cerc.summer.android.basis.view.BrowserView;
 import cn.cerc.summer.android.basis.view.DragPointView;
 import cn.cerc.summer.android.basis.view.ShowDialog;
 import cn.cerc.summer.android.basis.view.ShowPopupWindow;
-import cn.cerc.summer.android.parts.login.FrmLoginByAccount;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 
@@ -79,6 +80,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     RelativeLayout boxTitle;
 
     private final int REQUEST_SETTING = 101;
+    private final int MSG_TEST = 102;
     private static FrmMain instance;
 
     private SharedPreferences settings;
@@ -98,12 +100,25 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private int[] menu_img = new int[]{R.mipmap.message, R.mipmap.msg_manager, R.mipmap.home, R.mipmap.setting, R.mipmap.wipe, R.mipmap.logout, R.mipmap.reload};
     private List<MainPopupMenu> menuList;
     private ListPopupWindow popupWindow;//列表弹框
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == MSG_TEST) {
+                RemoteForm rf = (RemoteForm) msg.obj;
+                if (rf.isOk()) {
+                    setTitle("ok");
+                } else {
+                    setTitle(rf.getMessage());
+                }
+            }
+        }
+    };
+
 
     public BrowserView getBrowser() {
         return browser;
     }
-
-    ;
 
     /**
      * 推送消息的消息id， 点击通知栏打开
@@ -375,7 +390,16 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 showPopupMenu(imgMore);
                 break;
             case R.id.lblTitle:
-                FrmLoginByAccount.startForm(this, "ServiceLogin");
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        RemoteForm rf = new RemoteForm("FrmScanProduct.save");
+//                        rf.putParam("barcode", "11223344");
+//                        rf.putParam("num", "124");
+//                        handler.sendMessage(rf.execByMessage(MSG_TEST));
+//                    }
+//                }).start();
+//                FrmLoginByAccount.startForm(this, "ServiceLogin");
                 break;
             default:
                 break;
