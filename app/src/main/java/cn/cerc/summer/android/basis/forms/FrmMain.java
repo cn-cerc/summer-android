@@ -34,7 +34,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSONObject;
 import com.alipay.sdk.app.PayTask;
 import com.alipay.sdk.util.H5PayResultModel;
 import com.google.android.gms.appindexing.Action;
@@ -73,6 +72,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     public static final String JSON_ERROR = "com.mimrc.vine.JSON_ERROR";
     public final static int FILECHOOSER_RESULTCODE = 41;
     public final static int FILECHOOSER_RESULTCODE_FOR_ANDROID_5 = 42;
+    private static final String LOGTAG = "FrmMain";
 
     ImageView imgBack, imgMore;
     TextView lblTitle;
@@ -114,7 +114,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         public void gotResult(int i, String s, Set<String> set) {
             switch (i) {
                 case 0://成功
-                    Log.e("regsert:", "设置成功");
+                    Log.e(LOGTAG, "设置成功");
                     // 建议这里往 SharePreference 里写一个成功设置的状态。成功设置一次后，以后不必再次设置了。
                     break;
                 case 6002://失败
@@ -145,7 +145,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            Log.e("xxxx", "instance " + action);
+            Log.e(LOGTAG, "instance " + action);
             switch (action) {
                 case NETWORK_CHANGE:
                     if (MyApp.getNetworkState(context)) browser.reload();
@@ -154,7 +154,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 case APP_UPDATA://有更新
                     break;
                 default:
-                    Log.e("mainact", "instance:接收到广播");
+                    Log.e(LOGTAG, "instance:接收到广播");
                     break;
             }
         }
@@ -213,7 +213,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         if (intent.hasExtra("msgId")) {
             msgId = intent.getStringExtra("msgId");
             String msgurl = getMsgUrl(".show") + "&msgId=" + msgId;
-            Log.e("instance", msgurl);
+            Log.e(LOGTAG, msgurl);
             browser.loadUrl(msgurl);
         }
     }
@@ -375,7 +375,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 showPopupMenu(imgMore);
                 break;
             case R.id.lblTitle:
-                FrmLoginByAccount.startForm(this, "/service/SvrUserLogin.check");
+                FrmLoginByAccount.startForm(this, "/services/ServiceLogin");
                 break;
             default:
                 break;
@@ -562,16 +562,16 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             final PayTask task = new PayTask(FrmMain.this);
             final String ex = task.fetchOrderInfoFromH5PayUrl(url);
             if (!TextUtils.isEmpty(ex)) {
-                Log.e("url:::", url);
+                Log.e(LOGTAG, url);
                 new Thread(new Runnable() {
                     public void run() {
-                        Log.e("ex:::", ex);
+                        Log.e(LOGTAG, ex);
                         final H5PayResultModel result = task.h5Pay(ex, true);
                         if (!TextUtils.isEmpty(result.getReturnUrl())) {
                             FrmMain.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Log.e("return url:::", result.getReturnUrl());
+                                    Log.e(LOGTAG, result.getReturnUrl());
                                     view.loadUrl(result.getReturnUrl());
                                 }
                             });
@@ -607,7 +607,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             if (!MyApp.getNetworkState(view.getContext())) return;
-            Log.e("cururl", url);
+            Log.e(LOGTAG, url);
             is_ERROR = false;
             if (WebConfig.getInstance() == null) return;
             is_exit = false;
