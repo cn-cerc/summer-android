@@ -1,6 +1,9 @@
-package cn.cerc.summer.android.parts.barcode;
+package cn.cerc.summer.android.basis.db;
 
 import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -14,6 +17,7 @@ import java.net.URLEncoder;
 import java.util.Map;
 
 import cn.cerc.jdb.core.DataSet;
+import cn.cerc.summer.android.basis.forms.JavaScriptResult;
 
 /**
  * Created by Jason<sz9214e@qq.com> on 2017/8/26.
@@ -25,6 +29,7 @@ public class HttpClient {
     private String webUrl;
     private int resultCode = 0;
     private String message = null;
+    private DataSet dataOut = null;
 
     public HttpClient(String webUrl) {
         this.webUrl = webUrl;
@@ -119,5 +124,4 @@ public class HttpClient {
         resultData = new String(byteArrayOutputStream.toByteArray());
         return resultData;
     }
-
 }
