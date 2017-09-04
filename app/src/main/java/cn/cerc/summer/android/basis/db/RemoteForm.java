@@ -34,11 +34,10 @@ public class RemoteForm {
 
     public RemoteForm exec() {
         result = false;
-        HttpClient client = new HttpClient(String.format("%s/%s/%s", MyApp.HOME_URL, MyApp.FORMS_PATH, formCode));
-        String response = client.post(params);
-
         JSONObject json = null;
         try {
+            HttpClient client = new HttpClient(String.format("%s/%s/%s", MyApp.HOME_URL, MyApp.FORMS_PATH, formCode));
+            String response = client.post(params);
             json = new JSONObject(response);
             if (json.has("result")) {
                 result = json.getBoolean("result");
@@ -51,7 +50,7 @@ public class RemoteForm {
                     message = response;
                 }
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
             message = e.getMessage();
         }
         return this;
