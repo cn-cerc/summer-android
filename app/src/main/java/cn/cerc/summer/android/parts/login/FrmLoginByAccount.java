@@ -14,15 +14,8 @@ import android.widget.TextView;
 
 import com.mimrc.vine.R;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import cn.cerc.jdb.core.DataSet;
-import cn.cerc.summer.android.basis.core.MyApp;
-import cn.cerc.summer.android.parts.barcode.HttpClient;
+import cn.cerc.summer.android.basis.db.RemoteService;
 
 public class FrmLoginByAccount extends AppCompatActivity implements View.OnClickListener {
     EditText edtAccount;
@@ -38,23 +31,11 @@ public class FrmLoginByAccount extends AppCompatActivity implements View.OnClick
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == MSG_LOGIN) {
-                try {
-                    String response = (String) msg.obj;
-                    JSONObject json = null;
-                    json = new JSONObject(response);
-                    if (json.has("result") && json.getBoolean("result")) {
-                        lblMessage.setText(json.getString("data"));
-                    } else {
-                        if (json.has("message"))
-                            lblMessage.setText(json.getString("message"));
-                        else
-                            lblMessage.setText(response);
-                    }
-                }catch (JSONException e){
-                    lblMessage.setText("service result message error!");
-                } catch (Exception e) {
-                    lblMessage.setText(e.getMessage());
-                }
+                RemoteService rs = (RemoteService) msg.obj;
+                if (rs.isOk())
+                    lblMessage.setText("OK");
+                else
+                    lblMessage.setText(rs.getMessage());
             }
         }
     };
@@ -101,17 +82,13 @@ public class FrmLoginByAccount extends AppCompatActivity implements View.OnClick
                     @Override
                     public void run() {
                         try {
-                            DataSet dataIn = new DataSet();
+                            RemoteService rs = new RemoteService(loginUrl);
+                            DataSet dataIn = rs.getDataIn();
                             dataIn.getHead().setField("usercode", edtAccount.getText().toString());
                             dataIn.getHead().setField("Account_", edtAccount.getText().toString());
                             dataIn.getHead().setField("password", edtPassword.getText().toString());
                             dataIn.getHead().setField("Password_", edtPassword.getText().toString());
-
-                            HttpClient client = new HttpClient(String.format("%s%s", MyApp.HOME_URL, loginUrl));
-                            Message msg = new Message();
-                            msg.what = MSG_LOGIN;
-                            msg.obj = client.post(dataIn);
-                            handler.sendMessage(msg);
+                            handler.sendMessage(rs.execByMessage(MSG_LOGIN));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

@@ -36,6 +36,9 @@ import cn.jpush.android.api.JPushInterface;
 
 public class MyApp extends android.app.Application {
     public static String HOME_URL = "https://m.knowall.cn";
+    //    public static String HOME_URL = "http://192.168.1.181";
+    public static String SERVICES_PATH = "services";
+    public static String FORMS_PATH = "forms";
 
     private static MyApp instance;
     private DisplayImageOptions options;
@@ -43,6 +46,7 @@ public class MyApp extends android.app.Application {
     public static MyApp getInstance() {
         return instance;
     }
+
     public DisplayImageOptions getImageOptions() {
         return options;
     }
@@ -225,4 +229,5 @@ public class MyApp extends android.app.Application {
                 return false;
         }
         return true;
-    }}
+    }
+}

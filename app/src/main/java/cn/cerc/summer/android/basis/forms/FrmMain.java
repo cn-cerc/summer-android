@@ -375,7 +375,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 showPopupMenu(imgMore);
                 break;
             case R.id.lblTitle:
-                FrmLoginByAccount.startForm(this, "/services/ServiceLogin");
+                FrmLoginByAccount.startForm(this, "ServiceLogin");
                 break;
             default:
                 break;

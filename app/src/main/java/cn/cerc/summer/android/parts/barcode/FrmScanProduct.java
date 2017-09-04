@@ -38,6 +38,7 @@ import java.util.TimerTask;
 import cn.cerc.jdb.core.DataSet;
 import cn.cerc.jdb.core.Record;
 import cn.cerc.summer.android.basis.core.MyApp;
+import cn.cerc.summer.android.basis.db.HttpClient;
 import cn.cerc.summer.android.basis.db.ListViewAdapter;
 import cn.cerc.summer.android.basis.db.ListViewInterface;
 
