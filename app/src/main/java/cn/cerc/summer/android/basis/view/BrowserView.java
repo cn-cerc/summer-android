@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import cn.cerc.summer.android.basis.core.Constans;
+import cn.cerc.summer.android.basis.core.MyApp;
 
 public class BrowserView extends WebView {
 
@@ -62,7 +63,7 @@ public class BrowserView extends WebView {
         else return null;
 
         String filename = url.substring(url.indexOf("com") + 3);
-        File file = new File(Constans.getAppPath(Constans.DATA_PATH));
+        File file = new File(MyApp.getAppPath(Constans.DATA_PATH));
         String fileurl = file.getAbsolutePath() + filename;
         File files = new File(fileurl);
         if (!(files.isFile() && files.exists()))
