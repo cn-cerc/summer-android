@@ -17,6 +17,10 @@ import com.mimrc.vine.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import cn.cerc.jdb.core.DataSet;
 import cn.cerc.summer.android.basis.core.MyApp;
 import cn.cerc.summer.android.parts.barcode.HttpClient;
 
@@ -97,13 +101,16 @@ public class FrmLoginByAccount extends AppCompatActivity implements View.OnClick
                     @Override
                     public void run() {
                         try {
+                            DataSet dataIn = new DataSet();
+                            dataIn.getHead().setField("usercode", edtAccount.getText().toString());
+                            dataIn.getHead().setField("Account_", edtAccount.getText().toString());
+                            dataIn.getHead().setField("password", edtPassword.getText().toString());
+                            dataIn.getHead().setField("Password_", edtPassword.getText().toString());
+
                             HttpClient client = new HttpClient(String.format("%s%s", MyApp.HOME_URL, loginUrl));
-                            client.put("account", edtAccount.getText().toString());
-                            client.put("password", edtPassword.getText().toString());
-                            String response = client.post();
                             Message msg = new Message();
                             msg.what = MSG_LOGIN;
-                            msg.obj = client.post();
+                            msg.obj = client.post(dataIn);
                             handler.sendMessage(msg);
                         } catch (Exception e) {
                             e.printStackTrace();
