@@ -30,12 +30,15 @@ import com.mimrc.vine.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import cn.cerc.jdb.core.DataSet;
 import cn.cerc.jdb.core.Record;
 import cn.cerc.summer.android.basis.core.MyApp;
+import cn.cerc.summer.android.basis.db.HttpClient;
 import cn.cerc.summer.android.basis.db.ListViewAdapter;
 import cn.cerc.summer.android.basis.db.ListViewInterface;
 
@@ -246,11 +249,11 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
                 msg.what = MSG_UPLOAD;
                 msg.setData(bundle);
 
+                Map<String, String> params = new HashMap<String, String>();
                 HttpClient http = new HttpClient(MyApp.HOME_URL + postUrl);
-                http.put("barcode", barcode);
-                http.put("num", "" + num);
-
-                String response = http.post();
+                params.put("barcode", barcode);
+                params.put("num", "" + num);
+                String response = http.post(params);
                 Log.d("FrmScanProduct", response);
 
                 int state = 2; //更新state为失败
