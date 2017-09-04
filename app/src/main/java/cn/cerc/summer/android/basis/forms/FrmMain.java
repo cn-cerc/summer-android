@@ -53,7 +53,6 @@ import cn.cerc.summer.android.basis.core.Constans;
 import cn.cerc.summer.android.basis.core.MainPopupMenu;
 import cn.cerc.summer.android.basis.core.MyApp;
 import cn.cerc.summer.android.basis.core.MyBroadcastReceiver;
-import cn.cerc.summer.android.basis.core.PermissionUtils;
 import cn.cerc.summer.android.basis.core.ScreenUtils;
 import cn.cerc.summer.android.basis.core.WebConfig;
 import cn.cerc.summer.android.basis.db.RemoteForm;
@@ -61,6 +60,7 @@ import cn.cerc.summer.android.basis.view.BrowserView;
 import cn.cerc.summer.android.basis.view.DragPointView;
 import cn.cerc.summer.android.basis.view.ShowDialog;
 import cn.cerc.summer.android.basis.view.ShowPopupWindow;
+import cn.cerc.summer.android.parts.login.FrmLoginByAccount;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 
@@ -137,7 +137,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            JPushInterface.setAlias(FrmMain.this, PermissionUtils.IMEI, tac);
+                            JPushInterface.setAlias(FrmMain.this, MyApp.IMEI, tac);
                         }
                     }, 30000);
                     break;
@@ -267,7 +267,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
         Set<String> set = new HashSet<String>();
         set.add("android");
-        JPushInterface.setAlias(getApplicationContext(), PermissionUtils.IMEI, tac);//极光推送设置别名
+        JPushInterface.setAlias(getApplicationContext(), MyApp.IMEI, tac);//极光推送设置别名
     }
 
     @SuppressLint("JavascriptInterface")
@@ -399,7 +399,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 //                        handler.sendMessage(rf.execByMessage(MSG_TEST));
 //                    }
 //                }).start();
-//                FrmLoginByAccount.startForm(this, "ServiceLogin");
+//                FrmLoginByAccount.startForm(this, "SvrUserLogin.check");
                 break;
             default:
                 break;
@@ -573,6 +573,10 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
     public void setTitleVisibility(boolean visibility) {
         boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
+    }
+
+    public void loadUrl(String url) {
+        browser.loadUrl(url);
     }
 
     private class MyWebViewClient extends WebViewClient {

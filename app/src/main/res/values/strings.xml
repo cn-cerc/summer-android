@@ -56,5 +56,5 @@
     <string name="label_account">用户帐号：</string>
     <string name="label_password">登录密码：</string>
     <string name="button_login_text">登录系统</string>
-    <string name="label_save">记住我的密码</string>
+    <string name="label_save">记住密码（专用手机可选择）</string>
 </resources>
