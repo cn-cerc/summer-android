@@ -41,6 +41,7 @@ import cn.cerc.summer.android.basis.utils.ScanProduct;
 import cn.cerc.summer.android.basis.utils.SetTitle;
 import cn.cerc.summer.android.basis.utils.ShareToWeibo;
 import cn.cerc.summer.android.basis.utils.ShareToWeixin;
+import cn.cerc.summer.android.basis.utils.ShowWarning;
 
 /**
  * 供js调用的js
@@ -82,6 +83,8 @@ public class JavaScriptProxy extends Object {
         //
         services.put(ShareToWeixin.class, "分享到微信");
         services.put(ShareToWeibo.class, "分享到微博");
+
+        services.put(ShowWarning.class, "显示严重警告对话框");
     }
 
     private AppCompatActivity owner;

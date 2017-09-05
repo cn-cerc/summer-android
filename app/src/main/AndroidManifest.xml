@@ -64,6 +64,7 @@
             android:name="android.webkit.WebView.MetricsOptOut"
             android:value="true" />
 
+
         <activity
             android:name="cn.cerc.summer.android.basis.forms.FrmSettings"
             android:screenOrientation="portrait" />
@@ -86,7 +87,6 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.DaemonService" />
-
                 <category android:name="com.mimrc.vine" />
             </intent-filter>
         </service>
@@ -187,6 +187,10 @@
         <activity android:name="cn.cerc.summer.android.parts.barcode.FrmScanProduct" />
         <activity android:name="cn.cerc.summer.android.parts.barcode.DlgScanProduct" />
         <activity android:name="cn.cerc.summer.android.parts.login.FrmLoginByAccount"></activity>
+        <activity
+            android:name="cn.cerc.summer.android.parts.dialog.FrmShowWarning"
+            android:theme="@style/MyDialogStyle">
+        </activity>
     </application>
 
 </manifest>

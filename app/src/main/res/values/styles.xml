@@ -23,5 +23,24 @@
         <item name="android:background">@color/colorPrimaryDark</item>
     </style>
 
+    <!-- 自定义警告框 -->
+    <style name="MyDialogStyle" parent="@android:style/Theme.Dialog">
+        <!-- 去黑边 -->
+        <item name="android:windowFrame">@null</item>
+        <!-- 设置是否可滑动 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 设置是否透明 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- 无标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 背景 -->
+        <item name="android:background">@null</item>
+        <!-- 窗口背景 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 是否变暗 -->
+        <item name="android:backgroundDimEnabled">false</item>
+        <!-- 点击空白部分 activity 不消失 -->
+        <item name="android:windowCloseOnTouchOutside">false</item>
+    </style>
 
 </resources>
