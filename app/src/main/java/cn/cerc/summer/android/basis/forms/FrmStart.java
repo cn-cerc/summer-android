@@ -1,6 +1,7 @@
 package cn.cerc.summer.android.basis.forms;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.view.View;
@@ -29,16 +31,16 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import cn.cerc.summer.android.basis.core.MyApp;
-import cn.cerc.summer.android.basis.core.WebConfig;
 import cn.cerc.summer.android.basis.core.ConfigFileLoadCallback;
-import cn.cerc.summer.android.basis.core.RequestCallback;
 import cn.cerc.summer.android.basis.core.Constans;
-import cn.cerc.summer.android.basis.core.PermissionUtils;
+import cn.cerc.summer.android.basis.core.MyApp;
+import cn.cerc.summer.android.basis.core.RequestCallback;
 import cn.cerc.summer.android.basis.core.ScreenUtils;
+import cn.cerc.summer.android.basis.core.WebConfig;
 import cn.cerc.summer.android.basis.core.XHttpRequest;
 
 public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, RequestCallback, ConfigFileLoadCallback {
+    private static final int REQUEST_READ_PHONE_STATE = 123;
     private SharedPreferences settings;
     private static FrmStart instance;
     private WebConfig webConfig; //线上的配置参数
@@ -67,11 +69,34 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
 
         settings = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
 
-        if (PermissionUtils.getPermission(new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PermissionUtils.REQUEST_READ_PHONE_STATE, this)) {
+        if (getPermission(this, new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_READ_PHONE_STATE)) {
             XHttpRequest.getInstance().GET(MyApp.buildDeviceUrl(MyApp.HOME_URL + "/MobileConfig"), this);
         }
 
         initView();
+    }
+
+    /**
+     * 检查是否已获取权限
+     *
+     * @param permissions 获取的权限名字数组
+     * @param requestcode 请求权限的请求码
+     * @return 返回是否已获取了这个权限
+     */
+    private boolean getPermission(Activity activity, String[] permissions, int requestcode) {
+        boolean is_req = false; //是否需要请求权限
+        for (String permission : permissions) {
+            int checkCallPhonePermission = ContextCompat.checkSelfPermission(activity, permission);
+            if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) is_req = true;
+        }
+        if (is_req) {
+            ActivityCompat.requestPermissions(activity, permissions, requestcode);
+            return false;
+        } else {
+            TelephonyManager TelephonyMgr = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
+            MyApp.IMEI = "n_" + TelephonyMgr.getDeviceId();
+            return true;
+        }
     }
 
     private void initView() {
@@ -100,10 +125,10 @@ public class FrmStart extends AppCompatActivity implements ActivityCompat.OnRequ
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case PermissionUtils.REQUEST_READ_PHONE_STATE:
+            case REQUEST_READ_PHONE_STATE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     TelephonyManager TelephonyMgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-                    PermissionUtils.IMEI = TelephonyMgr.getDeviceId();
+                    MyApp.IMEI = TelephonyMgr.getDeviceId();
                     XHttpRequest.getInstance().GET(MyApp.buildDeviceUrl(MyApp.HOME_URL + "/MobileConfig"), this);
                 } else {
                     ActivityCompat.requestPermissions(this, permissions, requestCode);

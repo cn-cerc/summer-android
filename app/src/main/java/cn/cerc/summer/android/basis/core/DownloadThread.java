@@ -46,7 +46,7 @@ public class DownloadThread extends Thread {
      */
     private void fileLoad(String url) {
         String remote = MyApp.fileurl2name(url, 0);
-        String savepath = Constans.getAppPath(Constans.DATA_PATH) + MyApp.fileurl2name(url, 0);
+        String savepath = MyApp.getAppPath(Constans.DATA_PATH) + MyApp.fileurl2name(url, 0);
 
         if (!MyApp.needUpdate(url, jsonarr)) {
             loadnext();

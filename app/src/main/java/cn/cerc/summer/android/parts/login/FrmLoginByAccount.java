@@ -15,7 +15,10 @@ import android.widget.TextView;
 import com.mimrc.vine.R;
 
 import cn.cerc.jdb.core.DataSet;
+import cn.cerc.summer.android.basis.core.MyApp;
+import cn.cerc.summer.android.basis.core.MySession;
 import cn.cerc.summer.android.basis.db.RemoteService;
+import cn.cerc.summer.android.basis.forms.FrmMain;
 
 public class FrmLoginByAccount extends AppCompatActivity implements View.OnClickListener {
     EditText edtAccount;
@@ -26,15 +29,20 @@ public class FrmLoginByAccount extends AppCompatActivity implements View.OnClick
     private String loginUrl;
 
     private final int MSG_LOGIN = 1;
+    private static final String LOGTAG = "FrmLoginByAccount";
+
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == MSG_LOGIN) {
                 RemoteService rs = (RemoteService) msg.obj;
-                if (rs.isOk())
-                    lblMessage.setText("OK");
-                else
+                if (rs.isOk()) {
+                    String token = rs.getDataOut().getHead().getString("SessionID_");
+                    MySession.getInstance().setToken(token);
+                    FrmMain.getInstance().loadUrl(MyApp.getInstance().getFormUrl("WebDefault?sid=" + token));
+                    finish();
+                } else
                     lblMessage.setText(rs.getMessage());
             }
         }
@@ -84,10 +92,12 @@ public class FrmLoginByAccount extends AppCompatActivity implements View.OnClick
                         try {
                             RemoteService rs = new RemoteService(loginUrl);
                             DataSet dataIn = rs.getDataIn();
-                            dataIn.getHead().setField("usercode", edtAccount.getText().toString());
+//                            dataIn.getHead().setField("usercode", edtAccount.getText().toString());
                             dataIn.getHead().setField("Account_", edtAccount.getText().toString());
-                            dataIn.getHead().setField("password", edtPassword.getText().toString());
+//                            dataIn.getHead().setField("password", edtPassword.getText().toString());
                             dataIn.getHead().setField("Password_", edtPassword.getText().toString());
+                            dataIn.getHead().setField("MachineID_", MyApp.IMEI);
+                            dataIn.getHead().setField("ClientName_", "android");
                             handler.sendMessage(rs.execByMessage(MSG_LOGIN));
                         } catch (Exception e) {
                             e.printStackTrace();

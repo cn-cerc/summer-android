@@ -9,8 +9,6 @@ import org.json.JSONObject;
 import cn.cerc.jdb.core.DataSet;
 import cn.cerc.summer.android.basis.core.MyApp;
 
-import static android.R.attr.data;
-
 /**
  * Created by Jason<sz9214e@qq.com> on 2017/9/4.
  */
@@ -26,7 +24,7 @@ public class RemoteService {
         this.serviceCode = serviceCode;
     }
 
-    public Message execByMessage(int messageId){
+    public Message execByMessage(int messageId) {
         Message msg = new Message();
         msg.what = messageId;
         msg.obj = this.exec();
@@ -43,13 +41,15 @@ public class RemoteService {
             if (json.has("result")) {
                 result = json.getBoolean("result");
                 message = json.getString("message");
-                String data = json.getString("data");
-//                Log.d("AppDataSet", "data:" + data);
-                if (data.startsWith("[") && data.endsWith("]")) {
-                    if (!dataOut.setJSON(data.substring(1, data.length() - 1))) {
-                        Log.d("RemoteService", "dataSet:" + dataOut.getJSON());
-                        message = "DataSet JSON error!";
-                        result = false;
+                if (json.has("data")) {
+                    String data = json.getString("data");
+//                  Log.d("AppDataSet", "data:" + data);
+                    if (data.startsWith("[") && data.endsWith("]")) {
+                        if (!dataOut.setJSON(data.substring(1, data.length() - 1))) {
+                            Log.d("RemoteService", "dataSet:" + dataOut.getJSON());
+                            message = "DataSet JSON error!";
+                            result = false;
+                        }
                     }
                 }
             } else {
@@ -60,7 +60,7 @@ public class RemoteService {
                 }
             }
         } catch (JSONException e) {
-            message = "service result message error!";
+            message = e.getMessage();
         } catch (Exception e) {
             message = e.getMessage();
         }
