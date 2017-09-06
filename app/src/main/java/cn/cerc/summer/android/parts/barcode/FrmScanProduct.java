@@ -147,7 +147,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         //打开指定的网页
-        webView.loadUrl(MyApp.HOME_URL + homeUrl);
+        webView.loadUrl(MyApp.getFormUrl(homeUrl));
 
         //关闭软键盘
         edtBarcode.setInputType(InputType.TYPE_NULL);
@@ -193,7 +193,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
             case R.id.lblBarcode: {
                 int recordIndex = (Integer) view.getTag();
                 Record item = dataSet.getIndex((Integer) view.getTag());
-                webView.loadUrl(MyApp.HOME_URL + viewUrl + "?barcode=" + item.getString("barcode"));
+                webView.loadUrl(MyApp.getFormUrl(viewUrl + "?barcode=" + item.getString("barcode")));
                 break;
             }
             case R.id.lblNum: {

@@ -36,7 +36,7 @@ public class RemoteForm {
         result = false;
         JSONObject json = null;
         try {
-            HttpClient client = new HttpClient(String.format("%s/%s/%s", MyApp.HOME_URL, MyApp.FORMS_PATH, formCode));
+            HttpClient client = new HttpClient(MyApp.getFormUrl(formCode));
             String response = client.post(params);
             json = new JSONObject(response);
             if (json.has("result")) {
