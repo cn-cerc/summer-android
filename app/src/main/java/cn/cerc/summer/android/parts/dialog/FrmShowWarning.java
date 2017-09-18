@@ -65,4 +65,13 @@ public class FrmShowWarning extends Activity implements View.OnClickListener {
                 break;
         }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+        }
+        finish();
+    }
 }
