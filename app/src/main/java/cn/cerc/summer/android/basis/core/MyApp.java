@@ -36,7 +36,7 @@ import cn.jpush.android.api.JPushInterface;
 
 public class MyApp extends android.app.Application {
     public static String HOME_URL = "https://m.knowall.cn";
-    //    public static String HOME_URL = "http://192.168.1.181";
+    //        public static String HOME_URL = "http://192.168.1.132";
     public static String SERVICES_PATH = "services";
     public static String FORMS_PATH = "form";
 
@@ -239,11 +239,11 @@ public class MyApp extends android.app.Application {
         return file.getAbsolutePath();
     }
 
-    public String getFormUrl(String formCode) {
+    public static String getFormUrl(String formCode) {
         return String.format("%s/%s/%s", HOME_URL, FORMS_PATH, formCode);
     }
 
-    public String getServiceUrl(String serviceCode) {
+    public static String getServiceUrl(String serviceCode) {
         return String.format("%s/%s/%s", HOME_URL, SERVICES_PATH, serviceCode);
     }
 }
