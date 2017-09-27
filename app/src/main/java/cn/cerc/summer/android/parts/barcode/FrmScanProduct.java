@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -30,15 +29,12 @@ import com.mimrc.vine.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import cn.cerc.jdb.core.DataSet;
 import cn.cerc.jdb.core.Record;
 import cn.cerc.summer.android.basis.core.MyApp;
-import cn.cerc.summer.android.basis.db.HttpClient;
 import cn.cerc.summer.android.basis.db.ListViewAdapter;
 import cn.cerc.summer.android.basis.db.ListViewInterface;
 import cn.cerc.summer.android.basis.db.RemoteForm;
@@ -74,10 +70,39 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
                     String barcode = rf.getParam("barcode");
                     if (dataSet.locate("barcode", barcode)) {
                         Record item = dataSet.getCurrent();
-                        webView.loadUrl(String.format("%s%s?barcode=%s", MyApp.HOME_URL, viewUrl,
-                                item.getString("barcode")));
-                        item.setField("state", msg.arg1);
-                        adapter.notifyDataSetChanged();
+
+                        if (rf.isOk()) {
+                            String data = rf.getData();
+                            JSONObject json = null;
+                            int num = 0;
+                            String desc = "";
+                            try {
+                                json = new JSONObject(data);
+                                if (item.getString("status").equals("N")) {
+                                    num = json.getInt("InitNum_") + item.getInt("appendNum");
+                                    item.setField("status", "U");
+                                    System.out.print("InitNum_ : " + json.getInt("InitNum_"));
+                                    item.setField("InitNum_", json.getInt("InitNum_"));
+                                } else {
+                                    num = json.getInt("Num_");
+                                }
+                                desc = json.getString("DescSpec_");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                item.setField("state", 2);
+                                adapter.notifyDataSetChanged();
+                            }
+
+                            item.setField("num", num);
+                            String url = String.format("%s?barcode=%s", MyApp.getFormUrl(viewUrl), item.getString("barcode"));
+                            webView.loadUrl(url);
+                            item.setField("state", 1);
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            item.setField("state", 2);
+                            adapter.notifyDataSetChanged();
+                        }
+
                     }
                     break;
                 default:
@@ -156,7 +181,6 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                     saveBarcode();
-                    return true;
                 }
                 return false;
             }
@@ -199,7 +223,8 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
             case R.id.lblNum: {
                 int recordIndex = (Integer) view.getTag();
                 Record item = dataSet.getIndex((Integer) view.getTag());
-                DlgScanProduct.startFormForResult(this, recordIndex, item.getInt("num"));
+//                DlgScanProduct.startFormForResult(this, recordIndex, item.getInt("num"));
+                DlgScanProduct.startFormForResult(this, recordIndex, item.getInt("num"), item.getString("barcode"));
                 break;
             }
             case R.id.imgView: {
@@ -207,7 +232,16 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
                 Record item = dataSet.getIndex((Integer) view.getTag());
                 if (item.getInt("state") == 2) {//出错状态
                     item.setField("state", 0);
-                    requestUpload(item.getString("barcode"), item.getInt("num"));
+                    int num = 0;
+                    if (dataSet.getString("status").equals("N")) {
+                        postUrl = "FrmMarketBE.scanReceive";
+                        num = dataSet.getInt("appendNum");
+                    } else {
+                        postUrl = "FrmMarketBE.scanModify";
+                        num = dataSet.getInt("appendNum") + dataSet.getInt("InitNum_");
+                    }
+                    requestUpload(item.getString("barcode"), num);
+//                    requestUpload(item.getString("barcode"), item.getInt("num"));
                 }
                 break;
             }
@@ -224,15 +258,26 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
         String barcode = edtBarcode.getText().toString().trim();
         if (barcode.length() > 0) {
             if (dataSet.locate("barcode", barcode)) {
-                dataSet.setField("num", dataSet.getInt("num") + 1);
+                //dataSet.setField("num", dataSet.getInt("num") + 1);
                 dataSet.setField("state", 0);
+                dataSet.setField("appendNum", dataSet.getInt("appendNum") + 1);
             } else {
                 dataSet.append(0);
                 dataSet.setField("barcode", barcode);
                 dataSet.setField("num", 1);
+                dataSet.setField("status", "N");
+                dataSet.setField("appendNum", 1);
             }
             adapter.notifyDataSetChanged();
-            requestUpload(barcode, dataSet.getInt("num"));
+            int num = 0;
+            if (dataSet.getString("status").equals("N")) {
+                postUrl = "FrmMarketBE.scanReceive";
+                num = dataSet.getInt("appendNum");
+            } else {
+                postUrl = "FrmMarketBE.scanModify";
+                num = dataSet.getInt("appendNum") + dataSet.getInt("InitNum_");
+            }
+            requestUpload(barcode, num);
         }
 //        edtBarcode.setText("");
 //        edtBarcode.getFocusedRect();
@@ -247,6 +292,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
                 RemoteForm rf = new RemoteForm(postUrl);
                 rf.putParam("barcode", barcode);
                 rf.putParam("num", "" + num);
+//                rf.putParam("num", "" + 1);
                 handler.sendMessage(rf.execByMessage(MSG_UPLOAD));
             }
         }).start();
@@ -264,7 +310,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
         if (resultCode == RESULT_OK) {
             int index = data.getIntExtra("recordIndex", -1);
             int num = data.getIntExtra("num", 0);
-            dataSet.setRecNo(index+1);
+            dataSet.setRecNo(index + 1);
             dataSet.setField("num", num);
             if (num == 0)
                 dataSet.delete();
@@ -289,7 +335,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
             case 0:
                 imgView.setImageResource(R.mipmap.reload);
                 //设置动画效果
-                RotateAnimation animation = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF,
+                RotateAnimation animation = new RotateAnimation(0f, -360f, Animation.RELATIVE_TO_SELF,
                         0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                 animation.setDuration(3000);//设置动画持续时间
                 animation.setRepeatCount(Animation.INFINITE);//设定无限循环
