@@ -83,7 +83,8 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
         //上传到主机后的返回值处理
         private void receiveHost(RemoteForm rf) {
             String barcode = rf.getParam("barcode");
-            if (dataSet.locate("barcode", barcode)) {
+            boolean isSpare = "true".equals(rf.getParam("isSpare"));
+            if (dataSet.locate("barcode;isSpare", barcode, isSpare)) {
                 Record item = dataSet.getCurrent();
                 if (rf.isOk()) {
                     String data = rf.getData();
@@ -95,7 +96,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
                         returnBarcode = json.getString("barcode");
                         if (barcode.equals(returnBarcode)) {
                             if (item.getBoolean("appendStatus")) {
-                                item.setField("num", item.getInt("num") + json.getInt("InitNum_"));
+                                item.setField("num", json.getInt("Num_"));
                                 item.setField("descSpec", json.getString("descSpec"));
                                 item.setField("appendStatus", false);
                             }
@@ -103,7 +104,6 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
                             webView.loadUrl(url);
                             item.setField("state", 1);
                             adapter.notifyDataSetChanged();
-
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
