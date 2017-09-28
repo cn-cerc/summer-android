@@ -84,7 +84,6 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
                                 json = new JSONObject(data);
                                 returnBarcode = json.getString("barcode");
                                 if (barcode.equals(returnBarcode)) {
-
                                     if (item.getString("status").equals("N")) {
                                         num = json.getInt("InitNum_") + item.getInt("appendNum");
                                         item.setField("status", "U");
@@ -166,12 +165,6 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
         btnSave = (Button) findViewById(R.id.btnSave);
         btnSave.setOnClickListener(this);
 
-//        for (int i = 0; i < 2; i++) {
-//            dataSet.append();
-//            dataSet.setField("barcode", "123424123412");
-//            dataSet.setField("num", 1 + i);
-//        }
-
         adapter = new ListViewAdapter(this, R.layout.activity_list_scan_product, dataSet, this);
         lstView = (ListView) findViewById(R.id.lstView);
         lstView.setAdapter(adapter);
@@ -240,7 +233,6 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
             case R.id.lblNum: {
                 int recordIndex = (Integer) view.getTag();
                 Record item = dataSet.getIndex((Integer) view.getTag());
-//                DlgScanProduct.startFormForResult(this, recordIndex, item.getInt("num"));
                 DlgScanProduct.startFormForResult(this, recordIndex, item.getInt("num"),
                         item.getString("barcode"), appendUrl, modifyUrl);
                 break;
@@ -258,7 +250,6 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
                         num = dataSet.getInt("appendNum") + dataSet.getInt("InitNum_");
                         requestUpload(item.getString("barcode"), num, modifyUrl);
                     }
-//                    requestUpload(item.getString("barcode"), item.getInt("num"));
                 }
                 break;
             }
@@ -276,7 +267,6 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
         String barcode = edtBarcode.getText().toString().trim();
         if (barcode.length() > 0) {
             if (dataSet.locate("barcode", barcode)) {
-                //dataSet.setField("num", dataSet.getInt("num") + 1);
                 dataSet.setField("state", 0);
                 dataSet.setField("appendNum", dataSet.getInt("appendNum") + 1);
             } else {
@@ -296,8 +286,6 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
                 requestUpload(barcode, num, modifyUrl);
             }
         }
-//        edtBarcode.setText("");
-//        edtBarcode.getFocusedRect();
         edtBarcode.setSelection(0, edtBarcode.getText().toString().length() - 1);
         edtBarcode.requestFocus();
     }
