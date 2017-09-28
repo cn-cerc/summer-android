@@ -35,6 +35,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <CheckBox
+            android:id="@+id/chkIsSpare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:text="赠品" />
+
         <EditText
             android:id="@+id/edtBarcode"
             android:layout_width="0dp"
@@ -52,6 +59,7 @@
             android:text="@string/button_keyboard_text" />
 
     </LinearLayout>
+
 
     <WebView
         android:id="@+id/webView"

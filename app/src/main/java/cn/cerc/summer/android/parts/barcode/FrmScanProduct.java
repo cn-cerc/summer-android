@@ -19,10 +19,12 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mimrc.vine.R;
 
@@ -41,6 +43,7 @@ import cn.cerc.summer.android.basis.db.RemoteForm;
 import cn.cerc.summer.android.basis.forms.FrmMain;
 
 import static cn.cerc.summer.android.parts.music.FrmCaptureMusic.url;
+import static com.mimrc.vine.R.id.chkIsSpare;
 
 public class FrmScanProduct extends AppCompatActivity implements View.OnClickListener, ListViewInterface {
     private static final int MSG_TIMER = 1;
@@ -48,6 +51,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
 
     ImageView imgBack;
     TextView lblTitle;
+    CheckBox chkIsSpare;
     EditText edtBarcode;
     Button btnSave;
     WebView webView;
@@ -70,48 +74,46 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
                     edtBarcode.requestFocus();
                     break;
                 case MSG_UPLOAD:
-                    RemoteForm rf = (RemoteForm) msg.obj;
-                    String barcode = rf.getParam("barcode");
-                    if (dataSet.locate("barcode", barcode)) {
-                        Record item = dataSet.getCurrent();
-
-                        if (rf.isOk()) {
-                            String data = rf.getData();
-                            JSONObject json = null;
-                            int num = 0;
-                            String returnBarcode = "";
-                            try {
-                                json = new JSONObject(data);
-                                returnBarcode = json.getString("barcode");
-                                if (barcode.equals(returnBarcode)) {
-                                    if (item.getString("status").equals("N")) {
-                                        num = json.getInt("InitNum_") + item.getInt("appendNum");
-                                        item.setField("status", "U");
-                                        item.setField("InitNum_", json.getInt("InitNum_"));
-                                    } else {
-                                        num = json.getInt("Num_");
-                                    }
-                                    item.setField("num", num);
-                                    String url = String.format("%s?barcode=%s", MyApp.getFormUrl(resultUrl), item.getString("barcode"));
-                                    webView.loadUrl(url);
-                                    item.setField("state", 1);
-                                    adapter.notifyDataSetChanged();
-
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                item.setField("state", 2);
-                                adapter.notifyDataSetChanged();
-                            }
-                        } else {
-                            item.setField("state", 2);
-                            adapter.notifyDataSetChanged();
-                        }
-
-                    }
+                    uploadToHost((RemoteForm) msg.obj);
                     break;
                 default:
                     break;
+            }
+        }
+
+        //将数据上传到主机
+        private void uploadToHost(RemoteForm rf) {
+            String barcode = rf.getParam("barcode");
+            if (dataSet.locate("barcode", barcode)) {
+                Record item = dataSet.getCurrent();
+                if (rf.isOk()) {
+                    String data = rf.getData();
+                    JSONObject json = null;
+                    int num = 0;
+                    String returnBarcode = "";
+                    try {
+                        json = new JSONObject(data);
+                        returnBarcode = json.getString("barcode");
+                        if (barcode.equals(returnBarcode)) {
+                            if (item.getBoolean("appendStatus")) {
+                                item.setField("num", item.getInt("num") + json.getInt("InitNum_"));
+                                item.setField("appendStatus", false);
+                            }
+                            String url = String.format("%s?barcode=%s", MyApp.getFormUrl(resultUrl), item.getString("barcode"));
+                            webView.loadUrl(url);
+                            item.setField("state", 1);
+                            adapter.notifyDataSetChanged();
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        item.setField("state", 2);
+                        adapter.notifyDataSetChanged();
+                    }
+                } else {
+                    item.setField("state", 2);
+                    adapter.notifyDataSetChanged();
+                }
             }
         }
     };
@@ -161,6 +163,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
         this.deleteUrl = intent.getStringExtra("deleteUrl");
         this.resultUrl = intent.getStringExtra("resultUrl");
 
+        chkIsSpare = (CheckBox) findViewById(R.id.chkIsSpare);
         edtBarcode = (EditText) findViewById(R.id.edtBarcode);
         btnSave = (Button) findViewById(R.id.btnSave);
         btnSave.setOnClickListener(this);
@@ -241,15 +244,9 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
                 int recordIndex = (Integer) view.getTag();
                 Record item = dataSet.getIndex((Integer) view.getTag());
                 if (item.getInt("state") == 2) {//出错状态
+                    Toast.makeText(this, "重新上传中。。。", Toast.LENGTH_SHORT).show();
                     item.setField("state", 0);
-                    int num = 0;
-                    if (dataSet.getString("status").equals("N")) {
-                        num = dataSet.getInt("appendNum");
-                        requestUpload(item.getString("barcode"), num, appendUrl);
-                    } else {
-                        num = dataSet.getInt("appendNum") + dataSet.getInt("InitNum_");
-                        requestUpload(item.getString("barcode"), num, modifyUrl);
-                    }
+                    requestUpload(item);
                 }
                 break;
             }
@@ -260,43 +257,38 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
             default:
                 break;
         }
-
     }
 
     private void saveBarcode() {
         String barcode = edtBarcode.getText().toString().trim();
+        boolean isSpare = chkIsSpare.isChecked();
         if (barcode.length() > 0) {
-            if (dataSet.locate("barcode", barcode)) {
+            if (dataSet.locate("barcode;isSpare", barcode, isSpare)) {
                 dataSet.setField("state", 0);
-                dataSet.setField("appendNum", dataSet.getInt("appendNum") + 1);
+                dataSet.setField("num", dataSet.getInt("num") + 1);
             } else {
                 dataSet.append(0);
+                dataSet.setField("isSpare", isSpare);
                 dataSet.setField("barcode", barcode);
                 dataSet.setField("num", 1);
-                dataSet.setField("status", "N");
-                dataSet.setField("appendNum", 1);
+                dataSet.setField("appendStatus", true);
             }
             adapter.notifyDataSetChanged();
-            int num = 0;
-            if (dataSet.getString("status").equals("N")) {
-                num = dataSet.getInt("appendNum");
-                requestUpload(barcode, num, appendUrl);
-            } else {
-                num = dataSet.getInt("appendNum") + dataSet.getInt("InitNum_");
-                requestUpload(barcode, num, modifyUrl);
-            }
+            requestUpload(dataSet.getCurrent());
         }
         edtBarcode.setSelection(0, edtBarcode.getText().toString().length() - 1);
         edtBarcode.requestFocus();
     }
 
-    private void requestUpload(final String barcode, final int num, final String url) {
+    private void requestUpload(final Record item) {
+        final boolean appendStatus = item.getBoolean("appendStatus");
         new Thread(new Runnable() {
             @Override
             public void run() {
-                RemoteForm rf = new RemoteForm(url);
-                rf.putParam("barcode", barcode);
-                rf.putParam("num", "" + num);
+                RemoteForm rf = new RemoteForm(appendStatus ? appendUrl : modifyUrl);
+                rf.putParam("barcode", item.getString("barcode"));
+                rf.putParam("num", "" + item.getInt("num"));
+                rf.putParam("isSpare", item.getBoolean("isSpare") ? "true" : "false");
                 handler.sendMessage(rf.execByMessage(MSG_UPLOAD));
             }
         }).start();
@@ -325,7 +317,9 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onGetText(View view, Record item, int position) {
         TextView lblBarcode = (TextView) view.findViewById(R.id.lblBarcode);
-        lblBarcode.setText(item.getString("barcode"));
+        String desc = item.getString("barcode");
+        desc += item.getBoolean("isSpare") ? "赠" : "  ";
+        lblBarcode.setText(desc);
         lblBarcode.setOnClickListener(this);
         lblBarcode.setTag(position);
 
