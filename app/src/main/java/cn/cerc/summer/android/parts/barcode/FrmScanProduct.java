@@ -43,7 +43,6 @@ import cn.cerc.summer.android.basis.db.RemoteForm;
 import cn.cerc.summer.android.basis.forms.FrmMain;
 
 import static cn.cerc.summer.android.parts.music.FrmCaptureMusic.url;
-import static com.mimrc.vine.R.id.chkIsSpare;
 
 public class FrmScanProduct extends AppCompatActivity implements View.OnClickListener, ListViewInterface {
     private static final int MSG_TIMER = 1;
@@ -74,15 +73,15 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
                     edtBarcode.requestFocus();
                     break;
                 case MSG_UPLOAD:
-                    uploadToHost((RemoteForm) msg.obj);
+                    receiveHost((RemoteForm) msg.obj);
                     break;
                 default:
                     break;
             }
         }
 
-        //将数据上传到主机
-        private void uploadToHost(RemoteForm rf) {
+        //上传到主机后的返回值处理
+        private void receiveHost(RemoteForm rf) {
             String barcode = rf.getParam("barcode");
             if (dataSet.locate("barcode", barcode)) {
                 Record item = dataSet.getCurrent();
@@ -97,6 +96,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
                         if (barcode.equals(returnBarcode)) {
                             if (item.getBoolean("appendStatus")) {
                                 item.setField("num", item.getInt("num") + json.getInt("InitNum_"));
+                                item.setField("descSpec", json.getString("descSpec"));
                                 item.setField("appendStatus", false);
                             }
                             String url = String.format("%s?barcode=%s", MyApp.getFormUrl(resultUrl), item.getString("barcode"));
@@ -317,7 +317,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onGetText(View view, Record item, int position) {
         TextView lblBarcode = (TextView) view.findViewById(R.id.lblBarcode);
-        String desc = item.getString("barcode");
+        String desc = !"".equals(item.getString("descSpec")) ? item.getString("descSpec") : item.getString("barcode");
         desc += item.getBoolean("isSpare") ? "赠" : "  ";
         lblBarcode.setText(desc);
         lblBarcode.setOnClickListener(this);
