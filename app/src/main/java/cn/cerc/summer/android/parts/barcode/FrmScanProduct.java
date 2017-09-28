@@ -230,7 +230,8 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
             case R.id.lblBarcode: {
                 int recordIndex = (Integer) view.getTag();
                 Record item = dataSet.getIndex((Integer) view.getTag());
-                webView.loadUrl(MyApp.getFormUrl(resultUrl + "?barcode=" + item.getString("barcode")));
+                webView.loadUrl(MyApp.getFormUrl(String.format("%s?barcode=%s&isSpare=%s",
+                        resultUrl, item.getString("barcode"), item.getBoolean("isSpare") ? "true" : "false")));
                 break;
             }
             case R.id.lblNum: {
