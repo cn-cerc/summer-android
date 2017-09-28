@@ -22,11 +22,20 @@ public class ScanProduct implements JavaScriptService {
         if (!json.has("homeUrl")) {
             return "homeUrl is null.";
         }
-        if (!json.has("viewUrl")) {
-            return "viewUrl is null.";
+        if (!json.has("returnUrl")) {
+            return "returnUrl is null.";
         }
-        if (!json.has("postUrl")) {
-            return "postUrl is null.";
+        if (!json.has("appendUrl")) {
+            return "appendUrl is null.";
+        }
+        if (!json.has("modifyUrl")) {
+            return "modifyUrl is null.";
+        }
+        if (!json.has("deleteUrl")) {
+            return "deleteUrl is null.";
+        }
+        if (!json.has("resultUrl")) {
+            return "resultUrl is null.";
         }
 
         String token = null;
@@ -44,7 +53,8 @@ public class ScanProduct implements JavaScriptService {
         Log.d("ScanProduct", json.getString("title"));
         MySession.getInstance().setToken(token);
         FrmScanProduct.startForm(context, json.getString("title"), json.getString("homeUrl"),
-                json.getString("viewUrl"), json.getString("postUrl"));
+                json.getString("returnUrl"), json.getString("appendUrl"), json.getString("modifyUrl"),
+                json.getString("deleteUrl"), json.getString("resultUrl"));
         return "true";
     }
 }

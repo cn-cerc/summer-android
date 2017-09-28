@@ -34,8 +34,8 @@ public class DlgScanProduct extends AppCompatActivity implements View.OnClickLis
     private int recordIndex;
     private int num;
     private String barcode;
-    private String modifyUrl = "FrmMarketBE.scanModify";
-    private String deleteUrl = "FrmMarketBE.scanDelete";
+    private String modifyUrl;
+    private String deleteUrl;
 
     private Handler handler = new Handler() {
         @Override
@@ -65,6 +65,8 @@ public class DlgScanProduct extends AppCompatActivity implements View.OnClickLis
         recordIndex = intent.getIntExtra("recordIndex", -1);
         num = intent.getIntExtra("num", 0);
         barcode = intent.getStringExtra("barcode");
+        modifyUrl = intent.getStringExtra("modifyUrl");
+        deleteUrl = intent.getStringExtra("deleteUrl");
 
         imgBack = (ImageView) findViewById(R.id.imgBack);
         imgBack.setOnClickListener(this);
@@ -151,12 +153,15 @@ public class DlgScanProduct extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    public static void startFormForResult(AppCompatActivity context, int recordIndex, int num, String barcode) {
+    public static void startFormForResult(AppCompatActivity context, int recordIndex, int num,
+                                          String barcode, String modifyUrl, String deleteUrl) {
         Intent intent = new Intent();
         intent.setClass(context, DlgScanProduct.class);
         intent.putExtra("recordIndex", recordIndex);
         intent.putExtra("num", num);
         intent.putExtra("barcode", barcode);
+        intent.putExtra("modifyUrl", modifyUrl);
+        intent.putExtra("deleteUrl", deleteUrl);
         context.startActivityForResult(intent, 1, null);
     }
 }
