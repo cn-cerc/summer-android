@@ -34,8 +34,8 @@ public class ScanProduct implements JavaScriptService {
         if (!json.has("deleteUrl")) {
             return "deleteUrl is null.";
         }
-        if (!json.has("resultUrl")) {
-            return "resultUrl is null.";
+        if (!json.has("viewUrl")) {
+            return "viewUrl is null.";
         }
 
         String token = null;
@@ -54,7 +54,7 @@ public class ScanProduct implements JavaScriptService {
         MySession.getInstance().setToken(token);
         FrmScanProduct.startForm(context, json.getString("title"), json.getString("homeUrl"),
                 json.getString("returnUrl"), json.getString("appendUrl"), json.getString("modifyUrl"),
-                json.getString("deleteUrl"), json.getString("resultUrl"));
+                json.getString("deleteUrl"), json.getString("viewUrl"));
         return "true";
     }
 }
