@@ -19,17 +19,25 @@ import cn.cerc.summer.android.basis.forms.JavaScriptService;
 public class CallPhoneNumber implements JavaScriptService {
     @Override
     public String execute(Context context, JSONObject request) throws JSONException {
+        JSONObject json = new JSONObject();
+        json.put("result", false);
+
         if (request.has("phoneNumber")) {
             String uri = "tel:" + request.getString("phoneNumber");
             Intent it = new Intent(Intent.ACTION_CALL, Uri.parse(uri));
-            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                return "没有拨打电话权限";
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                json.put("message", "没有拨打电话权限");
+                return json.toString();
             }
             context.startActivity(it);
         } else {
-            return "请输入手机号";
+            json.put("message", "请输入手机号");
+            return json.toString();
         }
-        return "ok";
+        json.put("result", true);
+        json.put("message", "ok");
+        return json.toString();
 
     }
 }
