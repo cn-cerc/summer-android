@@ -1,7 +1,10 @@
 package cn.cerc.summer.android.basis.utils;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.cerc.summer.android.basis.forms.JavaScriptService;
@@ -12,8 +15,14 @@ import cn.cerc.summer.android.basis.forms.JavaScriptService;
 
 public class CallPhoneNumber implements JavaScriptService {
     @Override
-    public String execute(Context context, JSONObject request) {
-        //TODO: 此功能还未准备好
-        throw new RuntimeException("此功能还未准备好");
+    public String execute(Context context, JSONObject request) throws JSONException {
+        if (request.has("phoneNumber")) {
+            String uri = "tel:" + request.getString("phoneNumber");
+            Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+            context.startActivity(it);
+        } else {
+            return "请输入手机号";
+        }
+        return "true";
     }
 }
