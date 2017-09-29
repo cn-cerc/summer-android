@@ -1,26 +1,19 @@
 package cn.cerc.summer.android.basis.forms;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.CallLog;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -55,8 +48,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import cn.cerc.summer.android.basis.core.Constans;
 import cn.cerc.summer.android.basis.core.MainPopupMenu;
@@ -380,10 +371,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             }
         });
         browser.setOnLongClickListener(this);
-
-        TelephonyManager phoneManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        phoneManager.listen(new PhoneListen(this),
-                PhoneStateListener.LISTEN_CALL_STATE);
     }
 
     @Override
@@ -591,6 +578,15 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         browser.loadUrl(url);
     }
 
+    public void runScript(final String scriptCommand) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                instance.loadUrl(String.format("javascript:%s", scriptCommand));
+            }
+        });
+    }
+
     private class MyWebViewClient extends WebViewClient {
 
         @Override
@@ -692,99 +688,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             }
             progress.setVisibility(View.GONE);
             super.onPageFinished(view, url);
-        }
-    }
-
-    private Intent intent;
-
-    public void setIntent(Intent intent) {
-        this.intent = intent;
-    }
-
-    private static final String TAG = "message";
-    private static boolean mIncomingFlag = false;
-    private static String mIncomingNumber = null;
-    private static long callTime;
-
-    final class PhoneListen extends PhoneStateListener {
-        private final Context context;
-        //获取本次通话的时间(单位:秒)
-        int time = 0;
-        //判断是否正在通话
-        boolean isCalling;
-        //控制循环是否结束
-        boolean isFinish;
-        private ExecutorService service;
-
-        public PhoneListen(Context context) {
-            this.context = context;
-            service = Executors.newSingleThreadExecutor();
-        }
-
-        @Override
-        public void onCallStateChanged(int state, String incomingNumber) {
-            if (intent == null) {
-                return;
-            }
-            if (!intent.getAction().equals(Intent.ACTION_NEW_OUTGOING_CALL)) {
-                TelephonyManager tManager = (TelephonyManager) context
-                        .getSystemService(Service.TELEPHONY_SERVICE);
-                switch (tManager.getCallState()) {
-                    case TelephonyManager.CALL_STATE_IDLE:
-                        mIncomingNumber = intent.getStringExtra("incoming_number");
-                        Log.i(TAG, "RINGING :" + mIncomingNumber);
-
-                        if (ActivityCompat.checkSelfPermission(FrmMain.this, Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
-                            // TODO: Consider calling
-                            //    ActivityCompat#requestPermissions
-                            // here to request the missing permissions, and then overriding
-                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                            //                                          int[] grantResults)
-                            // to handle the case where the user grants the permission. See the documentation
-                            // for ActivityCompat#requestPermissions for more details.
-                            return;
-                        }
-                        Cursor cursor = getContentResolver().query(CallLog.Calls.CONTENT_URI,
-                                new String[]{CallLog.Calls.DURATION, CallLog.Calls.TYPE, CallLog.Calls.DATE},
-                                null,
-                                null,
-                                CallLog.Calls.DEFAULT_SORT_ORDER);
-                        FrmMain.this.startManagingCursor(cursor);
-                        boolean hasRecord = cursor.moveToFirst();
-                        long incoming = 0L;
-                        long outgoing = 0L;
-                        int count = 0;
-                        if (hasRecord) {
-                            int type = cursor.getInt(cursor.getColumnIndex(CallLog.Calls.TYPE));
-                            long duration = cursor.getLong(cursor.getColumnIndex(CallLog.Calls.DURATION));
-                            switch (type) {
-                                case CallLog.Calls.INCOMING_TYPE:
-                                    incoming += duration;
-                                    break;
-                                case CallLog.Calls.OUTGOING_TYPE:
-                                    outgoing += duration;
-                                default:
-                                    break;
-                            }
-                            count++;
-                            hasRecord = cursor.moveToNext();
-                        }
-                        callTime = incoming + outgoing;
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                browser.loadUrl(String.format("javascript:getCallTime('%s')", FrmMain.callTime));
-                            }
-                        });
-
-//                        Toast.makeText(FrmMain.this,
-//                                "共计 " + count + "次通话 . 总通话时长 " + (incoming + outgoing) + "秒. 其中接听 " + incoming + " 秒, 拔打 "
-//                                        + outgoing + " 秒.",
-//                                Toast.LENGTH_LONG).show();
-                        break;
-                }
-            }
         }
     }
 }
