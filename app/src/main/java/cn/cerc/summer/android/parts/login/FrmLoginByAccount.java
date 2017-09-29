@@ -40,7 +40,7 @@ public class FrmLoginByAccount extends AppCompatActivity implements View.OnClick
                 if (rs.isOk()) {
                     String token = rs.getDataOut().getHead().getString("SessionID_");
                     MySession.getInstance().setToken(token);
-                    FrmMain.getInstance().loadUrl(MyApp.getInstance().getFormUrl("WebDefault?sid=" + token));
+                    FrmMain.getInstance().loadUrl(MyApp.getFormUrl("WebDefault?sid=" + token));
                     finish();
                 } else
                     lblMessage.setText(rs.getMessage());

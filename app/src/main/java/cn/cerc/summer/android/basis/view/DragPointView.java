@@ -181,7 +181,7 @@ public class DragPointView extends TextView {
     }
 
     public interface OnDragListencer {
-        public void onDragOut();
+        void onDragOut();
     }
 
     class PointView extends View {

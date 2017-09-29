@@ -90,7 +90,7 @@ public class AudioRecorderUtils {
      * 开始录音
      */
     public void startRecorder() {
-        Log.e("AudioRecorder","开始录音");
+        Log.e("AudioRecorder", "开始录音");
         if (status == Status.STATUS_NO_READY || TextUtils.isEmpty(fileName)) {
             throw new IllegalStateException("录音尚未初始化,请检查是否禁止了录音权限~");
         }
@@ -114,7 +114,7 @@ public class AudioRecorderUtils {
      * 暂停录音
      */
     public void pauseRecord() {
-        Log.e("AudioRecorder","暂停录音");
+        Log.e("AudioRecorder", "暂停录音");
         if (status != Status.STATUS_START) {
             throw new IllegalStateException("没有在录音");
         } else {
@@ -127,7 +127,7 @@ public class AudioRecorderUtils {
      * 停止录音
      */
     public void stopRecord() {
-        Log.e("AudioRecorder","停止录音");
+        Log.e("AudioRecorder", "停止录音");
         if (status == Status.STATUS_NO_READY || status == Status.STATUS_READY) {
             throw new IllegalStateException("录音尚未开始");
         } else {
@@ -141,7 +141,7 @@ public class AudioRecorderUtils {
      * 释放资源
      */
     public void release() {
-        Log.e("AudioRecorder","释放资源");
+        Log.e("AudioRecorder", "释放资源");
         //假如有暂停录音
         try {
             if (listFileName.size() > 0) {
@@ -231,7 +231,7 @@ public class AudioRecorderUtils {
      * @param filePaths
      */
     private void mergePCMFilesToWAVFile(final List<String> filePaths) {
-        Log.e("AudioRecorder","录音完成，pcm合并成wav");
+        Log.e("AudioRecorder", "录音完成，pcm合并成wav");
         new Thread(new Runnable() {
             @Override
             public void run() {
