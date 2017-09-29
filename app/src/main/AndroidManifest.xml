@@ -189,8 +189,7 @@
         <activity android:name="cn.cerc.summer.android.parts.login.FrmLoginByAccount"></activity>
         <activity
             android:name="cn.cerc.summer.android.parts.dialog.FrmShowWarning"
-            android:theme="@style/MyDialogStyle">
-        </activity>
+            android:theme="@style/MyDialogStyle"></activity>
     </application>
 
 </manifest>

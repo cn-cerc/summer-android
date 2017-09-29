@@ -97,8 +97,9 @@ public class DlgScanProduct extends AppCompatActivity implements View.OnClickLis
             }
         }, 300);
 
-        for (int index : buttons)
-            ((Button) findViewById(index)).setOnClickListener(this);
+        for (int index : buttons) {
+            findViewById(index).setOnClickListener(this);
+        }
     }
 
     @Override

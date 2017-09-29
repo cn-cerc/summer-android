@@ -71,7 +71,7 @@ public class FrmZoomImage extends AppCompatActivity implements View.OnClickListe
     class DownloadTask extends AsyncTask<String, Integer, Void> {
 
         protected Void doInBackground(String... params) {
-            bitmap = getImageInputStream((String) params[0]);
+            bitmap = getImageInputStream(params[0]);
             return null;
         }
 

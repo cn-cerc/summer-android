@@ -38,7 +38,7 @@ public class FrmCaptureMusic extends AppCompatActivity implements View.OnClickLi
     private String path;
     private int time;
 
-    Handler handler = new Handler(){
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
 
