@@ -64,6 +64,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
     private String resultUrl;
     private DataSet dataSet = new DataSet();
     private ListViewAdapter adapter;
+    private FrmScanProduct instance;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -82,6 +83,11 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
 
         //上传到主机后的返回值处理
         private void receiveHost(RemoteForm rf) {
+            if (!rf.isOk()) {
+                Toast.makeText(instance, rf.getMessage(), Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             String barcode = rf.getParam("barcode");
             boolean isSpare = "true".equals(rf.getParam("isSpare"));
             if (dataSet.locate("barcode;isSpare", barcode, isSpare)) {
@@ -147,11 +153,11 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frm_scan_product);
+        instance = this;
         Intent intent = getIntent();
 
         imgBack = (ImageView) findViewById(R.id.imgBack);
         imgBack.setOnClickListener(this);
-
 
         lblTitle = (TextView) findViewById(R.id.lblTitle);
         lblTitle.setText(intent.getStringExtra("title"));
@@ -181,9 +187,11 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
                 return true;
             }
         });
+
         //启用支持javascript
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
+
         //打开指定的网页
         webView.loadUrl(MyApp.getFormUrl(homeUrl));
 
@@ -245,7 +253,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
                 int recordIndex = (Integer) view.getTag();
                 Record item = dataSet.getIndex((Integer) view.getTag());
                 if (item.getInt("state") == 2) {//出错状态
-                    Toast.makeText(this, "重新上传中。。。", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "重新上传中...", Toast.LENGTH_SHORT).show();
                     item.setField("state", 0);
                     requestUpload(item);
                 }
@@ -319,10 +327,12 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
     public void onGetText(View view, Record item, int position) {
         TextView lblBarcode = (TextView) view.findViewById(R.id.lblBarcode);
         String desc = !"".equals(item.getString("descSpec")) ? item.getString("descSpec") : item.getString("barcode");
-        desc += item.getBoolean("isSpare") ? "赠" : "  ";
         lblBarcode.setText(desc);
         lblBarcode.setOnClickListener(this);
         lblBarcode.setTag(position);
+
+        TextView lblSpare = (TextView) view.findViewById(R.id.lblSpare);
+        lblSpare.setText(item.getBoolean("isSpare") ? "赠" : "");
 
         TextView lblNum = (TextView) view.findViewById(R.id.lblNum);
         lblNum.setText("" + item.getInt("num"));

@@ -109,14 +109,12 @@ public class DlgScanProduct extends AppCompatActivity implements View.OnClickLis
                 intent.putExtra("recordIndex", recordIndex);
                 intent.putExtra("num", getNum());
                 setResult(RESULT_OK, intent);
-
                 requestUpload(barcode, getNum(), modifyUrl);
                 break;
             case R.id.btnDelete:
                 intent.putExtra("recordIndex", recordIndex);
                 intent.putExtra("num", 0);
                 setResult(RESULT_OK, intent);
-
                 requestUpload(barcode, getNum(), deleteUrl);
                 break;
             default:
