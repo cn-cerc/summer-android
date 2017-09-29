@@ -36,7 +36,7 @@ import cn.jpush.android.api.JPushInterface;
 
 public class MyApp extends android.app.Application {
     public static String HOME_URL = "https://m.knowall.cn";
-    //        public static String HOME_URL = "http://192.168.1.132";
+    //    public static String HOME_URL = "http://192.168.1.174";
     public static String SERVICES_PATH = "services";
     public static String FORMS_PATH = "form";
 
