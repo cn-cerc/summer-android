@@ -10,7 +10,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,6 +20,7 @@ import com.mimrc.vine.R;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cn.cerc.jdb.core.Record;
 import cn.cerc.summer.android.basis.db.RemoteForm;
 
 public class DlgScanProduct extends AppCompatActivity implements View.OnClickListener {
@@ -34,8 +34,10 @@ public class DlgScanProduct extends AppCompatActivity implements View.OnClickLis
     private int recordIndex;
     private int num;
     private String barcode;
+    private boolean isSpare;
     private String modifyUrl;
     private String deleteUrl;
+    private DlgScanProduct instance;
 
     private Handler handler = new Handler() {
         @Override
@@ -44,9 +46,8 @@ public class DlgScanProduct extends AppCompatActivity implements View.OnClickLis
             switch (msg.what) {
                 case MSG_UPLOAD:
                     RemoteForm rf = (RemoteForm) msg.obj;
-                    String barcode = rf.getParam("barcode");
                     if (rf.isOk()) {
-                        showToast();
+                        Toast.makeText(instance, "操作成功", Toast.LENGTH_SHORT).show();
                         finish();
                     }
                     break;
@@ -60,11 +61,13 @@ public class DlgScanProduct extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dlg_scan_product);
+        instance = this;
 
         Intent intent = getIntent();
         recordIndex = intent.getIntExtra("recordIndex", -1);
         num = intent.getIntExtra("num", 0);
         barcode = intent.getStringExtra("barcode");
+        isSpare = intent.getBooleanExtra("isSpare", false);
         modifyUrl = intent.getStringExtra("modifyUrl");
         deleteUrl = intent.getStringExtra("deleteUrl");
 
@@ -107,38 +110,32 @@ public class DlgScanProduct extends AppCompatActivity implements View.OnClickLis
         Intent intent = new Intent();
         switch (v.getId()) {
             case R.id.btnOk:
+            case R.id.btnDelete:
+                if(v.getId() == R.id.btnDelete){
+                    edtNum.setText("0");
+                }
                 intent.putExtra("recordIndex", recordIndex);
                 intent.putExtra("num", getNum());
+                intent.putExtra("isSpare", isSpare);
                 setResult(RESULT_OK, intent);
-                requestUpload(barcode, getNum(), modifyUrl);
-                break;
-            case R.id.btnDelete:
-                intent.putExtra("recordIndex", recordIndex);
-                intent.putExtra("num", 0);
-                setResult(RESULT_OK, intent);
-                requestUpload(barcode, getNum(), deleteUrl);
+
+                final String url = getNum() == 0 ? deleteUrl : modifyUrl;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        RemoteForm rf = new RemoteForm(url);
+                        rf.putParam("barcode", barcode);
+                        rf.putParam("num", "" + getNum());
+                        rf.putParam("isSpare", isSpare ? "true" : "false");
+                        handler.sendMessage(rf.execByMessage(MSG_UPLOAD));
+                    }
+                }).start();
                 break;
             default:
                 setResult(RESULT_CANCELED, intent);
                 finish();
                 break;
         }
-    }
-
-    public void showToast() {
-        Toast.makeText(this, "操作成功", Toast.LENGTH_SHORT).show();
-    }
-
-    private void requestUpload(final String barcode, final int num, final String url) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                RemoteForm rf = new RemoteForm(url);
-                rf.putParam("barcode", barcode);
-                rf.putParam("num", "" + num);
-                handler.sendMessage(rf.execByMessage(MSG_UPLOAD));
-            }
-        }).start();
     }
 
     private int getNum() {
@@ -152,13 +149,14 @@ public class DlgScanProduct extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    public static void startFormForResult(AppCompatActivity context, int recordIndex, int num,
-                                          String barcode, String modifyUrl, String deleteUrl) {
+    public static void startFormForResult(AppCompatActivity context, int recordIndex, Record item,
+                                          String modifyUrl, String deleteUrl) {
         Intent intent = new Intent();
         intent.setClass(context, DlgScanProduct.class);
         intent.putExtra("recordIndex", recordIndex);
-        intent.putExtra("num", num);
-        intent.putExtra("barcode", barcode);
+        intent.putExtra("num", item.getInt("num"));
+        intent.putExtra("barcode", item.getString("barcode"));
+        intent.putExtra("isSpare", item.getBoolean("isSpare"));
         intent.putExtra("modifyUrl", modifyUrl);
         intent.putExtra("deleteUrl", deleteUrl);
         context.startActivityForResult(intent, 1, null);

@@ -61,7 +61,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
     private String appendUrl;
     private String modifyUrl;
     private String deleteUrl;
-    private String resultUrl;
+    private String viewUrl;
     private DataSet dataSet = new DataSet();
     private ListViewAdapter adapter;
     private FrmScanProduct instance;
@@ -106,7 +106,9 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
                                 item.setField("descSpec", json.getString("descSpec"));
                                 item.setField("appendStatus", false);
                             }
-                            String url = String.format("%s?barcode=%s", MyApp.getFormUrl(resultUrl), item.getString("barcode"));
+                            String url = String.format("%s?barcode=%s&isSpare",
+                                    MyApp.getFormUrl(viewUrl), item.getString("barcode"),
+                                    isSpare ? "true" : "false");
                             webView.loadUrl(url);
                             item.setField("state", 1);
                             adapter.notifyDataSetChanged();
@@ -133,10 +135,10 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
      * @param appendUrl 新增数据指定的url
      * @param modifyUrl 修改数据指定的url
      * @param deleteUrl 删除相应的记录的url
-     * @param resultUrl 显示相应的记录的url
+     * @param viewUrl 显示相应的记录的url
      */
     public static void startForm(Context context, String title, String homeUrl, String returnUrl,
-                                 String appendUrl, String modifyUrl, String deleteUrl, String resultUrl) {
+                                 String appendUrl, String modifyUrl, String deleteUrl, String viewUrl) {
         Intent intent = new Intent();
         intent.putExtra("title", title);
         intent.putExtra("homeUrl", homeUrl);
@@ -144,7 +146,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
         intent.putExtra("appendUrl", appendUrl);
         intent.putExtra("modifyUrl", modifyUrl);
         intent.putExtra("deleteUrl", deleteUrl);
-        intent.putExtra("resultUrl", resultUrl);
+        intent.putExtra("viewUrl", viewUrl);
         intent.setClass(context, FrmScanProduct.class);
         context.startActivity(intent);
     }
@@ -167,7 +169,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
         this.appendUrl = intent.getStringExtra("appendUrl");
         this.modifyUrl = intent.getStringExtra("modifyUrl");
         this.deleteUrl = intent.getStringExtra("deleteUrl");
-        this.resultUrl = intent.getStringExtra("resultUrl");
+        this.viewUrl = intent.getStringExtra("viewUrl");
 
         chkIsSpare = (CheckBox) findViewById(R.id.chkIsSpare);
         edtBarcode = (EditText) findViewById(R.id.edtBarcode);
@@ -239,14 +241,15 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
                 int recordIndex = (Integer) view.getTag();
                 Record item = dataSet.getIndex((Integer) view.getTag());
                 webView.loadUrl(MyApp.getFormUrl(String.format("%s?barcode=%s&isSpare=%s",
-                        resultUrl, item.getString("barcode"), item.getBoolean("isSpare") ? "true" : "false")));
+                        viewUrl, item.getString("barcode"), item.getBoolean("isSpare") ? "true" : "false")));
                 break;
             }
             case R.id.lblNum: {
                 int recordIndex = (Integer) view.getTag();
                 Record item = dataSet.getIndex((Integer) view.getTag());
-                DlgScanProduct.startFormForResult(this, recordIndex, item.getInt("num"),
-                        item.getString("barcode"), appendUrl, modifyUrl);
+                if (item.getBoolean("appendStatus"))
+                    break;
+                DlgScanProduct.startFormForResult(this, recordIndex, item, modifyUrl, deleteUrl);
                 break;
             }
             case R.id.imgView: {
@@ -317,8 +320,14 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
             int num = data.getIntExtra("num", 0);
             dataSet.setRecNo(index + 1);
             dataSet.setField("num", num);
-            if (num == 0)
+            if (num == 0) {
+                webView.loadUrl(MyApp.getFormUrl(homeUrl));
                 dataSet.delete();
+            } else {
+                Record item = dataSet.getCurrent();
+                webView.loadUrl(MyApp.getFormUrl(String.format("%s?barcode=%s&isSpare=%s",
+                        viewUrl, item.getString("barcode"), item.getBoolean("isSpare") ? "true" : "false")));
+            }
             adapter.notifyDataSetChanged();
         }
     }
