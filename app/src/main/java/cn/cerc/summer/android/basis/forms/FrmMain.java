@@ -234,27 +234,32 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_SETTING) {
-            if (resultCode == RESULT_OK) {
-                browser.loadUrl(data.getStringExtra("home"));
-            }
-        } else if (requestCode == FILECHOOSER_RESULTCODE) {
-            if (null == mUploadMessage)
-                return;
-            Uri result = data == null || resultCode != RESULT_OK ? null : data.getData();
-            mUploadMessage.onReceiveValue(result);
-            mUploadMessage = null;
-
-        } else if (requestCode == FILECHOOSER_RESULTCODE_FOR_ANDROID_5) {
-            if (null == mUploadMessageForAndroid5)
-                return;
-            Uri result = (data == null || resultCode != RESULT_OK) ? null : data.getData();
-            if (result != null) {
-                mUploadMessageForAndroid5.onReceiveValue(new Uri[]{result});
-            } else {
-                mUploadMessageForAndroid5.onReceiveValue(new Uri[]{});
-            }
-            mUploadMessageForAndroid5 = null;
+        switch (requestCode) {
+            case REQUEST_SETTING:
+                if (resultCode == RESULT_OK) {
+                    browser.loadUrl(data.getStringExtra("home"));
+                }
+                break;
+            case FILECHOOSER_RESULTCODE:
+                if (null == mUploadMessage)
+                    return;
+                Uri result1 = data == null || resultCode != RESULT_OK ? null : data.getData();
+                mUploadMessage.onReceiveValue(result1);
+                mUploadMessage = null;
+                break;
+            case FILECHOOSER_RESULTCODE_FOR_ANDROID_5:
+                if (null == mUploadMessageForAndroid5)
+                    return;
+                Uri result2 = (data == null || resultCode != RESULT_OK) ? null : data.getData();
+                if (result2 != null) {
+                    mUploadMessageForAndroid5.onReceiveValue(new Uri[]{result2});
+                } else {
+                    mUploadMessageForAndroid5.onReceiveValue(new Uri[]{});
+                }
+                mUploadMessageForAndroid5 = null;
+                break;
+            default:
+                break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

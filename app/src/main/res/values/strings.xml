@@ -57,4 +57,6 @@
     <string name="label_password">登录密码：</string>
     <string name="button_login_text">登录系统</string>
     <string name="label_save">记住密码（专用手机可选择）</string>
+
+    <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
 </resources>

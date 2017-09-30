@@ -24,6 +24,7 @@ import cn.cerc.summer.android.basis.utils.CallPhoneNumber;
 import cn.cerc.summer.android.basis.utils.CaptureImage;
 import cn.cerc.summer.android.basis.utils.CaptureMovie;
 import cn.cerc.summer.android.basis.utils.CaptureMusic;
+import cn.cerc.summer.android.basis.utils.CreateQrcode;
 import cn.cerc.summer.android.basis.utils.GetClientGPS;
 import cn.cerc.summer.android.basis.utils.GetClientId;
 import cn.cerc.summer.android.basis.utils.GetClientVersion;
@@ -62,6 +63,8 @@ public class JavaScriptProxy extends Object {
         services.put(CaptureMovie.class, "录像或选择本地视频，并上传到指定的位置");
         services.put(CaptureMusic.class, "录音并生成指定文件，并上传到指定的位置");
         //
+        services.put(CreateQrcode.class, "生成二维码或一维码");
+        //
         services.put(GetClientGPS.class, "取得当前的GPS地址");
         services.put(GetClientId.class, "取得当前设备ID");
         services.put(GetClientVersion.class, "取得当前软件版本号");
@@ -86,7 +89,7 @@ public class JavaScriptProxy extends Object {
         //
         services.put(ShareToWeixin.class, "分享到微信");
         services.put(ShareToWeibo.class, "分享到微博");
-
+        //
         services.put(ShowWarning.class, "显示严重警告对话框");
     }
 
