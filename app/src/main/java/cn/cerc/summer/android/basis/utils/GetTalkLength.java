@@ -18,7 +18,7 @@ import cn.cerc.summer.android.basis.forms.JavaScriptService;
  * Created by Hasee on 2017/9/28.
  */
 
-public class GetPhoneTime implements JavaScriptService {
+public class GetTalkLength implements JavaScriptService {
 
     @Override
     public String execute(Context context, JSONObject request) throws Exception {
@@ -26,18 +26,14 @@ public class GetPhoneTime implements JavaScriptService {
 
         TelephonyManager tm = (TelephonyManager) context
                 .getSystemService(Service.TELEPHONY_SERVICE);
-        JSONObject json = new JSONObject();
-        json.put("result", false);
 
         if (tm.getCallState() != TelephonyManager.CALL_STATE_IDLE) {
-            json.put("message", "当前手机不是空闲状态");
-            return json.toString();
+            throw new RuntimeException("当前手机不是空闲状态");
         }
 
         if (ActivityCompat.checkSelfPermission(frmMain, Manifest.permission.READ_CALL_LOG)
                 != PackageManager.PERMISSION_GRANTED) {
-            json.put("message", "没有拨打电话权限");
-            return json.toString();
+            throw new RuntimeException("没有拨打电话权限");
         }
 
         Cursor cursor = frmMain.getContentResolver().query(CallLog.Calls.CONTENT_URI,
@@ -51,21 +47,20 @@ public class GetPhoneTime implements JavaScriptService {
         long outgoing = 0L;
         int count = 0;
         if (!hasRecord) {
-            json.put("message", "没有通话记录");
-            return json.toString();
+            throw new RuntimeException("没有通话记录");
         }
 
         int type = cursor.getInt(cursor.getColumnIndex(CallLog.Calls.TYPE));
         String phoneNumber = cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER));
         if (type != CallLog.Calls.OUTGOING_TYPE) {
-            json.put("message", "该通话记录不是呼出记录");
-            return json.toString();
+            throw new RuntimeException("该通话记录不是呼出记录");
         }
 
         long callTime = cursor.getLong(cursor.getColumnIndex(CallLog.Calls.DURATION));
+        JSONObject json = new JSONObject();
+        json.put("result", true);
         json.put("message", "ok");
         json.put("phoneNumber", phoneNumber);
-        json.put("result", true);
         json.put("timeLength", callTime);
         return json.toString();
     }

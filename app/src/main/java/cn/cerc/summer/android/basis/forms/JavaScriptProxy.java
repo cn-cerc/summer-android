@@ -17,7 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import cn.cerc.summer.android.basis.core.MyApp;
-import cn.cerc.summer.android.basis.utils.GetPhoneTime;
+import cn.cerc.summer.android.basis.utils.GetTalkLength;
 import cn.cerc.summer.android.basis.utils.CallLoginByAccount;
 import cn.cerc.summer.android.basis.utils.CallLoginByPhone;
 import cn.cerc.summer.android.basis.utils.CallPhoneNumber;
@@ -54,7 +54,7 @@ public class JavaScriptProxy extends Object {
 
     static {
         services.put(CallPhoneNumber.class, "拔打指定的电话号码");
-        services.put(GetPhoneTime.class, "取得最近一次电话拨出时长");
+        services.put(GetTalkLength.class, "取得最近一次电话拨出时长");
         //
         services.put(CallLoginByAccount.class, "使用标准的帐号、密码进行登录");
         services.put(CallLoginByPhone.class, "使用手机号及验证码进行登录");
