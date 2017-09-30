@@ -23,6 +23,13 @@
             android:text="1234567890123" />
 
         <TextView
+            android:id="@+id/lblSpare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/holo_red_light"
+            android:textStyle="bold" />
+
+        <TextView
             android:id="@+id/lblNum"
             android:layout_width="60dp"
             android:layout_height="match_parent"

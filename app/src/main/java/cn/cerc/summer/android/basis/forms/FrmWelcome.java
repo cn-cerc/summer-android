@@ -115,7 +115,8 @@ public class FrmWelcome extends AppCompatActivity implements View.OnClickListene
     @Override
     public void onPageSelected(int position) {
         for (int i = 0; i < boxContan.getChildCount(); i++) {
-            if (position == i) boxContan.getChildAt(i).setBackgroundResource(R.drawable.point_white);
+            if (position == i)
+                boxContan.getChildAt(i).setBackgroundResource(R.drawable.point_white);
             else boxContan.getChildAt(i).setBackgroundResource(R.drawable.point_color);
         }
         if (position == (imageViewList.size() - 1)) lblSkip.setVisibility(View.VISIBLE);

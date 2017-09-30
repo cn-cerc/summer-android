@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cn.cerc.summer.android.basis.core.MyApp;
+import cn.cerc.summer.android.basis.core.MySession;
 
 /**
  * Created by Jason<sz9214e@qq.com> on 2017/9/4.
@@ -36,7 +37,15 @@ public class RemoteForm {
         result = false;
         JSONObject json = null;
         try {
-            HttpClient client = new HttpClient(String.format("%s/%s/%s", MyApp.HOME_URL, MyApp.FORMS_PATH, formCode));
+            String token = null;
+            if (!params.containsKey("token")) {
+                token = MySession.getInstance().getToken();
+            }
+            HttpClient client = null;
+            if (token != null && !"".equals(token))
+                client = new HttpClient(MyApp.getFormUrl(formCode) + String.format("?sid=%s", token));
+            else
+                client = new HttpClient(MyApp.getFormUrl(formCode));
             String response = client.post(params);
             json = new JSONObject(response);
             if (json.has("result")) {
