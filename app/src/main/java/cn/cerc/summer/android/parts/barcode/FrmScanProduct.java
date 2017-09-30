@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -106,7 +107,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
                                 item.setField("descSpec", json.getString("descSpec"));
                                 item.setField("appendStatus", false);
                             }
-                            String url = String.format("%s?barcode=%s&isSpare",
+                            String url = String.format("%s?barcode=%s&isSpare=%s",
                                     MyApp.getFormUrl(viewUrl), item.getString("barcode"),
                                     isSpare ? "true" : "false");
                             webView.loadUrl(url);
