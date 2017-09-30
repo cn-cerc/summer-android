@@ -32,10 +32,16 @@ import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeReader;
 import com.mimrc.vine.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import cn.cerc.summer.android.basis.core.MyApp;
+import cn.cerc.summer.android.basis.db.RemoteForm;
+import cn.cerc.summer.android.basis.forms.FrmMain;
 import cn.cerc.summer.android.parts.barcode.zxing.camera.CameraManager;
 import cn.cerc.summer.android.parts.barcode.zxing.decoding.CaptureActivityHandler;
 import cn.cerc.summer.android.parts.barcode.zxing.decoding.InactivityTimer;
@@ -45,8 +51,8 @@ import cn.cerc.summer.android.parts.barcode.zxing.view.ViewfinderView;
 public class FrmScanBarcode extends AppCompatActivity implements Callback, View.OnClickListener {
     public final static int SCANNIN_GREQUEST_CODE = 1;
     private static final long VIBRATE_DURATION = 200L;
-
     private CaptureActivityHandler handler;
+
     private ViewfinderView viewfinderView;
     private boolean hasSurface;
     private Vector<BarcodeFormat> decodeFormats;
@@ -59,13 +65,27 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
 
     private static final int PARSE_BARCODE_SUC = 300;
     private static final int PARSE_BARCODE_FAIL = 303;
+    private static final int MSG_UPLOAD = 2;
     private ProgressDialog mProgress;
     private String photo_path;
-    private Bitmap scanBitmap;
 
+    private Bitmap scanBitmap;
+    private int type;
+    private String forms;
+    private String jsFun;
 
     public static void startForm(AppCompatActivity context) {
         Intent intent = new Intent();
+        intent.setClass(context, FrmScanBarcode.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
+    }
+
+    public static void startForm(AppCompatActivity context, int type, String forms, String jsFun) {
+        Intent intent = new Intent();
+        intent.putExtra("type", type);
+        intent.putExtra("forms", forms);
+        intent.putExtra("jsFun", jsFun);
         intent.setClass(context, FrmScanBarcode.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
@@ -76,6 +96,11 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frm_scan_barcode);
+
+        Intent intent = getIntent();
+        type = intent.getIntExtra("type", 0);
+        forms = intent.getStringExtra("forms");
+        jsFun = intent.getStringExtra("jsFun");
 
         CameraManager.init(getApplication());
         viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
@@ -116,6 +141,24 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
                     break;
                 case PARSE_BARCODE_FAIL:
                     Toast.makeText(FrmScanBarcode.this, (String) msg.obj, Toast.LENGTH_LONG).show();
+                    break;
+                case MSG_UPLOAD:
+                    RemoteForm rf = (RemoteForm) msg.obj;
+                    if (rf.isOk()) {
+                        String data = rf.getData();
+                        JSONObject json = null;
+                        try {
+                            json = new JSONObject(data);
+                            FrmMain.getInstance().loadUrl(MyApp.getFormUrl(json.getString("forms")));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(FrmScanBarcode.this, "上传失败！", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(FrmScanBarcode.this, "上传失败！", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                default:
                     break;
 
             }
@@ -274,7 +317,35 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
         bundle.putParcelable("bitmap", bitmap);
         resultIntent.putExtras(bundle);
         this.setResult(RESULT_OK, resultIntent);
+
+        //操作类型：0(默认):原生页面调用、1、调后台；2、数据为 forms ,直接跳转、3、回调js方法
+        switch (type) {
+            case 0:
+                break;
+            case 1:
+                requestUpload(forms, resultString);
+                break;
+            case 2:
+                FrmMain.getInstance().loadUrl(resultString);
+                break;
+            case 3:
+                FrmMain.getInstance().runScript(String.format("%s('%s')", jsFun, resultString));
+                break;
+            default:
+                break;
+        }
         FrmScanBarcode.this.finish();
+    }
+
+    private void requestUpload(final String forms, final String resultString) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RemoteForm rf = new RemoteForm(forms);
+                rf.putParam("resultString", resultString);
+                handler.sendMessage(rf.execByMessage(MSG_UPLOAD));
+            }
+        }).start();
     }
 
     private void initCamera(SurfaceHolder surfaceHolder) {
