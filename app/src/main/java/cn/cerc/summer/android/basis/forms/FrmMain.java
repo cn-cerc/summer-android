@@ -60,7 +60,6 @@ import cn.cerc.summer.android.basis.view.BrowserView;
 import cn.cerc.summer.android.basis.view.DragPointView;
 import cn.cerc.summer.android.basis.view.ShowDialog;
 import cn.cerc.summer.android.basis.view.ShowPopupWindow;
-import cn.cerc.summer.android.parts.login.FrmLoginByAccount;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 
@@ -577,6 +576,15 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
     public void loadUrl(String url) {
         browser.loadUrl(url);
+    }
+
+    public void runScript(final String scriptCommand) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                instance.loadUrl(String.format("javascript:%s", scriptCommand));
+            }
+        });
     }
 
     private class MyWebViewClient extends WebViewClient {
