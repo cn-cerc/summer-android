@@ -5,17 +5,14 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.TextView;
 
 import com.mimrc.vine.R;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class FrmCheck extends AppCompatActivity {
-    TextView textView;
-
-    private FrmCheck instince;
+public class FrmStartup extends AppCompatActivity {
+    private FrmStartup instince;
     private Timer timer = new Timer();
     private Handler handler = new Handler(){
 
@@ -34,9 +31,8 @@ public class FrmCheck extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_frm_check);
+        setContentView(R.layout.activity_frm_startup);
         instince = this;
-        textView = (TextView) findViewById(R.id.textView);
 
         timer.schedule(new TimerTask() {
             @Override
