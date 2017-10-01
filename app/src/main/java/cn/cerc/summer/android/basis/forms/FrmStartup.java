@@ -5,11 +5,14 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 
 import com.mimrc.vine.R;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import cn.cerc.summer.android.basis.core.MyApp;
 
 public class FrmStartup extends AppCompatActivity {
     private FrmStartup instince;
@@ -43,5 +46,7 @@ public class FrmStartup extends AppCompatActivity {
             }
         }, 3000);
 
+        TelephonyManager TelephonyMgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+        MyApp.IMEI = TelephonyMgr.getDeviceId();
     }
 }

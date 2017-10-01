@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -44,21 +44,14 @@
             android:name="cn.cerc.summer.android.basis.forms.FrmMain"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
+            <!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            -->
         </activity>
-        <activity
-            android:name="cn.cerc.summer.android.basis.forms.FrmWelcome"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="cn.cerc.summer.android.basis.forms.FrmStart"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="cn.cerc.summer.android.basis.forms.FrmAD"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".wxapi.WXPayEntryActivity"
             android:exported="true"
@@ -193,9 +186,16 @@
         <activity android:name="cn.cerc.summer.android.parts.login.FrmLoginByAccount" />
         <activity
             android:name="cn.cerc.summer.android.parts.dialog.FrmShowWarning"
-            android:theme="@style/MyDialogStyle"></activity>
+            android:theme="@style/MyDialogStyle" />
         <activity android:name="cn.cerc.summer.android.parts.barcode.FrmCreateQrcode" />
         <activity android:name="cn.cerc.summer.android.parts.barcode.FrmScanBarcode" />
+        <activity android:name="cn.cerc.summer.android.basis.forms.FrmStartup">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

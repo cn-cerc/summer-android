@@ -25,7 +25,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import cn.jpush.android.api.JPushInterface;
@@ -44,14 +46,22 @@ public class MyApp extends android.app.Application {
 
     private static MyApp instance;
     private DisplayImageOptions options;
+    public boolean debug = false;
+    private String appVersion;
 
     public static MyApp getInstance() {
         return instance;
     }
 
+    public boolean isDebug() {
+        return debug;
+    }
+
     public DisplayImageOptions getImageOptions() {
         return options;
     }
+
+    private List<String> cacheFiles = new ArrayList<>();
 
     @Override
     public void onCreate() {
@@ -139,9 +149,9 @@ public class MyApp extends android.app.Application {
      *
      * @param webConfig 配置文件类
      */
-    public static void saveCacheList(WebConfig webConfig) {
+    public void saveCacheList() {
         Map<String, String> map = new HashMap<String, String>();
-        for (String str : webConfig.getCacheFiles()) {
+        for (String str : cacheFiles) {
             String[] args = str.split(",");
             map.put(args[0], args.length == 2 ? args[1] : "0");
         }
@@ -245,5 +255,25 @@ public class MyApp extends android.app.Application {
 
     public static String getServiceUrl(String serviceCode) {
         return String.format("%s/%s/%s", HOME_URL, SERVICES_PATH, serviceCode);
+    }
+
+    public static Object getClientId() {
+        return MyApp.IMEI;
+    }
+
+    public String getRootSite() {
+        return this.HOME_URL;
+    }
+
+    public String getAppVersion() {
+        return appVersion;
+    }
+
+    public void setAppVersion(String appVersion) {
+        this.appVersion = appVersion;
+    }
+
+    public String getStartPage() {
+        return String.format("%s?CLIENTID=%s&device=%s", MyApp.HOME_URL, MyApp.getClientId(), "phone");
     }
 }
