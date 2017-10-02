@@ -22,11 +22,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="bold"
+            android:layout_marginBottom="16dp"
             android:text="发现新版本"/>
 
         <TextView
             android:id="@+id/tvReadme"
+            android:layout_marginBottom="16dp"
             android:layout_width="match_parent"
+            android:text="(更新说明)"
             android:layout_height="wrap_content" />
 
         <LinearLayout
