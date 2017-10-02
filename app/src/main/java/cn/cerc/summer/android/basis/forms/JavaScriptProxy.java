@@ -111,20 +111,6 @@ public class JavaScriptProxy extends Object {
     }
 
     /**
-     * 返回当前的版本号
-     *
-     * @return
-     */
-    public int getVersion() {
-        try {
-            return MyApp.getVersionCode(this.owner);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    /**
      * 供html调用 微信支付
      *
      * @param appId     app id
