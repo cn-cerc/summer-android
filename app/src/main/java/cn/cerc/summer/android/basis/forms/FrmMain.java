@@ -2,11 +2,9 @@ package cn.cerc.summer.android.basis.forms;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -30,6 +28,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListPopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -38,9 +37,7 @@ import android.widget.TextView;
 import com.alipay.sdk.app.PayTask;
 import com.alipay.sdk.util.H5PayResultModel;
 import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.mimrc.vine.R;
 
 import java.io.File;
@@ -52,13 +49,10 @@ import java.util.Set;
 import cn.cerc.summer.android.basis.core.Constans;
 import cn.cerc.summer.android.basis.core.MainPopupMenu;
 import cn.cerc.summer.android.basis.core.MyApp;
-import cn.cerc.summer.android.basis.core.MyBroadcastReceiver;
 import cn.cerc.summer.android.basis.core.ScreenUtils;
-import cn.cerc.summer.android.basis.core.WebConfig;
 import cn.cerc.summer.android.basis.db.RemoteForm;
 import cn.cerc.summer.android.basis.view.BrowserView;
 import cn.cerc.summer.android.basis.view.DragPointView;
-import cn.cerc.summer.android.basis.view.ShowDialog;
 import cn.cerc.summer.android.basis.view.ShowPopupWindow;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
@@ -74,12 +68,11 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     public final static int FILECHOOSER_RESULTCODE_FOR_ANDROID_5 = 42;
     private static final String LOGTAG = "FrmMain";
 
-    ImageView imgBack, imgMore;
+    ImageView imgHome, imgBack, imgMore;
     TextView lblTitle;
-    RelativeLayout boxTitle;
+    LinearLayout boxTitle;
 
     private final int REQUEST_SETTING = 101;
-    private final int MSG_TEST = 102;
     private static FrmMain instance;
 
     private SharedPreferences settings;
@@ -92,32 +85,15 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private DragPointView dragpointview;
     private ImageView tipsImage;
     private String logoutUrl = "";
-    private boolean isGoHome = false;//是否返回home
     private boolean is_ERROR = false;//是否错误了
-    private GoogleApiClient client;
     private String[] menus;//菜单
     private int[] menu_img = new int[]{R.mipmap.message, R.mipmap.msg_manager, R.mipmap.home, R.mipmap.setting, R.mipmap.wipe, R.mipmap.logout, R.mipmap.reload};
     private List<MainPopupMenu> menuList;
     private ListPopupWindow popupWindow;//列表弹框
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == MSG_TEST) {
-                RemoteForm rf = (RemoteForm) msg.obj;
-                if (rf.isOk()) {
-                    setTitle("ok");
-                } else {
-                    setTitle(rf.getMessage());
-                }
-            }
-        }
-    };
-
-
     public BrowserView getBrowser() {
         return browser;
     }
+    private MyApp myApp;
 
     /**
      * 推送消息的消息id， 点击通知栏打开
@@ -144,51 +120,13 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             }
         }
     };
-    /**
-     * 退出点击的第一次的时间戳
-     */
-    private long timet = 0;
+
     /**
      * 是否直接退出
      */
     private boolean is_exit = false;
-    /**
-     * 广播接收者
-     */
-    private MyBroadcastReceiver receiver = new MyBroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            Log.e(LOGTAG, "instance " + action);
-            switch (action) {
-                case NETWORK_CHANGE:
-                    if (MyApp.getNetworkState(context)) browser.reload();
-                    else ShowDialog.getDialog(context).showTips();
-                    break;
-                case APP_UPDATA://有更新
-                    break;
-                default:
-                    Log.e(LOGTAG, "instance:接收到广播");
-                    break;
-            }
-        }
-    };
-
     public static FrmMain getInstance() {
         return instance;
-    }
-
-    /**
-     * 初始化广播
-     */
-    private void initbro() {
-        //通过代码的方式动态注册MyBroadcastReceiver
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(NETWORK_CHANGE);
-        filter.addAction(JSON_ERROR);
-        filter.addAction(APP_UPDATA);
-        //注册receiver
-        registerReceiver(receiver, filter);
     }
 
     public void setHomeUrl(String homeUrl) {
@@ -200,17 +138,14 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        instance = this;
 
         settings = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
 
-        instance = this;
-
-        initbro();
         InitView();
 
-        startActivity(new Intent(this, FrmStart.class));
-
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        myApp = MyApp.getInstance();
+        browser.loadUrl(myApp.getStartPage());
     }
 
     /**
@@ -276,10 +211,12 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
     @SuppressLint("JavascriptInterface")
     private void InitView() {
+        imgHome = (ImageView) findViewById(R.id.imgHome);
         imgBack = (ImageView) this.findViewById(R.id.imgBack);
         imgMore = (ImageView) this.findViewById(R.id.imgMore);
         lblTitle = (TextView) this.findViewById(R.id.lblTitle);
-        boxTitle = (RelativeLayout) findViewById(R.id.boxTitle);
+        boxTitle = (LinearLayout) findViewById(R.id.boxTitle);
+        imgHome.setOnClickListener(this);
         imgBack.setOnClickListener(this);
         imgMore.setOnClickListener(this);
         lblTitle.setOnClickListener(this);
@@ -387,6 +324,9 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.imgHome:
+                browser.loadUrl(myApp.getStartPage());
+                break;
             case R.id.imgBack:
                 browser.goBack();
                 break;
@@ -394,29 +334,9 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 showPopupMenu(imgMore);
                 break;
             case R.id.lblTitle:
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        RemoteForm rf = new RemoteForm("FrmScanProduct.save");
-//                        rf.putParam("barcode", "11223344");
-//                        rf.putParam("num", "124");
-//                        handler.sendMessage(rf.execByMessage(MSG_TEST));
-//                    }
-//                }).start();
-//                FrmLoginByAccount.startForm(this, "SvrUserLogin.check");
                 break;
             default:
                 break;
-        }
-    }
-
-    public void checkUpdate() {
-        try {//检查是否需要更新
-            if (!MyApp.getVersionName(this).equals(WebConfig.getInstance().getAppVersion())) {
-                ShowDialog.getDialog(this).UpDateDialogShow();
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
         }
     }
 
@@ -478,12 +398,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(receiver);//注销广播
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
         JPushInterface.onPause(this);
@@ -509,32 +423,12 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         return deletedFiles;
     }
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for imgMore information.
-     */
     public Action getIndexApiAction() {
         Thing object = new Thing.Builder()
                 .setName("Main Page")
                 .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
                 .build();
         return new Action.Builder(Action.TYPE_VIEW).setObject(object).setActionStatus(Action.STATUS_TYPE_COMPLETED).build();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        client.connect();
-        AppIndex.AppIndexApi.start(client, getIndexApiAction());
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        AppIndex.AppIndexApi.end(client, getIndexApiAction());
-        client.disconnect();
     }
 
     //在系统进行登入、登出时通知
@@ -650,6 +544,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             if (!MyApp.getNetworkState(view.getContext())) return;
             Log.e(LOGTAG, url);
             is_ERROR = false;
+            /*
             if (WebConfig.getInstance() == null) return;
             is_exit = false;
             isGoHome = false;
@@ -659,6 +554,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     is_exit = WebConfig.getInstance().getHomePagers().get(i).is_home();
                 }
             }
+            */
             progress.setVisibility(View.VISIBLE);
             super.onPageStarted(view, url, favicon);
         }
@@ -684,6 +580,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 lblTitle.setText(browser.getTitle());
                 tipsImage.setVisibility(View.GONE);
             }
+            /*
             if (isGoHome) {
                 browser.clearHistory();
                 browser.clearCache(true);
@@ -691,6 +588,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             } else {
                 imgBack.setVisibility(View.VISIBLE);
             }
+            */
             progress.setVisibility(View.GONE);
             super.onPageFinished(view, url);
         }

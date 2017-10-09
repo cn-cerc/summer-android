@@ -17,11 +17,11 @@ public class GetClientVersion implements JavaScriptService {
     public String execute(Context context, JSONObject request) {
 
         try {
-            return "" + MyApp.getVersionCode(context);
+            return MyApp.getInstance().getVersionName(context);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        return "0";
+        return "0.0.0";
 
     }
 }

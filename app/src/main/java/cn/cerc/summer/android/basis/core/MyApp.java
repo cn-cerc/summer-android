@@ -25,10 +25,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import cn.jpush.android.api.JPushInterface;
+
+import static android.R.attr.versionName;
 
 /**
  * Created by Jason<sz9214e@qq.com> on 2016/11/2.
@@ -37,6 +41,7 @@ import cn.jpush.android.api.JPushInterface;
 public class MyApp extends android.app.Application {
     public static String HOME_URL = "https://m.knowall.cn";
     //    public static String HOME_URL = "http://192.168.1.174";
+//        public static String HOME_URL = "http://192.168.31.247";
     public static String SERVICES_PATH = "services";
     public static String FORMS_PATH = "form";
 
@@ -44,14 +49,22 @@ public class MyApp extends android.app.Application {
 
     private static MyApp instance;
     private DisplayImageOptions options;
+    public boolean debug = false;
+    private String appVersion;
 
     public static MyApp getInstance() {
         return instance;
     }
 
+    public boolean isDebug() {
+        return debug;
+    }
+
     public DisplayImageOptions getImageOptions() {
         return options;
     }
+
+    private List<String> cacheFiles = new ArrayList<>();
 
     @Override
     public void onCreate() {
@@ -103,11 +116,10 @@ public class MyApp extends android.app.Application {
      * @return 版本号
      * @throws PackageManager.NameNotFoundException
      */
-    public static int getVersionCode(Context context) throws PackageManager.NameNotFoundException {
+    public String getCurrentVersion(Context context) throws PackageManager.NameNotFoundException {
         PackageManager pm = context.getPackageManager();
         PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
-        int versioncode = pi.versionCode;
-        return versioncode;
+        return pi.versionName;
     }
 
     /**
@@ -139,9 +151,9 @@ public class MyApp extends android.app.Application {
      *
      * @param webConfig 配置文件类
      */
-    public static void saveCacheList(WebConfig webConfig) {
+    public void saveCacheList() {
         Map<String, String> map = new HashMap<String, String>();
-        for (String str : webConfig.getCacheFiles()) {
+        for (String str : cacheFiles) {
             String[] args = str.split(",");
             map.put(args[0], args.length == 2 ? args[1] : "0");
         }
@@ -240,10 +252,44 @@ public class MyApp extends android.app.Application {
     }
 
     public static String getFormUrl(String formCode) {
-        return String.format("%s/%s/%s", HOME_URL, FORMS_PATH, formCode);
+        return getFormUrl(formCode, false);
+    }
+
+    public static String getFormUrl(String formCode, boolean first) {
+        if(first)
+            return String.format("%s/%s/%s?CLIENTID=%s&device=%s", MyApp.HOME_URL, FORMS_PATH, formCode,
+                    MyApp.getClientId(), "phone");
+        else
+            return String.format("%s/%s/%s", HOME_URL, FORMS_PATH, formCode);
     }
 
     public static String getServiceUrl(String serviceCode) {
         return String.format("%s/%s/%s", HOME_URL, SERVICES_PATH, serviceCode);
+    }
+
+    public static Object getClientId() {
+        return MyApp.IMEI;
+    }
+
+    public String getRootSite() {
+        return this.HOME_URL;
+    }
+
+    public String getAppVersion() {
+        return appVersion;
+    }
+
+    public void setAppVersion(String appVersion) {
+        this.appVersion = appVersion;
+    }
+
+    public String getStartPage() {
+        return String.format("%s?CLIENTID=%s&device=%s", MyApp.HOME_URL, MyApp.getClientId(), "phone");
+    }
+
+    //载入配置
+    public void loadConfig(JSONObject json) throws JSONException {
+        String value = json.getString("appVersion");
+        MyApp.getInstance().setAppVersion(value);
     }
 }
