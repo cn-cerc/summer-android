@@ -10,6 +10,6 @@ import org.json.JSONObject;
 
 public interface JavaScriptService {
 
-    public String execute(Context context, JSONObject request) throws Exception;
+    String execute(Context context, JSONObject request) throws Exception;
 
 }

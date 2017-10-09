@@ -7,8 +7,8 @@ android {
         applicationId "com.mimrc.vine"
         minSdkVersion 18
         targetSdkVersion 25
-        versionCode 10
-        versionName "1.0.13"
+        versionCode 15
+        versionName "1.1.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -33,6 +33,8 @@ dependencies {
     compile files('libs/universal-image-loader-1.9.5.jar')
     compile files('libs/alipaySdk-20170420.jar')
     compile files('libs/summer-core-1.3.0.jar')
+    compile files('libs/gson-2.6.2.jar')
+    compile files('libs/google-zxing-1.6.0.jar')
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.alibaba:fastjson:1.2.16'
     compile 'org.xutils:xutils:3.3.36'

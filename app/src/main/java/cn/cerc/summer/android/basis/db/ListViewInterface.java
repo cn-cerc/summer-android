@@ -9,5 +9,5 @@ import cn.cerc.jdb.core.Record;
  */
 
 public interface ListViewInterface {
-    public void onGetText(View view, Record item, int position);
+    void onGetText(View view, Record item, int position);
 }

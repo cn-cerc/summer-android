@@ -93,7 +93,7 @@ public class XHttpRequest implements AsyncFileLoadCallback {
     public Callback.Cancelable GETFile(final String url, final GetFileCallback rc) {
         if (!MyApp.getNetworkState(rc.getContext())) return null;
         RequestParams rp = new RequestParams(url);
-        rp.setSaveFilePath(Constans.getAppPath(Constans.APP_PATH) + "app.apk");
+        rp.setSaveFilePath(MyApp.getAppPath(Constans.APP_PATH) + "app.apk");
         Callback.Cancelable cc = x.http().get(rp, new Callback.ProgressCallback<File>() {
             @Override
             public void onWaiting() {
