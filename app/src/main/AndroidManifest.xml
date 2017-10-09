@@ -6,6 +6,8 @@
         android:name="com.mimrc.vine.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" />
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
