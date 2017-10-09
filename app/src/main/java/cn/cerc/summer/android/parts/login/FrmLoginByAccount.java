@@ -14,11 +14,11 @@ import android.widget.TextView;
 
 import com.mimrc.vine.R;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import cn.cerc.jdb.core.DataSet;
 import cn.cerc.summer.android.basis.core.MyApp;
-import cn.cerc.summer.android.parts.barcode.HttpClient;
+import cn.cerc.summer.android.basis.core.MySession;
+import cn.cerc.summer.android.basis.db.RemoteService;
+import cn.cerc.summer.android.basis.forms.FrmMain;
 
 public class FrmLoginByAccount extends AppCompatActivity implements View.OnClickListener {
     EditText edtAccount;
@@ -29,28 +29,21 @@ public class FrmLoginByAccount extends AppCompatActivity implements View.OnClick
     private String loginUrl;
 
     private final int MSG_LOGIN = 1;
+    private static final String LOGTAG = "FrmLoginByAccount";
+
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == MSG_LOGIN) {
-                try {
-                    String response = (String) msg.obj;
-                    JSONObject json = null;
-                    json = new JSONObject(response);
-                    if (json.has("result") && json.getBoolean("result")) {
-                        lblMessage.setText(json.getString("data"));
-                    } else {
-                        if (json.has("message"))
-                            lblMessage.setText(json.getString("message"));
-                        else
-                            lblMessage.setText(response);
-                    }
-                }catch (JSONException e){
-                    lblMessage.setText("service result message error!");
-                } catch (Exception e) {
-                    lblMessage.setText(e.getMessage());
-                }
+                RemoteService rs = (RemoteService) msg.obj;
+                if (rs.isOk()) {
+                    String token = rs.getDataOut().getHead().getString("SessionID_");
+                    MySession.getInstance().setToken(token);
+                    FrmMain.getInstance().loadUrl(MyApp.getFormUrl("WebDefault?sid=" + token));
+                    finish();
+                } else
+                    lblMessage.setText(rs.getMessage());
             }
         }
     };
@@ -97,14 +90,15 @@ public class FrmLoginByAccount extends AppCompatActivity implements View.OnClick
                     @Override
                     public void run() {
                         try {
-                            HttpClient client = new HttpClient(String.format("%s%s", MyApp.HOME_URL, loginUrl));
-                            client.put("account", edtAccount.getText().toString());
-                            client.put("password", edtPassword.getText().toString());
-                            String response = client.post();
-                            Message msg = new Message();
-                            msg.what = MSG_LOGIN;
-                            msg.obj = client.post();
-                            handler.sendMessage(msg);
+                            RemoteService rs = new RemoteService(loginUrl);
+                            DataSet dataIn = rs.getDataIn();
+//                            dataIn.getHead().setField("usercode", edtAccount.getText().toString());
+                            dataIn.getHead().setField("Account_", edtAccount.getText().toString());
+//                            dataIn.getHead().setField("password", edtPassword.getText().toString());
+                            dataIn.getHead().setField("Password_", edtPassword.getText().toString());
+                            dataIn.getHead().setField("MachineID_", MyApp.IMEI);
+                            dataIn.getHead().setField("ClientName_", "android");
+                            handler.sendMessage(rs.execByMessage(MSG_LOGIN));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

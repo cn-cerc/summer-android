@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -34,7 +35,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSONObject;
 import com.alipay.sdk.app.PayTask;
 import com.alipay.sdk.util.H5PayResultModel;
 import com.google.android.gms.appindexing.Action;
@@ -53,14 +53,13 @@ import cn.cerc.summer.android.basis.core.Constans;
 import cn.cerc.summer.android.basis.core.MainPopupMenu;
 import cn.cerc.summer.android.basis.core.MyApp;
 import cn.cerc.summer.android.basis.core.MyBroadcastReceiver;
-import cn.cerc.summer.android.basis.core.PermissionUtils;
 import cn.cerc.summer.android.basis.core.ScreenUtils;
 import cn.cerc.summer.android.basis.core.WebConfig;
+import cn.cerc.summer.android.basis.db.RemoteForm;
 import cn.cerc.summer.android.basis.view.BrowserView;
 import cn.cerc.summer.android.basis.view.DragPointView;
 import cn.cerc.summer.android.basis.view.ShowDialog;
 import cn.cerc.summer.android.basis.view.ShowPopupWindow;
-import cn.cerc.summer.android.parts.login.FrmLoginByAccount;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 
@@ -73,12 +72,14 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     public static final String JSON_ERROR = "com.mimrc.vine.JSON_ERROR";
     public final static int FILECHOOSER_RESULTCODE = 41;
     public final static int FILECHOOSER_RESULTCODE_FOR_ANDROID_5 = 42;
+    private static final String LOGTAG = "FrmMain";
 
     ImageView imgBack, imgMore;
     TextView lblTitle;
     RelativeLayout boxTitle;
 
     private final int REQUEST_SETTING = 101;
+    private final int MSG_TEST = 102;
     private static FrmMain instance;
 
     private SharedPreferences settings;
@@ -98,12 +99,25 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private int[] menu_img = new int[]{R.mipmap.message, R.mipmap.msg_manager, R.mipmap.home, R.mipmap.setting, R.mipmap.wipe, R.mipmap.logout, R.mipmap.reload};
     private List<MainPopupMenu> menuList;
     private ListPopupWindow popupWindow;//列表弹框
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == MSG_TEST) {
+                RemoteForm rf = (RemoteForm) msg.obj;
+                if (rf.isOk()) {
+                    setTitle("ok");
+                } else {
+                    setTitle(rf.getMessage());
+                }
+            }
+        }
+    };
+
 
     public BrowserView getBrowser() {
         return browser;
     }
-
-    ;
 
     /**
      * 推送消息的消息id， 点击通知栏打开
@@ -114,7 +128,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         public void gotResult(int i, String s, Set<String> set) {
             switch (i) {
                 case 0://成功
-                    Log.e("regsert:", "设置成功");
+                    Log.e(LOGTAG, "设置成功");
                     // 建议这里往 SharePreference 里写一个成功设置的状态。成功设置一次后，以后不必再次设置了。
                     break;
                 case 6002://失败
@@ -122,7 +136,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            JPushInterface.setAlias(FrmMain.this, PermissionUtils.IMEI, tac);
+                            JPushInterface.setAlias(FrmMain.this, MyApp.IMEI, tac);
                         }
                     }, 30000);
                     break;
@@ -145,7 +159,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            Log.e("xxxx", "instance " + action);
+            Log.e(LOGTAG, "instance " + action);
             switch (action) {
                 case NETWORK_CHANGE:
                     if (MyApp.getNetworkState(context)) browser.reload();
@@ -154,7 +168,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 case APP_UPDATA://有更新
                     break;
                 default:
-                    Log.e("mainact", "instance:接收到广播");
+                    Log.e(LOGTAG, "instance:接收到广播");
                     break;
             }
         }
@@ -213,34 +227,39 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         if (intent.hasExtra("msgId")) {
             msgId = intent.getStringExtra("msgId");
             String msgurl = getMsgUrl(".show") + "&msgId=" + msgId;
-            Log.e("instance", msgurl);
+            Log.e(LOGTAG, msgurl);
             browser.loadUrl(msgurl);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_SETTING) {
-            if (resultCode == RESULT_OK) {
-                browser.loadUrl(data.getStringExtra("home"));
-            }
-        } else if (requestCode == FILECHOOSER_RESULTCODE) {
-            if (null == mUploadMessage)
-                return;
-            Uri result = data == null || resultCode != RESULT_OK ? null : data.getData();
-            mUploadMessage.onReceiveValue(result);
-            mUploadMessage = null;
-
-        } else if (requestCode == FILECHOOSER_RESULTCODE_FOR_ANDROID_5) {
-            if (null == mUploadMessageForAndroid5)
-                return;
-            Uri result = (data == null || resultCode != RESULT_OK) ? null : data.getData();
-            if (result != null) {
-                mUploadMessageForAndroid5.onReceiveValue(new Uri[]{result});
-            } else {
-                mUploadMessageForAndroid5.onReceiveValue(new Uri[]{});
-            }
-            mUploadMessageForAndroid5 = null;
+        switch (requestCode) {
+            case REQUEST_SETTING:
+                if (resultCode == RESULT_OK) {
+                    browser.loadUrl(data.getStringExtra("home"));
+                }
+                break;
+            case FILECHOOSER_RESULTCODE:
+                if (null == mUploadMessage)
+                    return;
+                Uri result1 = data == null || resultCode != RESULT_OK ? null : data.getData();
+                mUploadMessage.onReceiveValue(result1);
+                mUploadMessage = null;
+                break;
+            case FILECHOOSER_RESULTCODE_FOR_ANDROID_5:
+                if (null == mUploadMessageForAndroid5)
+                    return;
+                Uri result2 = (data == null || resultCode != RESULT_OK) ? null : data.getData();
+                if (result2 != null) {
+                    mUploadMessageForAndroid5.onReceiveValue(new Uri[]{result2});
+                } else {
+                    mUploadMessageForAndroid5.onReceiveValue(new Uri[]{});
+                }
+                mUploadMessageForAndroid5 = null;
+                break;
+            default:
+                break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -252,7 +271,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
         Set<String> set = new HashSet<String>();
         set.add("android");
-        JPushInterface.setAlias(getApplicationContext(), PermissionUtils.IMEI, tac);//极光推送设置别名
+        JPushInterface.setAlias(getApplicationContext(), MyApp.IMEI, tac);//极光推送设置别名
     }
 
     @SuppressLint("JavascriptInterface")
@@ -375,7 +394,16 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 showPopupMenu(imgMore);
                 break;
             case R.id.lblTitle:
-                FrmLoginByAccount.startForm(this, "/service/SvrUserLogin.check");
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        RemoteForm rf = new RemoteForm("FrmScanProduct.save");
+//                        rf.putParam("barcode", "11223344");
+//                        rf.putParam("num", "124");
+//                        handler.sendMessage(rf.execByMessage(MSG_TEST));
+//                    }
+//                }).start();
+//                FrmLoginByAccount.startForm(this, "SvrUserLogin.check");
                 break;
             default:
                 break;
@@ -551,6 +579,19 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
     }
 
+    public void loadUrl(String url) {
+        browser.loadUrl(url);
+    }
+
+    public void runScript(final String scriptCommand) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                instance.loadUrl(String.format("javascript:%s", scriptCommand));
+            }
+        });
+    }
+
     private class MyWebViewClient extends WebViewClient {
 
         @Override
@@ -562,16 +603,16 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             final PayTask task = new PayTask(FrmMain.this);
             final String ex = task.fetchOrderInfoFromH5PayUrl(url);
             if (!TextUtils.isEmpty(ex)) {
-                Log.e("url:::", url);
+                Log.e(LOGTAG, url);
                 new Thread(new Runnable() {
                     public void run() {
-                        Log.e("ex:::", ex);
+                        Log.e(LOGTAG, ex);
                         final H5PayResultModel result = task.h5Pay(ex, true);
                         if (!TextUtils.isEmpty(result.getReturnUrl())) {
                             FrmMain.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Log.e("return url:::", result.getReturnUrl());
+                                    Log.e(LOGTAG, result.getReturnUrl());
                                     view.loadUrl(result.getReturnUrl());
                                 }
                             });
@@ -607,7 +648,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             if (!MyApp.getNetworkState(view.getContext())) return;
-            Log.e("cururl", url);
+            Log.e(LOGTAG, url);
             is_ERROR = false;
             if (WebConfig.getInstance() == null) return;
             is_exit = false;

@@ -17,12 +17,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import cn.cerc.summer.android.basis.core.MyApp;
+import cn.cerc.summer.android.basis.utils.GetTalkLength;
 import cn.cerc.summer.android.basis.utils.CallLoginByAccount;
 import cn.cerc.summer.android.basis.utils.CallLoginByPhone;
 import cn.cerc.summer.android.basis.utils.CallPhoneNumber;
 import cn.cerc.summer.android.basis.utils.CaptureImage;
 import cn.cerc.summer.android.basis.utils.CaptureMovie;
 import cn.cerc.summer.android.basis.utils.CaptureMusic;
+import cn.cerc.summer.android.basis.utils.CreateQrcode;
 import cn.cerc.summer.android.basis.utils.GetClientGPS;
 import cn.cerc.summer.android.basis.utils.GetClientId;
 import cn.cerc.summer.android.basis.utils.GetClientVersion;
@@ -41,6 +43,7 @@ import cn.cerc.summer.android.basis.utils.ScanProduct;
 import cn.cerc.summer.android.basis.utils.SetTitle;
 import cn.cerc.summer.android.basis.utils.ShareToWeibo;
 import cn.cerc.summer.android.basis.utils.ShareToWeixin;
+import cn.cerc.summer.android.basis.utils.ShowWarning;
 
 /**
  * 供js调用的js
@@ -51,12 +54,16 @@ public class JavaScriptProxy extends Object {
 
     static {
         services.put(CallPhoneNumber.class, "拔打指定的电话号码");
+        services.put(GetTalkLength.class, "取得最近一次电话拨出时长");
+        //
         services.put(CallLoginByAccount.class, "使用标准的帐号、密码进行登录");
         services.put(CallLoginByPhone.class, "使用手机号及验证码进行登录");
         //
         services.put(CaptureImage.class, "拍照或选取本地图片，并上传到指定的位置");
         services.put(CaptureMovie.class, "录像或选择本地视频，并上传到指定的位置");
         services.put(CaptureMusic.class, "录音并生成指定文件，并上传到指定的位置");
+        //
+        services.put(CreateQrcode.class, "生成二维码或一维码");
         //
         services.put(GetClientGPS.class, "取得当前的GPS地址");
         services.put(GetClientId.class, "取得当前设备ID");
@@ -82,6 +89,8 @@ public class JavaScriptProxy extends Object {
         //
         services.put(ShareToWeixin.class, "分享到微信");
         services.put(ShareToWeibo.class, "分享到微博");
+        //
+        services.put(ShowWarning.class, "显示严重警告对话框");
     }
 
     private AppCompatActivity owner;

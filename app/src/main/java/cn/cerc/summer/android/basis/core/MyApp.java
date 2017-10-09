@@ -36,6 +36,11 @@ import cn.jpush.android.api.JPushInterface;
 
 public class MyApp extends android.app.Application {
     public static String HOME_URL = "https://m.knowall.cn";
+    //    public static String HOME_URL = "http://192.168.1.174";
+    public static String SERVICES_PATH = "services";
+    public static String FORMS_PATH = "form";
+
+    public static String IMEI;
 
     private static MyApp instance;
     private DisplayImageOptions options;
@@ -43,6 +48,7 @@ public class MyApp extends android.app.Application {
     public static MyApp getInstance() {
         return instance;
     }
+
     public DisplayImageOptions getImageOptions() {
         return options;
     }
@@ -125,7 +131,7 @@ public class MyApp extends android.app.Application {
      * @return url
      */
     public static String buildDeviceUrl(String baseUrl) {
-        return String.format("%s?device=%s&CLIENTID=%s", baseUrl, Constans.DEVICE_TYPE, PermissionUtils.IMEI);
+        return String.format("%s?device=%s&CLIENTID=%s", baseUrl, Constans.DEVICE_TYPE, MyApp.IMEI);
     }
 
     /**
@@ -149,7 +155,7 @@ public class MyApp extends android.app.Application {
      * @return 返回的文件json字符串
      */
     public static JSONObject getCacheList() {
-        File file = new File(Constans.getAppPath(Constans.CONFIG_PATH) + "/" + Constans.CONFIGNAME);
+        File file = new File(MyApp.getAppPath(Constans.CONFIG_PATH) + "/" + Constans.CONFIGNAME);
         try {
             FileInputStream fis = new FileInputStream(file);
             int length = fis.available();
@@ -203,7 +209,7 @@ public class MyApp extends android.app.Application {
 
     public static boolean needUpdate(String url, JSONObject jsonarr) {
         String remote = fileurl2name(url, 0);
-        String savepath = Constans.getAppPath(Constans.DATA_PATH) + fileurl2name(url, 0);
+        String savepath = MyApp.getAppPath(Constans.DATA_PATH) + fileurl2name(url, 0);
         if (jsonarr != null && jsonarr.has(remote)) {// 此段代码用于判断文件是否需要更新或删除
             String modis = "";
             try {
@@ -225,4 +231,19 @@ public class MyApp extends android.app.Application {
                 return false;
         }
         return true;
-    }}
+    }
+
+    public static String getAppPath(String Dir) {
+        File file = MyApp.getInstance().getExternalFilesDir(Dir);
+        if (!file.exists()) file.mkdirs();
+        return file.getAbsolutePath();
+    }
+
+    public static String getFormUrl(String formCode) {
+        return String.format("%s/%s/%s", HOME_URL, FORMS_PATH, formCode);
+    }
+
+    public static String getServiceUrl(String serviceCode) {
+        return String.format("%s/%s/%s", HOME_URL, SERVICES_PATH, serviceCode);
+    }
+}

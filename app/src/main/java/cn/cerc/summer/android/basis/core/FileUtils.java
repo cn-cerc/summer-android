@@ -25,7 +25,7 @@ public class FileUtils {
 
     private static final String LOG_TAG = "FileUtils";
     private static String pathDiv = "/";
-    private static File cacheDir = new File(Constans.getAppPath(Constans.CONFIG_PATH));
+    private static File cacheDir = new File(MyApp.getAppPath(Constans.CONFIG_PATH));
 
     private FileUtils() {
         /* cannot be instantiated */
@@ -94,7 +94,7 @@ public class FileUtils {
      * @param data 数据
      */
     public static void createFile(byte[] data, String filename) {
-        File f = new File(Constans.getAppPath(Constans.CONFIG_PATH), filename);
+        File f = new File(MyApp.getAppPath(Constans.CONFIG_PATH), filename);
         try {
             FileOutputStream fos = new FileOutputStream(f);
             fos.write(data);

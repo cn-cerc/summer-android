@@ -70,10 +70,4 @@ public class Constans {
      */
     public static String SCALE_SHAREDKEY = "InitialScale";
 
-    public static String getAppPath(String Dir) {
-        File file = MyApp.getInstance().getExternalFilesDir(Dir);
-        if (!file.exists()) file.mkdirs();
-        return file.getAbsolutePath();
-    }
-
 }

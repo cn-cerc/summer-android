@@ -97,10 +97,7 @@ public class RecorderFileUtils {
      * @return true | false
      */
     public static boolean isSdcardExit() {
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
-            return true;
-        else
-            return false;
+        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
     }
 
     /**
