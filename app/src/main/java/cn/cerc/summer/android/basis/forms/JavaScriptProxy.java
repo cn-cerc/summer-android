@@ -1,6 +1,5 @@
 package cn.cerc.summer.android.basis.forms;
 
-import android.content.pm.PackageManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
@@ -16,8 +15,6 @@ import org.json.JSONObject;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import cn.cerc.summer.android.basis.core.MyApp;
-import cn.cerc.summer.android.basis.utils.GetTalkLength;
 import cn.cerc.summer.android.basis.utils.CallLoginByAccount;
 import cn.cerc.summer.android.basis.utils.CallLoginByPhone;
 import cn.cerc.summer.android.basis.utils.CallPhoneNumber;
@@ -28,6 +25,8 @@ import cn.cerc.summer.android.basis.utils.CreateQrcode;
 import cn.cerc.summer.android.basis.utils.GetClientGPS;
 import cn.cerc.summer.android.basis.utils.GetClientId;
 import cn.cerc.summer.android.basis.utils.GetClientVersion;
+import cn.cerc.summer.android.basis.utils.SetMenuList;
+import cn.cerc.summer.android.basis.utils.GetTalkLength;
 import cn.cerc.summer.android.basis.utils.GetTokenByAlipay;
 import cn.cerc.summer.android.basis.utils.GetTokenByQQ;
 import cn.cerc.summer.android.basis.utils.GetTokenByWeibo;
@@ -91,6 +90,8 @@ public class JavaScriptProxy extends Object {
         services.put(ShareToWeibo.class, "分享到微博");
         //
         services.put(ShowWarning.class, "显示严重警告对话框");
+        //
+        services.put(SetMenuList.class, "设置菜单列表");
     }
 
     private AppCompatActivity owner;
