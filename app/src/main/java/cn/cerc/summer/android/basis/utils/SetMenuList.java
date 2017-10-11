@@ -5,8 +5,12 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
+import cn.cerc.summer.android.basis.core.MainTitleMenu;
+import cn.cerc.summer.android.basis.forms.FrmMain;
 import cn.cerc.summer.android.basis.forms.JavaScriptService;
 
 /**
@@ -14,17 +18,31 @@ import cn.cerc.summer.android.basis.forms.JavaScriptService;
  */
 
 public class SetMenuList implements JavaScriptService {
+
     @Override
     public String execute(Context context, JSONObject request) throws Exception {
-        if(!request.has("menus")){
-            return "没有菜单项";
+        FrmMain frmMain = (FrmMain) context;
+        if (request.has("menus")) {
+            //标题栏菜单数据
+            JSONObject menus = request.getJSONObject("menus");
+            Iterator it = menus.keys();
+            while (it.hasNext()) {
+                String key = (String) it.next();
+                String value = menus.getString(key);
+                Log.i("SetMenuList", key + "-" + value);
+                frmMain.CatalogTitleWebView(key, value);
+            }
         }
-        JSONObject obj = request.getJSONObject("menus");
-        Iterator it = obj.keys();
-        while (it.hasNext()) {
-            String key = (String) it.next();
-            String value = obj.getString(key);
-            Log.i("SetMenuList", key + "-" + value);
+        if (request.has("history")) {
+            //右侧菜单数据
+            JSONObject history = request.getJSONObject("history");
+            Iterator itTitle = history.keys();
+            while (itTitle.hasNext()) {
+                String key = (String) itTitle.next();
+                String value = history.getString(key);
+                Log.i("SetMenuList——————", key + "-" + value);
+                frmMain.CatalogWebView(key, value);
+            }
         }
         return "ok";
     }

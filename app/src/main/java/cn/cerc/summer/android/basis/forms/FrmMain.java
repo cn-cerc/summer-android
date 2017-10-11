@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.GeolocationPermissions;
 import android.webkit.PermissionRequest;
 import android.webkit.ValueCallback;
@@ -27,12 +29,16 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListPopupWindow;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
 import com.alipay.sdk.util.H5PayResultModel;
@@ -46,16 +52,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import cn.cerc.summer.android.basis.core.CommBottomPopWindow;
 import cn.cerc.summer.android.basis.core.Constans;
 import cn.cerc.summer.android.basis.core.MainPopupMenu;
+import cn.cerc.summer.android.basis.core.MainTitleMenu;
 import cn.cerc.summer.android.basis.core.MyApp;
 import cn.cerc.summer.android.basis.core.ScreenUtils;
+import cn.cerc.summer.android.basis.core.WebViewEntity;
 import cn.cerc.summer.android.basis.db.RemoteForm;
 import cn.cerc.summer.android.basis.view.BrowserView;
 import cn.cerc.summer.android.basis.view.DragPointView;
 import cn.cerc.summer.android.basis.view.ShowPopupWindow;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
+
+import static android.os.Build.VERSION.SDK;
 
 /**
  * 主界面
@@ -90,9 +101,20 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private int[] menu_img = new int[]{R.mipmap.message, R.mipmap.msg_manager, R.mipmap.home, R.mipmap.setting, R.mipmap.wipe, R.mipmap.logout, R.mipmap.reload};
     private List<MainPopupMenu> menuList;
     private ListPopupWindow popupWindow;//列表弹框
+
+    private FrameLayout mainframe;
+    private View view;      //弹出框子布局
+    private ListView list_pop;
+    private PopupWindow pop;
+    private CommBottomPopWindow mTitlePopWindow;  //标题栏菜单项
+    private CommBottomPopWindow mpopWindow; //
+    public ArrayList<MainTitleMenu> mRightMenu;  //右侧菜单集合
+    private ArrayList<MainTitleMenu> mTitleWinMenu;  //标题菜单窗口集合
+    public ArrayList<MainTitleMenu> mTitleMenu;  //标题菜单集合
     public BrowserView getBrowser() {
         return browser;
     }
+
     private MyApp myApp;
 
     /**
@@ -125,6 +147,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
      * 是否直接退出
      */
     private boolean is_exit = false;
+
     public static FrmMain getInstance() {
         return instance;
     }
@@ -142,9 +165,15 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
         settings = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
 
+        mRightMenu = new ArrayList<MainTitleMenu>();
+        mTitleMenu = new ArrayList<MainTitleMenu>();
         InitView();
-
         myApp = MyApp.getInstance();
+        mTitleMenu.add(new MainTitleMenu("返回首页", false, myApp.getStartPage(), 1));  //设置初始化数据
+        mTitleMenu.add(new MainTitleMenu("关闭页面", false, "", 1));
+        mTitleMenu.add(new MainTitleMenu("新建窗口", true, "", 1));
+        mRightMenu.add(new MainTitleMenu("设置", false, "", 1));
+        mRightMenu.add(new MainTitleMenu("退出系统", true, "", 1));
         browser.loadUrl(myApp.getStartPage());
     }
 
@@ -211,12 +240,10 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
     @SuppressLint("JavascriptInterface")
     private void InitView() {
-        imgHome = (ImageView) findViewById(R.id.imgHome);
         imgBack = (ImageView) this.findViewById(R.id.imgBack);
         imgMore = (ImageView) this.findViewById(R.id.imgMore);
         lblTitle = (TextView) this.findViewById(R.id.lblTitle);
         boxTitle = (LinearLayout) findViewById(R.id.boxTitle);
-        imgHome.setOnClickListener(this);
         imgBack.setOnClickListener(this);
         imgMore.setOnClickListener(this);
         lblTitle.setOnClickListener(this);
@@ -231,12 +258,10 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             }
         });
         dragpointview.setVisibility(View.INVISIBLE);
-
+        mainframe = (FrameLayout) this.findViewById(R.id.mainframe);
         progress = (ProgressBar) this.findViewById(R.id.progress);
         tipsImage = (ImageView) this.findViewById(R.id.image_tips);
-
         browser = (BrowserView) this.findViewById(R.id.webView);
-
         browser.getSettings().setTextZoom(settings.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this, ScreenUtils.getInches(this))));
 
         //jsAndroid 供web端js调用标识，修改请通知web开发者
@@ -321,80 +346,123 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         return true;
     }
 
+
+    /**
+     * 获得标题上层级菜单
+     *
+     * @param title
+     * @param newUrl
+     */
+    public void CatalogTitleWebView(String title, String newUrl) {
+        mTitleMenu.add(new MainTitleMenu(title, false, newUrl, 2));
+        initTitlePopWindow();
+    }
+
+    /**
+     * 获得右侧上级菜单
+     *
+     * @param title
+     * @param newUrl
+     */
+    public void CatalogWebView(String title, String newUrl) {
+        mRightMenu.add(new MainTitleMenu(title, false, newUrl, 2));
+        initPopWindow();
+    }
+
+    public int bb = -1;  //控制关闭窗口
+    //标题菜单回调的点击事件
+    private CommBottomPopWindow.PopWindowListener mPopListener = new CommBottomPopWindow.PopWindowListener() {
+        @Override
+        public void onPopSelected(int which) {
+            switch (which) {
+                case 1:
+                    //关闭当前页面
+                    browser.goBack();
+                    if (bb > 0) {
+                        mTitleMenu.remove(bb);
+                        bb = -1;
+                    }
+                    mTitlePopWindow.dismiss();
+                    initTitlePopWindow();
+                    break;
+                case 2:
+                    //新建窗口
+                    break;
+                default:
+                    browser.loadUrl(mTitleMenu.get(which).getUrl());
+                    bb = which;
+                    mTitlePopWindow.dismiss();
+                    break;
+            }
+        }
+    };
+
+    /**
+     * 右侧菜单回调的点击事件
+     */
+    private CommBottomPopWindow.PopWindowListener mPopListener1 = new CommBottomPopWindow.PopWindowListener() {
+        @Override
+        public void onPopSelected(int which) {
+            switch (which) {
+                case 0:
+                    //设置界面
+                    FrmSettings.startFormForResult(FrmMain.getInstance(), REQUEST_SETTING, browser.getUrl());
+                    mpopWindow.dismiss();
+                    break;
+                case 1:
+                    Toast.makeText(FrmMain.this, "退出系统", Toast.LENGTH_SHORT).show();
+                    //退出系统
+                    mpopWindow.dismiss();
+                    break;
+                default:
+                    browser.loadUrl(mTitleMenu.get(which).getUrl());
+                    mpopWindow.dismiss();
+                    break;
+            }
+        }
+    };
+
+    /**
+     * 设置标题栏点击菜单
+     */
+    private void initTitlePopWindow() {
+        view = this.getLayoutInflater().inflate(R.layout.comm_popwindow_item, null);
+        mTitlePopWindow = new CommBottomPopWindow(this);
+        mTitlePopWindow.initPopItem(mTitleMenu);
+        mTitlePopWindow.setPopListener(mPopListener);
+    }
+
+    /**
+     * 设置右侧弹出框
+     */
+    private void initPopWindow() {
+        view = this.getLayoutInflater().inflate(R.layout.comm_popwindow_item, null);
+        mpopWindow = new CommBottomPopWindow(this, true);
+        // 带显示小标题，可加可不加
+        //mPopWindow.initPopSubTitle("返回首页");
+        mpopWindow.initPopItem(mRightMenu);
+        mpopWindow.setPopListener(mPopListener1);
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.imgHome:
-                browser.loadUrl(myApp.getStartPage());
-                break;
             case R.id.imgBack:
                 browser.goBack();
                 break;
             case R.id.imgMore:
-                showPopupMenu(imgMore);
+                initPopWindow();
+                mpopWindow.showAsDropDown(boxTitle);
+                mpopWindow.show(view);
                 break;
             case R.id.lblTitle:
+                initTitlePopWindow();
+                mTitlePopWindow.showAsDropDown(boxTitle);
+                mTitlePopWindow.show(view);
                 break;
             default:
                 break;
         }
-    }
-
-    /**
-     * 显示菜单栏的窗口
-     *
-     * @param view
-     */
-    public void showPopupMenu(View view) {
-        menuList = new ArrayList<MainPopupMenu>();
-        menus = getResources().getStringArray(R.array.mainPopupMenu);
-
-        for (int i = 0; i < menus.length; i++) {
-            if ("退出登录".equals(menus[i]) && !islogin) continue;
-            MainPopupMenu mainPopupMenu = new MainPopupMenu(i == 0 ? 12 : 0, menus[i], menu_img[i]);
-            menuList.add(mainPopupMenu);
-        }
-
-        popupWindow = ShowPopupWindow.getPopupwindow().show(this, menuList);
-        popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 0:
-                        browser.loadUrl(getMsgUrl(".unread"));
-                        break;
-                    case 1:
-                        browser.loadUrl(getMsgUrl(""));
-                        break;
-                    case 2:
-                        browser.loadUrl(homeUrl);
-                        break;
-                    case 3:
-                        FrmSettings.startFormForResult(FrmMain.getInstance(), REQUEST_SETTING, browser.getUrl());
-                        break;
-                    case 4:
-                        clearCacheFolder(FrmMain.this.getCacheDir(), System.currentTimeMillis());
-                        break;
-                    case 5:
-                        if (islogin) {
-                            if (!TextUtils.isEmpty(logoutUrl)) {
-                                browser.loadUrl(logoutUrl);
-                                browser.clearCache(true);
-                                browser.clearHistory();
-                                browser.reload();
-                            }
-                        } else
-                            browser.reload();
-                        break;
-                    case 6:
-                        browser.reload();
-                        break;
-                }
-                popupWindow.dismiss();
-            }
-        });
-        popupWindow.setAnchorView(view);
-        popupWindow.show();
     }
 
     @Override
@@ -486,6 +554,31 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         });
     }
 
+    private List<MainTitleMenu> list;
+
+    /**
+     * 页面发生改变时清空js上层数据
+     */
+    public void clearData() {
+        list = new ArrayList<MainTitleMenu>();
+        for (int d = 0; d < mTitleMenu.size(); d++) {
+            if (2 == mTitleMenu.get(d).getLayerSign()) {
+                list.add(mTitleMenu.get(d));
+            }
+        }
+        mTitleMenu.removeAll(list);
+        list.clear();
+        for (int i = 0; i < mRightMenu.size(); i++) {
+            if (2 == mRightMenu.get(i).getLayerSign()) {
+                list.add(mRightMenu.get(i));
+            }
+        }
+        mRightMenu.removeAll(list);
+        list.clear();
+        initTitlePopWindow();
+        initPopWindow();
+    }
+
     private class MyWebViewClient extends WebViewClient {
 
         @Override
@@ -498,6 +591,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             final String ex = task.fetchOrderInfoFromH5PayUrl(url);
             if (!TextUtils.isEmpty(ex)) {
                 Log.e(LOGTAG, url);
+
                 new Thread(new Runnable() {
                     public void run() {
                         Log.e(LOGTAG, ex);
@@ -542,7 +636,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             if (!MyApp.getNetworkState(view.getContext())) return;
-            Log.e(LOGTAG, url);
+            clearData();
             is_ERROR = false;
             /*
             if (WebConfig.getInstance() == null) return;
