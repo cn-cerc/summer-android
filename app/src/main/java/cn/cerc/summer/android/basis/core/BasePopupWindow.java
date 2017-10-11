@@ -10,7 +10,7 @@ import android.widget.PopupWindow;
 import com.mimrc.vine.R;
 
 /**
- * Created by Administrator on 2017/10/9.
+ * Created by yty on 2017/10/9.
  */
 
 public abstract class BasePopupWindow extends PopupWindow {
@@ -53,13 +53,10 @@ public abstract class BasePopupWindow extends PopupWindow {
         setTouchable(true);
         ColorDrawable dw = new ColorDrawable(0x50000000);
         this.setBackgroundDrawable(dw);
-//        setAnimationStyle(R.style.popwin_anim_style);
         initViews();
         initEvents();
         init();
-
     }
-
 
     public abstract void initViews();
 

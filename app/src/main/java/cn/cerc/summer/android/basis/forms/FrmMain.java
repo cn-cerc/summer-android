@@ -107,11 +107,10 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private PopupWindow pop;
     private CommBottomPopWindow mTitlePopWindow;  //标题栏菜单项
     private CommBottomPopWindow mpopWindow; //
-    private int b = 0;
     public List<MainTitleMenu> mTitleList1;  //右侧菜单集合
     private List<MainTitleMenu> mTitleList2;
     public List<MainTitleMenu> maxListl;  //标题菜单集合
-
+    private RelativeLayout relative_main;
 
     public BrowserView getBrowser() {
         return browser;
@@ -170,7 +169,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         mTitleList1 = new ArrayList<MainTitleMenu>();
         mTitleList2 = new ArrayList<MainTitleMenu>();
         maxListl = new ArrayList<MainTitleMenu>();
-//
+
         InitView();
 
         myApp = MyApp.getInstance();
@@ -245,12 +244,10 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
     @SuppressLint("JavascriptInterface")
     private void InitView() {
-//        imgHome = (ImageView) findViewById(R.id.imgHome);
         imgBack = (ImageView) this.findViewById(R.id.imgBack);
         imgMore = (ImageView) this.findViewById(R.id.imgMore);
         lblTitle = (TextView) this.findViewById(R.id.lblTitle);
         boxTitle = (LinearLayout) findViewById(R.id.boxTitle);
-//        imgHome.setOnClickListener(this);
         imgBack.setOnClickListener(this);
         imgMore.setOnClickListener(this);
         lblTitle.setOnClickListener(this);
@@ -268,7 +265,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
         progress = (ProgressBar) this.findViewById(R.id.progress);
         tipsImage = (ImageView) this.findViewById(R.id.image_tips);
-
         browser = (BrowserView) this.findViewById(R.id.webView);
         mainframe = (FrameLayout) this.findViewById(R.id.mainframe);
         browser.getSettings().setTextZoom(settings.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this, ScreenUtils.getInches(this))));
@@ -379,7 +375,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         initPopWindow();
     }
 
-
     public int bb = -1;  //控制关闭窗口
     //标题菜单回调的点击事件
     private CommBottomPopWindow.PopWindowListener mPopListener = new CommBottomPopWindow.PopWindowListener() {
@@ -398,7 +393,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     break;
                 case 2:
                     //新建窗口
-//                    AddWebView();
                     break;
                 default:
                     browser.loadUrl(maxListl.get(which).getUrl());
@@ -440,10 +434,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private void initTitlePopWindow() {
         view = this.getLayoutInflater().inflate(R.layout.comm_popwindow_item, null);
         mTitlePopWindow = new CommBottomPopWindow(this);
-
-        // 带显示小标题，可加可不加
-//            mPopWindow.initPopSubTitle("返回首页");
-
         mTitlePopWindow.initPopItem(maxListl);
         mTitlePopWindow.setPopListener(mPopListener);
 
@@ -463,13 +453,9 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
     }
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.imgHome:
-//                browser.loadUrl(myApp.getStartPage());
-//                break;
             case R.id.imgBack:
                 browser.goBack();
                 break;

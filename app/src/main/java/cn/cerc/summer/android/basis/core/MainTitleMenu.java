@@ -1,7 +1,7 @@
 package cn.cerc.summer.android.basis.core;
 
 /**
- * Created by Administrator on 2017/10/10.
+ * Created by yty on 2017/10/10.
  */
 
 public class MainTitleMenu {
@@ -9,8 +9,6 @@ public class MainTitleMenu {
     private boolean isline;
     private String url;
     private int num;
-
-
 
     public MainTitleMenu(String name, boolean isline, String url,int num) {
         this.name = name;
