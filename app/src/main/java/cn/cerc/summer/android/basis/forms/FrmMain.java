@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -107,11 +108,9 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private PopupWindow pop;
     private CommBottomPopWindow mTitlePopWindow;  //标题栏菜单项
     private CommBottomPopWindow mpopWindow; //
-    public List<MainTitleMenu> mTitleList1;  //右侧菜单集合
-    private List<MainTitleMenu> mTitleList2;
-    public List<MainTitleMenu> maxListl;  //标题菜单集合
-    private RelativeLayout relative_main;
-
+    public ArrayList<MainTitleMenu> mRightMenu;  //右侧菜单集合
+    private ArrayList<MainTitleMenu> mTitleWinMenu;  //标题菜单窗口集合
+    public ArrayList<MainTitleMenu> mTitleMenu;  //标题菜单集合
     public BrowserView getBrowser() {
         return browser;
     }
@@ -166,18 +165,15 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
         settings = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
 
-        mTitleList1 = new ArrayList<MainTitleMenu>();
-        mTitleList2 = new ArrayList<MainTitleMenu>();
-        maxListl = new ArrayList<MainTitleMenu>();
-
+        mRightMenu = new ArrayList<MainTitleMenu>();
+        mTitleMenu = new ArrayList<MainTitleMenu>();
         InitView();
-
         myApp = MyApp.getInstance();
-        maxListl.add(new MainTitleMenu("返回首页", false, myApp.getStartPage(), 1));  //设置初始化数据
-        maxListl.add(new MainTitleMenu("关闭页面", false, "", 1));
-        maxListl.add(new MainTitleMenu("新建窗口", true, "", 1));
-        mTitleList1.add(new MainTitleMenu("设置", false, "", 1));
-        mTitleList1.add(new MainTitleMenu("退出系统", true, "", 1));
+        mTitleMenu.add(new MainTitleMenu("返回首页", false, myApp.getStartPage(), 1));  //设置初始化数据
+        mTitleMenu.add(new MainTitleMenu("关闭页面", false, "", 1));
+        mTitleMenu.add(new MainTitleMenu("新建窗口", true, "", 1));
+        mRightMenu.add(new MainTitleMenu("设置", false, "", 1));
+        mRightMenu.add(new MainTitleMenu("退出系统", true, "", 1));
         browser.loadUrl(myApp.getStartPage());
     }
 
@@ -262,7 +258,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             }
         });
         dragpointview.setVisibility(View.INVISIBLE);
-
+        mainframe = (FrameLayout) this.findViewById(R.id.mainframe);
         progress = (ProgressBar) this.findViewById(R.id.progress);
         tipsImage = (ImageView) this.findViewById(R.id.image_tips);
         browser = (BrowserView) this.findViewById(R.id.webView);
@@ -358,7 +354,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
      * @param newUrl
      */
     public void CatalogTitleWebView(String title, String newUrl) {
-        maxListl.add(new MainTitleMenu(title, false, newUrl, 2));
+        mTitleMenu.add(new MainTitleMenu(title, false, newUrl, 2));
         initTitlePopWindow();
     }
 
@@ -369,7 +365,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
      * @param newUrl
      */
     public void CatalogWebView(String title, String newUrl) {
-        mTitleList1.add(new MainTitleMenu(title, false, newUrl, 2));
+        mRightMenu.add(new MainTitleMenu(title, false, newUrl, 2));
         initPopWindow();
     }
 
@@ -383,7 +379,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     //关闭当前页面
                     browser.goBack();
                     if (bb > 0) {
-                        maxListl.remove(bb);
+                        mTitleMenu.remove(bb);
                         bb = -1;
                     }
                     mTitlePopWindow.dismiss();
@@ -393,7 +389,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     //新建窗口
                     break;
                 default:
-                    browser.loadUrl(maxListl.get(which).getUrl());
+                    browser.loadUrl(mTitleMenu.get(which).getUrl());
                     bb = which;
                     mTitlePopWindow.dismiss();
                     break;
@@ -419,7 +415,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     mpopWindow.dismiss();
                     break;
                 default:
-                    browser.loadUrl(maxListl.get(which).getUrl());
+                    browser.loadUrl(mTitleMenu.get(which).getUrl());
                     mpopWindow.dismiss();
                     break;
             }
@@ -432,7 +428,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private void initTitlePopWindow() {
         view = this.getLayoutInflater().inflate(R.layout.comm_popwindow_item, null);
         mTitlePopWindow = new CommBottomPopWindow(this);
-        mTitlePopWindow.initPopItem(maxListl);
+        mTitlePopWindow.initPopItem(mTitleMenu);
         mTitlePopWindow.setPopListener(mPopListener);
     }
 
@@ -444,7 +440,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         mpopWindow = new CommBottomPopWindow(this, true);
         // 带显示小标题，可加可不加
         //mPopWindow.initPopSubTitle("返回首页");
-        mpopWindow.initPopItem(mTitleList1);
+        mpopWindow.initPopItem(mRightMenu);
         mpopWindow.setPopListener(mPopListener1);
     }
 
@@ -563,21 +559,21 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     /**
      * 页面发生改变时清空js上层数据
      */
-    public void clealurl() {
+    public void clearData() {
         list = new ArrayList<MainTitleMenu>();
-        for (int d = 0; d < maxListl.size(); d++) {
-            if (2 == maxListl.get(d).getNum()) {
-                list.add(maxListl.get(d));
+        for (int d = 0; d < mTitleMenu.size(); d++) {
+            if (2 == mTitleMenu.get(d).getLayerSign()) {
+                list.add(mTitleMenu.get(d));
             }
         }
-        maxListl.removeAll(list);
+        mTitleMenu.removeAll(list);
         list.clear();
-        for (int i = 0; i < mTitleList1.size(); i++) {
-            if (2 == mTitleList1.get(i).getNum()) {
-                list.add(mTitleList1.get(i));
+        for (int i = 0; i < mRightMenu.size(); i++) {
+            if (2 == mRightMenu.get(i).getLayerSign()) {
+                list.add(mRightMenu.get(i));
             }
         }
-        mTitleList1.removeAll(list);
+        mRightMenu.removeAll(list);
         list.clear();
         initTitlePopWindow();
         initPopWindow();
@@ -640,7 +636,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             if (!MyApp.getNetworkState(view.getContext())) return;
-            clealurl();
+            clearData();
             is_ERROR = false;
             /*
             if (WebConfig.getInstance() == null) return;

@@ -8,5 +8,5 @@
     <color name="result_view">#b0000000</color>
     <color name="viewfinder_mask">#60000000</color>
     <color name="possible_result_points">#c0ffff00</color>
-    <color name="white">#ffffff</color>
+    <color name="white_view">#ffffff</color>
 </resources>

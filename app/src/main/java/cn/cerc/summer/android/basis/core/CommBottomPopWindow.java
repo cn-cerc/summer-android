@@ -16,7 +16,7 @@ import com.mimrc.vine.R;
 import java.util.List;
 
 /**
- * Created by yty on 2017/10/9.
+ * Created by yangtaiyu on 2017/10/9.
  *
  */
 
@@ -77,7 +77,7 @@ public class CommBottomPopWindow extends BasePopupWindow implements View.OnClick
 
         for (int i = 0; i < list.size(); i++) {
             String title = list.get(i).getName();
-            mLayout.addView(createItem(title, i, list.size(),list.get(i).isline()));
+            mLayout.addView(createItem(title, i, list.size(),list.get(i).isLine()));
         }
     }
 

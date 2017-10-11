@@ -1,29 +1,31 @@
 package cn.cerc.summer.android.basis.core;
 
 /**
- * Created by yty on 2017/10/10.
+ * Created by yangtaiyu on 2017/10/10.
  */
 
 public class MainTitleMenu {
     private String name;
-    private boolean isline;
+    private boolean isLine;
     private String url;
-    private int num;
+    private int layerSign;  //层次标识
+    private int onlySign;     //唯一标识
+    public int getOnlySign() {
+        return onlySign;
+    }
 
-    public MainTitleMenu(String name, boolean isline, String url,int num) {
+    public void setOnlySign(int onlySign) {
+        this.onlySign = onlySign;
+    }
+
+    public MainTitleMenu(String name, boolean isLine, String url, int layerSign) {
         this.name = name;
-        this.isline = isline;
+        this.isLine = isLine;
         this.url = url;
-        this.num = num;
+        this.layerSign = layerSign;
+
     }
 
-    public int getNum() {
-        return num;
-    }
-
-    public void setNum(int num) {
-        this.num = num;
-    }
     public String getName() {
         return name;
     }
@@ -32,12 +34,12 @@ public class MainTitleMenu {
         this.name = name;
     }
 
-    public boolean isline() {
-        return isline;
+    public boolean isLine() {
+        return isLine;
     }
 
-    public void setIsline(boolean isline) {
-        this.isline = isline;
+    public void setLine(boolean line) {
+        isLine = line;
     }
 
     public String getUrl() {
@@ -47,4 +49,13 @@ public class MainTitleMenu {
     public void setUrl(String url) {
         this.url = url;
     }
+
+    public int getLayerSign() {
+        return layerSign;
+    }
+
+    public void setLayerSign(int layerSign) {
+        this.layerSign = layerSign;
+    }
+
 }

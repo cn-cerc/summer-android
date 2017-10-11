@@ -17,7 +17,7 @@
             android:id="@+id/camp_pop_cancle"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="#ffffff"
+            android:background="@color/white_view"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:visibility="gone"
@@ -30,7 +30,7 @@
             android:layout_marginTop="5dp"
             android:layout_gravity="center"
             android:orientation="vertical"
-            android:background="@color/white" >
+            android:background="@color/white_view" >
             <LinearLayout
                 android:id="@+id/comm_bottom_popwindow_layout"
                 android:layout_width="fill_parent"

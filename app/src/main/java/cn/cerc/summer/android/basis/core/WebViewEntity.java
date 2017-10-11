@@ -1,7 +1,7 @@
 package cn.cerc.summer.android.basis.core;
 
 /**
- * Created by Administrator on 2017/10/10.
+ * Created by yangtaiyu on 2017/10/10.
  */
 
 public class WebViewEntity {

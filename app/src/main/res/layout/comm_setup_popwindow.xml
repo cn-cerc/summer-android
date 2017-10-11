@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
                 android:layout_marginRight="50dp"
-                android:background="#ffffff"
+                android:background="@color/white_view"
                 android:text="返回首页"
                 android:visibility="gone" />
 
@@ -38,7 +38,7 @@
                     android:id="@+id/comm_bottom_popwindow_layout"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
+                    android:background="@color/white_view"
                     android:orientation="vertical">
                 </LinearLayout>
 
