@@ -266,7 +266,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         progress = (ProgressBar) this.findViewById(R.id.progress);
         tipsImage = (ImageView) this.findViewById(R.id.image_tips);
         browser = (BrowserView) this.findViewById(R.id.webView);
-        mainframe = (FrameLayout) this.findViewById(R.id.mainframe);
         browser.getSettings().setTextZoom(settings.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this, ScreenUtils.getInches(this))));
 
         //jsAndroid 供web端js调用标识，修改请通知web开发者
@@ -361,7 +360,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     public void CatalogTitleWebView(String title, String newUrl) {
         maxListl.add(new MainTitleMenu(title, false, newUrl, 2));
         initTitlePopWindow();
-
     }
 
     /**
@@ -436,8 +434,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         mTitlePopWindow = new CommBottomPopWindow(this);
         mTitlePopWindow.initPopItem(maxListl);
         mTitlePopWindow.setPopListener(mPopListener);
-
-//        }
     }
 
     /**
@@ -450,7 +446,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         //mPopWindow.initPopSubTitle("返回首页");
         mpopWindow.initPopItem(mTitleList1);
         mpopWindow.setPopListener(mPopListener1);
-
     }
 
     @Override
@@ -460,7 +455,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 browser.goBack();
                 break;
             case R.id.imgMore:
-//                showPopupMenu(imgMore);
                 initPopWindow();
                 mpopWindow.showAsDropDown(boxTitle);
                 mpopWindow.show(view);
@@ -473,63 +467,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             default:
                 break;
         }
-    }
-
-    /**
-     * 显示菜单栏的窗口
-     *
-     * @param view
-     */
-    public void showPopupMenu(View view) {
-        menuList = new ArrayList<MainPopupMenu>();
-        menus = getResources().getStringArray(R.array.mainPopupMenu);
-
-        for (int i = 0; i < menus.length; i++) {
-            if ("退出登录".equals(menus[i]) && !islogin) continue;
-            MainPopupMenu mainPopupMenu = new MainPopupMenu(i == 0 ? 12 : 0, menus[i], menu_img[i]);
-            menuList.add(mainPopupMenu);
-        }
-
-        popupWindow = ShowPopupWindow.getPopupwindow().show(this, menuList);
-        popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 0:
-                        browser.loadUrl(getMsgUrl(".unread"));
-                        break;
-                    case 1:
-                        browser.loadUrl(getMsgUrl(""));
-                        break;
-                    case 2:
-                        browser.loadUrl(homeUrl);
-                        break;
-                    case 3:
-                        FrmSettings.startFormForResult(FrmMain.getInstance(), REQUEST_SETTING, browser.getUrl());
-                        break;
-                    case 4:
-                        clearCacheFolder(FrmMain.this.getCacheDir(), System.currentTimeMillis());
-                        break;
-                    case 5:
-                        if (islogin) {
-                            if (!TextUtils.isEmpty(logoutUrl)) {
-                                browser.loadUrl(logoutUrl);
-                                browser.clearCache(true);
-                                browser.clearHistory();
-                                browser.reload();
-                            }
-                        } else
-                            browser.reload();
-                        break;
-                    case 6:
-                        browser.reload();
-                        break;
-                }
-                popupWindow.dismiss();
-            }
-        });
-        popupWindow.setAnchorView(view);
-        popupWindow.show();
     }
 
     @Override
@@ -703,7 +640,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             if (!MyApp.getNetworkState(view.getContext())) return;
-//            Log.e(LOGTAG, url);
             clealurl();
             is_ERROR = false;
             /*

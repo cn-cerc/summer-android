@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-
 import com.mimrc.vine.R;
 
 import java.util.List;
@@ -158,7 +157,6 @@ public class CommBottomPopWindow extends BasePopupWindow implements View.OnClick
             default:
                 break;
         }
-
     }
 
     /**

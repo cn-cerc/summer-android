@@ -3,9 +3,7 @@
     android:layout_width="100dp"
     android:layout_height="fill_parent"
     android:layout_gravity="center_horizontal"
-    android:orientation="vertical"
-
-    >
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -27,11 +25,6 @@
                 android:background="#ffffff"
                 android:text="返回首页"
                 android:visibility="gone" />
-            <!--<View-->
-            <!--android:id="@+id/view"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="0.5dp"-->
-            <!--android:background="#000"/>-->
 
             <LinearLayout
                 android:layout_width="150dp"
@@ -45,10 +38,9 @@
                     android:id="@+id/comm_bottom_popwindow_layout"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/title_menu"
+                    android:background="@color/white"
                     android:orientation="vertical">
                 </LinearLayout>
-
 
             </LinearLayout>
         </LinearLayout>
