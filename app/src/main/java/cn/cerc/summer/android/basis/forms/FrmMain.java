@@ -198,7 +198,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         mTitleMenu.clear();
         mRightMenu.clear();
         mTitleMenu.add(new MainTitleMenu("返回首页", false, myApp.getStartPage(), 1, classWebView));  //设置初始化数据
-        mTitleMenu.add(new MainTitleMenu("关闭页面", false, "", 1, classWebView));
         mTitleMenu.add(new MainTitleMenu("新建窗口", false, "", 1, classWebView));
         mRightMenu.add(new MainTitleMenu("设置", false, "", 1));
         mRightMenu.add(new MainTitleMenu("退出系统", true, "", 1));
@@ -404,111 +403,124 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         public void onPopSelected(int which) {
             switch (which) {
                 case 1:
-                    //关闭当前窗口
-                    int windowNum = 0;
-                    for (int i = 0; i < allTitleList.size(); i++) {
-                        if (allTitleList.get(i).size() > 0) {
-                            windowNum++;
-                        }
-                    }
-                    if (windowNum > 1) {
-                        newsWebView[classWebView].setVisibility(View.GONE);
-                        newsWebView[classWebView] = null;
-                        for (int i = 0; i < allTitleList.size(); i++) {
-                            if (allTitleList.get(i).size() > 0) {
-                                if (allTitleList.get(i).get(0).getOnlySign() == classWebView) {
-                                    allTitleList.get(classWebView).clear();
-                                    allRightList.get(classWebView).clear();
+
+                case 2:
+                    switch (mTitleMenu.get(which).getName()) {
+                        case "关闭页面":
+                            //关闭当前窗口
+                            int windowNum = 0;
+                            for (int i = 0; i < allTitleList.size(); i++) {
+                                if (allTitleList.get(i).size() > 0) {
+                                    windowNum++;
                                 }
                             }
-                        }
-                        for (int i = 0; i < titlePage.size(); i++) {
-                            if (titlePage.get(i).getOnlySign() == classWebView) {
-                                titlePage.remove(i);
-                            }
-                        }
-                        for (int i = 0; i < titlePage.size(); i++) {
-                            Log.d("print", "onPopSelected: +++++" + titlePage.get(i).getName());
-                        }
-
-                        for (int i = 0; i < newsWebView.length; i++) {
-                            if (newsWebView[i] != null) {
-                                newsWebView[i].setVisibility(View.VISIBLE);
-                                browser = newsWebView[i];
-                                classWebView = i;
-                                for (int l = 0; l < allTitleList.size(); l++) {
-                                    if (allTitleList.get(l).size() > 0) {
-                                        if (allTitleList.get(l).get(0).getOnlySign() == classWebView) {
-                                            upDataAggre(allTitleList.get(l), titlePage);
-                                            mTitleMenu.clear();
-                                            mTitleMenu.addAll(allTitleList.get(l));
-                                            mRightMenu.clear();
-                                            mRightMenu.addAll(allRightList.get(l));
-                                            break;
+                            if (windowNum > 1) {
+                                newsWebView[classWebView].setVisibility(View.GONE);
+                                newsWebView[classWebView] = null;
+                                for (int i = 0; i < allTitleList.size(); i++) {
+                                    if (allTitleList.get(i).size() > 0) {
+                                        if (allTitleList.get(i).get(0).getOnlySign() == classWebView) {
+                                            allTitleList.get(classWebView).clear();
+                                            allRightList.get(classWebView).clear();
                                         }
                                     }
                                 }
-                                for (int j = 0; j < titlePage.size(); j++) {
-                                    if (titlePage.get(j).getOnlySign() == i) {
-                                        lblTitle.setText(titlePage.get(j).getName());
+                                for (int i = 0; i < titlePage.size(); i++) {
+                                    if (titlePage.get(i).getOnlySign() == classWebView) {
+                                        titlePage.remove(i);
+                                    }
+                                }
+                                for (int i = 0; i < newsWebView.length; i++) {
+                                    if (newsWebView[i] != null) {
+                                        newsWebView[i].setVisibility(View.VISIBLE);
+                                        browser = newsWebView[i];
+                                        classWebView = i;
+                                        for (int l = 0; l < allTitleList.size(); l++) {
+                                            if (allTitleList.get(l).size() > 0) {
+                                                if (allTitleList.get(l).get(0).getOnlySign() == classWebView) {
+                                                    upDataAggre(allTitleList.get(l), titlePage);
+                                                    mTitleMenu.clear();
+                                                    mTitleMenu.addAll(allTitleList.get(l));
+                                                    mRightMenu.clear();
+                                                    mRightMenu.addAll(allRightList.get(l));
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        for (int j = 0; j < titlePage.size(); j++) {
+                                            if (titlePage.get(j).getOnlySign() == i) {
+                                                lblTitle.setText(titlePage.get(j).getName());
+                                                break;
+                                            }
+                                        }
                                         break;
                                     }
                                 }
-                                break;
+                            } else {
+                                Toast.makeText(myApp, "已经是顶层菜单", Toast.LENGTH_SHORT).show();
                             }
-                        }
-                    } else {
-                        Toast.makeText(myApp, "已经是顶层菜单", Toast.LENGTH_SHORT).show();
-                    }
-                    mTitlePopWindow.dismiss();
-                    initTitlePopWindow();
-                    break;
-                case 2:
-                    //新建窗口
-                    AddWebView();
-                    mTitlePopWindow.dismiss();
-                    break;
-                default:
-                    switch (mTitleMenu.get(which).getLayerSign()) {
-                        case 3:
-                            //切换窗口
-                            mIndex = mTitleMenu.get(which).getOnlySign();
-                            classWebView = mIndex;
-                            newsWebView[mTitleMenu.get(which).getOnlySign()].setVisibility(View.VISIBLE);
-                            browser = newsWebView[mIndex];
-                            lblTitle.setText(mTitleMenu.get(which).getName());
-                            for (int i = 0; i < titlePage.size(); i++) {
-
-                            }
-                            for (int i = 0; i < allTitleList.size(); i++) {
-                                if (allTitleList.get(i).size() > 0) {
-                                    if (allTitleList.get(i).get(0).getOnlySign() == classWebView) {
-//                                        upDataAggre(allTitleList.get(i), titlePage);
-                                        mTitleMenu.clear();
-                                        mTitleMenu.addAll(allTitleList.get(i));
-                                        mRightMenu.clear();
-                                        mRightMenu.addAll(allRightList.get(i));
-                                        break;
-                                    }
-                                }
-                            }
-                            for (int i = 0; i < newsWebView.length; i++) {
-                                if (i != mIndex && newsWebView[i] != null) {
-                                    newsWebView[i].setVisibility(View.GONE);
-                                }
-                            }
+                            mTitlePopWindow.dismiss();
+                            initTitlePopWindow();
+                            break;
+                        case "新建窗口":
+                            AddWebView();
                             mTitlePopWindow.dismiss();
                             break;
                         default:
-                            browser.loadUrl(mTitleMenu.get(which).getUrl());
-                            winClose = which;
-                            mTitlePopWindow.dismiss();
+                            bettWin(which);
                             break;
                     }
+                    break;
+                default:
+                    bettWin(which);
                     break;
             }
         }
     };
+
+    /**
+     * 切换窗口
+     *
+     * @param which
+     */
+    private void bettWin(int which) {
+        switch (mTitleMenu.get(which).getLayerSign()) {
+            case 3:
+                //切换窗口
+                mIndex = mTitleMenu.get(which).getOnlySign();
+                classWebView = mIndex;
+                newsWebView[mTitleMenu.get(which).getOnlySign()].setVisibility(View.VISIBLE);
+                browser = newsWebView[mIndex];
+                lblTitle.setText(mTitleMenu.get(which).getName());
+                for (int i = 0; i < titlePage.size(); i++) {
+
+                }
+                for (int i = 0; i < allTitleList.size(); i++) {
+                    if (allTitleList.get(i).size() > 0) {
+                        if (allTitleList.get(i).get(0).getOnlySign() == classWebView) {
+//                                        upDataAggre(allTitleList.get(i), titlePage);
+                            mTitleMenu.clear();
+                            mTitleMenu.addAll(allTitleList.get(i));
+                            mRightMenu.clear();
+                            mRightMenu.addAll(allRightList.get(i));
+                            break;
+                        }
+                    }
+                }
+                for (int i = 0; i < newsWebView.length; i++) {
+                    if (i != mIndex && newsWebView[i] != null) {
+                        newsWebView[i].setVisibility(View.GONE);
+                    }
+                }
+                mTitlePopWindow.dismiss();
+                break;
+            default:
+                browser.loadUrl(mTitleMenu.get(which).getUrl());
+                winClose = which;
+                mTitlePopWindow.dismiss();
+                break;
+        }
+    }
 
     /**
      * 右侧菜单回调的点击事件
@@ -734,6 +746,19 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 break;
             case R.id.lblTitle:
                 //标题菜单
+                if (titlePage.size() > 1) {
+                    if (mTitleMenu.get(1).getName().equals("关闭页面")) {
+                    } else {
+                        mTitleMenu.add(1, new MainTitleMenu("关闭页面", false, "", 1, classWebView));
+                    }
+                } else {
+                    for (int i = 0; i < mTitleMenu.size(); i++) {
+                        if (mTitleMenu.get(i).getName().equals("关闭页面")) {
+                            mTitleMenu.remove(i);
+                            break;
+                        }
+                    }
+                }
                 initTitlePopWindow();
                 mTitlePopWindow.showAsDropDown(boxTitle);
                 mTitlePopWindow.show(view);
