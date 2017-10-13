@@ -33,8 +33,9 @@
             android:background="@color/white_view" >
             <LinearLayout
                 android:id="@+id/comm_bottom_popwindow_layout"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white_view"
                 android:orientation="vertical" >
             </LinearLayout>
 

@@ -10,6 +10,7 @@ public class MainTitleMenu {
     private String url;
     private int layerSign;  //层次标识
     private int onlySign;     //唯一标识
+
     public int getOnlySign() {
         return onlySign;
     }
@@ -23,7 +24,14 @@ public class MainTitleMenu {
         this.isLine = isLine;
         this.url = url;
         this.layerSign = layerSign;
+    }
 
+    public MainTitleMenu(String name, boolean isLine, String url, int layerSign, int onlySign) {
+        this.name = name;
+        this.isLine = isLine;
+        this.url = url;
+        this.layerSign = layerSign;
+        this.onlySign = onlySign;
     }
 
     public String getName() {

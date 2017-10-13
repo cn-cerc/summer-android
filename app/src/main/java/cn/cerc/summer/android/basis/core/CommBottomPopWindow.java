@@ -1,11 +1,17 @@
 package cn.cerc.summer.android.basis.core;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.PaintDrawable;
+import android.text.Layout;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -17,10 +23,9 @@ import java.util.List;
 
 /**
  * Created by yangtaiyu on 2017/10/9.
- *
  */
 
-public class CommBottomPopWindow extends BasePopupWindow implements View.OnClickListener{
+public class CommBottomPopWindow extends PopupWindow implements View.OnClickListener {
 
     private Button cancleBtn;
 
@@ -34,32 +39,70 @@ public class CommBottomPopWindow extends BasePopupWindow implements View.OnClick
 
     private LayoutInflater inflater;
 
+    public View popRootView;
+
     /**
      * 功能描述: 设置点击事件<br>
      * 〈功能详细描述〉
-     *  点击的自定义回调接口
+     * 点击的自定义回调接口
      */
     public void setPopListener(PopWindowListener listener) {
         this.listener = listener;
     }
 
-    public CommBottomPopWindow(Context context) {
-        //布局填充
-            super((LayoutInflater.from(context).inflate(R.layout.comm_title_popwindow, null)),
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            mContext = context;
+    public CommBottomPopWindow(final Activity context) {
+        mContext = context;
+        LayoutInflater inflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        popRootView = inflater.inflate(R.layout.comm_title_popwindow, null);
+        // 设置SelectPicPopupWindow的View
+        this.setContentView(popRootView);
+        // 设置SelectPicPopupWindow弹出窗体的宽
+        this.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+        // 设置SelectPicPopupWindow弹出窗体的高
+        this.setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
+        // 设置SelectPicPopupWindow弹出窗体可点击
+        this.setFocusable(true);
+        this.setOutsideTouchable(true);
+        // 刷新状态
+        this.update();
+        // 实例化一个ColorDrawable颜色为半透明
+        ColorDrawable dw = new ColorDrawable(0x50000000);
+        // 点back键和其他地方使其消失,设置了这个才能触发OnDismisslistener ，设置其他控件变化等操作
+        this.setBackgroundDrawable(new PaintDrawable());
+        this.setBackgroundDrawable(dw);
+        initViews();
+        initEvents();
     }
 
-    public CommBottomPopWindow(Context context,boolean ispop){
-        //布局填充
-        super((LayoutInflater.from(context).inflate(R.layout.comm_setup_popwindow, null)),
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+    public CommBottomPopWindow(Activity context, boolean ispop) {
         mContext = context;
+        LayoutInflater inflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        popRootView = inflater.inflate(R.layout.comm_setup_popwindow, null);
+        // 设置SelectPicPopupWindow的View
+        this.setContentView(popRootView);
+        // 设置SelectPicPopupWindow弹出窗体的宽
+        this.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+        // 设置SelectPicPopupWindow弹出窗体的高
+        this.setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
+        // 设置SelectPicPopupWindow弹出窗体可点击
+        this.setFocusable(true);
+        this.setOutsideTouchable(true);
+        // 刷新状态
+        this.update();
+        // 实例化一个ColorDrawable颜色为半透明
+        ColorDrawable dw = new ColorDrawable(0x50000000);
+        // 点back键和其他地方使其消失,设置了这个才能触发OnDismisslistener ，设置其他控件变化等操作
+        this.setBackgroundDrawable(new PaintDrawable());
+        this.setBackgroundDrawable(dw);
+        initViews();
+        initEvents();
     }
 
     /**
      * 功能描述:初始化小标题 <br>
-     顶部是否需要提示的小标题
+     * 顶部是否需要提示的小标题
      */
     public void initPopSubTitle(String notiTxt) {
         mLayout.addView(createItem(notiTxt, true));
@@ -68,7 +111,7 @@ public class CommBottomPopWindow extends BasePopupWindow implements View.OnClick
     /**
      * 功能描述: 初始化item<br>
      * 〈功能详细描述〉
-     动态添加的条目
+     * 动态添加的条目
      */
     public void initPopItem(List<MainTitleMenu> list) {
         if (list == null || list.size() == 0) {
@@ -77,7 +120,7 @@ public class CommBottomPopWindow extends BasePopupWindow implements View.OnClick
 
         for (int i = 0; i < list.size(); i++) {
             String title = list.get(i).getName();
-            mLayout.addView(createItem(title, i, list.size(),list.get(i).isLine()));
+            mLayout.addView(createItem(title, i, list.size(), list.get(i).isLine()));
         }
     }
 
@@ -92,8 +135,8 @@ public class CommBottomPopWindow extends BasePopupWindow implements View.OnClick
     /**
      * 功能描述: 创建item<br>
      * 〈功能详细描述〉
-     *
-     创建具体的条目
+     * <p>
+     * 创建具体的条目
      */
     private View createItem(String itemTxt, final int index, int total,
                             boolean isSubTitle) {
@@ -103,15 +146,13 @@ public class CommBottomPopWindow extends BasePopupWindow implements View.OnClick
         LinearLayout layout = (LinearLayout) view
                 .findViewById(R.id.comm_popwindow_item_layout);
         View view1 = view.findViewById(R.id.view_title);
-        TextView textView = (TextView) view
+        final TextView textView = (TextView) view
                 .findViewById(R.id.comm_popwindow_item_txt);
-        if(isSubTitle){
+        if (isSubTitle) {
             view1.setVisibility(View.VISIBLE);
         }
         textView.setText(itemTxt);
-
         view.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 if (index == -1) {
@@ -125,18 +166,15 @@ public class CommBottomPopWindow extends BasePopupWindow implements View.OnClick
         return view;
     }
 
-    @Override
     public void initViews() {
-        mLayout = (LinearLayout) findViewById(R.id.comm_bottom_popwindow_layout);
-        cancleBtn = (Button) findViewById(R.id.camp_pop_cancle);
+        mLayout = (LinearLayout) popRootView.findViewById(R.id.comm_bottom_popwindow_layout);
+        cancleBtn = (Button) popRootView.findViewById(R.id.camp_pop_cancle);
         isHasSubTitle = false;
     }
 
-    @Override
     public void initEvents() {
         cancleBtn.setOnClickListener(this);
         popRootView.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 dismiss();
@@ -145,14 +183,10 @@ public class CommBottomPopWindow extends BasePopupWindow implements View.OnClick
     }
 
     @Override
-    public void init() {
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.camp_pop_cancle:
-                dismiss();
+                this.dismiss();
                 break;
             default:
                 break;
@@ -166,6 +200,7 @@ public class CommBottomPopWindow extends BasePopupWindow implements View.OnClick
     public void show(View view) {
         showAtLocation(view, Gravity.BOTTOM, 0, 0);
     }
+
     //回调接口定义
     public interface PopWindowListener {
         public void onPopSelected(int which);

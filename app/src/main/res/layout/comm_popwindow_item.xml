@@ -3,7 +3,7 @@
     android:id="@+id/comm_popwindow_item_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#fff"
+    android:background="@color/white_view"
     android:orientation="vertical" >
 
     <TextView
@@ -13,6 +13,10 @@
         android:layout_margin="10dp"
         android:text="进入菜单"
         android:gravity="center"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:focusable="true"
+        android:marqueeRepeatLimit="marquee_forever"
         android:textSize="18sp" />
     <View
         android:id="@+id/view_title"

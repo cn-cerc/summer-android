@@ -111,6 +111,14 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     public ArrayList<MainTitleMenu> mRightMenu;  //右侧菜单集合
     private ArrayList<MainTitleMenu> mTitleWinMenu;  //标题菜单窗口集合
     public ArrayList<MainTitleMenu> mTitleMenu;  //标题菜单集合
+    private ArrayList<ArrayList<MainTitleMenu>> allTitleList;  //标题菜单总集合
+    private ArrayList<ArrayList<MainTitleMenu>> allRightList;  //右侧总集合
+    private List<MainTitleMenu> titlePage;  //多页面集合
+    private BrowserView newsWebView[] = new BrowserView[6];  //webView数组，限制上限为6
+    private String currentUrl = null;
+    private int classWebView = 0;
+    private boolean webViewState = false;  //判断是否新建webView
+
     public BrowserView getBrowser() {
         return browser;
     }
@@ -167,14 +175,32 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
         mRightMenu = new ArrayList<MainTitleMenu>();
         mTitleMenu = new ArrayList<MainTitleMenu>();
-        InitView();
+        allTitleList = new ArrayList<ArrayList<MainTitleMenu>>();
+        allRightList = new ArrayList<ArrayList<MainTitleMenu>>();
         myApp = MyApp.getInstance();
-        mTitleMenu.add(new MainTitleMenu("返回首页", false, myApp.getStartPage(), 1));  //设置初始化数据
-        mTitleMenu.add(new MainTitleMenu("关闭页面", false, "", 1));
-        mTitleMenu.add(new MainTitleMenu("新建窗口", true, "", 1));
+        for (int i = 0; i < 6; i++) {
+            allTitleList.add(new ArrayList<MainTitleMenu>());
+        }
+        for (int i = 0; i < 6; i++) {
+            allRightList.add(new ArrayList<MainTitleMenu>());
+        }
+        titlePage = new ArrayList<MainTitleMenu>();
+        mTitleWinMenu = new ArrayList<MainTitleMenu>();
+        initData();
+        InitView();
+        browser.loadUrl(myApp.getStartPage());
+    }
+
+    /**
+     * 固定数据初始化
+     */
+    private void initData() {
+        mTitleMenu.clear();
+        mRightMenu.clear();
+        mTitleMenu.add(new MainTitleMenu("返回首页", false, myApp.getStartPage(), 1, classWebView));  //设置初始化数据
+        mTitleMenu.add(new MainTitleMenu("新建窗口", false, "", 1, classWebView));
         mRightMenu.add(new MainTitleMenu("设置", false, "", 1));
         mRightMenu.add(new MainTitleMenu("退出系统", true, "", 1));
-        browser.loadUrl(myApp.getStartPage());
     }
 
     /**
@@ -338,6 +364,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             }
         });
         browser.setOnLongClickListener(this);
+        AddWebView();
     }
 
     @Override
@@ -346,7 +373,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         return true;
     }
 
-
     /**
      * 获得标题上层级菜单
      *
@@ -354,7 +380,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
      * @param newUrl
      */
     public void CatalogTitleWebView(String title, String newUrl) {
-        mTitleMenu.add(new MainTitleMenu(title, false, newUrl, 2));
+        mTitleMenu.add(new MainTitleMenu(title, false, newUrl, 2, classWebView));
         initTitlePopWindow();
     }
 
@@ -369,33 +395,132 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         initPopWindow();
     }
 
-    public int bb = -1;  //控制关闭窗口
+    public int winClose = -1;  //控制关闭窗口
+    int mIndex = 0;   //当前页面窗口位置下标
     //标题菜单回调的点击事件
     private CommBottomPopWindow.PopWindowListener mPopListener = new CommBottomPopWindow.PopWindowListener() {
         @Override
         public void onPopSelected(int which) {
             switch (which) {
                 case 1:
-                    //关闭当前页面
-                    browser.goBack();
-                    if (bb > 0) {
-                        mTitleMenu.remove(bb);
-                        bb = -1;
-                    }
-                    mTitlePopWindow.dismiss();
-                    initTitlePopWindow();
-                    break;
+
                 case 2:
-                    //新建窗口
+                    switch (mTitleMenu.get(which).getName()) {
+                        case "关闭页面":
+                            //关闭当前窗口
+                            int windowNum = 0;
+                            for (int i = 0; i < allTitleList.size(); i++) {
+                                if (allTitleList.get(i).size() > 0) {
+                                    windowNum++;
+                                }
+                            }
+                            if (windowNum > 1) {
+                                newsWebView[classWebView].setVisibility(View.GONE);
+                                newsWebView[classWebView] = null;
+                                for (int i = 0; i < allTitleList.size(); i++) {
+                                    if (allTitleList.get(i).size() > 0) {
+                                        if (allTitleList.get(i).get(0).getOnlySign() == classWebView) {
+                                            allTitleList.get(classWebView).clear();
+                                            allRightList.get(classWebView).clear();
+                                        }
+                                    }
+                                }
+                                for (int i = 0; i < titlePage.size(); i++) {
+                                    if (titlePage.get(i).getOnlySign() == classWebView) {
+                                        titlePage.remove(i);
+                                    }
+                                }
+                                for (int i = 0; i < newsWebView.length; i++) {
+                                    if (newsWebView[i] != null) {
+                                        newsWebView[i].setVisibility(View.VISIBLE);
+                                        browser = newsWebView[i];
+                                        classWebView = i;
+                                        for (int l = 0; l < allTitleList.size(); l++) {
+                                            if (allTitleList.get(l).size() > 0) {
+                                                if (allTitleList.get(l).get(0).getOnlySign() == classWebView) {
+                                                    upDataAggre(allTitleList.get(l), titlePage);
+                                                    mTitleMenu.clear();
+                                                    mTitleMenu.addAll(allTitleList.get(l));
+                                                    mRightMenu.clear();
+                                                    mRightMenu.addAll(allRightList.get(l));
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        for (int j = 0; j < titlePage.size(); j++) {
+                                            if (titlePage.get(j).getOnlySign() == i) {
+                                                lblTitle.setText(titlePage.get(j).getName());
+                                                break;
+                                            }
+                                        }
+                                        break;
+                                    }
+                                }
+                            } else {
+                                Toast.makeText(myApp, "已经是顶层菜单", Toast.LENGTH_SHORT).show();
+                            }
+                            mTitlePopWindow.dismiss();
+                            initTitlePopWindow();
+                            break;
+                        case "新建窗口":
+                            AddWebView();
+                            mTitlePopWindow.dismiss();
+                            break;
+                        default:
+                            bettWin(which);
+                            break;
+                    }
                     break;
                 default:
-                    browser.loadUrl(mTitleMenu.get(which).getUrl());
-                    bb = which;
-                    mTitlePopWindow.dismiss();
+                    bettWin(which);
                     break;
             }
         }
     };
+
+    /**
+     * 切换窗口
+     *
+     * @param which
+     */
+    private void bettWin(int which) {
+        switch (mTitleMenu.get(which).getLayerSign()) {
+            case 3:
+                //切换窗口
+                mIndex = mTitleMenu.get(which).getOnlySign();
+                classWebView = mIndex;
+                newsWebView[mTitleMenu.get(which).getOnlySign()].setVisibility(View.VISIBLE);
+                browser = newsWebView[mIndex];
+                lblTitle.setText(mTitleMenu.get(which).getName());
+                for (int i = 0; i < titlePage.size(); i++) {
+
+                }
+                for (int i = 0; i < allTitleList.size(); i++) {
+                    if (allTitleList.get(i).size() > 0) {
+                        if (allTitleList.get(i).get(0).getOnlySign() == classWebView) {
+//                                        upDataAggre(allTitleList.get(i), titlePage);
+                            mTitleMenu.clear();
+                            mTitleMenu.addAll(allTitleList.get(i));
+                            mRightMenu.clear();
+                            mRightMenu.addAll(allRightList.get(i));
+                            break;
+                        }
+                    }
+                }
+                for (int i = 0; i < newsWebView.length; i++) {
+                    if (i != mIndex && newsWebView[i] != null) {
+                        newsWebView[i].setVisibility(View.GONE);
+                    }
+                }
+                mTitlePopWindow.dismiss();
+                break;
+            default:
+                browser.loadUrl(mTitleMenu.get(which).getUrl());
+                winClose = which;
+                mTitlePopWindow.dismiss();
+                break;
+        }
+    }
 
     /**
      * 右侧菜单回调的点击事件
@@ -415,7 +540,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     mpopWindow.dismiss();
                     break;
                 default:
-                    browser.loadUrl(mTitleMenu.get(which).getUrl());
+                    browser.loadUrl(mRightMenu.get(which).getUrl());
                     mpopWindow.dismiss();
                     break;
             }
@@ -428,8 +553,44 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private void initTitlePopWindow() {
         view = this.getLayoutInflater().inflate(R.layout.comm_popwindow_item, null);
         mTitlePopWindow = new CommBottomPopWindow(this);
+        upDataAggre(mTitleMenu, titlePage);
+        for (int i = 0; i < allTitleList.size(); i++) {
+            if (allTitleList.get(i).size() > 0) {
+                if (allTitleList.get(i).get(0).getOnlySign() == classWebView) {
+                    allTitleList.get(classWebView).clear();
+                    allTitleList.get(classWebView).addAll(mTitleMenu);
+                }
+            }
+        }
+        for (int j = 0; j < mTitleMenu.size() - 1; j++) {
+            if (mTitleMenu.get(j).getLayerSign() != mTitleMenu.get(j + 1).getLayerSign()) {
+                mTitleMenu.get(j).setLine(true);
+            } else {
+                mTitleMenu.get(j).setLine(false);
+            }
+        }
+        if (mTitleMenu.get(mTitleMenu.size() - 1).isLine()) {
+            mTitleMenu.get(mTitleMenu.size() - 1).setLine(false);
+        }
         mTitlePopWindow.initPopItem(mTitleMenu);
         mTitlePopWindow.setPopListener(mPopListener);
+    }
+
+    /**
+     * 重新添加标题类
+     *
+     * @param list1
+     * @param list2
+     */
+    private void upDataAggre(List<MainTitleMenu> list1, List<MainTitleMenu> list2) {
+        List<MainTitleMenu> tempList = new ArrayList<MainTitleMenu>();
+        for (int i = 0; i < list1.size(); i++) {
+            if (list1.get(i).getLayerSign() == 3) {
+                tempList.add(list1.get(i));
+            }
+        }
+        list1.removeAll(tempList);
+        list1.addAll(list2);
     }
 
     /**
@@ -438,10 +599,138 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private void initPopWindow() {
         view = this.getLayoutInflater().inflate(R.layout.comm_popwindow_item, null);
         mpopWindow = new CommBottomPopWindow(this, true);
-        // 带显示小标题，可加可不加
-        //mPopWindow.initPopSubTitle("返回首页");
+        for (int i = 0; i < allTitleList.size(); i++) {
+            if (allTitleList.get(i).size() > 0) {
+                if (allTitleList.get(i).get(0).getOnlySign() == classWebView) {
+                    allRightList.get(i).clear();
+                    allRightList.get(i).addAll(mRightMenu);
+                }
+            }
+        }
+        mRightMenu.get(1).setLine(true);
+        if (mRightMenu.get(mRightMenu.size() - 1).isLine()) {
+            mRightMenu.get(mRightMenu.size() - 1).setLine(false);
+        }
         mpopWindow.initPopItem(mRightMenu);
         mpopWindow.setPopListener(mPopListener1);
+    }
+
+    private boolean newsWebView() {
+        for (int i = 0; i < 6; i++) {
+            if (newsWebView[i] != null) {
+                webViewState = false;
+            } else {
+                webViewState = true;
+                classWebView = i;
+                break;
+            }
+        }
+        if (webViewState) {
+            initData();         //每次新建重新初始化数据
+            titlePage.add(new MainTitleMenu("欢迎页", false, currentUrl, 3, classWebView));
+            newsWebView[classWebView] = new BrowserView(this);
+            mainframe.addView(newsWebView[classWebView]);
+            newsWebView[classWebView].getSettings().setTextZoom(settings.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this, ScreenUtils.getInches(this))));
+
+            //jsAndroid 供web端js调用标识，修改请通知web开发者
+            newsWebView[classWebView].addJavascriptInterface(new JavaScriptProxy(this), "JSobj");
+
+            newsWebView[classWebView].setWebViewClient(new MyWebViewClient());
+
+            newsWebView[classWebView].setWebChromeClient(new WebChromeClient() {
+
+                // For Android  > 4.1.1
+                public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
+                    openFileChooserImpl(uploadMsg);
+                    mUploadMessage = uploadMsg;
+                }
+
+                // For Android  > 3.0
+                public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType) {
+                    if (mUploadMessage != null) return;
+                    mUploadMessage = uploadMsg;
+                }
+
+                // For Android  > 5.0
+                @Override
+                public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+                    mUploadMessageForAndroid5 = filePathCallback;
+                    openFileChooserImplForAndroid5(filePathCallback);
+                    return true;
+                }
+
+                @Override
+                public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+                    callback.invoke(origin, true, false);
+                    super.onGeolocationPermissionsShowPrompt(origin, callback);
+                }
+
+                @Override
+                public void onPermissionRequest(PermissionRequest request) {
+                    super.onPermissionRequest(request);
+                }
+
+                @Override
+                public void onProgressChanged(WebView view, int newProgress) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                        progress.setProgress(newProgress, true);
+                    else progress.setProgress(newProgress);
+                    super.onProgressChanged(view, newProgress);
+                }
+
+                @Override
+                public void onReceivedTitle(WebView view, String title) {
+                    super.onReceivedTitle(view, title);
+                }
+
+                @Override
+                public void onReceivedTouchIconUrl(WebView view, String url, boolean precomposed) {
+                    super.onReceivedTouchIconUrl(view, url, precomposed);
+                }
+            });
+            newsWebView[classWebView].setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if ((keyCode == KeyEvent.KEYCODE_BACK) && event.getAction() == KeyEvent.ACTION_UP) {
+                        if (is_exit) {
+                            Intent home = new Intent(Intent.ACTION_MAIN);
+                            home.addCategory(Intent.CATEGORY_HOME);
+                            startActivity(home);
+                        } else {
+                            if (newsWebView[classWebView].canGoBack())
+                                newsWebView[classWebView].goBack();// 返回键退回
+                            else finish();
+                        }
+                        return true;
+                    } else
+                        return false;
+                }
+            });
+
+        } else {
+            Toast.makeText(this, "已达到新窗口上限", Toast.LENGTH_SHORT).show();
+        }
+        return webViewState;
+    }
+
+    /**
+     * 新建窗口
+     */
+    private void AddWebView() {
+        if (newsWebView()) {
+            //将数据存进总集合
+            for (int i = 0; i < allTitleList.size(); i++) {
+                if (allTitleList.get(i).size() == 0) {
+                    allTitleList.get(i).clear();
+                    allTitleList.get(i).addAll(mTitleMenu);
+                    allRightList.get(i).clear();
+                    allRightList.get(i).addAll(mRightMenu);
+                    break;
+                }
+            }
+            browser = newsWebView[classWebView];
+            browser.loadUrl(myApp.getStartPage());
+        }
     }
 
     @Override
@@ -453,9 +742,23 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             case R.id.imgMore:
                 initPopWindow();
                 mpopWindow.showAsDropDown(boxTitle);
-                mpopWindow.show(view);
+                mpopWindow.show(lblTitle);
                 break;
             case R.id.lblTitle:
+                //标题菜单
+                if (titlePage.size() > 1) {
+                    if (mTitleMenu.get(1).getName().equals("关闭页面")) {
+                    } else {
+                        mTitleMenu.add(1, new MainTitleMenu("关闭页面", false, "", 1, classWebView));
+                    }
+                } else {
+                    for (int i = 0; i < mTitleMenu.size(); i++) {
+                        if (mTitleMenu.get(i).getName().equals("关闭页面")) {
+                            mTitleMenu.remove(i);
+                            break;
+                        }
+                    }
+                }
                 initTitlePopWindow();
                 mTitlePopWindow.showAsDropDown(boxTitle);
                 mTitlePopWindow.show(view);
@@ -561,6 +864,12 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
      */
     public void clearData() {
         list = new ArrayList<MainTitleMenu>();
+        for (int i = 0; i < allTitleList.get(classWebView).size(); i++) {
+            if (2 == allTitleList.get(classWebView).get(i).getLayerSign()) {
+                list.add(allTitleList.get(classWebView).get(i));
+            }
+        }
+        allTitleList.get(classWebView).remove(list);
         for (int d = 0; d < mTitleMenu.size(); d++) {
             if (2 == mTitleMenu.get(d).getLayerSign()) {
                 list.add(mTitleMenu.get(d));
@@ -636,6 +945,8 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             if (!MyApp.getNetworkState(view.getContext())) return;
+            currentUrl = url;
+            Log.d("print", "url___: " + url);
             clearData();
             is_ERROR = false;
             /*
@@ -669,9 +980,19 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         public void onPageFinished(WebView view, String url) {
             if (is_ERROR) {
                 lblTitle.setText("出错了");
+                for (int i = 0; i < titlePage.size(); i++) {
+                    if (titlePage.get(i).getOnlySign() == classWebView) {
+                        titlePage.get(i).setName("出错了");
+                    }
+                }
                 tipsImage.setVisibility(View.VISIBLE);
             } else {
                 lblTitle.setText(browser.getTitle());
+                for (int i = 0; i < titlePage.size(); i++) {
+                    if (titlePage.get(i).getOnlySign() == classWebView) {
+                        titlePage.get(i).setName(browser.getTitle());
+                    }
+                }
                 tipsImage.setVisibility(View.GONE);
             }
             /*
