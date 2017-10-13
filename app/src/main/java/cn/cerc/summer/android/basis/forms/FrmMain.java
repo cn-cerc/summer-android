@@ -151,7 +151,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         }
     };
 
-
     /**
      * 是否直接退出
      */
@@ -204,7 +203,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         mRightMenu.add(new MainTitleMenu("设置", false, "", 1));
         mRightMenu.add(new MainTitleMenu("退出系统", true, "", 1));
     }
-
 
     /**
      * 查看消息的url
@@ -375,7 +373,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         //webview的长按事件，设置true后webview将不会触发长按复制动作
         return true;
     }
-
 
     /**
      * 获得标题上层级菜单
