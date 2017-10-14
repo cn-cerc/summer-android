@@ -2,6 +2,7 @@ package cn.cerc.summer.android.forms;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -526,7 +527,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 case 1:
                     Toast.makeText(FrmMain.this, "退出系统", Toast.LENGTH_SHORT).show();
                     //退出系统
-                    mpopWindow.dismiss();
+                    finish();
                     break;
                 default:
                     browser.loadUrl(mRightMenu.get(which).getUrl());
