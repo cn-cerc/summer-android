@@ -132,7 +132,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            JPushInterface.setAlias(FrmMain.this, MyApp.IMEI, tac);
+                            JPushInterface.setAlias(FrmMain.this, MyApp.getInstance().getClientId(), tac);
                         }
                     }, 30000);
                     break;
@@ -251,7 +251,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
         Set<String> set = new HashSet<String>();
         set.add("android");
-        JPushInterface.setAlias(getApplicationContext(), MyApp.IMEI, tac);//极光推送设置别名
+        JPushInterface.setAlias(getApplicationContext(), MyApp.getInstance().getClientId(), tac);//极光推送设置别名
     }
 
     @SuppressLint("JavascriptInterface")

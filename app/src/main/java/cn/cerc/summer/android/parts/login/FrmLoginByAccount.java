@@ -96,7 +96,7 @@ public class FrmLoginByAccount extends AppCompatActivity implements View.OnClick
                             dataIn.getHead().setField("Account_", edtAccount.getText().toString());
 //                            dataIn.getHead().setField("password", edtPassword.getText().toString());
                             dataIn.getHead().setField("Password_", edtPassword.getText().toString());
-                            dataIn.getHead().setField("MachineID_", MyApp.IMEI);
+                            dataIn.getHead().setField("MachineID_", MyApp.getInstance().getClientId());
                             dataIn.getHead().setField("ClientName_", "android");
                             handler.sendMessage(rs.execByMessage(MSG_LOGIN));
                         } catch (Exception e) {

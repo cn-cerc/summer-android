@@ -39,16 +39,17 @@ import cn.jpush.android.api.JPushInterface;
 public class MyApp extends android.app.Application {
     public static String HOME_URL = "https://m.knowall.cn";
     //    public static String HOME_URL = "http://192.168.1.174";
-//        public static String HOME_URL = "http://192.168.31.247";
+    //    public static String HOME_URL = "http://192.168.31.247";
     public static String SERVICES_PATH = "services";
     public static String FORMS_PATH = "forms";
-    private String APPCODE = "vine-android-standard";
+    private final String APPCODE = "vine-android-standard";
+    public static final String DEVICE_TYPE = "android";
 
-    public static String IMEI;
     private static MyApp instance;
     private DisplayImageOptions options;
     public boolean debug = false;
     private String appVersion;
+    private String clientId;
 
     public static MyApp getInstance() {
         return instance;
@@ -132,10 +133,9 @@ public class MyApp extends android.app.Application {
      * @throws PackageManager.NameNotFoundException
      */
     public static String getVersionName(Context context) throws PackageManager.NameNotFoundException {
-        PackageManager pm = context.getPackageManager();
-        PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
-        String versionname = pi.versionName;
-        return versionname;
+        PackageManager packageManager = context.getPackageManager();
+        PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+        return packageInfo.versionName;
     }
 
     /**
@@ -145,13 +145,11 @@ public class MyApp extends android.app.Application {
      * @return url
      */
     public static String buildDeviceUrl(String baseUrl) {
-        return String.format("%s?device=%s&CLIENTID=%s", baseUrl, Constans.DEVICE_TYPE, MyApp.IMEI);
+        return String.format("%s?device=%s&CLIENTID=%s", baseUrl, DEVICE_TYPE, MyApp.getInstance().getClientId());
     }
 
     /**
      * 储存缓存配置列表
-     *
-     * @param webConfig 配置文件类
      */
     public void saveCacheList() {
         Map<String, String> map = new HashMap<String, String>();
@@ -258,9 +256,9 @@ public class MyApp extends android.app.Application {
     }
 
     public static String getFormUrl(String formCode, boolean first) {
-        if(first)
+        if (first)
             return String.format("%s/%s/%s?CLIENTID=%s&device=%s", MyApp.HOME_URL, FORMS_PATH, formCode,
-                    MyApp.getClientId(), "phone");
+                    MyApp.getInstance().getClientId(), DEVICE_TYPE);
         else
             return String.format("%s/%s/%s", HOME_URL, FORMS_PATH, formCode);
     }
@@ -269,8 +267,12 @@ public class MyApp extends android.app.Application {
         return String.format("%s/%s/%s", HOME_URL, SERVICES_PATH, serviceCode);
     }
 
-    public static Object getClientId() {
-        return "n_" + MyApp.IMEI;
+    public String getClientId() {
+        return this.clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
     public String getRootSite() {
@@ -286,7 +288,7 @@ public class MyApp extends android.app.Application {
     }
 
     public String getStartPage() {
-        return String.format("%s?CLIENTID=%s&device=%s", MyApp.HOME_URL, MyApp.getClientId(), "phone");
+        return String.format("%s?CLIENTID=%s&device=%s", MyApp.HOME_URL, MyApp.getInstance().getClientId(), DEVICE_TYPE);
     }
 
     //载入配置

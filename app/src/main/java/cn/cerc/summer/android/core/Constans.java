@@ -5,11 +5,6 @@ package cn.cerc.summer.android.core;
  */
 
 public class Constans {
-
-    /**
-     * 设备类型
-     */
-    public static final String DEVICE_TYPE = "android";
     /**
      * 文件存储跟目录路径
      */
