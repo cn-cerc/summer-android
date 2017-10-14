@@ -56,7 +56,7 @@ public class FrmStartup extends AppCompatActivity {
                 } catch (Exception e) {
                     str = e.getMessage();
                 }
-                if(str != null) {
+                if(err != null) {
                     llDialog.setVisibility(View.VISIBLE);
                     TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
                     tvTitle.setText("出现错误！");
