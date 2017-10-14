@@ -100,7 +100,9 @@ public class FrmStartup extends AppCompatActivity {
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse(myApp.getFormUrl("install?device=phone&oldVersion" + oldVersion));
+                Uri uri = Uri.parse(myApp.getFormUrl(String.format("install.update?appCode=%s&curVersion=%s",
+                        myApp.getAppCode(),
+                        oldVersion)));
                 startActivity(new Intent(Intent.ACTION_VIEW, uri));
                 finish();
             }
@@ -148,9 +150,11 @@ public class FrmStartup extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                MyApp myApp = MyApp.getInstance();
                 HttpClient client = new HttpClient(MyApp.getFormUrl("install.client"));
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("client", "android");
+                params.put("appCode", myApp.getAppCode());
+                params.put("curVersion", myApp.getCurrentVersion(instince));
                 String response = client.post(params);
                 Message msg = new Message();
                 msg.what = MSG_CLIENT;

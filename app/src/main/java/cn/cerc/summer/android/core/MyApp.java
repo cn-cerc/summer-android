@@ -41,10 +41,10 @@ public class MyApp extends android.app.Application {
     //    public static String HOME_URL = "http://192.168.1.174";
 //        public static String HOME_URL = "http://192.168.31.247";
     public static String SERVICES_PATH = "services";
-    public static String FORMS_PATH = "form";
+    public static String FORMS_PATH = "forms";
+    private String APPCODE = "vine-android-standard";
 
     public static String IMEI;
-
     private static MyApp instance;
     private DisplayImageOptions options;
     public boolean debug = false;
@@ -112,11 +112,15 @@ public class MyApp extends android.app.Application {
      *
      * @param context 上下文
      * @return 版本号
-     * @throws PackageManager.NameNotFoundException
      */
-    public String getCurrentVersion(Context context) throws PackageManager.NameNotFoundException {
+    public String getCurrentVersion(Context context) {
         PackageManager pm = context.getPackageManager();
-        PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
+        PackageInfo pi = null;
+        try {
+            pi = pm.getPackageInfo(context.getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
         return pi.versionName;
     }
 
@@ -289,5 +293,10 @@ public class MyApp extends android.app.Application {
     public void loadConfig(JSONObject json) throws JSONException {
         String value = json.getString("appVersion");
         MyApp.getInstance().setAppVersion(value);
+    }
+
+    //返回应用代码
+    public String getAppCode() {
+        return this.APPCODE;
     }
 }
