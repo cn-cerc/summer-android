@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -37,11 +36,11 @@ import java.util.TimerTask;
 
 import cn.cerc.jdb.core.DataSet;
 import cn.cerc.jdb.core.Record;
-import cn.cerc.summer.android.basis.core.MyApp;
-import cn.cerc.summer.android.basis.db.ListViewAdapter;
-import cn.cerc.summer.android.basis.db.ListViewInterface;
-import cn.cerc.summer.android.basis.db.RemoteForm;
-import cn.cerc.summer.android.basis.forms.FrmMain;
+import cn.cerc.summer.android.core.MyApp;
+import cn.cerc.summer.android.basis.ListViewAdapter;
+import cn.cerc.summer.android.basis.ListViewInterface;
+import cn.cerc.summer.android.basis.RemoteForm;
+import cn.cerc.summer.android.forms.FrmMain;
 
 import static cn.cerc.summer.android.parts.music.FrmCaptureMusic.url;
 

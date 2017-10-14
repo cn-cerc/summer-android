@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_vertical"
-    tools:context="cn.cerc.summer.android.basis.forms.FrmStartup"
+    tools:context="cn.cerc.summer.android.forms.FrmStartup"
     android:orientation="vertical">
 
     <LinearLayout

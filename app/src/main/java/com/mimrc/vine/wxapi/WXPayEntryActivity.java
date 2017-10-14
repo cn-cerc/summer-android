@@ -14,7 +14,7 @@ import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
-import cn.cerc.summer.android.basis.forms.FrmMain;
+import cn.cerc.summer.android.forms.FrmMain;
 
 public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
 

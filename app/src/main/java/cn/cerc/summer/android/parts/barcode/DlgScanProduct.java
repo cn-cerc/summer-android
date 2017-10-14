@@ -21,7 +21,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import cn.cerc.jdb.core.Record;
-import cn.cerc.summer.android.basis.db.RemoteForm;
+import cn.cerc.summer.android.basis.RemoteForm;
 
 public class DlgScanProduct extends AppCompatActivity implements View.OnClickListener {
     private static final int MSG_TIMER = 1;

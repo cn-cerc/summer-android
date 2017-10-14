@@ -36,14 +36,14 @@
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
 
     <application
-        android:name="cn.cerc.summer.android.basis.core.MyApp"
+        android:name="cn.cerc.summer.android.core.MyApp"
         android:allowBackup="true"
         android:icon="@mipmap/deting"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="cn.cerc.summer.android.basis.forms.FrmMain"
+            android:name="cn.cerc.summer.android.forms.FrmMain"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <!--
@@ -64,7 +64,7 @@
             android:value="true" />
 
         <activity
-            android:name="cn.cerc.summer.android.basis.forms.FrmSettings"
+            android:name="cn.cerc.summer.android.forms.FrmSettings"
             android:screenOrientation="portrait" />
 
         <!-- JPush -->
@@ -125,7 +125,7 @@
         <!-- Required. AppKey copied from Portal -->
         <!-- User defined. 用户自定义的广播接收器 -->
         <receiver
-            android:name="cn.cerc.summer.android.basis.core.MyBroadcastReceiver"
+            android:name="cn.cerc.summer.android.core.MyBroadcastReceiver"
             android:enabled="true">
             <intent-filter>
 
@@ -191,7 +191,7 @@
             android:theme="@style/MyDialogStyle" />
         <activity android:name="cn.cerc.summer.android.parts.barcode.FrmCreateQrcode" />
         <activity android:name="cn.cerc.summer.android.parts.barcode.FrmScanBarcode" />
-        <activity android:name="cn.cerc.summer.android.basis.forms.FrmStartup">
+        <activity android:name="cn.cerc.summer.android.forms.FrmStartup">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

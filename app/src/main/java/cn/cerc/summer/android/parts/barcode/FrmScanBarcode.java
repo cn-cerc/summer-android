@@ -39,9 +39,9 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import cn.cerc.summer.android.basis.core.MyApp;
-import cn.cerc.summer.android.basis.db.RemoteForm;
-import cn.cerc.summer.android.basis.forms.FrmMain;
+import cn.cerc.summer.android.core.MyApp;
+import cn.cerc.summer.android.basis.RemoteForm;
+import cn.cerc.summer.android.forms.FrmMain;
 import cn.cerc.summer.android.parts.barcode.zxing.camera.CameraManager;
 import cn.cerc.summer.android.parts.barcode.zxing.decoding.CaptureActivityHandler;
 import cn.cerc.summer.android.parts.barcode.zxing.decoding.InactivityTimer;
