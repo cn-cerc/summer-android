@@ -270,7 +270,7 @@ public class MyApp extends android.app.Application {
     }
 
     public static Object getClientId() {
-        return MyApp.IMEI;
+        return "n_" + MyApp.IMEI;
     }
 
     public String getRootSite() {
