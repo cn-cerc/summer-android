@@ -41,23 +41,27 @@ public class FrmStartup extends AppCompatActivity {
             if(msg.what == MSG_CLIENT){
                 String str = (String) msg.obj;
                 JSONObject json = null;
+                String err = null;
                 try {
                     json = new JSONObject(str);
                     if(json.has("result")){
                         if(json.getBoolean("result")){
                             instince.loadConfig(json);
                         }else{
-                            Toast.makeText(instince, json.getString("message"), Toast.LENGTH_LONG).show();
+                            str = json.getString("message");
                         }
                     }else{
-                        Toast.makeText(instince, "无法取得后台服务，请稍后再试！", Toast.LENGTH_LONG).show();
+                        str = "无法取得后台服务，请稍后再试！";
                     }
                 } catch (Exception e) {
+                    str = e.getMessage();
+                }
+                if(str != null) {
                     llDialog.setVisibility(View.VISIBLE);
                     TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
                     tvTitle.setText("出现错误！");
                     TextView tvReadme = (TextView) findViewById(R.id.tvReadme);
-                    tvReadme.setText(e.getMessage());
+                    tvReadme.setText(str);
                     Button btnOK = (Button) findViewById(R.id.btnOk);
                     btnOK.setVisibility(View.GONE);
                     Button btnCancel = (Button) findViewById(R.id.btnCancel);
