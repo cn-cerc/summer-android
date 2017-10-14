@@ -15,6 +15,6 @@ public class GetClientId implements JavaScriptService {
 
     @Override
     public String execute(Context context, JSONObject request) {
-        return MyApp.IMEI;
+        return MyApp.getInstance().getClientId();
     }
 }

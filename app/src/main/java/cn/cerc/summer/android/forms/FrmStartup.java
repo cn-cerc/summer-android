@@ -168,6 +168,6 @@ public class FrmStartup extends AppCompatActivity {
         }).start();
 
         TelephonyManager TelephonyMgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-        MyApp.IMEI = TelephonyMgr.getDeviceId();
+        MyApp.getInstance().setClientId("n_" + TelephonyMgr.getDeviceId());
     }
 }
