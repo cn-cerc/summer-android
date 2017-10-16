@@ -1,13 +1,28 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            keyAlias 'keyAlias'
+            keyPassword 'keyPassword'
+            storeFile file('C:/android/summer.jks')
+            storePassword 'storePassword'
+        }
+        debug {
+            keyAlias 'keyAlias'
+            keyPassword 'keyPassword'
+            storeFile file('C:/android/summer.jks')
+            storePassword 'storePassword'
+        }
+    }
+
     compileSdkVersion 25
     buildToolsVersion '25.0.0'
     defaultConfig {
         applicationId "com.mimrc.vine"
         minSdkVersion 18
         targetSdkVersion 25
-        versionCode 15
+        versionCode 16
         versionName "1.1.2.4"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
