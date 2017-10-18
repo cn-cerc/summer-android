@@ -147,6 +147,7 @@ public class CommBottomPopWindow extends PopupWindow implements View.OnClickList
             view1.setVisibility(View.VISIBLE);
         }
         textView.setText(itemTxt);
+        textView.setSelected(true);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
