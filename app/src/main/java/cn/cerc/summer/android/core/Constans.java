@@ -62,5 +62,12 @@ public class Constans {
      * 缩放程度  shared   key
      */
     public static String SCALE_SHAREDKEY = "InitialScale";
-
+    /**
+     * 配置文件
+     */
+    public static String CACHE_FILE = "cacheFiles";
+    /**
+     * 广告图片缓存
+     */
+    public static String IMAGE_STARTIP = "startup";
 }
