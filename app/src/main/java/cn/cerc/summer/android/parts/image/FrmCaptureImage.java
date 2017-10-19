@@ -51,7 +51,6 @@ public class FrmCaptureImage extends Activity implements View.OnClickListener {
     private LinearLayout camp_pop_linear;
     private Bitmap bitmap;
     private LinearLayout linear_image;
-    private HttpURLConnection httpURLConnection;
     private int RESULT_LOAD_IMAGE = 1;  //相册返回
     private int RESULT_CAMERA_IMAGE = 2;  //相机返回
 

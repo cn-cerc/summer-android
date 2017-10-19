@@ -17,7 +17,6 @@ import cn.cerc.summer.android.parts.music.FrmCaptureMusic;
 public class CaptureImage implements JavaScriptService {
     @Override
     public String execute(Context context, JSONObject request) {
-        //TODO: 此功能还未准备好
         try {
             String url = request.getString("uploadUrl");
             Log.e("CatureImage", "url: " + url);
