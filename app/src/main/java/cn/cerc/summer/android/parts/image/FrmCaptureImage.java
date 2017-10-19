@@ -1,6 +1,7 @@
 package cn.cerc.summer.android.parts.image;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -26,17 +27,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.common.Callback;
 import org.xutils.common.util.KeyValue;
-import org.xutils.ex.HttpException;
-import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
-import org.xutils.http.app.ResponseParser;
 import org.xutils.http.body.MultipartBody;
-import org.xutils.http.request.UriRequest;
 import org.xutils.x;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -44,8 +39,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import cn.cerc.summer.android.parts.music.ArrivateUpload;
 
 /**
  * Created by yangtaiyu on 2017/10/16.
@@ -171,81 +164,20 @@ public class FrmCaptureImage extends Activity implements View.OnClickListener {
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                 String picturePath = cursor.getString(columnIndex);
                 String pictureImage = getFileName(picturePath);
-                Log.e("print", "onActivityResult: ___" + picturePath + "   ____" + pictureImage);
                 uploadImg(serverUrl, picturePath);
-//                upload(picturePath);
-//                Toast.makeText(this,  picturePath + "   ____" + pictureImage, Toast.LENGTH_SHORT).show();
-//                File file = new File(picturePath);
-//                FileInputStream fileInputStream = null;
-//                try {
-//                    fileInputStream = new FileInputStream(file);
-//                    Toast.makeText(this, "开始上传", Toast.LENGTH_SHORT).show();
-//                    Log.d("print", "onResourceReady: ___" + serverUrl);
-//                    new ArrivateUpload(serverUrl, fileInputStream, pictureImage).start();
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                }
-//                cursor.close();
             } else if (requestCode == RESULT_CAMERA_IMAGE) {
                 File file = null;
+                String picturePath = null;
+                String pictureImage;
                 if (null == data) {
-//                    upload(mCurrentPhotoPath);
-                    file = new File(mCurrentPhotoPath);
+                    picturePath = mCurrentPhotoPath;
                 } else {
                     Bundle bundle = data.getExtras();
                     Bitmap bitmap = (Bitmap) bundle.get("data");
-                    String picturePath = saveMyBitmap(bitmap).getAbsolutePath();
-                    String pictureImage = getFileName(picturePath);
-//                    upload(picturePath);
-                    file = new File(pictureImage);
+                    picturePath = saveMyBitmap(bitmap).getAbsolutePath();
+                    pictureImage = getFileName(picturePath);
                 }
-                FileInputStream fileInputStream = null;
-                try {
-                    fileInputStream = new FileInputStream(file);
-                    Toast.makeText(this, "开始上传" + mCurrentPhotoPath, Toast.LENGTH_SHORT).show();
-                    new ArrivateUpload(serverUrl, fileInputStream, mCurrentPhotoPath).start();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-//                SimpleTarget target = new SimpleTarget<Bitmap>() {
-//
-//                    @Override
-//                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-//                        String picturePath = saveMyBitmap(bitmap).getAbsolutePath();
-//                        String pictureImage = getFileName(picturePath);
-//                        Log.d("print", "onActivityResult: ___" + picturePath + "   ____" + pictureImage);
-//                        File file = new File(picturePath);
-//                        FileInputStream fileInputStream = null;
-//                        try {
-//                            fileInputStream = new FileInputStream(file);
-//                            Toast.makeText(FrmCaptureImage.this, "开始上传", Toast.LENGTH_SHORT).show();
-//                            Log.d("print", "onResourceReady: ___" + serverUrl);
-//                            new ArrivateUpload(serverUrl, fileInputStream, pictureImage).start();
-//                        } catch (FileNotFoundException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onLoadStarted(Drawable placeholder) {
-//                        super.onLoadStarted(placeholder);
-//
-//                    }
-//
-//                    @Override
-//                    public void onLoadFailed(Exception e, Drawable errorDrawable) {
-//                        super.onLoadFailed(e, errorDrawable);
-//
-//                    }
-//                };
-//
-//                Glide.with(this).load(mCurrentPhotoPath)
-//                        .asBitmap()
-//                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-//                        .override(1080, 1920)//图片压缩
-//                        .centerCrop()
-//                        .dontAnimate()
-//                        .into(target);
+                uploadImg(serverUrl, picturePath);
 
 
             }
@@ -273,11 +205,19 @@ public class FrmCaptureImage extends Activity implements View.OnClickListener {
         return file;
     }
 
-    private RequestParams params;
 
+    /**
+     * 上传图片至服务器
+     *
+     * @param url      服务器接口
+     * @param filePath 本地图片路径
+     */
     public void uploadImg(String url, final String filePath) {
+        final ProgressDialog pb = new ProgressDialog(this);
+        pb.setMessage("正在上传");
+        pb.setCancelable(false);
+        pb.show();
         RequestParams params = new RequestParams(url);
-
         params.setMultipart(true);//设置表单传送
         params.setCancelFast(true);//设置可以立即被停止
         params.addBodyParameter("Filedata", new File(filePath), "multipart/form-data");
@@ -285,23 +225,16 @@ public class FrmCaptureImage extends Activity implements View.OnClickListener {
         Callback.Cancelable cancelable = x.http().post(params, new Callback.ProgressCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.i("uploadImg", "result-->" + result);
-                Toast.makeText(FrmCaptureImage.this, "上传成功" + result, Toast.LENGTH_SHORT).show();
-//                if (mCallback!=null){
-//                    mCallback.successCallback(tab,result);
-//                }
+                pb.dismiss();
+                finish();
+                Toast.makeText(FrmCaptureImage.this, "上传成功", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+                pb.dismiss();
+                Toast.makeText(FrmCaptureImage.this, "上传失败，请重新上传", Toast.LENGTH_SHORT).show();
                 Log.i("uploadImg", "ex-->" + ex.getMessage());
-//                if (mCallback!=null){
-//                    mCallback.errorCallback(tab);
-//                }
-
-//                if (scheduleCallback!=null){
-//                    scheduleCallback.uploadErrorCallback(filePath);
-//                }
             }
 
             @Override
@@ -325,67 +258,8 @@ public class FrmCaptureImage extends Activity implements View.OnClickListener {
 
             @Override
             public void onLoading(long total, long current, boolean isDownloading) {
-
-            /*  Log.i("uploadImg","total-->"+total);
-                Log.i("upload","isDownloading-->"+isDownloading);
-                Log.i("uploadImg","current-->"+current);*/
-//                if (scheduleCallback!=null){
-//                    scheduleCallback.uploadScheduleCallback(total,current,filePath);
-//                }
             }
         });
-
-        //cancelable.cancel();//终止上传
-    }
-
-    private void upload(String picturePath) {
-//        final ProgressDialog pb = new ProgressDialog(this);
-//        pb.setMessage("正在上传");
-//        pb.setCancelable(false);
-//        pb.show();
-
-        //要传递给服务器的json格式参数
-        JSONObject json = new JSONObject();
-        try {
-            json.put("devId", 1);
-            json.put("devName", "pout");
-            json.put("keyWord", "ss");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        //构建RequestParams对象，传入请求的服务器地址URL
-        RequestParams params = new RequestParams(serverUrl);
-        params.setAsJsonContent(true);
-        List<KeyValue> list = new ArrayList<>();
-        list.add(new KeyValue("file", new File(picturePath)));
-        list.add(new KeyValue("parameters", json.toString()));
-        MultipartBody body = new MultipartBody(list, "UTF-8");
-        params.setRequestBody(body);
-        x.http().post(params, new org.xutils.common.Callback.CommonCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
-                Toast.makeText(FrmCaptureImage.this, "成功了么" + result, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFinished() {
-                //上传完成
-                Toast.makeText(FrmCaptureImage.this, "上传完成", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-                //取消上传
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                //上传失败
-                Toast.makeText(FrmCaptureImage.this, "上传失败", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
     }
 
     /**
