@@ -17,33 +17,23 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.mimrc.vine.R;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.xutils.common.Callback;
-import org.xutils.common.util.KeyValue;
 import org.xutils.http.RequestParams;
-import org.xutils.http.body.MultipartBody;
 import org.xutils.x;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by yangtaiyu on 2017/10/16.
  */
-
 public class FrmCaptureImage extends Activity implements View.OnClickListener {
     private Button btn_pop_album, btn_pop_camera, btn_pop_cancel;
     private String serverUrl;
@@ -75,7 +65,6 @@ public class FrmCaptureImage extends Activity implements View.OnClickListener {
         Intent intent = getIntent();
         serverUrl = intent.getStringExtra("url");
         initView();
-
     }
 
     private void initView() {
@@ -177,8 +166,6 @@ public class FrmCaptureImage extends Activity implements View.OnClickListener {
                     pictureImage = getFileName(picturePath);
                 }
                 uploadImg(serverUrl, picturePath);
-
-
             }
         }
     }
@@ -203,7 +190,6 @@ public class FrmCaptureImage extends Activity implements View.OnClickListener {
         }
         return file;
     }
-
 
     /**
      * 上传图片至服务器
