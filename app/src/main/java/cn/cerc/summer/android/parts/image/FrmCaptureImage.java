@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,18 +17,16 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.mimrc.vine.R;
+
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by yangtaiyu on 2017/10/16.
@@ -37,12 +34,13 @@ import java.util.Date;
 public class FrmCaptureImage extends Activity implements View.OnClickListener {
     private Button btn_pop_album, btn_pop_camera, btn_pop_cancel;
     private String serverUrl;
-    private String mCurrentPhotoPath;
     private LinearLayout camp_pop_linear;
-    private Bitmap bitmap;
-    private LinearLayout linear_image;
-    private int RESULT_LOAD_IMAGE = 1;  //相册返回
-    private int RESULT_CAMERA_IMAGE = 2;  //相机返回
+    private RelativeLayout linear_image;
+    private static final int LOAD_IMAGE = 1;  //相册返回
+    private File file;  //照片file
+    private Uri imageUri; //照片URi
+    private static final int TAKE_PHOTO = 2;//相机返回
+    private static final int CUT_PHOTO = 3; //裁剪返回
 
     public static void startForm(Context context, String urlImage) {
         Intent intent = new Intent();
@@ -72,7 +70,7 @@ public class FrmCaptureImage extends Activity implements View.OnClickListener {
         btn_pop_camera = (Button) findViewById(R.id.btn_pop_camera);
         btn_pop_cancel = (Button) findViewById(R.id.btn_pop_cancel);
         camp_pop_linear = (LinearLayout) findViewById(R.id.camp_pop_linear);
-        linear_image = (LinearLayout) findViewById(R.id.linear_image);
+        linear_image = (RelativeLayout) findViewById(R.id.linear_image);
         linear_image.setOnClickListener(this);
         btn_pop_camera.setOnClickListener(this);
         btn_pop_album.setOnClickListener(this);
@@ -84,10 +82,18 @@ public class FrmCaptureImage extends Activity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.btn_pop_album:
                 Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(i, RESULT_LOAD_IMAGE);
+                startActivityForResult(i, LOAD_IMAGE);
                 break;
             case R.id.btn_pop_camera:
-                takeCamera(RESULT_CAMERA_IMAGE);
+                Intent it = new Intent();
+                it.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                file = new File(getPath());
+                imageUri = Uri.fromFile(file);
+                // 以键值对的形式告诉系统照片保存的地址，键的名称不能随便写
+                it.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+
+                startActivityForResult(it, TAKE_PHOTO);
                 camp_pop_linear.setVisibility(View.GONE);
                 break;
             case R.id.btn_pop_cancel:
@@ -100,95 +106,76 @@ public class FrmCaptureImage extends Activity implements View.OnClickListener {
     }
 
     /**
-     * 拍照并自动生成存储路径
+     * 制作图片的路径地址
      *
-     * @param num
-     */
-    private void takeCamera(int num) {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(this.getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            photoFile = createImageFile();
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                        Uri.fromFile(photoFile));
-            }
-        }
-        startActivityForResult(takePictureIntent, num);//跳转界面传回拍照所得数据
-    }
-
-    /**
-     * 根据路径获取文件名
-     *
-     * @param pathandname
      * @return
      */
-    public String getFileName(String pathandname) {
-        int start = pathandname.lastIndexOf("/");
-        int end = pathandname.lastIndexOf(".");
-        if (start != -1 && end != -1) {
-            return pathandname.substring(start + 1, end);
+    public String getPath() {
+        String path = null;
+        File file = null;
+        long tag = System.currentTimeMillis();
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            //SDCard是否可用
+            path = Environment.getExternalStorageDirectory() + File.separator + "DCIM/";
+            file = new File(path);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            path = Environment.getExternalStorageDirectory() + File.separator + "DCIM/" + tag + ".jpg";
         } else {
-            return null;
+            path = this.getFilesDir() + File.separator + "DCIM/";
+            file = new File(path);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            path = this.getFilesDir() + File.separator + "DCIM/" + tag + ".jpg";
         }
+        return path;
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case LOAD_IMAGE:
+                if (null != data) {
+                    Uri selectedImage = data.getData();
+                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
-        if (resultCode == RESULT_OK) {
-            if (requestCode == RESULT_LOAD_IMAGE && null != data) {
-                Uri selectedImage = data.getData();
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                    Cursor cursor = getContentResolver().query(selectedImage,
+                            filePathColumn, null, null, null);
+                    cursor.moveToFirst();
 
-                Cursor cursor = getContentResolver().query(selectedImage,
-                        filePathColumn, null, null, null);
-                cursor.moveToFirst();
-
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                String picturePath = cursor.getString(columnIndex);
-                String pictureImage = getFileName(picturePath);
-                uploadImg(serverUrl, picturePath);
-            } else if (requestCode == RESULT_CAMERA_IMAGE) {
-                File file = null;
-                String picturePath = null;
-                String pictureImage;
-                if (null == data) {
-                    picturePath = mCurrentPhotoPath;
-                } else {
-                    Bundle bundle = data.getExtras();
-                    Bitmap bitmap = (Bitmap) bundle.get("data");
-                    picturePath = saveMyBitmap(bitmap).getAbsolutePath();
-                    pictureImage = getFileName(picturePath);
+                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                    String picturePath = cursor.getString(columnIndex);
+                    Log.d("print", "onActivityResult: __))___" + picturePath);
+                    file = new File(picturePath);
+                    imageUri = Uri.fromFile(file);
+                    Intent intent = new Intent("com.android.camera.action.CROP");
+                    intent.setDataAndType(imageUri, "image/*");
+                    intent.putExtra("scale", true);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                    startActivityForResult(intent, CUT_PHOTO);// 启动裁剪程序
                 }
+                break;
+            case TAKE_PHOTO:
+                Intent intent = new Intent("com.android.camera.action.CROP");
+                intent.setDataAndType(imageUri, "image/*");
+                intent.putExtra("scale", true);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                startActivityForResult(intent, CUT_PHOTO);// 启动裁剪程序
+                break;
+            case CUT_PHOTO:
+                // 发送通知，通知媒体数据库更新URL，否则图库无法显示图片
+                Intent it = new Intent();
+                it.setAction(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                it.setData(imageUri);
+                sendBroadcast(it);
+
+                String picturePath = file.getPath();
                 uploadImg(serverUrl, picturePath);
-            }
+                break;
         }
-    }
-
-    //将bitmap转化为png格式
-    public File saveMyBitmap(Bitmap mBitmap) {
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-        File file = null;
-        try {
-            file = File.createTempFile(
-                    generateFileName(),  /* prefix */
-                    ".jpg",         /* suffix */
-                    storageDir      /* directory */
-            );
-
-            FileOutputStream out = new FileOutputStream(file);
-            mBitmap.compress(Bitmap.CompressFormat.JPEG, 20, out);
-            out.flush();
-            out.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return file;
     }
 
     /**
@@ -245,33 +232,5 @@ public class FrmCaptureImage extends Activity implements View.OnClickListener {
             public void onLoading(long total, long current, boolean isDownloading) {
             }
         });
-    }
-
-    /**
-     * 生成存储路径
-     *
-     * @return
-     */
-    private File createImageFile() {
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-        File image = null;
-        try {
-            image = File.createTempFile(
-                    FrmCaptureImage.generateFileName(),  /* prefix */
-                    ".jpg",         /* suffix */
-                    storageDir      /* directory */
-            );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        mCurrentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
-    //生成拍摄的照片名字
-    public static String generateFileName() {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        return imageFileName;
     }
 }
