@@ -1,13 +1,17 @@
 package cn.cerc.summer.android.forms;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -30,52 +34,57 @@ import cn.cerc.summer.android.basis.HttpClient;
 public class FrmStartup extends AppCompatActivity {
     LinearLayout llDialog;
 
+    private final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 11;
     private boolean appUpdateReset = false;
     private FrmStartup instince;
     private Timer timer = new Timer();
     private int MSG_CLIENT = 1;
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if(msg.what == MSG_CLIENT){
+            if (msg.what == MSG_CLIENT) {
                 String resp = (String) msg.obj;
                 JSONObject json = null;
                 String err = null;
                 try {
                     json = new JSONObject(resp);
-                    if(json.has("result")){
-                        if(json.getBoolean("result")){
+                    if (json.has("result")) {
+                        if (json.getBoolean("result")) {
                             instince.loadConfig(json);
-                        }else{
+                        } else {
                             err = json.getString("message");
                         }
-                    }else{
+                    } else {
                         err = "无法取得后台服务，请稍后再试！";
                     }
                 } catch (Exception e) {
                     err = e.getMessage();
                 }
-                if(err != null) {
-                    llDialog.setVisibility(View.VISIBLE);
-                    TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
-                    tvTitle.setText("出现错误！");
-                    TextView tvReadme = (TextView) findViewById(R.id.tvReadme);
-                    tvReadme.setText(err);
-                    Button btnOK = (Button) findViewById(R.id.btnOk);
-                    btnOK.setVisibility(View.GONE);
-                    Button btnCancel = (Button) findViewById(R.id.btnCancel);
-                    btnCancel.setText("确定");
-                    btnCancel.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            finish();
-                        }
-                    });
+                if (err != null) {
+                    showError("出现错误！", err);
                 }
             }
         }
     };
+
+    private void showError(String errtitle, String errText) {
+        llDialog.setVisibility(View.VISIBLE);
+        TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
+        tvTitle.setText(errtitle);
+        TextView tvReadme = (TextView) findViewById(R.id.tvReadme);
+        tvReadme.setText(errText);
+        Button btnOK = (Button) findViewById(R.id.btnOk);
+        btnOK.setVisibility(View.GONE);
+        Button btnCancel = (Button) findViewById(R.id.btnCancel);
+        btnCancel.setText("确定");
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
 
     //读取配置
     private void loadConfig(JSONObject json) throws JSONException, PackageManager.NameNotFoundException {
@@ -84,7 +93,7 @@ public class FrmStartup extends AppCompatActivity {
 
         //检测是否有新的版本
         final String oldVersion = myApp.getCurrentVersion(this);
-        if(oldVersion.equals(myApp.getAppVersion())) {
+        if (oldVersion.equals(myApp.getAppVersion())) {
             startMainForm();
             return;
         }
@@ -94,13 +103,13 @@ public class FrmStartup extends AppCompatActivity {
         JSONArray appUpdateReadme = json.getJSONArray("appUpdateReadme");
         TextView tvReadme = (TextView) findViewById(R.id.tvReadme);
         StringBuffer sbReadme = new StringBuffer();
-        for(int i = 0; i < appUpdateReadme.length(); i ++) {
+        for (int i = 0; i < appUpdateReadme.length(); i++) {
             sbReadme.append(appUpdateReadme.getString(i) + "\n");
         }
         tvReadme.setText(sbReadme.toString());
         appUpdateReset = json.getBoolean("appUpdateReset");
-        Button  btnOk = (Button) findViewById(R.id.btnOk);
-        Button   btnCancel = (Button) findViewById(R.id.btnCancel);
+        Button btnOk = (Button) findViewById(R.id.btnOk);
+        Button btnCancel = (Button) findViewById(R.id.btnCancel);
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,16 +125,16 @@ public class FrmStartup extends AppCompatActivity {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(appUpdateReset){
+                if (appUpdateReset) {
                     finish();
-                }else{
+                } else {
                     startMainForm();
                 }
             }
         });
     }
 
-    private void startMainForm(){
+    private void startMainForm() {
         //启动主窗口
         Intent intent = new Intent();
         intent.setClass(instince, FrmMain.class);
@@ -151,6 +160,45 @@ public class FrmStartup extends AppCompatActivity {
         }, 3000);
         */
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+                == PackageManager.PERMISSION_GRANTED) {
+            startRequest();
+            return;
+        }
+
+        //检查是否已被拒绝过
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.READ_PHONE_STATE)) {
+            showError("权限不足", "系统运行时必须读取IMEI，防止非您本人冒用您的帐号，请您于设置中开启相应权限后才能继续使用！");
+            return;
+        }
+
+        //申请权限
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.READ_PHONE_STATE},
+                MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+        String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_PHONE_STATE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startRequest();
+                } else {
+                    showError("权限不足", "系统运行时必须读取IMEI，防止非您本人冒用您的帐号，请您于设置中开启相应权限后才能继续使用！");
+                }
+                return;
+            }
+        }
+    }
+
+    private void startRequest() {
+        TelephonyManager TelephonyMgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+        MyApp.getInstance().setClientId("n_" + TelephonyMgr.getDeviceId());
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -166,8 +214,5 @@ public class FrmStartup extends AppCompatActivity {
                 handler.sendMessage(msg);
             }
         }).start();
-
-        TelephonyManager TelephonyMgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-        MyApp.getInstance().setClientId("n_" + TelephonyMgr.getDeviceId());
     }
 }
