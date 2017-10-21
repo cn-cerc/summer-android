@@ -63,6 +63,14 @@ public class FileUtils {
     }
 
     /**
+     * 判断缓存文件是否存在----直接根据绝对路径
+     */
+    public static boolean isCachePathFileExist(String fileName) {
+        File file = new File(fileName);
+        return file.exists();
+    }
+
+    /**
      * 将图片存储为文件
      *
      * @param bitmap 图片
