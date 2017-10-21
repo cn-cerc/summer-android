@@ -15,8 +15,12 @@ public class PlayMovie implements JavaScriptService {
 
     @Override
     public String execute(Context context, JSONObject request) throws Exception {
-        //TODO: 此功能还未准备好
-        FrmPlayMovie.startForm(context, request.getString("movieUrl"));
-        return "还没有做完呢。。。";
+        String movieUrl = request.getString("movieUrl");
+        if(movieUrl != null){
+        FrmPlayMovie.startForm(context, movieUrl);
+        }else{
+            throw new RuntimeException("URL参数错误");
+        }
+        return "true";
     }
 }
