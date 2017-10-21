@@ -62,8 +62,5 @@ public class Constans {
      * 缩放程度  shared   key
      */
     public static String SCALE_SHAREDKEY = "InitialScale";
-    /**
-     * 视频播放
-     */
-    public static String PLAY_MOVIE = "playmovie";
+
 }
