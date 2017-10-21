@@ -7,9 +7,9 @@
     android:orientation="vertical"
     tools:context="cn.cerc.summer.android.parts.movie.FrmPlayMovie">
 
-    <cn.cerc.summer.android.core.CommonVideoView
+    <cn.cerc.summer.android.parts.movie.CommonVideoView
         android:id="@+id/videoview_movie"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </cn.cerc.summer.android.core.CommonVideoView>
+    </cn.cerc.summer.android.parts.movie.CommonVideoView>
 </LinearLayout>

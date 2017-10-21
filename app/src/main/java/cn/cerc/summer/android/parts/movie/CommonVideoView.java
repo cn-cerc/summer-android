@@ -1,4 +1,4 @@
-package cn.cerc.summer.android.core;
+package cn.cerc.summer.android.parts.movie;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;

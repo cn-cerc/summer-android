@@ -1,6 +1,5 @@
 package cn.cerc.summer.android.parts.movie;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,7 +12,6 @@ import android.util.Log;
 
 import com.mimrc.vine.R;
 
-import cn.cerc.summer.android.core.CommonVideoView;
 import cn.cerc.summer.android.core.Constans;
 
 public class FrmPlayMovie extends AppCompatActivity {
@@ -21,6 +19,10 @@ public class FrmPlayMovie extends AppCompatActivity {
     private String videoUrl = null;
     private SharedPreferences sharedPreferences;
     private int num = 0;
+    /**
+     * 视频播放
+     */
+    private static String PLAY_MOVIE = "FrmPlayMovie_playmovie";
 
     public static void startForm(Context context, String movieUrl) {
         Intent intent = new Intent();
@@ -33,7 +35,7 @@ public class FrmPlayMovie extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frm_play_movie);
-        sharedPreferences = getSharedPreferences(Constans.PLAY_MOVIE, MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(PLAY_MOVIE, MODE_PRIVATE);
         commonVideoView = (CommonVideoView) findViewById(R.id.videoview_movie);
         Intent intent = getIntent();
         videoUrl = intent.getStringExtra("url");
@@ -54,13 +56,13 @@ public class FrmPlayMovie extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
-        outState.putInt(Constans.PLAY_MOVIE, commonVideoView.getCurrentPosition());
+        outState.putInt(PLAY_MOVIE, commonVideoView.getCurrentPosition());
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        commonVideoView.setCurrentPosition(savedInstanceState.getInt(Constans.PLAY_MOVIE));
+        commonVideoView.setCurrentPosition(savedInstanceState.getInt(PLAY_MOVIE));
     }
 
     @Override
