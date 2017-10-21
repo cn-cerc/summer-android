@@ -263,7 +263,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         imgBack.setOnClickListener(this);
         imgMore.setOnClickListener(this);
         lblTitle.setOnClickListener(this);
-
+        lblTitle.setSelected(true);
         dragpointview = (DragPointView) this.findViewById(R.id.dragpointview);
         dragpointview.setEnable(false);
         dragpointview.setClickable(false);

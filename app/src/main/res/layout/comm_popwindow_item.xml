@@ -2,20 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/comm_popwindow_item_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/white_view"
     android:orientation="vertical" >
 
     <TextView
         android:id="@+id/comm_popwindow_item_txt"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
         android:text="进入菜单"
         android:gravity="center"
         android:ellipsize="marquee"
         android:singleLine="true"
         android:focusable="true"
+        android:padding="5dp"
+        android:background="@drawable/tv_bg_color"
         android:marqueeRepeatLimit="marquee_forever"
         android:textSize="18sp" />
     <View
