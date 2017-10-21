@@ -184,6 +184,8 @@
         <activity android:name="cn.cerc.summer.android.parts.movie.FrmPlayMovie"
             android:configChanges="orientation|screenSize|screenLayout"/>
         <activity android:name="cn.cerc.summer.android.parts.music.FrmCaptureMusic" />
+        <activity android:name="cn.cerc.summer.android.parts.image.FrmCaptureImage"
+            android:theme="@style/MyCaptureDialogStyle"/>
         <activity android:name="cn.cerc.summer.android.parts.barcode.FrmScanProduct" />
         <activity android:name="cn.cerc.summer.android.parts.barcode.DlgScanProduct" />
         <activity android:name="cn.cerc.summer.android.parts.login.FrmLoginByAccount" />
