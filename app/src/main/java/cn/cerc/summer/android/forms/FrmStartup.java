@@ -11,12 +11,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -35,21 +32,13 @@ import com.mimrc.vine.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 
 import cn.cerc.summer.android.core.Constans;
-import cn.cerc.summer.android.core.FileUtils;
 import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.basis.HttpClient;
 import cn.cerc.summer.android.forms.view.NavigationChatImageView;
@@ -226,7 +215,6 @@ public class FrmStartup extends AppCompatActivity {
             }
         }, 3000);
         */
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
                 == PackageManager.PERMISSION_GRANTED) {
             startRequest();
@@ -247,8 +235,7 @@ public class FrmStartup extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_READ_PHONE_STATE: {
                 if (grantResults.length > 0
