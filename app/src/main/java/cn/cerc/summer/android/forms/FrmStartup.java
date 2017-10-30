@@ -7,25 +7,21 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mimrc.vine.R;
 
@@ -38,9 +34,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 
+import cn.cerc.summer.android.basis.HttpClient;
 import cn.cerc.summer.android.core.Constans;
 import cn.cerc.summer.android.core.MyApp;
-import cn.cerc.summer.android.basis.HttpClient;
 import cn.cerc.summer.android.forms.view.NavigationChatImageView;
 
 public class FrmStartup extends AppCompatActivity {
@@ -68,6 +64,10 @@ public class FrmStartup extends AppCompatActivity {
             super.handleMessage(msg);
             if (msg.what == MSG_CLIENT) {
                 resp = (String) msg.obj;
+                if (resp == null) {
+                    showError("出现错误！", "无法取得后台服务，请稍后再试！");
+                    return;
+                }
                 String err = null;
                 try {
                     json = new JSONObject(resp);
@@ -78,7 +78,7 @@ public class FrmStartup extends AppCompatActivity {
                             err = json.getString("message");
                         }
                     } else {
-                        err = "无法取得后台服务，请稍后再试！";
+                        err = "取得后台服务异常，请稍后再试！";
                     }
                 } catch (Exception e) {
                     err = e.getMessage();
