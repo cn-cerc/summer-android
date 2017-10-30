@@ -116,7 +116,7 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_back:
-                this.finish();
+                FrmScanBarcode.this.finish();
                 break;
 //            case R.id.button_function:
 //                //打开手机中的相册
@@ -314,7 +314,7 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
         Intent resultIntent = new Intent();
         Bundle bundle = new Bundle();
         bundle.putString("result", resultString);
-        bundle.putParcelable("bitmap", bitmap);
+//        bundle.putParcelable("bitmap", bitmap);
         resultIntent.putExtras(bundle);
         this.setResult(RESULT_OK, resultIntent);
 
