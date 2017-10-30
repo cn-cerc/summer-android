@@ -2,7 +2,10 @@ package cn.cerc.summer.android.forms;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
@@ -11,10 +14,16 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,12 +33,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 
+import cn.cerc.summer.android.core.Constans;
 import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.basis.HttpClient;
+import cn.cerc.summer.android.forms.view.NavigationChatImageView;
 
 public class FrmStartup extends AppCompatActivity {
     LinearLayout llDialog;
@@ -39,13 +51,23 @@ public class FrmStartup extends AppCompatActivity {
     private FrmStartup instince;
     private Timer timer = new Timer();
     private int MSG_CLIENT = 1;
+    private int IMAGE_CLTENT = 2;
+    private MyApp myApp;
+    String resp = null;
+    private JSONObject json = null;
+    private ImageView start_image;
+    private FrameLayout frameLayout;
+    public static String CACHE_FILE = "cacheFiles";
+    public static String IMAGE_STARTIP = "startup"; //广告图片缓存
+    public static SharedPreferences settings;
+    private NavigationChatImageView navigationChatImageView;
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == MSG_CLIENT) {
-                String resp = (String) msg.obj;
-                JSONObject json = null;
+                resp = (String) msg.obj;
                 String err = null;
                 try {
                     json = new JSONObject(resp);
@@ -87,14 +109,14 @@ public class FrmStartup extends AppCompatActivity {
     }
 
     //读取配置
-    private void loadConfig(JSONObject json) throws JSONException, PackageManager.NameNotFoundException {
+    private void loadConfig(final JSONObject json) throws JSONException, PackageManager.NameNotFoundException {
         final MyApp myApp = MyApp.getInstance();
         myApp.loadConfig(json);
 
         //检测是否有新的版本
         final String oldVersion = myApp.getCurrentVersion(this);
         if (oldVersion.equals(myApp.getAppVersion())) {
-            startMainForm();
+            loadImageView();
             return;
         }
 
@@ -128,10 +150,27 @@ public class FrmStartup extends AppCompatActivity {
                 if (appUpdateReset) {
                     finish();
                 } else {
-                    startMainForm();
+                    llDialog.setVisibility(View.GONE);
+                    loadImageView();
                 }
             }
         });
+    }
+
+    private NavigationChatImageView.ImageViewPagerListener PagerListener = new NavigationChatImageView.ImageViewPagerListener() {
+        @Override
+        public void onPopSelected() {
+            startMainForm();
+        }
+    };
+
+    private void loadImageView() {
+        navigationChatImageView = new NavigationChatImageView(this, resp, settings);
+        navigationChatImageView.setPopListener(PagerListener);
+        frameLayout.addView(navigationChatImageView.loadNavigationImage());
+        if (json == null) {
+            startMainForm();
+        }
     }
 
     private void startMainForm() {
@@ -142,13 +181,30 @@ public class FrmStartup extends AppCompatActivity {
         finish();
     }
 
+    public static boolean isCachePathFileExist(String fileName) {
+        File file = new File(fileName);
+        return file.exists();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 放在setContentView()之前运行
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_frm_startup);
         instince = this;
-
         llDialog = (LinearLayout) findViewById(R.id.llDialog);
+        start_image = (ImageView) findViewById(R.id.start_image);
+        frameLayout = (FrameLayout) findViewById(R.id.frm_image);
+        settings = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
+        String startimage = settings.getString(IMAGE_STARTIP, "");
+        if (isCachePathFileExist(startimage)) {
+            start_image.setVisibility(View.VISIBLE);
+            Bitmap bm = BitmapFactory.decodeFile(settings.getString(IMAGE_STARTIP, null));
+            start_image.setImageBitmap(bm);
+        }
         /*
         timer.schedule(new TimerTask() {
             @Override
@@ -159,7 +215,6 @@ public class FrmStartup extends AppCompatActivity {
             }
         }, 3000);
         */
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
                 == PackageManager.PERMISSION_GRANTED) {
             startRequest();
@@ -180,8 +235,7 @@ public class FrmStartup extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-        String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_READ_PHONE_STATE: {
                 if (grantResults.length > 0
@@ -215,4 +269,5 @@ public class FrmStartup extends AppCompatActivity {
             }
         }).start();
     }
+
 }

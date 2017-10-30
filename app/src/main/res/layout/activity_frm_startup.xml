@@ -1,55 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_vertical"
-    tools:context="cn.cerc.summer.android.forms.FrmStartup"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="cn.cerc.summer.android.forms.FrmStartup">
+
+    <ImageView
+        android:id="@+id/start_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible" />
 
     <LinearLayout
-        android:layout_margin="60dp"
         android:id="@+id/llDialog"
-        android:visibility="gone"
-        android:padding="16dp"
-        android:background="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_centerInParent="true"
+        android:layout_margin="60dp"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
             android:layout_marginBottom="16dp"
-            android:text="发现新版本"/>
+            android:text="发现新版本"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvReadme"
-            android:layout_marginBottom="16dp"
             android:layout_width="match_parent"
-            android:text="(更新说明)"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="(更新说明)" />
 
         <LinearLayout
-            android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center">
 
             <Button
                 android:id="@+id/btnOk"
-                android:text="更新"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="更新" />
 
             <Button
                 android:id="@+id/btnCancel"
                 android:layout_width="wrap_content"
-                android:text="忽略"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="忽略" />
         </LinearLayout>
 
     </LinearLayout>
+    <FrameLayout
+        android:id="@+id/frm_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</LinearLayout>
+    </FrameLayout>
+
+</RelativeLayout>
