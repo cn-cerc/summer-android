@@ -1,15 +1,17 @@
 package cn.cerc.summer.android.forms;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -55,6 +57,7 @@ import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.core.ScreenUtils;
 import cn.cerc.summer.android.forms.view.BrowserView;
 import cn.cerc.summer.android.forms.view.DragPointView;
+import cn.cerc.summer.android.parts.barcode.FrmScanBarcode;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 
@@ -190,6 +193,8 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         mTitleMenu.add(new MainTitleMenu("返回首页", false, myApp.getStartPage(), 1, classWebView));  //设置初始化数据
         mTitleMenu.add(new MainTitleMenu("新建窗口", false, "", 1, classWebView));
         mRightMenu.add(new MainTitleMenu("设置", false, "", 1));
+        // TODO 临时扫一扫
+        mRightMenu.add(new MainTitleMenu("扫一扫", true, "", 1));
         mRightMenu.add(new MainTitleMenu("退出系统", true, "", 1));
     }
 
@@ -525,6 +530,14 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     mpopWindow.dismiss();
                     break;
                 case 1:
+                    if (ActivityCompat.checkSelfPermission(FrmMain.this, Manifest.permission.CAMERA)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        FrmScanBarcode.startForm((AppCompatActivity) FrmMain.this, 3, "123", "123");
+                    } else {
+                        ActivityCompat.requestPermissions(FrmMain.this, new String[]{Manifest.permission.CAMERA}, 35);
+                    }
+                    break;
+                case 2:
                     Toast.makeText(FrmMain.this, "退出系统", Toast.LENGTH_SHORT).show();
                     //退出系统
                     finish();

@@ -14,6 +14,7 @@ import android.os.Message;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -116,7 +117,7 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_back:
-                this.finish();
+                finish();
                 break;
 //            case R.id.button_function:
 //                //打开手机中的相册
@@ -127,7 +128,6 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
 //                break;
         }
     }
-
 
     private Handler mHandler = new Handler() {
 
@@ -314,7 +314,9 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
         Intent resultIntent = new Intent();
         Bundle bundle = new Bundle();
         bundle.putString("result", resultString);
-        bundle.putParcelable("bitmap", bitmap);
+
+        Log.e("barcode",resultString);
+//        bundle.putParcelable("bitmap", bitmap);
         resultIntent.putExtras(bundle);
         this.setResult(RESULT_OK, resultIntent);
 
