@@ -1,17 +1,14 @@
 package cn.cerc.summer.android.forms;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -57,7 +54,6 @@ import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.core.ScreenUtils;
 import cn.cerc.summer.android.forms.view.BrowserView;
 import cn.cerc.summer.android.forms.view.DragPointView;
-import cn.cerc.summer.android.parts.barcode.FrmScanBarcode;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 
@@ -538,14 +534,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 case 1:
                     Toast.makeText(FrmMain.this, "退出系统", Toast.LENGTH_SHORT).show();
                     //退出系统
-//                    finish();
-                    if (ActivityCompat.checkSelfPermission(FrmMain.this, Manifest.permission.CAMERA)
-                            == PackageManager.PERMISSION_GRANTED) {
-                        FrmScanBarcode.startForm((AppCompatActivity) FrmMain.this, 3, "123", "123");
-                    }else {
-                        ActivityCompat.requestPermissions(FrmMain.this, new String[]{Manifest.permission.CAMERA}, 35);
-                    }
-
+                    finish();
                     break;
                 default:
                     browser.loadUrl(mRightMenu.get(which).getUrl());
