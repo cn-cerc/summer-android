@@ -1,17 +1,14 @@
 package cn.cerc.summer.android.forms;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -41,7 +38,11 @@ import com.alipay.sdk.app.PayTask;
 import com.alipay.sdk.util.H5PayResultModel;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.Thing;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mimrc.vine.R;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -57,14 +58,14 @@ import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.core.ScreenUtils;
 import cn.cerc.summer.android.forms.view.BrowserView;
 import cn.cerc.summer.android.forms.view.DragPointView;
-import cn.cerc.summer.android.parts.barcode.FrmScanBarcode;
+import cn.cerc.summer.android.services.RefreshMenu;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 
 /**
  * 主界面
  */
-public class FrmMain extends AppCompatActivity implements View.OnLongClickListener, View.OnClickListener {
+public class FrmMain extends AppCompatActivity implements View.OnLongClickListener, View.OnClickListener, RefreshMenu.RefreshMenuListener {
     public static final String NETWORK_CHANGE = "android.net.conn.NETWORK_CHANGE";
     public static final String APP_UPDATA = "com.mimrc.vine.APP_UPDATA";
     public static final String JSON_ERROR = "com.mimrc.vine.JSON_ERROR";
@@ -182,6 +183,8 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         initData();
         InitView();
         browser.loadUrl(myApp.getStartPage());
+        RefreshMenu refreshMenu = new RefreshMenu();
+        refreshMenu.setonRefreshMenuListener(this);
     }
 
     /**
@@ -194,7 +197,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         mTitleMenu.add(new MainTitleMenu("新建窗口", false, "", 1, classWebView));
         mRightMenu.add(new MainTitleMenu("设置", false, "", 1));
         // TODO 临时扫一扫
-        mRightMenu.add(new MainTitleMenu("扫一扫", true, "", 1));
+        // mRightMenu.add(new MainTitleMenu("扫一扫", true, "", 1));
         mRightMenu.add(new MainTitleMenu("退出系统", true, "", 1));
     }
 
@@ -889,6 +892,39 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         list.clear();
         initTitlePopWindow();
         initPopWindow();
+    }
+
+    @Override
+    public void onRefreshMenuListener(JSONObject refreshInfo) {
+        String titles = refreshInfo.optString("title");//菜单列表数据
+        String scriptTag = refreshInfo.optString("scriptTag");//菜单标记
+
+        if (titles != null) {
+            List<MainTitleMenu> titleList = new Gson().fromJson(titles, new TypeToken<List<MainTitleMenu>>() {
+            }.getType());
+            //TODO
+
+            if (titleList.size() > 0) {
+                switch (scriptTag) {
+                    case "mRightMenu":
+                        mRightMenu.clear();
+                        mRightMenu.add(new MainTitleMenu("设置", false, "", 1));
+                        mRightMenu.add(new MainTitleMenu("退出系统", true, "", 1));
+                        mRightMenu.addAll(titleList);
+                        break;
+
+                    case "mTitleMenu":
+                        mTitleMenu.clear();
+                        mTitleMenu.add(new MainTitleMenu("返回首页", false, myApp.getStartPage(), 1, classWebView));  //设置初始化数据
+                        mTitleMenu.add(new MainTitleMenu("新建窗口", false, "", 1, classWebView));
+                        mTitleMenu.addAll(titleList);
+                        break;
+
+                }
+
+            }
+        }
+
     }
 
     private class MyWebViewClient extends WebViewClient {
