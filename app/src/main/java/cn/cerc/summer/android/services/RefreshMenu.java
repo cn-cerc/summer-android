@@ -9,16 +9,15 @@ import cn.cerc.summer.android.forms.FrmMain;
 import cn.cerc.summer.android.forms.JavaScriptService;
 
 
-
 public class RefreshMenu implements JavaScriptService {
 
 
     @Override
     public String execute(Context context, JSONObject request) throws Exception {
-        if (!request.has("scriptTag")){
+        if (!request.has("scriptTag")) {
             return "没有指定的标记参数";
         }
-        if (!request.has("scriptFunction")){
+        if (!request.has("scriptFunction")) {
             return "没有指定要回调的函数";
         }
         if (request.has("title")){
@@ -32,8 +31,6 @@ public class RefreshMenu implements JavaScriptService {
         }else {
             return "没有菜单更新";
         }
-
-
         return "";
     }
 
