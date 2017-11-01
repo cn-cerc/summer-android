@@ -7,34 +7,34 @@ import org.json.JSONObject;
 import cn.cerc.summer.android.forms.JavaScriptService;
 
 
-
 public class RefreshMenu implements JavaScriptService {
 
-    private RefreshMenuListener  mRefreshMenuListener;//提供动态修改菜单的监听器
+    private RefreshMenuListener mRefreshMenuListener;//提供动态修改菜单的监听器
+
     @Override
     public String execute(Context context, JSONObject request) throws Exception {
-        if (!request.has("scriptTag")){
+        if (!request.has("scriptTag")) {
             return "没有指定的标记参数";
         }
-        if (!request.has("scriptFunction")){
+        if (!request.has("scriptFunction")) {
             return "没有指定要回调的函数";
         }
-        if (!request.has("title")){
-            if (mRefreshMenuListener!=null){
-            mRefreshMenuListener.onRefreshMenuListener(request);
-            return "true";
+        if (request.has("title")) {
+            if (mRefreshMenuListener != null) {
+                mRefreshMenuListener.onRefreshMenuListener(request);
+                return "true";
             }
-        }else {
+        } else {
             return "没有更新菜单";
         }
-
-
         return "";
     }
-    public  interface RefreshMenuListener{
+
+    public interface RefreshMenuListener {
         void onRefreshMenuListener(JSONObject title);
     }
-    public  void setonRefreshMenuListener(RefreshMenuListener listener){
-        mRefreshMenuListener  =listener;
+
+    public void setonRefreshMenuListener(RefreshMenuListener listener) {
+        mRefreshMenuListener = listener;
     }
 }
