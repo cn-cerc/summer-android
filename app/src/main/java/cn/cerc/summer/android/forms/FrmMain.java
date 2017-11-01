@@ -40,8 +40,6 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.Thing;
 import com.mimrc.vine.R;
 
-import org.json.JSONObject;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -63,7 +61,7 @@ import cn.jpush.android.api.TagAliasCallback;
 /**
  * 主界面
  */
-public class FrmMain extends AppCompatActivity implements View.OnLongClickListener, View.OnClickListener, RefreshMenu.RefreshMenuListener {
+public class FrmMain extends AppCompatActivity implements View.OnLongClickListener, View.OnClickListener {
     public static final String NETWORK_CHANGE = "android.net.conn.NETWORK_CHANGE";
     public static final String APP_UPDATA = "com.mimrc.vine.APP_UPDATA";
     public static final String JSON_ERROR = "com.mimrc.vine.JSON_ERROR";
@@ -110,6 +108,8 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private String currentUrl = null;
     private int classWebView = 0;
     private boolean webViewState = false;  //判断是否新建webView
+    private RefreshMenu mRefreshMenu;
+    public List<MainTitleMenu> mRightMenuTemp = new ArrayList<>();
 
     public BrowserView getBrowser() {
         return browser;
@@ -181,8 +181,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         initData();
         InitView();
         browser.loadUrl(myApp.getStartPage());
-        RefreshMenu refreshMenu = new RefreshMenu();
-        refreshMenu.setonRefreshMenuListener(this);
+
     }
 
     /**
@@ -193,10 +192,10 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         mRightMenu.clear();
         mTitleMenu.add(new MainTitleMenu("返回首页", false, myApp.getStartPage(), 1, classWebView));  //设置初始化数据
         mTitleMenu.add(new MainTitleMenu("新建窗口", false, "", 1, classWebView));
-        mRightMenu.add(new MainTitleMenu("设置", false, "", 1));
+        mRightMenu.add(new MainTitleMenu("设置", false, "", 1,""));
         // TODO 临时扫一扫
         // mRightMenu.add(new MainTitleMenu("扫一扫", true, "", 1));
-        mRightMenu.add(new MainTitleMenu("退出系统", true, "", 1));
+        mRightMenu.add(new MainTitleMenu("退出系统", true, "", 1,""));
     }
 
     /**
@@ -387,7 +386,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
      * @param newUrl
      */
     public void CatalogWebView(String title, String newUrl) {
-        mRightMenu.add(new MainTitleMenu(title, false, newUrl, 2));
+        mRightMenu.add(new MainTitleMenu(title, false, newUrl, 2,""));
         initPopWindow();
     }
 
@@ -529,22 +528,18 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     //设置界面
                     FrmSettings.startFormForResult(FrmMain.getInstance(), REQUEST_SETTING, browser.getUrl());
                     mpopWindow.dismiss();
-                    break;
+                break;
+
                 case 1:
-//                    if (ActivityCompat.checkSelfPermission(FrmMain.this, Manifest.permission.CAMERA)
-//                            == PackageManager.PERMISSION_GRANTED) {
-//                        FrmScanBarcode.startForm((AppCompatActivity) FrmMain.this, 3, "123", "123");
-//                    } else {
-//                        ActivityCompat.requestPermissions(FrmMain.this, new String[]{Manifest.permission.CAMERA}, 35);
-//                    }
-                    break;
-                case 2:
                     Toast.makeText(FrmMain.this, "退出系统", Toast.LENGTH_SHORT).show();
                     //退出系统
                     finish();
                     break;
                 default:
-                    browser.loadUrl(mRightMenu.get(which).getUrl());
+                   // runScript(String.format("%s('%s', '%s')", mRightMenu.get(which).getUrl(), this.scriptTag, resultString));
+                    //   browser.loadUrl(mRightMenu.get(which).getName());
+                    runScript(String.format("%s('%s', '%s')", mRightMenu.get(which).getUrl(), mRightMenu.get(which).getScriptTag(),"回调成功"));
+
                     mpopWindow.dismiss();
                     break;
             }
@@ -892,7 +887,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         initPopWindow();
     }
 
-    @Override
+ /*   @Override
     public void onRefreshMenuListener(JSONObject refreshInfo) {
         String title = refreshInfo.optString("title");//菜单列表数据
         String scriptTag = refreshInfo.optString("scriptTag");//菜单标记
@@ -902,7 +897,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
 
 
-    }
+    }*/
 
     private class MyWebViewClient extends WebViewClient {
 
@@ -979,9 +974,16 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
 
             //TODO
-            mRightMenu.clear();
-            mRightMenu.add(new MainTitleMenu("设置", false, "", 1));
-            mRightMenu.add(new MainTitleMenu("退出系统", true, "", 1));
+
+
+                for (int i = 0; i < mRightMenu.size(); i++) {
+                    if (mRightMenuTemp.size() > 0) {
+                    if (mRightMenuTemp.get(i).getName().equals(mRightMenu.get(i + 2).getName())) {
+                        mRightMenu.remove(i + 2);
+                        mRightMenuTemp.remove(i);
+                    }
+                }
+            }
 
             progress.setVisibility(View.VISIBLE);
             super.onPageStarted(view, url, favicon);
