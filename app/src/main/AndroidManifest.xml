@@ -194,7 +194,7 @@
             android:name="cn.cerc.summer.android.parts.dialog.FrmShowWarning"
             android:theme="@style/MyDialogStyle" />
         <activity android:name="cn.cerc.summer.android.parts.barcode.FrmCreateQrcode" />
-        <activity android:name="cn.cerc.summer.android.parts.barcode.FrmScanBarcode" />
+        <activity android:name="cn.cerc.summer.android.parts.barcode.FrmScanBarcode"   android:screenOrientation="portrait"/>
         <activity android:name="cn.cerc.summer.android.forms.FrmStartup">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
