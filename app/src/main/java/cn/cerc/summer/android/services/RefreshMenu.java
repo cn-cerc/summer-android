@@ -6,9 +6,7 @@ import org.json.JSONObject;
 
 import cn.cerc.summer.android.forms.JavaScriptService;
 
-/**
- * Created by ${廖昭启} on 2017/11/1.
- */
+
 
 public class RefreshMenu implements JavaScriptService {
 

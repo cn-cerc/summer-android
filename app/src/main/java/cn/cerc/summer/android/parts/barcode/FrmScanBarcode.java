@@ -14,6 +14,7 @@ import android.os.Message;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -123,6 +124,7 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
         mButtonBack.setOnClickListener(this);
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this);
+
     }
 
 
@@ -335,8 +337,12 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
         FrmMain obj = FrmMain.getInstance();
         if (!"".equals(this.scriptFunction)) {
             obj.runScript(String.format("%s('%s', '%s')", this.scriptFunction, this.scriptTag, resultString));
+          //  RemoteForm   remoteForm  = new RemoteForm(postUrl==null||postUrl.equals("")?postUrl)
+
         } else if (!"".equals(this.postUrl)) {
             obj.loadUrl(String.format("%s?barcode=%s", this.postUrl, resultString));
+
+            Log.e("URl",postUrl);
         } else {
             Toast.makeText(this, "参数调用有误！", Toast.LENGTH_LONG).show();
         }

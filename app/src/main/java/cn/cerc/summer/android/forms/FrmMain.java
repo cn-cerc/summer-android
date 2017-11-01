@@ -38,8 +38,6 @@ import com.alipay.sdk.app.PayTask;
 import com.alipay.sdk.util.H5PayResultModel;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.Thing;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.mimrc.vine.R;
 
 import org.json.JSONObject;
@@ -896,34 +894,13 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
     @Override
     public void onRefreshMenuListener(JSONObject refreshInfo) {
-        String titles = refreshInfo.optString("title");//菜单列表数据
+        String title = refreshInfo.optString("title");//菜单列表数据
         String scriptTag = refreshInfo.optString("scriptTag");//菜单标记
+        mRightMenu.add(new MainTitleMenu(title, false, "", 1));
 
-        if (titles != null) {
-            List<MainTitleMenu> titleList = new Gson().fromJson(titles, new TypeToken<List<MainTitleMenu>>() {
-            }.getType());
-            //TODO
 
-            if (titleList.size() > 0) {
-                switch (scriptTag) {
-                    case "mRightMenu":
-                        mRightMenu.clear();
-                        mRightMenu.add(new MainTitleMenu("设置", false, "", 1));
-                        mRightMenu.add(new MainTitleMenu("退出系统", true, "", 1));
-                        mRightMenu.addAll(titleList);
-                        break;
 
-                    case "mTitleMenu":
-                        mTitleMenu.clear();
-                        mTitleMenu.add(new MainTitleMenu("返回首页", false, myApp.getStartPage(), 1, classWebView));  //设置初始化数据
-                        mTitleMenu.add(new MainTitleMenu("新建窗口", false, "", 1, classWebView));
-                        mTitleMenu.addAll(titleList);
-                        break;
 
-                }
-
-            }
-        }
 
     }
 
@@ -999,6 +976,13 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 }
             }
             */
+
+
+            //TODO
+            mRightMenu.clear();
+            mRightMenu.add(new MainTitleMenu("设置", false, "", 1));
+            mRightMenu.add(new MainTitleMenu("退出系统", true, "", 1));
+
             progress.setVisibility(View.VISIBLE);
             super.onPageStarted(view, url, favicon);
         }
