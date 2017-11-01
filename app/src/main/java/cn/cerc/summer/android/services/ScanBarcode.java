@@ -1,6 +1,11 @@
 package cn.cerc.summer.android.services;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import org.json.JSONObject;
@@ -24,9 +29,15 @@ public class ScanBarcode implements JavaScriptService {
             if (!request.has("scriptTag")) {
                 return "没有指定要回调的scriptTag参数";
             }
-            FrmScanBarcode.startForm((AppCompatActivity) context,
-                    request.getString("scriptFunction"), request.getString("scriptTag"));
-            return "true";
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+                    == PackageManager.PERMISSION_GRANTED) {
+                FrmScanBarcode.startForm((AppCompatActivity) context,
+                        request.getString("scriptFunction"), request.getString("scriptTag"));
+                return "true";
+            } else {
+//                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.CAMERA}, 35);
+                return "没有足够权限，请到手机权限设置中予以开放";
+            }
         } else if (type == 1) {
             if (!request.has("postUrl")) {
                 return "没有指定要回调的javaScript函数";
