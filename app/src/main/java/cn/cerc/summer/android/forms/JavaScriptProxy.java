@@ -25,7 +25,6 @@ import cn.cerc.summer.android.services.CreateQrcode;
 import cn.cerc.summer.android.services.GetClientGPS;
 import cn.cerc.summer.android.services.GetClientId;
 import cn.cerc.summer.android.services.GetClientVersion;
-import cn.cerc.summer.android.services.SetMenuList;
 import cn.cerc.summer.android.services.GetTalkLength;
 import cn.cerc.summer.android.services.GetTokenByAlipay;
 import cn.cerc.summer.android.services.GetTokenByQQ;
@@ -37,8 +36,10 @@ import cn.cerc.summer.android.services.PayByWeixin;
 import cn.cerc.summer.android.services.PlayImage;
 import cn.cerc.summer.android.services.PlayMovie;
 import cn.cerc.summer.android.services.PlayMusic;
+import cn.cerc.summer.android.services.RefreshMenu;
 import cn.cerc.summer.android.services.ScanBarcode;
 import cn.cerc.summer.android.services.ScanProduct;
+import cn.cerc.summer.android.services.SetMenuList;
 import cn.cerc.summer.android.services.SetTitle;
 import cn.cerc.summer.android.services.ShareToWeibo;
 import cn.cerc.summer.android.services.ShareToWeixin;
@@ -92,6 +93,7 @@ public class JavaScriptProxy extends Object {
         services.put(ShowWarning.class, "显示严重警告对话框");
         //
         services.put(SetMenuList.class, "设置菜单列表");
+        services.put(RefreshMenu.class,"动态添加菜单");
     }
 
     private AppCompatActivity owner;
