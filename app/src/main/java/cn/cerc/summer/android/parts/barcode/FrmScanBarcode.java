@@ -14,7 +14,6 @@ import android.os.Message;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -71,10 +70,11 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
     private String photo_path;
 
     private Bitmap scanBitmap;
-    private int type;
-    private String forms;
-    private String jsFun;
+    private String scriptFunction = "";
+    private String scriptTag = "";
+    private String postUrl = "";
 
+    //内部调试使用
     public static void startForm(AppCompatActivity context) {
         Intent intent = new Intent();
         intent.setClass(context, FrmScanBarcode.class);
@@ -82,14 +82,22 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
         context.startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
     }
 
-    public static void startForm(AppCompatActivity context, int type, String forms, String jsFun) {
+    //调用扫描画面并回调javaScript
+    public static void startForm(AppCompatActivity context, String scriptFunction, String scriptTag) {
         Intent intent = new Intent();
-        intent.putExtra("type", type);
-        intent.putExtra("forms", forms);
-        intent.putExtra("jsFun", jsFun);
+        intent.putExtra("scriptFunction", scriptFunction);
+        intent.putExtra("scriptTag", scriptTag);
         intent.setClass(context, FrmScanBarcode.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        context.startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
+        context.startActivity(intent);
+    }
+
+    //调用扫描画面并post到指定的url
+    public static void startForm(AppCompatActivity context, String postUrl) {
+        Intent intent = new Intent();
+        intent.putExtra("postUrl", postUrl);
+        intent.setClass(context, FrmScanBarcode.class);
+        intent.setClass(context, FrmScanBarcode.class);
+        context.startActivity(intent);
     }
 
 
@@ -99,9 +107,14 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
         setContentView(R.layout.activity_frm_scan_barcode);
 
         Intent intent = getIntent();
-        type = intent.getIntExtra("type", 0);
-        forms = intent.getStringExtra("forms");
-        jsFun = intent.getStringExtra("jsFun");
+        if (intent.hasExtra("scriptFunction")) {
+            this.scriptFunction = intent.getStringExtra("scriptFunction");
+            this.scriptTag = intent.getStringExtra("scriptTag");
+        } else if (intent.hasExtra("postUrl")) {
+            this.postUrl = intent.getStringExtra("postUrl");
+        } else {
+            this.setTitle("传入参数有误！");
+        }
 
         CameraManager.init(getApplication());
         viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
@@ -117,7 +130,7 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_back:
-                finish();
+                this.finish();
                 break;
 //            case R.id.button_function:
 //                //打开手机中的相册
@@ -128,6 +141,7 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
 //                break;
         }
     }
+
 
     private Handler mHandler = new Handler() {
 
@@ -314,27 +328,17 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
         Intent resultIntent = new Intent();
         Bundle bundle = new Bundle();
         bundle.putString("result", resultString);
-
-        Log.e("barcode",resultString);
-//        bundle.putParcelable("bitmap", bitmap);
+        bundle.putParcelable("bitmap", bitmap);
         resultIntent.putExtras(bundle);
         this.setResult(RESULT_OK, resultIntent);
 
-        //操作类型：0(默认):原生页面调用、1、调后台；2、数据为 forms ,直接跳转、3、回调js方法
-        switch (type) {
-            case 0:
-                break;
-            case 1:
-                requestUpload(forms, resultString);
-                break;
-            case 2:
-                FrmMain.getInstance().loadUrl(resultString);
-                break;
-            case 3:
-                FrmMain.getInstance().runScript(String.format("%s('%s')", jsFun, resultString));
-                break;
-            default:
-                break;
+        FrmMain obj = FrmMain.getInstance();
+        if (!"".equals(this.scriptFunction)) {
+            obj.runScript(String.format("%s('%s', '%s')", this.scriptFunction, this.scriptTag, resultString));
+        } else if (!"".equals(this.postUrl)) {
+            obj.loadUrl(String.format("%s?barcode=%s", this.postUrl, resultString));
+        } else {
+            Toast.makeText(this, "参数调用有误！", Toast.LENGTH_LONG).show();
         }
         FrmScanBarcode.this.finish();
     }
@@ -439,6 +443,4 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
             mediaPlayer.seekTo(0);
         }
     };
-
-
 }

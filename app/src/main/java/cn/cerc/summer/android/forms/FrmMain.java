@@ -530,12 +530,12 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     mpopWindow.dismiss();
                     break;
                 case 1:
-                    if (ActivityCompat.checkSelfPermission(FrmMain.this, Manifest.permission.CAMERA)
-                            == PackageManager.PERMISSION_GRANTED) {
-                        FrmScanBarcode.startForm((AppCompatActivity) FrmMain.this, 3, "123", "123");
-                    } else {
-                        ActivityCompat.requestPermissions(FrmMain.this, new String[]{Manifest.permission.CAMERA}, 35);
-                    }
+//                    if (ActivityCompat.checkSelfPermission(FrmMain.this, Manifest.permission.CAMERA)
+//                            == PackageManager.PERMISSION_GRANTED) {
+//                        FrmScanBarcode.startForm((AppCompatActivity) FrmMain.this, 3, "123", "123");
+//                    } else {
+//                        ActivityCompat.requestPermissions(FrmMain.this, new String[]{Manifest.permission.CAMERA}, 35);
+//                    }
                     break;
                 case 2:
                     Toast.makeText(FrmMain.this, "退出系统", Toast.LENGTH_SHORT).show();
