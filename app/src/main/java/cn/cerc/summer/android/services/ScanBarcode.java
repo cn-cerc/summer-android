@@ -1,6 +1,7 @@
 package cn.cerc.summer.android.services;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
@@ -33,7 +34,7 @@ public class ScanBarcode implements JavaScriptService {
                         request.getString("scriptFunction"), request.getString("scriptTag"));
                 return "true";
             } else {
-//                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.CAMERA}, 35);
+                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.CAMERA}, 35);
                 return "没有足够权限，请到手机权限设置中予以开放";
             }
         } else if (type == 1) {
