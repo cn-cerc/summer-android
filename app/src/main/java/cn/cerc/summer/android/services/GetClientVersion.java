@@ -13,15 +13,14 @@ import cn.cerc.summer.android.forms.JavaScriptService;
  */
 
 public class GetClientVersion implements JavaScriptService {
-    @Override
-    public String execute(Context context, JSONObject request) {
 
+    @Override
+    public void execute(Context context, JSONObject request, JSONObject response) throws Exception {
         try {
-            return MyApp.getInstance().getVersionName(context);
+            response.put("version",MyApp.getInstance().getVersionName(context)) ;
         } catch (PackageManager.NameNotFoundException e) {
+            response.put("version","权限缺少，无法获取") ;
             e.printStackTrace();
         }
-        return "0.0.0";
-
     }
 }

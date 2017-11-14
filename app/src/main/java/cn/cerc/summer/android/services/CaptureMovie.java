@@ -11,8 +11,9 @@ import cn.cerc.summer.android.forms.JavaScriptService;
  */
 
 public class CaptureMovie implements JavaScriptService {
+    
     @Override
-    public String execute(Context context, JSONObject request) {
+    public void execute(Context context, JSONObject request, JSONObject response) throws Exception {
         //TODO: 此功能还未准备好
         throw new RuntimeException("此功能还未准备好");
     }

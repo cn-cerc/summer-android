@@ -14,13 +14,16 @@ import cn.cerc.summer.android.parts.movie.FrmPlayMovie;
 public class PlayMovie implements JavaScriptService {
 
     @Override
-    public String execute(Context context, JSONObject request) throws Exception {
+    public void execute(Context context, JSONObject request, JSONObject response) throws Exception {
         String movieUrl = request.getString("movieUrl");
         if(movieUrl != null){
-        FrmPlayMovie.startForm(context, movieUrl);
+            FrmPlayMovie.startForm(context, movieUrl);
         }else{
-            throw new RuntimeException("URL参数错误");
+            response.put("result", false);
+            response.put("message", "URL参数错误");
+            return;
         }
-        return "true";
+        response.put("result", true);
+        response.put("message", "OK");
     }
 }

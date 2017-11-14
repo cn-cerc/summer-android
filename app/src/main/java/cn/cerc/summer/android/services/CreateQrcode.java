@@ -14,14 +14,25 @@ import cn.cerc.summer.android.parts.barcode.FrmCreateQrcode;
 public class CreateQrcode implements JavaScriptService {
 
     @Override
-    public String execute(Context context, JSONObject request) throws Exception {
+    public void execute(Context context, JSONObject request, JSONObject response) throws Exception {
         String text = "";
-        if (request.has("text"))
-            text = request.getString("text");
+        if (!request.has("text")){
+            response.put("result", false);
+            response.put("message", "text 不允许为空！");
+            return;
+        }
+
+        if (!request.has("qrcode")){
+            response.put("result", false);
+            response.put("message", "qrcode 不允许为空！");
+            return;
+        }
         boolean qrcode = true;
-        if (request.has("qrcode"))
-            qrcode = request.getBoolean("qrcode");
+        text = request.getString("text");
+        qrcode = request.getBoolean("qrcode");
         FrmCreateQrcode.startForm(context, text, qrcode);
-        return "true";
+        response.put("result", true);
+        response.put("message", "OK");
+        return ;
     }
 }

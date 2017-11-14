@@ -12,12 +12,17 @@ import cn.cerc.summer.android.parts.dialog.FrmShowWarning;
  */
 
 public class ShowWarning implements JavaScriptService {
+
     @Override
-    public String execute(Context context, JSONObject request) throws Exception {
-        String message = "(请设置警告内容!)";
-        if (request.has("message"))
-            message = request.getString("message");
+    public void execute(Context context, JSONObject request, JSONObject response) throws Exception {
+        if(!request.has("message"))      {
+            response.put("result", false);
+            response.put("message", "(请设置警告内容!)");
+            return;
+        }
+        String message = request.getString("message");
         FrmShowWarning.startForm(context, message);
-        return "";
+        response.put("result", true);
+        response.put("message", "OK");
     }
 }

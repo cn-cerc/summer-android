@@ -14,12 +14,15 @@ import cn.cerc.summer.android.parts.login.FrmLoginByAccount;
 
 public class CallLoginByAccount implements JavaScriptService {
 
+
     @Override
-    public String execute(Context context, JSONObject request) throws Exception {
+    public void execute(Context context, JSONObject request, JSONObject response) throws Exception {
         String loginUrl = "/services/SvrUserLogin.check";
         if (request.has("loginUrl"))
             loginUrl = request.getString("loginUrl");
         FrmLoginByAccount.startForm((AppCompatActivity) context, loginUrl);
-        return "true";
+        response.put("result", true);
+        response.put("message", "ok");
+        return ;
     }
 }

@@ -16,14 +16,16 @@ import cn.cerc.summer.android.parts.music.FrmCaptureMusic;
 public class CaptureMusic implements JavaScriptService {
 
     @Override
-    public String execute(Context context, JSONObject request) {
+    public void execute(Context context, JSONObject request, JSONObject response) throws Exception {
         try {
             String url = request.getString("uploadUrl");
             Log.e("CaptureMusic", "url: " + url);
             FrmCaptureMusic.startForm(context, url);
+            response.put("result", true);
+            response.put("message", "OK");
         } catch (JSONException e) {
-            throw new RuntimeException(e.getMessage());
+            response.put("result", false);
+            response.put("message", e.getMessage());
         }
-        return "true";
     }
 }
