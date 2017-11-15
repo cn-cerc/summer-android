@@ -2,7 +2,6 @@ package cn.cerc.summer.android.forms;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -354,7 +353,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             }
         });
         browser.setOnLongClickListener(this);
-        AddWebView();
+        AddWebView("");
     }
 
     @Override
@@ -397,63 +396,10 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 case 2:
                     switch (mTitleMenu.get(which).getName()) {
                         case "关闭页面":
-                            //关闭当前窗口
-                            int windowNum = 0;
-                            for (int i = 0; i < allTitleList.size(); i++) {
-                                if (allTitleList.get(i).size() > 0) {
-                                    windowNum++;
-                                }
-                            }
-                            if (windowNum > 1) {
-                                newsWebView[classWebView].setVisibility(View.GONE);
-                                newsWebView[classWebView] = null;
-                                for (int i = 0; i < allTitleList.size(); i++) {
-                                    if (allTitleList.get(i).size() > 0) {
-                                        if (allTitleList.get(i).get(0).getOnlySign() == classWebView) {
-                                            allTitleList.get(classWebView).clear();
-                                            allRightList.get(classWebView).clear();
-                                        }
-                                    }
-                                }
-                                for (int i = 0; i < titlePage.size(); i++) {
-                                    if (titlePage.get(i).getOnlySign() == classWebView) {
-                                        titlePage.remove(i);
-                                    }
-                                }
-                                for (int i = 0; i < newsWebView.length; i++) {
-                                    if (newsWebView[i] != null) {
-                                        newsWebView[i].setVisibility(View.VISIBLE);
-                                        browser = newsWebView[i];
-                                        classWebView = i;
-                                        for (int l = 0; l < allTitleList.size(); l++) {
-                                            if (allTitleList.get(l).size() > 0) {
-                                                if (allTitleList.get(l).get(0).getOnlySign() == classWebView) {
-                                                    upDataAggre(allTitleList.get(l), titlePage);
-                                                    mTitleMenu.clear();
-                                                    mTitleMenu.addAll(allTitleList.get(l));
-                                                    mRightMenu.clear();
-                                                    mRightMenu.addAll(allRightList.get(l));
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        for (int j = 0; j < titlePage.size(); j++) {
-                                            if (titlePage.get(j).getOnlySign() == i) {
-                                                lblTitle.setText(titlePage.get(j).getName());
-                                                break;
-                                            }
-                                        }
-                                        break;
-                                    }
-                                }
-                            } else {
-                                Toast.makeText(myApp, "已经是顶层菜单", Toast.LENGTH_SHORT).show();
-                            }
-                            mTitlePopWindow.dismiss();
-                            initTitlePopWindow();
+                            closeNowWebview();
                             break;
                         case "新建窗口":
-                            AddWebView();
+                            AddWebView("");
                             mTitlePopWindow.dismiss();
                             break;
                         default:
@@ -511,7 +457,68 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 break;
         }
     }
-
+    /*
+    关闭当前的webview
+     */
+    private boolean closeNowWebview(){
+        boolean isTop =false;  //判断是否最后一个webview，如果是，则可以执行关闭程序操作
+        //关闭当前窗口
+        int windowNum = 0;
+        for (int i = 0; i < allTitleList.size(); i++) {
+            if (allTitleList.get(i).size() > 0) {
+                windowNum++;
+            }
+        }
+        if (windowNum > 1) {
+            newsWebView[classWebView].setVisibility(View.GONE);
+            newsWebView[classWebView] = null;
+            for (int i = 0; i < allTitleList.size(); i++) {
+                if (allTitleList.get(i).size() > 0) {
+                    if (allTitleList.get(i).get(0).getOnlySign() == classWebView) {
+                        allTitleList.get(classWebView).clear();
+                        allRightList.get(classWebView).clear();
+                    }
+                }
+            }
+            for (int i = 0; i < titlePage.size(); i++) {
+                if (titlePage.get(i).getOnlySign() == classWebView) {
+                    titlePage.remove(i);
+                }
+            }
+            for (int i = 0; i < newsWebView.length; i++) {
+                if (newsWebView[i] != null) {
+                    newsWebView[i].setVisibility(View.VISIBLE);
+                    browser = newsWebView[i];
+                    classWebView = i;
+                    for (int l = 0; l < allTitleList.size(); l++) {
+                        if (allTitleList.get(l).size() > 0) {
+                            if (allTitleList.get(l).get(0).getOnlySign() == classWebView) {
+                                upDataAggre(allTitleList.get(l), titlePage);
+                                mTitleMenu.clear();
+                                mTitleMenu.addAll(allTitleList.get(l));
+                                mRightMenu.clear();
+                                mRightMenu.addAll(allRightList.get(l));
+                                break;
+                            }
+                        }
+                    }
+                    for (int j = 0; j < titlePage.size(); j++) {
+                        if (titlePage.get(j).getOnlySign() == i) {
+                            lblTitle.setText(titlePage.get(j).getName());
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        } else {
+            Toast.makeText(myApp, "已经是顶层菜单", Toast.LENGTH_SHORT).show();
+            isTop =true;
+        }
+        mTitlePopWindow.dismiss();
+        initTitlePopWindow();
+        return isTop;
+    }
     /**
      * 右侧菜单回调的点击事件
      */
@@ -689,7 +696,12 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                         } else {
                             if (newsWebView[classWebView].canGoBack())
                                 newsWebView[classWebView].goBack();// 返回键退回
-                            else finish();
+                            else {
+                                //关闭当前窗口
+                                if (closeNowWebview()){
+                                    finish();
+                                }
+                            };
                         }
                         return true;
                     } else
@@ -706,7 +718,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     /**
      * 新建窗口
      */
-    private void AddWebView() {
+    private void AddWebView(String newUrl) {
         if (newsWebView()) {
             //将数据存进总集合
             for (int i = 0; i < allTitleList.size(); i++) {
@@ -719,7 +731,9 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 }
             }
             browser = newsWebView[classWebView];
+            if(TextUtils.isEmpty(newUrl))
             browser.loadUrl(myApp.getStartPage());
+            else browser.loadUrl(newUrl);
         }
     }
 
@@ -797,6 +811,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         this.logoutUrl = url;
         this.islogin = islogin;
     }
+
 
     public void reload(int scales) {
         browser.getSettings().setTextZoom(Integer.valueOf(settings.getInt(Constans.SCALE_SHAREDKEY, 90)));
@@ -885,7 +900,12 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             if (!(url.startsWith("http") || url.startsWith("https"))) {
                 return true;
             }
-
+            if (url.startsWith("newtab:")) {
+            AddWebView(url.replace("newtab:",""));
+            }
+            else {
+                view.loadUrl(url); //load url in current WebView
+            }
             final PayTask task = new PayTask(FrmMain.this);
             final String ex = task.fetchOrderInfoFromH5PayUrl(url);
             if (!TextUtils.isEmpty(ex)) {
@@ -994,6 +1014,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 imgBack.setVisibility(View.VISIBLE);
             }
             */
+            view.loadUrl("javascript: var allLinks = document.getElementsByTagName('a'); if (allLinks) {var i;for (i=0; i<allLinks.length; i++) {var link = allLinks[i];var target = link.getAttribute('target'); if (target && target == '_blank') {link.setAttribute('target','_self');link.href = 'newtab:'+link.href;}}}");
             progress.setVisibility(View.GONE);
             super.onPageFinished(view, url);
         }

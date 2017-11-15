@@ -12,13 +12,25 @@ import cn.cerc.summer.android.forms.JavaScriptService;
  */
 
 public class SetTitle implements JavaScriptService {
+
     @Override
-    public String execute(Context context, JSONObject json) throws Exception {
+    public void execute(Context context, JSONObject request, JSONObject response) throws Exception {
         FrmMain main = (FrmMain) context;
-        if (json.has("visibility"))
-            main.setTitleVisibility(json.getBoolean("visibility"));
-        if (json.has("title"))
-            main.setTitle(json.getString("title"));
-        return "true";
+        if (!request.has("visibility")){
+            response.put("result", false);
+            response.put("message", "visibility 不允许为空！");
+            return;
+        }
+
+        if (!request.has("title")){
+            response.put("result", false);
+            response.put("message", "title 不允许为空！");
+            return;
+        }
+
+        main.setTitle(request.getString("title"));
+        main.setTitleVisibility(request.getBoolean("visibility"));
+        response.put("result", true);
+        response.put("message", "OK");
     }
 }

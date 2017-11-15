@@ -14,7 +14,7 @@ import cn.cerc.summer.android.forms.JavaScriptService;
 public class GetClientId implements JavaScriptService {
 
     @Override
-    public String execute(Context context, JSONObject request) {
-        return MyApp.getInstance().getClientId();
+    public void execute(Context context, JSONObject request, JSONObject response) throws Exception {
+        response.put("message",MyApp.getInstance().getClientId());
     }
 }

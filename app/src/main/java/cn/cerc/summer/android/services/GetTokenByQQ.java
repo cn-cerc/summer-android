@@ -11,9 +11,10 @@ import cn.cerc.summer.android.forms.JavaScriptService;
  */
 
 public class GetTokenByQQ implements JavaScriptService {
+
     @Override
-    public String execute(Context context, JSONObject request) {
-        //TODO: 此功能还未准备好
-        throw new RuntimeException("此功能还未准备好");
+    public void execute(Context context, JSONObject request, JSONObject response) throws Exception {
+        response.put("result", false);
+        response.put("message", "此功能还未准备好");
     }
 }

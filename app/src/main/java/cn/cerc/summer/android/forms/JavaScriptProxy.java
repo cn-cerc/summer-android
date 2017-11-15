@@ -213,31 +213,41 @@ public class JavaScriptProxy extends Object {
     @JavascriptInterface
     public String send(String classCode, String dataIn) {
         Class clazz = getClazz(classCode);
-        JavaScriptResult json = new JavaScriptResult();
-        if (clazz != null) {
-            try {
-                Object object = clazz.newInstance();
-                if (object instanceof JavaScriptService) {
-                    JavaScriptService object1 = (JavaScriptService) object;
-                    try {
-                        JSONObject request = new JSONObject(dataIn);
-                        json.setData(object1.execute(this.owner, request));
-                        json.setResult(true);
-                    } catch (Exception e) {
-                        json.setMessage(e.getMessage());
+        JSONObject json = new JSONObject();
+        try {
+            if (clazz != null) {
+                try {
+                    Object object = clazz.newInstance();
+                    if (object instanceof JavaScriptService) {
+                        JavaScriptService object1 = (JavaScriptService) object;
+                        try {
+                            JSONObject request = new JSONObject(dataIn);
+                            json.put("result", true);
+                            json.put("message", "ok");
+                            object1.execute(this.owner, request, json);
+                        } catch (Exception e) {
+                            json.put("result", false);
+                            json.put("message", e.getMessage());
+                        }
+                    } else {
+                        json.put("result", false);
+                        json.put("message", "not support JavascriptInterface");
                     }
-                } else {
-                    json.setMessage("not support JavascriptInterface");
+                } catch (InstantiationException e) {
+                    json.put("result", false);
+                    json.put("message", "InstantiationException");
+                } catch (IllegalAccessException e) {
+                    json.put("result", false);
+                    json.put("message", "IllegalAccessException");
                 }
-            } catch (InstantiationException e) {
-                json.setMessage("InstantiationException");
-            } catch (IllegalAccessException e) {
-                json.setMessage("IllegalAccessException");
+            } else {
+                json.put("result", false);
+                json.put("message", "当前版本不支持: " + classCode);
             }
-        } else {
-            json.setMessage("当前版本不支持: " + classCode);
+            return json.toString();
+        } catch (JSONException e) {
+            return "{\"result\": false, \"message\":\"JSONException\"}";
         }
-        return json.toString();
     }
 
 }

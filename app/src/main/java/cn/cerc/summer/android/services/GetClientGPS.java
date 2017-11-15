@@ -8,7 +8,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.cerc.summer.android.forms.JavaScriptService;
@@ -20,7 +19,7 @@ import cn.cerc.summer.android.forms.JavaScriptService;
 public class GetClientGPS implements JavaScriptService {
 
     @Override
-    public String execute(Context context, JSONObject request) throws JSONException {
+    public void execute(Context context, JSONObject request, JSONObject response) throws Exception {
         LocationManager locationManager = (LocationManager) context.getSystemService(context.getApplicationContext().LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_COARSE);//低精度，如果设置为高精度，依然获取不了location。
@@ -29,24 +28,24 @@ public class GetClientGPS implements JavaScriptService {
         criteria.setCostAllowed(true);//允许有花费
         criteria.setPowerRequirement(Criteria.POWER_LOW);//低功耗
 
-        JSONObject json = new JSONObject();
-        String result = "false";
-        String message = "定位失败！";
         //从可用的位置提供器中，匹配以上标准的最佳提供器
         String locationProvider = locationManager.getBestProvider(criteria, true);
         if (ActivityCompat.checkSelfPermission(context.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context.getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            message = "没有权限，定位失败！";
+            response.put("result", false);
+            response.put("message", "没有权限，定位失败！");
+            return;
         }
         Location location = locationManager.getLastKnownLocation(locationProvider);
         if (location != null) {
             //不为空,显示地理位置经纬度
-            result = "true";
-            message = "定位成功！";
-            json.put("longitude", location.getLongitude());
-            json.put("latitude", location.getLatitude());
+            response.put("result", false);
+            response.put("message", "定位成功");
+            response.put("longitude", location.getLongitude());
+            response.put("latitude", location.getLatitude());
+        }else {
+            response.put("result", false);
+            response.put("message", "坐标获取失败");
         }
-        json.put("result", result);
-        json.put("message", message);
-        return json.toString();
+        return ;
     }
 }
