@@ -45,8 +45,8 @@ public class HttpClient {
             Log.d("HttpClient", "post:" + webUrl);
             URL url = new URL(webUrl);
             connection = (HttpURLConnection) url.openConnection();
-            connection.setConnectTimeout(3000);
-            connection.setReadTimeout(3000);
+            connection.setConnectTimeout(3 * 1000);
+            connection.setReadTimeout(3 * 1000);
             connection.setDoInput(true);                  //打开输入流，以便从服务器获取数据
             connection.setDoOutput(true);                 //打开输出流，以便向服务器提交数据
             connection.setUseCaches(false);               //使用Post方式不能使用缓存
