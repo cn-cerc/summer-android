@@ -960,10 +960,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             }
             */
 
-
             //TODO
-
-
             for (int i = 0; i < mRightMenu.size(); i++) {
                 if (mRightMenuTemp.size() > 0) {
                     if (mRightMenuTemp.get(i).getName().equals(mRightMenu.get(i + 2).getName())) {
