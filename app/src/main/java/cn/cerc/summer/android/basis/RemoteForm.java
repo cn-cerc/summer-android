@@ -46,6 +46,7 @@ public class RemoteForm {
                 client = new HttpClient(MyApp.getFormUrl(formCode) + String.format("?sid=%s", token));
             else
                 client = new HttpClient(MyApp.getFormUrl(formCode));
+
             String response = client.post(params);
             json = new JSONObject(response);
             if (json.has("result")) {

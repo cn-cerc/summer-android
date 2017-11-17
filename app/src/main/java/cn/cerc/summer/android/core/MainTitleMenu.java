@@ -11,6 +11,16 @@ public class MainTitleMenu {
     private int layerSign;  //层次标识
     private int onlySign;     //唯一标识
 
+    public String getScriptTag() {
+        return scriptTag;
+    }
+
+    public void setScriptTag(String scriptTag) {
+        this.scriptTag = scriptTag;
+    }
+
+    private String scriptTag;//标题标识
+
     public int getOnlySign() {
         return onlySign;
     }
@@ -19,11 +29,12 @@ public class MainTitleMenu {
         this.onlySign = onlySign;
     }
 
-    public MainTitleMenu(String name, boolean isLine, String url, int layerSign) {
+    public MainTitleMenu(String name, boolean isLine, String url, int layerSign,String  scriptTag) {
         this.name = name;
         this.isLine = isLine;
         this.url = url;
         this.layerSign = layerSign;
+        this.scriptTag=scriptTag;
     }
 
     public MainTitleMenu(String name, boolean isLine, String url, int layerSign, int onlySign) {

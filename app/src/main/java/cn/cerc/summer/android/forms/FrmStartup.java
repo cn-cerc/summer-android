@@ -80,6 +80,8 @@ public class FrmStartup extends AppCompatActivity {
                     } else {
                         err = "取得后台服务异常，请稍后再试！";
                     }
+                }catch(JSONException e){
+                    showError("出现错误！", resp);
                 } catch (Exception e) {
                     err = e.getMessage();
                 }
