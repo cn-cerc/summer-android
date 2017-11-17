@@ -192,10 +192,10 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         mRightMenu.clear();
         mTitleMenu.add(new MainTitleMenu("返回首页", false, myApp.getStartPage(), 1, classWebView));  //设置初始化数据
         mTitleMenu.add(new MainTitleMenu("新建窗口", false, "", 1, classWebView));
-        mRightMenu.add(new MainTitleMenu("设置", false, "", 1,""));
+        mRightMenu.add(new MainTitleMenu("设置", false, "", 1, ""));
         // TODO 临时扫一扫
         // mRightMenu.add(new MainTitleMenu("扫一扫", true, "", 1));
-        mRightMenu.add(new MainTitleMenu("退出系统", true, "", 1,""));
+        mRightMenu.add(new MainTitleMenu("退出系统", true, "", 1, ""));
     }
 
     /**
@@ -386,7 +386,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
      * @param newUrl
      */
     public void CatalogWebView(String title, String newUrl) {
-        mRightMenu.add(new MainTitleMenu(title, false, newUrl, 2,""));
+        mRightMenu.add(new MainTitleMenu(title, false, newUrl, 2, ""));
         initPopWindow();
     }
 
@@ -528,7 +528,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     //设置界面
                     FrmSettings.startFormForResult(FrmMain.getInstance(), REQUEST_SETTING, browser.getUrl());
                     mpopWindow.dismiss();
-                break;
+                    break;
 
                 case 1:
                     Toast.makeText(FrmMain.this, "退出系统", Toast.LENGTH_SHORT).show();
@@ -536,9 +536,9 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     finish();
                     break;
                 default:
-                   // runScript(String.format("%s('%s', '%s')", mRightMenu.get(which).getUrl(), this.scriptTag, resultString));
+                    // runScript(String.format("%s('%s', '%s')", mRightMenu.get(which).getUrl(), this.scriptTag, resultString));
                     //   browser.loadUrl(mRightMenu.get(which).getName());
-                    runScript(String.format("%s('%s', '%s')", mRightMenu.get(which).getUrl(), mRightMenu.get(which).getScriptTag(),"回调成功"));
+                    runScript(String.format("%s('%s', '%s')", mRightMenu.get(which).getUrl(), mRightMenu.get(which).getScriptTag(), "回调成功"));
 
                     mpopWindow.dismiss();
                     break;
@@ -887,18 +887,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         initPopWindow();
     }
 
- /*   @Override
-    public void onRefreshMenuListener(JSONObject refreshInfo) {
-        String title = refreshInfo.optString("title");//菜单列表数据
-        String scriptTag = refreshInfo.optString("scriptTag");//菜单标记
-        mRightMenu.add(new MainTitleMenu(title, false, "", 1));
-
-
-
-
-
-    }*/
-
     private class MyWebViewClient extends WebViewClient {
 
         @Override
@@ -976,8 +964,8 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             //TODO
 
 
-                for (int i = 0; i < mRightMenu.size(); i++) {
-                    if (mRightMenuTemp.size() > 0) {
+            for (int i = 0; i < mRightMenu.size(); i++) {
+                if (mRightMenuTemp.size() > 0) {
                     if (mRightMenuTemp.get(i).getName().equals(mRightMenu.get(i + 2).getName())) {
                         mRightMenu.remove(i + 2);
                         mRightMenuTemp.remove(i);
