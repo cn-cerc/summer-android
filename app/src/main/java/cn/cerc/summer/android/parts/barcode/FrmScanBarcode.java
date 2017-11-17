@@ -97,7 +97,6 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
         Intent intent = new Intent();
         intent.putExtra("postUrl", postUrl);
         intent.setClass(context, FrmScanBarcode.class);
-        intent.setClass(context, FrmScanBarcode.class);
         context.startActivity(intent);
     }
 
