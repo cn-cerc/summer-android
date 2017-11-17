@@ -80,7 +80,7 @@ public class FrmStartup extends AppCompatActivity {
                     } else {
                         err = "取得后台服务异常，请稍后再试！";
                     }
-                }catch(JSONException e){
+                } catch (JSONException e) {
                     showError("出现错误！", resp);
                 } catch (Exception e) {
                     err = e.getMessage();
@@ -118,7 +118,7 @@ public class FrmStartup extends AppCompatActivity {
         //检测是否有新的版本
         final String oldVersion = myApp.getCurrentVersion(this);
         if (oldVersion.equals(myApp.getAppVersion())) {
-            loadImageView();
+            startMainForm();
             return;
         }
 
@@ -153,7 +153,7 @@ public class FrmStartup extends AppCompatActivity {
                     finish();
                 } else {
                     llDialog.setVisibility(View.GONE);
-                    loadImageView();
+                    startMainForm();
                 }
             }
         });
@@ -165,15 +165,6 @@ public class FrmStartup extends AppCompatActivity {
             startMainForm();
         }
     };
-
-    private void loadImageView() {
-        navigationChatImageView = new NavigationChatImageView(this, resp, settings);
-        navigationChatImageView.setPopListener(PagerListener);
-        frameLayout.addView(navigationChatImageView.loadNavigationImage());
-        if (json == null) {
-            startMainForm();
-        }
-    }
 
     private void startMainForm() {
         //启动主窗口
@@ -244,7 +235,9 @@ public class FrmStartup extends AppCompatActivity {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     startRequest();
                 } else {
-                    showError("权限不足", "系统运行时必须读取IMEI，防止非您本人冒用您的帐号，请您于设置中开启相应权限后才能继续使用！");
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.READ_PHONE_STATE},
+                            MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
                 }
                 return;
             }
@@ -253,6 +246,9 @@ public class FrmStartup extends AppCompatActivity {
 
     private void startRequest() {
         TelephonyManager TelephonyMgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         MyApp.getInstance().setClientId("n_" + TelephonyMgr.getDeviceId());
 
         new Thread(new Runnable() {

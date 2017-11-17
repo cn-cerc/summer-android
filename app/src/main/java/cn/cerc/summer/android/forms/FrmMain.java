@@ -4,11 +4,13 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -41,6 +43,7 @@ import com.google.android.gms.appindexing.Thing;
 import com.mimrc.vine.R;
 
 import java.io.File;
+import java.security.Permission;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -772,6 +775,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         super.onPause();
         JPushInterface.onPause(this);
     }
+
 
     /**
      * 清除缓存
