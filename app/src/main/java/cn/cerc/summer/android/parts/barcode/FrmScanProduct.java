@@ -138,7 +138,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
      * @param appendUrl 新增数据指定的url
      * @param modifyUrl 修改数据指定的url
      * @param deleteUrl 删除相应的记录的url
-     * @param viewUrl 显示相应的记录的url
+     * @param viewUrl   显示相应的记录的url
      */
     public static void startForm(Context context, String title, String homeUrl, String returnUrl,
                                  String appendUrl, String modifyUrl, String deleteUrl, String viewUrl) {
@@ -208,7 +208,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
                 if (actionId == EditorInfo.IME_ACTION_DONE || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                     saveBarcode();
                 }
-                return true;
+                return false;
             }
         });
 
@@ -285,8 +285,9 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
             adapter.notifyDataSetChanged();
             requestUpload(dataSet.getCurrent());
         }
-        if (barcode.length()>=1)
-        edtBarcode.setSelection(0, edtBarcode.getText().toString().length());
+        if (barcode.length() >= 1) {
+            edtBarcode.setSelection(0, edtBarcode.getText().toString().length());
+        }
         edtBarcode.requestFocus();
     }
 
