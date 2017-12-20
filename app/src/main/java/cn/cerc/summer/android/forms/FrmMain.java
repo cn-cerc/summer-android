@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -844,7 +845,10 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     }
 
     public void setTitleVisibility(boolean visibility) {
-        boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
+        Message message =new Message();
+        message.what =1;
+        message.obj =visibility;
+        handler.sendMessage(message);
     }
 
     public void loadUrl(String url) {
@@ -889,6 +893,13 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         list.clear();
         initTitlePopWindow();
         initPopWindow();
+    }
+
+    public void setWebTitle(String title) {
+        Message message =new Message();
+        message.what =2;
+        message.obj =title;
+        handler.sendMessage(message);
     }
 
     private class MyWebViewClient extends WebViewClient {
@@ -952,6 +963,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             Log.d("print", "url___: " + url);
             clearData();
             is_ERROR = false;
+            setTitleVisibility(true);
             /*
             if (WebConfig.getInstance() == null) return;
             is_exit = false;
@@ -1022,4 +1034,23 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             super.onPageFinished(view, url);
         }
     }
+
+    Handler handler =new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);{
+                switch (msg.what){
+                    case 1:
+                        boolean visibility = (boolean) msg.obj;
+                        boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
+                        break;
+                    case 2:
+                        String title =(String)msg.obj;
+                        lblTitle.setText(title);
+                        break;
+
+                }
+            }
+        }
+    };
 }

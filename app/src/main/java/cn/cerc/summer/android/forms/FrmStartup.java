@@ -38,6 +38,7 @@ import cn.cerc.summer.android.basis.HttpClient;
 import cn.cerc.summer.android.core.Constans;
 import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.forms.view.NavigationChatImageView;
+import cn.cerc.summer.android.parts.dialog.DialogUtil;
 
 public class FrmStartup extends AppCompatActivity {
     LinearLayout llDialog;
@@ -210,8 +211,21 @@ public class FrmStartup extends AppCompatActivity {
         */
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
                 == PackageManager.PERMISSION_GRANTED) {
-            startRequest();
-            return;
+            if (MyApp.getInstance().isDebug()) {
+                DialogUtil.InputDialog(this, new DialogUtil.OnclickAddressListen() {
+                    @Override
+                    public void click(boolean bool, String newsUrl) {
+                        if (bool) {
+                            MyApp.setHomeUrl(newsUrl);
+                        }
+                        startRequest();
+                        return;
+                    }
+                });
+            } else {
+                startRequest();
+                return;
+            }
         }
 
         //检查是否已被拒绝过

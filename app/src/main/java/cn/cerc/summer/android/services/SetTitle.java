@@ -18,7 +18,7 @@ public class SetTitle implements JavaScriptService {
         if (json.has("visibility"))
             main.setTitleVisibility(json.getBoolean("visibility"));
         if (json.has("title"))
-            main.setTitle(json.getString("title"));
+            main.setWebTitle(json.getString("title"));
         return "true";
     }
 }
