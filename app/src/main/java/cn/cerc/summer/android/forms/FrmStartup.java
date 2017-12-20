@@ -226,6 +226,11 @@ public class FrmStartup extends AppCompatActivity {
                 startRequest();
                 return;
             }
+        }else {
+            //申请权限
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_PHONE_STATE},
+                    MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
         }
 
         //检查是否已被拒绝过
@@ -235,10 +240,7 @@ public class FrmStartup extends AppCompatActivity {
             return;
         }
 
-        //申请权限
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.READ_PHONE_STATE},
-                MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
+
     }
 
     @Override
@@ -247,7 +249,21 @@ public class FrmStartup extends AppCompatActivity {
             case MY_PERMISSIONS_REQUEST_READ_PHONE_STATE: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startRequest();
+                    if (MyApp.getInstance().isDebug()) {
+                        DialogUtil.InputDialog(this, new DialogUtil.OnclickAddressListen() {
+                            @Override
+                            public void click(boolean bool, String newsUrl) {
+                                if (bool) {
+                                    MyApp.setHomeUrl(newsUrl);
+                                }
+                                startRequest();
+                                return;
+                            }
+                        });
+                    } else {
+                        startRequest();
+                        return;
+                    }
                 } else {
                     ActivityCompat.requestPermissions(this,
                             new String[]{Manifest.permission.READ_PHONE_STATE},
