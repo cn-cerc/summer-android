@@ -963,7 +963,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             Log.d("print", "url___: " + url);
             clearData();
             is_ERROR = false;
-            setTitleVisibility(true);
             /*
             if (WebConfig.getInstance() == null) return;
             is_exit = false;

@@ -40,7 +40,7 @@ import cn.cerc.summer.android.services.RefreshMenu;
 import cn.cerc.summer.android.services.ScanBarcode;
 import cn.cerc.summer.android.services.ScanProduct;
 import cn.cerc.summer.android.services.SetMenuList;
-import cn.cerc.summer.android.services.SetTitle;
+import cn.cerc.summer.android.services.SetAppliedTitle;
 import cn.cerc.summer.android.services.ShareToWeibo;
 import cn.cerc.summer.android.services.ShareToWeixin;
 import cn.cerc.summer.android.services.ShowWarning;
@@ -85,7 +85,7 @@ public class JavaScriptProxy extends Object {
         services.put(ScanBarcode.class, "扫一扫功能，扫描成功后上传到指定网址");
         services.put(ScanProduct.class, "批次扫描商品条码");
         //
-        services.put(SetTitle.class, "设置浏览器标题");
+        services.put(SetAppliedTitle.class, "设置浏览器标题");
         //
         services.put(ShareToWeixin.class, "分享到微信");
         services.put(ShareToWeibo.class, "分享到微博");
