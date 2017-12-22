@@ -2,18 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
-        debug {
-            keyAlias 'Vine2017'
-            keyPassword 'Mimrc2017'
-            storeFile file('../summer.jks')
-            storePassword 'Mimrc2017'
-        }
-        release {
-            keyAlias 'Vine2017'
-            keyPassword 'Mimrc2017'
-            storeFile file('../summer.jks')
-            storePassword 'Mimrc2017'
-        }
+
     }
     compileSdkVersion 25
     buildToolsVersion '26.0.2'

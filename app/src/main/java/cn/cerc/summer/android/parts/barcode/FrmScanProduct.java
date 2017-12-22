@@ -7,7 +7,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -135,7 +138,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
      * @param appendUrl 新增数据指定的url
      * @param modifyUrl 修改数据指定的url
      * @param deleteUrl 删除相应的记录的url
-     * @param viewUrl 显示相应的记录的url
+     * @param viewUrl   显示相应的记录的url
      */
     public static void startForm(Context context, String title, String homeUrl, String returnUrl,
                                  String appendUrl, String modifyUrl, String deleteUrl, String viewUrl) {
@@ -198,7 +201,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
         webView.loadUrl(MyApp.getFormUrl(homeUrl));
 
         //关闭软键盘
-        edtBarcode.setInputType(InputType.TYPE_NULL);
+//        edtBarcode.setInputType(InputType.TYPE_NULL);
         edtBarcode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -225,16 +228,8 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnSave: {
-                if (edtBarcode.getInputType() == InputType.TYPE_NULL) {
-                    edtBarcode.setInputType(InputType.TYPE_CLASS_TEXT);
-                    InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.showSoftInput(edtBarcode, 0);
-                } else {
-                    edtBarcode.setInputType(InputType.TYPE_NULL);
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    if (imm != null)
-                        imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
-                }
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
                 break;
             }
             case R.id.lblBarcode: {
@@ -272,6 +267,8 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
     }
 
     private void saveBarcode() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
         String barcode = edtBarcode.getText().toString().trim();
         boolean isSpare = chkIsSpare.isChecked();
         if (barcode.length() > 0) {
@@ -288,7 +285,9 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
             adapter.notifyDataSetChanged();
             requestUpload(dataSet.getCurrent());
         }
-        edtBarcode.setSelection(0, edtBarcode.getText().toString().length() - 1);
+        if (barcode.length() >= 1) {
+            edtBarcode.setSelection(0, edtBarcode.getText().toString().length());
+        }
         edtBarcode.requestFocus();
     }
 
