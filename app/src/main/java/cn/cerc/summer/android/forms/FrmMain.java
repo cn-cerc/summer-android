@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.GeolocationPermissions;
 import android.webkit.PermissionRequest;
 import android.webkit.ValueCallback;
@@ -56,6 +59,7 @@ import cn.cerc.summer.android.core.MainPopupMenu;
 import cn.cerc.summer.android.core.MainTitleMenu;
 import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.core.ScreenUtils;
+import cn.cerc.summer.android.core.StatusBarCompat;
 import cn.cerc.summer.android.forms.view.BrowserView;
 import cn.cerc.summer.android.forms.view.DragPointView;
 import cn.cerc.summer.android.services.RefreshMenu;
@@ -165,6 +169,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         instance = this;
 
         settings = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
@@ -538,12 +543,12 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     Toast.makeText(FrmMain.this, "退出系统", Toast.LENGTH_SHORT).show();
                     //退出系统
                     finish();
+//                    StatusBarCompat.compat(FrmMain.this, Color.RED);
                     break;
                 default:
                     // runScript(String.format("%s('%s', '%s')", mRightMenu.get(which).getUrl(), this.scriptTag, resultString));
                     //   browser.loadUrl(mRightMenu.get(which).getName());
                     runScript(String.format("%s('%s', '%s')", mRightMenu.get(which).getUrl(), mRightMenu.get(which).getScriptTag(), "回调成功"));
-
                     mpopWindow.dismiss();
                     break;
             }

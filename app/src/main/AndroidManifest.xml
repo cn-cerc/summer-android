@@ -46,7 +46,8 @@
         <activity
             android:name="cn.cerc.summer.android.forms.FrmMain"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/FullScreen">
             <!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
