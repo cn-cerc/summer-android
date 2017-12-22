@@ -174,9 +174,9 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initWindows();
+        initWindows();//沉浸式全屏设置
         setContentView(R.layout.activity_main);
-        AndroidBug54971Workaround.assistActivity(findViewById(android.R.id.content));
+        AndroidBug54971Workaround.assistActivity(findViewById(android.R.id.content)); //自动监听虚拟按键的变化，改变高度
         instance = this;
 
         settings = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
@@ -321,6 +321,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         boxTitle = (LinearLayout) findViewById(R.id.boxTitle);
         hightview = (View) findViewById(R.id.hightview);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            hightview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,getStatusBarHeight(FrmMain.this)));
             hightview.setVisibility(View.VISIBLE);
         }else {
             hightview.setVisibility(View.GONE);
