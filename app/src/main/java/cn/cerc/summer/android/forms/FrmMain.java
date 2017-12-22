@@ -2,6 +2,7 @@ package cn.cerc.summer.android.forms;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -10,6 +11,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -202,6 +204,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         mTitleMenu.add(new MainTitleMenu("返回首页", false, myApp.getStartPage(), 1, classWebView));  //设置初始化数据
         mTitleMenu.add(new MainTitleMenu("新建窗口", false, "", 1, classWebView));
         mRightMenu.add(new MainTitleMenu("设置", false, "", 1, ""));
+        mRightMenu.add(new MainTitleMenu("刷新", false, "", 1, ""));
         // TODO 临时扫一扫
         // mRightMenu.add(new MainTitleMenu("扫一扫", true, "", 1));
         mRightMenu.add(new MainTitleMenu("退出系统", true, "", 1, ""));
@@ -538,8 +541,13 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     FrmSettings.startFormForResult(FrmMain.getInstance(), REQUEST_SETTING, browser.getUrl());
                     mpopWindow.dismiss();
                     break;
-
                 case 1:
+                    browser.reload();
+                    clearAllCache(getApplicationContext());
+                    Toast.makeText(FrmMain.this, "刷新成功", Toast.LENGTH_SHORT).show();
+                    mpopWindow.dismiss();
+                    break;
+                case 2:
                     Toast.makeText(FrmMain.this, "退出系统", Toast.LENGTH_SHORT).show();
                     //退出系统
                     finish();
@@ -615,7 +623,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 }
             }
         }
-        mRightMenu.get(1).setLine(true);
+        mRightMenu.get(2).setLine(true);
         if (mRightMenu.get(mRightMenu.size() - 1).isLine()) {
             mRightMenu.get(mRightMenu.size() - 1).setLine(false);
         }
@@ -782,6 +790,39 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         JPushInterface.onPause(this);
     }
 
+    /**
+     * @param context 删除缓存
+     */
+    public static void clearAllCache(Context context) {
+        deleteDir(context.getCacheDir());
+        if (Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)) {
+            deleteDir(context.getExternalCacheDir());
+        }
+    }
+
+    private static boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            int size = 0;
+            if (children != null) {
+                size = children.length;
+                for (int i = 0; i < size; i++) {
+                    boolean success = deleteDir(new File(dir, children[i]));
+                    if (!success) {
+                        return false;
+                    }
+                }
+            }
+
+        }
+        if (dir == null) {
+            return true;
+        } else {
+
+            return dir.delete();
+        }
+    }
 
     /**
      * 清除缓存
