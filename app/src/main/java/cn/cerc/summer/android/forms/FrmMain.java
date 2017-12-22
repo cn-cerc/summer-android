@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.GeolocationPermissions;
@@ -53,6 +54,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import cn.cerc.summer.android.core.AndroidBug54971Workaround;
 import cn.cerc.summer.android.core.CommBottomPopWindow;
 import cn.cerc.summer.android.core.Constans;
 import cn.cerc.summer.android.core.MainPopupMenu;
@@ -65,6 +67,8 @@ import cn.cerc.summer.android.forms.view.DragPointView;
 import cn.cerc.summer.android.services.RefreshMenu;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
+
+import static cn.cerc.summer.android.core.StatusBarCompat.getStatusBarHeight;
 
 /**
  * 主界面
@@ -118,7 +122,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private boolean webViewState = false;  //判断是否新建webView
     private RefreshMenu mRefreshMenu;
     public List<MainTitleMenu> mRightMenuTemp = new ArrayList<>();
-
+    private View hightview;
     public BrowserView getBrowser() {
         return browser;
     }
@@ -168,8 +172,9 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initWindows();
         setContentView(R.layout.activity_main);
-
+        AndroidBug54971Workaround.assistActivity(findViewById(android.R.id.content));
         instance = this;
 
         settings = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
@@ -192,6 +197,43 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         browser.loadUrl(myApp.getStartPage());
 
     }
+    private void initWindows() {
+        Window window = getWindow();
+        int color = getResources().getColor(android.R.color.transparent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            //设置状态栏颜色
+            window.setStatusBarColor(color);
+            //设置导航栏颜色
+//            window.setNavigationBarColor(color);
+            ViewGroup contentView = ((ViewGroup) findViewById(android.R.id.content));
+            View childAt = contentView.getChildAt(0);
+            if (childAt != null) {
+                childAt.setFitsSystemWindows(true);
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            //透明状态栏
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            //透明导航栏
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            //设置contentview为fitsSystemWindows
+            ViewGroup contentView = (ViewGroup) findViewById(android.R.id.content);
+            View childAt = contentView.getChildAt(0);
+            if (childAt != null) {
+                childAt.setFitsSystemWindows(true);
+            }
+            //给statusbar着色
+            View view = new View(this);
+            view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getStatusBarHeight(this)));
+            view.setBackgroundColor(color);
+            contentView.addView(view);
+        }
+    }
 
     /**
      * 固定数据初始化
@@ -202,6 +244,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         mTitleMenu.add(new MainTitleMenu("返回首页", false, myApp.getStartPage(), 1, classWebView));  //设置初始化数据
         mTitleMenu.add(new MainTitleMenu("新建窗口", false, "", 1, classWebView));
         mRightMenu.add(new MainTitleMenu("设置", false, "", 1, ""));
+        mRightMenu.add(new MainTitleMenu("刷新", false, "", 1, ""));
         // TODO 临时扫一扫
         // mRightMenu.add(new MainTitleMenu("扫一扫", true, "", 1));
         mRightMenu.add(new MainTitleMenu("退出系统", true, "", 1, ""));
@@ -274,6 +317,12 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         imgMore = (ImageView) this.findViewById(R.id.imgMore);
         lblTitle = (TextView) this.findViewById(R.id.lblTitle);
         boxTitle = (LinearLayout) findViewById(R.id.boxTitle);
+        hightview = (View) findViewById(R.id.hightview);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            hightview.setVisibility(View.VISIBLE);
+        }else {
+            hightview.setVisibility(View.GONE);
+        }
         imgBack.setOnClickListener(this);
         imgMore.setOnClickListener(this);
         lblTitle.setOnClickListener(this);
