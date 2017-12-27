@@ -19,7 +19,7 @@
         android:padding="5dp"
         android:background="@drawable/tv_bg_color"
         android:marqueeRepeatLimit="marquee_forever"
-        android:textSize="18sp" />
+        />
     <View
         android:id="@+id/view_title"
         android:layout_width="match_parent"

@@ -301,4 +301,8 @@ public class MyApp extends android.app.Application {
     public String getAppCode() {
         return this.APPCODE;
     }
+
+    public static void setHomeUrl(String homeUrl) {
+        HOME_URL = homeUrl;
+    }
 }
