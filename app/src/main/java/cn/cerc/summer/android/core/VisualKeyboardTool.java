@@ -11,7 +11,7 @@ import android.view.ViewTreeObserver;
  * Created by 26232 on 2017/12/22.
  */
 
-public class AndroidBug54971Workaround {
+public class VisualKeyboardTool {
     // For more information, see https://code.google.com/p/android/issues/detail?id=5497
     // To use this class, simply invoke assistActivity() on an Activity that already has its content view set.
 
@@ -21,14 +21,14 @@ public class AndroidBug54971Workaround {
      * @param viewObserving
      */
     public static void assistActivity(View viewObserving) {
-        new AndroidBug54971Workaround(viewObserving);
+        new VisualKeyboardTool(viewObserving);
     }
 
     private View mViewObserved;//被监听的视图
     private int usableHeightPrevious;//视图变化前的可用高度
     private ViewGroup.LayoutParams frameLayoutParams;
 
-    private AndroidBug54971Workaround(View viewObserving) {
+    private VisualKeyboardTool(View viewObserving) {
         mViewObserved = viewObserving;
         //给View添加全局的布局监听器
         mViewObserved.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {

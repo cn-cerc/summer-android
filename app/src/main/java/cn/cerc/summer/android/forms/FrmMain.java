@@ -52,7 +52,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import cn.cerc.summer.android.core.AndroidBug54971Workaround;
+import cn.cerc.summer.android.core.VisualKeyboardTool;
 import cn.cerc.summer.android.core.CommBottomPopWindow;
 import cn.cerc.summer.android.core.Constans;
 import cn.cerc.summer.android.core.MainPopupMenu;
@@ -170,7 +170,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         super.onCreate(savedInstanceState);
         initWindows();//沉浸式全屏设置
         setContentView(R.layout.activity_main);
-        AndroidBug54971Workaround.assistActivity(findViewById(android.R.id.content)); //自动监听虚拟按键的变化，改变高度
+        VisualKeyboardTool.assistActivity(findViewById(android.R.id.content)); //自动监听虚拟按键的变化，改变高度
         instance = this;
 
         settings = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
@@ -225,7 +225,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             }
             //给statusbar着色
             View view = new View(this);
-            view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, AndroidBug54971Workaround.getStatusBarHeight(this)));
+            view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, VisualKeyboardTool.getStatusBarHeight(this)));
             view.setBackgroundColor(color);
             contentView.addView(view);
         }
@@ -315,7 +315,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         boxTitle = (LinearLayout) findViewById(R.id.boxTitle);
         hightview = (View) findViewById(R.id.hightview);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            hightview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,AndroidBug54971Workaround.getStatusBarHeight(FrmMain.this)));
+            hightview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, VisualKeyboardTool.getStatusBarHeight(FrmMain.this)));
             hightview.setVisibility(View.VISIBLE);
         }else {
             hightview.setVisibility(View.GONE);
