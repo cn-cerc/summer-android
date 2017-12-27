@@ -2,14 +2,18 @@ package cn.cerc.summer.android.forms;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -17,6 +21,9 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.GeolocationPermissions;
 import android.webkit.PermissionRequest;
 import android.webkit.ValueCallback;
@@ -49,17 +56,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import cn.cerc.summer.android.core.AndroidBug54971Workaround;
 import cn.cerc.summer.android.core.CommBottomPopWindow;
 import cn.cerc.summer.android.core.Constans;
 import cn.cerc.summer.android.core.MainPopupMenu;
 import cn.cerc.summer.android.core.MainTitleMenu;
 import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.core.ScreenUtils;
+import cn.cerc.summer.android.core.StatusBarCompat;
 import cn.cerc.summer.android.forms.view.BrowserView;
 import cn.cerc.summer.android.forms.view.DragPointView;
 import cn.cerc.summer.android.services.RefreshMenu;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
+
+import static cn.cerc.summer.android.core.StatusBarCompat.getStatusBarHeight;
 
 /**
  * 主界面
@@ -113,7 +124,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private boolean webViewState = false;  //判断是否新建webView
     private RefreshMenu mRefreshMenu;
     public List<MainTitleMenu> mRightMenuTemp = new ArrayList<>();
-
+    private View hightview;
     public BrowserView getBrowser() {
         return browser;
     }
@@ -163,7 +174,9 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initWindows();//沉浸式全屏设置
         setContentView(R.layout.activity_main);
+        AndroidBug54971Workaround.assistActivity(findViewById(android.R.id.content)); //自动监听虚拟按键的变化，改变高度
         instance = this;
 
         settings = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
@@ -186,6 +199,43 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         browser.loadUrl(myApp.getStartPage());
 
     }
+    private void initWindows() {
+        Window window = getWindow();
+        int color = getResources().getColor(android.R.color.transparent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            //设置状态栏颜色
+            window.setStatusBarColor(color);
+            //设置导航栏颜色
+//            window.setNavigationBarColor(color);
+            ViewGroup contentView = ((ViewGroup) findViewById(android.R.id.content));
+            View childAt = contentView.getChildAt(0);
+            if (childAt != null) {
+                childAt.setFitsSystemWindows(true);
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            //透明状态栏
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            //透明导航栏
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            //设置contentview为fitsSystemWindows
+            ViewGroup contentView = (ViewGroup) findViewById(android.R.id.content);
+            View childAt = contentView.getChildAt(0);
+            if (childAt != null) {
+                childAt.setFitsSystemWindows(true);
+            }
+            //给statusbar着色
+            View view = new View(this);
+            view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getStatusBarHeight(this)));
+            view.setBackgroundColor(color);
+            contentView.addView(view);
+        }
+    }
 
     /**
      * 固定数据初始化
@@ -196,6 +246,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         mTitleMenu.add(new MainTitleMenu("返回首页", false, myApp.getStartPage(), 1, classWebView));  //设置初始化数据
         mTitleMenu.add(new MainTitleMenu("新建窗口", false, "", 1, classWebView));
         mRightMenu.add(new MainTitleMenu("设置", false, "", 1, ""));
+        mRightMenu.add(new MainTitleMenu("刷新", false, "", 1, ""));
         // TODO 临时扫一扫
         // mRightMenu.add(new MainTitleMenu("扫一扫", true, "", 1));
         mRightMenu.add(new MainTitleMenu("退出系统", true, "", 1, ""));
@@ -268,6 +319,13 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         imgMore = (ImageView) this.findViewById(R.id.imgMore);
         lblTitle = (TextView) this.findViewById(R.id.lblTitle);
         boxTitle = (LinearLayout) findViewById(R.id.boxTitle);
+        hightview = (View) findViewById(R.id.hightview);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            hightview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,getStatusBarHeight(FrmMain.this)));
+            hightview.setVisibility(View.VISIBLE);
+        }else {
+            hightview.setVisibility(View.GONE);
+        }
         imgBack.setOnClickListener(this);
         imgMore.setOnClickListener(this);
         lblTitle.setOnClickListener(this);
@@ -532,17 +590,22 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     FrmSettings.startFormForResult(FrmMain.getInstance(), REQUEST_SETTING, browser.getUrl());
                     mpopWindow.dismiss();
                     break;
-
                 case 1:
+                    browser.reload();
+                    clearAllCache(getApplicationContext());
+                    Toast.makeText(FrmMain.this, "刷新成功", Toast.LENGTH_SHORT).show();
+                    mpopWindow.dismiss();
+                    break;
+                case 2:
                     Toast.makeText(FrmMain.this, "退出系统", Toast.LENGTH_SHORT).show();
                     //退出系统
                     finish();
+//                    StatusBarCompat.compat(FrmMain.this, Color.RED);
                     break;
                 default:
                     // runScript(String.format("%s('%s', '%s')", mRightMenu.get(which).getUrl(), this.scriptTag, resultString));
                     //   browser.loadUrl(mRightMenu.get(which).getName());
                     runScript(String.format("%s('%s', '%s')", mRightMenu.get(which).getUrl(), mRightMenu.get(which).getScriptTag(), "回调成功"));
-
                     mpopWindow.dismiss();
                     break;
             }
@@ -609,7 +672,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 }
             }
         }
-        mRightMenu.get(1).setLine(true);
+        mRightMenu.get(2).setLine(true);
         if (mRightMenu.get(mRightMenu.size() - 1).isLine()) {
             mRightMenu.get(mRightMenu.size() - 1).setLine(false);
         }
@@ -776,6 +839,39 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         JPushInterface.onPause(this);
     }
 
+    /**
+     * @param context 删除缓存
+     */
+    public static void clearAllCache(Context context) {
+        deleteDir(context.getCacheDir());
+        if (Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)) {
+            deleteDir(context.getExternalCacheDir());
+        }
+    }
+
+    private static boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            int size = 0;
+            if (children != null) {
+                size = children.length;
+                for (int i = 0; i < size; i++) {
+                    boolean success = deleteDir(new File(dir, children[i]));
+                    if (!success) {
+                        return false;
+                    }
+                }
+            }
+
+        }
+        if (dir == null) {
+            return true;
+        } else {
+
+            return dir.delete();
+        }
+    }
 
     /**
      * 清除缓存
@@ -844,7 +940,10 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     }
 
     public void setTitleVisibility(boolean visibility) {
-        boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
+        Message message =new Message();
+        message.what =1;
+        message.obj =visibility;
+        handler.sendMessage(message);
     }
 
     public void loadUrl(String url) {
@@ -889,6 +988,13 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         list.clear();
         initTitlePopWindow();
         initPopWindow();
+    }
+
+    public void setWebTitle(String title) {
+        Message message =new Message();
+        message.what =2;
+        message.obj =title;
+        handler.sendMessage(message);
     }
 
     private class MyWebViewClient extends WebViewClient {
@@ -1022,4 +1128,23 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             super.onPageFinished(view, url);
         }
     }
+
+    Handler handler =new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);{
+                switch (msg.what){
+                    case 1:
+                        boolean visibility = (boolean) msg.obj;
+                        boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
+                        break;
+                    case 2:
+                        String title =(String)msg.obj;
+                        lblTitle.setText(title);
+                        break;
+
+                }
+            }
+        }
+    };
 }
