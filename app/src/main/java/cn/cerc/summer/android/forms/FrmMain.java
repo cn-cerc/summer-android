@@ -5,16 +5,13 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -50,7 +47,6 @@ import com.google.android.gms.appindexing.Thing;
 import com.mimrc.vine.R;
 
 import java.io.File;
-import java.security.Permission;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -63,14 +59,12 @@ import cn.cerc.summer.android.core.MainPopupMenu;
 import cn.cerc.summer.android.core.MainTitleMenu;
 import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.core.ScreenUtils;
-import cn.cerc.summer.android.core.StatusBarCompat;
 import cn.cerc.summer.android.forms.view.BrowserView;
 import cn.cerc.summer.android.forms.view.DragPointView;
 import cn.cerc.summer.android.services.RefreshMenu;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 
-import static cn.cerc.summer.android.core.StatusBarCompat.getStatusBarHeight;
 
 /**
  * 主界面
@@ -231,7 +225,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             }
             //给statusbar着色
             View view = new View(this);
-            view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getStatusBarHeight(this)));
+            view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, AndroidBug54971Workaround.getStatusBarHeight(this)));
             view.setBackgroundColor(color);
             contentView.addView(view);
         }
@@ -321,7 +315,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         boxTitle = (LinearLayout) findViewById(R.id.boxTitle);
         hightview = (View) findViewById(R.id.hightview);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            hightview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,getStatusBarHeight(FrmMain.this)));
+            hightview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,AndroidBug54971Workaround.getStatusBarHeight(FrmMain.this)));
             hightview.setVisibility(View.VISIBLE);
         }else {
             hightview.setVisibility(View.GONE);
@@ -600,7 +594,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     Toast.makeText(FrmMain.this, "退出系统", Toast.LENGTH_SHORT).show();
                     //退出系统
                     finish();
-//                    StatusBarCompat.compat(FrmMain.this, Color.RED);
                     break;
                 default:
                     // runScript(String.format("%s('%s', '%s')", mRightMenu.get(which).getUrl(), this.scriptTag, resultString));

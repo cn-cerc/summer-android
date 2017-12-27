@@ -1,11 +1,11 @@
 package cn.cerc.summer.android.core;
 
+import android.content.Context;
 import android.graphics.Rect;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
-import static cn.cerc.summer.android.core.StatusBarCompat.getStatusBarHeight;
 
 /**
  * Created by 26232 on 2017/12/22.
@@ -59,5 +59,16 @@ public class AndroidBug54971Workaround {
         Rect r = new Rect();
         mViewObserved.getWindowVisibleDisplayFrame(r);
         return (r.bottom - r.top+ getStatusBarHeight(MyApp.getInstance().getApplicationContext()));
+    }
+
+    public static int getStatusBarHeight(Context context)
+    {
+        int result = 0;
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0)
+        {
+            result = context.getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 }
