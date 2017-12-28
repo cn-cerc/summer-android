@@ -129,12 +129,18 @@ public class ScreenUtils {
         return total;
     }
 
-    public static int getScales(Context context, double inches) {
+    public static int getScales(double inches) {
         if (inches <= 4) return 80;
         if (inches <= 4.5) return 90;
         else if (inches >= 5 && inches < 5.5) return 100;
         else if (inches == 5.5) return 110;
         else if (inches > 5.5) return 120;
+        else return 100;
+    }
+
+    public static int getScales(Context context, double inches) {
+        if (inches <= 4) return 80;
+        if (inches <= 4.5) return 90;
         else return 100;
     }
 }
