@@ -13,8 +13,8 @@ import static android.database.sqlite.SQLiteDatabase.openOrCreateDatabase;
  */
 
 public class LiteDatabase {
-    private AppCompatActivity view;
     private static SQLiteDatabase db;
+    private AppCompatActivity view;
 
     public LiteDatabase(AppCompatActivity view) {
         this.view = view;

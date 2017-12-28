@@ -15,11 +15,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true" />
+
         <LinearLayout
             android:id="@+id/linear_movie"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/movie_linearbg">
+
             <ImageView
                 android:id="@+id/movie_imgBack"
                 android:layout_width="40dp"

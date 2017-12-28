@@ -16,9 +16,9 @@ public class PlayMovie implements JavaScriptService {
     @Override
     public String execute(Context context, JSONObject request) throws Exception {
         String movieUrl = request.getString("movieUrl");
-        if(movieUrl != null){
-        FrmPlayMovie.startForm(context, movieUrl);
-        }else{
+        if (movieUrl != null) {
+            FrmPlayMovie.startForm(context, movieUrl);
+        } else {
             throw new RuntimeException("URL参数错误");
         }
         return "true";

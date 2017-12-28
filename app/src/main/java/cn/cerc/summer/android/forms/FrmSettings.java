@@ -35,6 +35,12 @@ public class FrmSettings extends AppCompatActivity implements SeekBar.OnSeekBarC
 
     private Button[] buttons = new Button[5];
 
+    public static void startFormForResult(AppCompatActivity content, int requestNo, String address) {
+        Intent intent = new Intent(content, FrmSettings.class);
+        intent.putExtra("address", address);
+        content.startActivityForResult(intent, requestNo);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,11 +157,5 @@ public class FrmSettings extends AppCompatActivity implements SeekBar.OnSeekBarC
         customseekbar.setProgress(scales);
         String str = String.format("界面缩放比例（80%% -- 120%%）当前值：%d%%", scales);
         scale.setText(str);
-    }
-
-    public static void startFormForResult(AppCompatActivity content, int requestNo, String address) {
-        Intent intent = new Intent(content, FrmSettings.class);
-        intent.putExtra("address", address);
-        content.startActivityForResult(intent, requestNo);
     }
 }

@@ -57,6 +57,19 @@ public class DlgScanProduct extends AppCompatActivity implements View.OnClickLis
         }
     };
 
+    public static void startFormForResult(AppCompatActivity context, int recordIndex, Record item,
+                                          String modifyUrl, String deleteUrl) {
+        Intent intent = new Intent();
+        intent.setClass(context, DlgScanProduct.class);
+        intent.putExtra("recordIndex", recordIndex);
+        intent.putExtra("num", item.getInt("num"));
+        intent.putExtra("barcode", item.getString("barcode"));
+        intent.putExtra("isSpare", item.getBoolean("isSpare"));
+        intent.putExtra("modifyUrl", modifyUrl);
+        intent.putExtra("deleteUrl", deleteUrl);
+        context.startActivityForResult(intent, 1, null);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,7 +124,7 @@ public class DlgScanProduct extends AppCompatActivity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.btnOk:
             case R.id.btnDelete:
-                if(v.getId() == R.id.btnDelete){
+                if (v.getId() == R.id.btnDelete) {
                     edtNum.setText("0");
                 }
                 intent.putExtra("recordIndex", recordIndex);
@@ -147,18 +160,5 @@ public class DlgScanProduct extends AppCompatActivity implements View.OnClickLis
         } catch (Exception e) {
             return 0;
         }
-    }
-
-    public static void startFormForResult(AppCompatActivity context, int recordIndex, Record item,
-                                          String modifyUrl, String deleteUrl) {
-        Intent intent = new Intent();
-        intent.setClass(context, DlgScanProduct.class);
-        intent.putExtra("recordIndex", recordIndex);
-        intent.putExtra("num", item.getInt("num"));
-        intent.putExtra("barcode", item.getString("barcode"));
-        intent.putExtra("isSpare", item.getBoolean("isSpare"));
-        intent.putExtra("modifyUrl", modifyUrl);
-        intent.putExtra("deleteUrl", deleteUrl);
-        context.startActivityForResult(intent, 1, null);
     }
 }

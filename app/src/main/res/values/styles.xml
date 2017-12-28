@@ -55,6 +55,7 @@
         <!-- 点击空白部分 activity 不消失 -->
         <item name="android:windowCloseOnTouchOutside">false</item>
     </style>
+
     <style name="DialogTheme" parent="@android:style/Theme.Dialog">
         <item name="android:windowNoTitle">true</item>  <!-- 无标题 -->
         <item name="android:windowBackground">@android:color/transparent</item> <!-- 背景颜色 -->

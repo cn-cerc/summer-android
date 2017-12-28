@@ -51,13 +51,13 @@ public class DialogUtil {
         dialog.setOnDialogClickListern(new InputDialog.OnDialogClick() {
             @Override
             public void onConfrim(String newsUrl) {
-                listen.click(true,newsUrl);
+                listen.click(true, newsUrl);
                 dialog.dismiss();
             }
 
             @Override
             public void onCancel() {
-                listen.click(false,null);
+                listen.click(false, null);
                 dialog.dismiss();
             }
 
@@ -65,7 +65,7 @@ public class DialogUtil {
         dialog.show();
     }
 
-    public interface OnclickAddressListen{
+    public interface OnclickAddressListen {
         void click(boolean bool, String newsUrl);
     }
 

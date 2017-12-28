@@ -8,7 +8,7 @@ public class WebViewEntity {
     private String title;
     private String url;
 
-    public WebViewEntity(String title,String url){
+    public WebViewEntity(String title, String url) {
         this.title = title;
         this.url = url;
     }

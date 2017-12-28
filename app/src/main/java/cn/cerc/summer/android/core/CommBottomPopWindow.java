@@ -22,28 +22,13 @@ import java.util.List;
 
 public class CommBottomPopWindow extends PopupWindow implements View.OnClickListener {
 
-    private Button cancleBtn;
-
-    private PopWindowListener listener;
-
-    private LinearLayout mLayout;
-
-    private Context mContext;
-
-    private boolean isHasSubTitle = false;
-
-    private LayoutInflater inflater;
-
     public View popRootView;
-
-    /**
-     * 功能描述: 设置点击事件<br>
-     * 〈功能详细描述〉
-     * 点击的自定义回调接口
-     */
-    public void setPopListener(PopWindowListener listener) {
-        this.listener = listener;
-    }
+    private Button cancleBtn;
+    private PopWindowListener listener;
+    private LinearLayout mLayout;
+    private Context mContext;
+    private boolean isHasSubTitle = false;
+    private LayoutInflater inflater;
 
     public CommBottomPopWindow(final Activity context) {
         mContext = context;
@@ -93,6 +78,15 @@ public class CommBottomPopWindow extends PopupWindow implements View.OnClickList
         this.setBackgroundDrawable(dw);
         initViews();
         initEvents();
+    }
+
+    /**
+     * 功能描述: 设置点击事件<br>
+     * 〈功能详细描述〉
+     * 点击的自定义回调接口
+     */
+    public void setPopListener(PopWindowListener listener) {
+        this.listener = listener;
     }
 
     /**

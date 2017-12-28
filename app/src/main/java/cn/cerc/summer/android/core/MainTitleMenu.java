@@ -10,6 +10,23 @@ public class MainTitleMenu {
     private String url;
     private int layerSign;  //层次标识
     private int onlySign;     //唯一标识
+    private String scriptTag;//标题标识
+
+    public MainTitleMenu(String name, boolean isLine, String url, int layerSign, String scriptTag) {
+        this.name = name;
+        this.isLine = isLine;
+        this.url = url;
+        this.layerSign = layerSign;
+        this.scriptTag = scriptTag;
+    }
+
+    public MainTitleMenu(String name, boolean isLine, String url, int layerSign, int onlySign) {
+        this.name = name;
+        this.isLine = isLine;
+        this.url = url;
+        this.layerSign = layerSign;
+        this.onlySign = onlySign;
+    }
 
     public String getScriptTag() {
         return scriptTag;
@@ -19,29 +36,11 @@ public class MainTitleMenu {
         this.scriptTag = scriptTag;
     }
 
-    private String scriptTag;//标题标识
-
     public int getOnlySign() {
         return onlySign;
     }
 
     public void setOnlySign(int onlySign) {
-        this.onlySign = onlySign;
-    }
-
-    public MainTitleMenu(String name, boolean isLine, String url, int layerSign,String  scriptTag) {
-        this.name = name;
-        this.isLine = isLine;
-        this.url = url;
-        this.layerSign = layerSign;
-        this.scriptTag=scriptTag;
-    }
-
-    public MainTitleMenu(String name, boolean isLine, String url, int layerSign, int onlySign) {
-        this.name = name;
-        this.isLine = isLine;
-        this.url = url;
-        this.layerSign = layerSign;
         this.onlySign = onlySign;
     }
 

@@ -52,8 +52,19 @@ import cn.cerc.summer.android.parts.barcode.zxing.view.ViewfinderView;
 public class FrmScanBarcode extends AppCompatActivity implements Callback, View.OnClickListener {
     public final static int SCANNIN_GREQUEST_CODE = 1;
     private static final long VIBRATE_DURATION = 200L;
+    private static final float BEEP_VOLUME = 0.10f;
+    private static final int PARSE_BARCODE_SUC = 300;
+    private static final int PARSE_BARCODE_FAIL = 303;
+    private static final int MSG_UPLOAD = 2;
+    /**
+     * When the beep has finished playing, rewind to queue up another one.
+     */
+    private final OnCompletionListener beepListener = new OnCompletionListener() {
+        public void onCompletion(MediaPlayer mediaPlayer) {
+            mediaPlayer.seekTo(0);
+        }
+    };
     private CaptureActivityHandler handler;
-
     private ViewfinderView viewfinderView;
     private boolean hasSurface;
     private Vector<BarcodeFormat> decodeFormats;
@@ -61,89 +72,13 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
     private InactivityTimer inactivityTimer;
     private MediaPlayer mediaPlayer;
     private boolean playBeep;
-    private static final float BEEP_VOLUME = 0.10f;
     private boolean vibrate;
-
-    private static final int PARSE_BARCODE_SUC = 300;
-    private static final int PARSE_BARCODE_FAIL = 303;
-    private static final int MSG_UPLOAD = 2;
     private ProgressDialog mProgress;
     private String photo_path;
-
     private Bitmap scanBitmap;
     private String scriptFunction = "";
     private String scriptTag = "";
     private String postUrl = "";
-
-    //内部调试使用
-    public static void startForm(AppCompatActivity context) {
-        Intent intent = new Intent();
-        intent.setClass(context, FrmScanBarcode.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        context.startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
-    }
-
-    //调用扫描画面并回调javaScript
-    public static void startForm(AppCompatActivity context, String scriptFunction, String scriptTag) {
-        Intent intent = new Intent();
-        intent.putExtra("scriptFunction", scriptFunction);
-        intent.putExtra("scriptTag", scriptTag);
-        intent.setClass(context, FrmScanBarcode.class);
-        context.startActivity(intent);
-    }
-
-    //调用扫描画面并post到指定的url
-    public static void startForm(AppCompatActivity context, String postUrl) {
-        Intent intent = new Intent();
-        intent.putExtra("postUrl", postUrl);
-        intent.setClass(context, FrmScanBarcode.class);
-        context.startActivity(intent);
-    }
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_frm_scan_barcode);
-
-        Intent intent = getIntent();
-        if (intent.hasExtra("scriptFunction")) {
-            this.scriptFunction = intent.getStringExtra("scriptFunction");
-            this.scriptTag = intent.getStringExtra("scriptTag");
-        } else if (intent.hasExtra("postUrl")) {
-            this.postUrl = intent.getStringExtra("postUrl");
-        } else {
-            this.setTitle("传入参数有误！");
-        }
-
-        CameraManager.init(getApplication());
-        viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
-
-        Button mButtonBack = (Button) findViewById(R.id.button_back);
-        mButtonBack.setOnClickListener(this);
-        hasSurface = false;
-        inactivityTimer = new InactivityTimer(this);
-
-    }
-
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button_back:
-                this.finish();
-                break;
-//            case R.id.button_function:
-//                //打开手机中的相册
-//                Intent innerIntent = new Intent(Intent.ACTION_GET_CONTENT); //"android.intent.action.GET_CONTENT"
-//                innerIntent.setType("image/*");
-//                Intent wrapperIntent = Intent.createChooser(innerIntent, "选择二维码图片");
-//                this.startActivityForResult(wrapperIntent, REQUEST_CODE);
-//                break;
-        }
-    }
-
-
     private Handler mHandler = new Handler() {
 
         @Override
@@ -180,6 +115,56 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
         }
 
     };
+
+    //内部调试使用
+    public static void startForm(AppCompatActivity context) {
+        Intent intent = new Intent();
+        intent.setClass(context, FrmScanBarcode.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
+    }
+
+    //调用扫描画面并回调javaScript
+    public static void startForm(AppCompatActivity context, String scriptFunction, String scriptTag) {
+        Intent intent = new Intent();
+        intent.putExtra("scriptFunction", scriptFunction);
+        intent.putExtra("scriptTag", scriptTag);
+        intent.setClass(context, FrmScanBarcode.class);
+        context.startActivity(intent);
+    }
+
+    //调用扫描画面并post到指定的url
+    public static void startForm(AppCompatActivity context, String postUrl) {
+        Intent intent = new Intent();
+        intent.putExtra("postUrl", postUrl);
+        intent.setClass(context, FrmScanBarcode.class);
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_frm_scan_barcode);
+
+        Intent intent = getIntent();
+        if (intent.hasExtra("scriptFunction")) {
+            this.scriptFunction = intent.getStringExtra("scriptFunction");
+            this.scriptTag = intent.getStringExtra("scriptTag");
+        } else if (intent.hasExtra("postUrl")) {
+            this.postUrl = intent.getStringExtra("postUrl");
+        } else {
+            this.setTitle("传入参数有误！");
+        }
+
+        CameraManager.init(getApplication());
+        viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
+
+        Button mButtonBack = (Button) findViewById(R.id.button_back);
+        mButtonBack.setOnClickListener(this);
+        hasSurface = false;
+        inactivityTimer = new InactivityTimer(this);
+
+    }
 
 
 //    @Override
@@ -224,6 +209,22 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
 //        }
 //    }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.button_back:
+                this.finish();
+                break;
+//            case R.id.button_function:
+//                //打开手机中的相册
+//                Intent innerIntent = new Intent(Intent.ACTION_GET_CONTENT); //"android.intent.action.GET_CONTENT"
+//                innerIntent.setType("image/*");
+//                Intent wrapperIntent = Intent.createChooser(innerIntent, "选择二维码图片");
+//                this.startActivityForResult(wrapperIntent, REQUEST_CODE);
+//                break;
+        }
+    }
+
     /**
      * 识别二维码图片中的数据
      *
@@ -260,7 +261,6 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
         }
         return null;
     }
-
 
     @Override
     protected void onResume() {
@@ -336,12 +336,12 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
         FrmMain obj = FrmMain.getInstance();
         if (!"".equals(this.scriptFunction)) {
             obj.runScript(String.format("%s('%s', '%s')", this.scriptFunction, this.scriptTag, resultString));
-          //  RemoteForm   remoteForm  = new RemoteForm(postUrl==null||postUrl.equals("")?postUrl)
+            //  RemoteForm   remoteForm  = new RemoteForm(postUrl==null||postUrl.equals("")?postUrl)
 
         } else if (!"".equals(this.postUrl)) {
             obj.loadUrl(String.format("%s?barcode=%s", this.postUrl, resultString));
 
-            Log.e("URl",postUrl);
+            Log.e("URl", postUrl);
         } else {
             Toast.makeText(this, "参数调用有误！", Toast.LENGTH_LONG).show();
         }
@@ -439,13 +439,4 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
             vibrator.vibrate(VIBRATE_DURATION);
         }
     }
-
-    /**
-     * When the beep has finished playing, rewind to queue up another one.
-     */
-    private final OnCompletionListener beepListener = new OnCompletionListener() {
-        public void onCompletion(MediaPlayer mediaPlayer) {
-            mediaPlayer.seekTo(0);
-        }
-    };
 }

@@ -4,26 +4,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white_view"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/comm_popwindow_item_txt"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="5dp"
-        android:text="进入菜单"
-        android:gravity="center"
-        android:ellipsize="marquee"
-        android:singleLine="true"
-        android:focusable="true"
-        android:padding="5dp"
         android:background="@drawable/tv_bg_color"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:gravity="center"
         android:marqueeRepeatLimit="marquee_forever"
-        />
+        android:padding="5dp"
+        android:singleLine="true"
+        android:text="进入菜单" />
+
     <View
         android:id="@+id/view_title"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:visibility="gone"
-        android:background="#000"/>
-    </LinearLayout>
+        android:background="#000"
+        android:visibility="gone" />
+</LinearLayout>

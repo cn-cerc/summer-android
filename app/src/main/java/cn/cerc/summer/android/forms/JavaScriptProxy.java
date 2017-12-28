@@ -93,7 +93,7 @@ public class JavaScriptProxy extends Object {
         services.put(ShowWarning.class, "显示严重警告对话框");
         //
         services.put(SetMenuList.class, "设置菜单列表");
-        services.put(RefreshMenu.class,"动态添加菜单");
+        services.put(RefreshMenu.class, "动态添加菜单");
     }
 
     private AppCompatActivity owner;

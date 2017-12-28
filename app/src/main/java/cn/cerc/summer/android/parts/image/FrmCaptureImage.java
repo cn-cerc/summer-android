@@ -32,15 +32,15 @@ import java.io.File;
  * Created by yangtaiyu on 2017/10/16.
  */
 public class FrmCaptureImage extends Activity implements View.OnClickListener {
+    private static final int LOAD_IMAGE = 1;  //相册返回
+    private static final int TAKE_PHOTO = 2;//相机返回
+    private static final int CUT_PHOTO = 3; //裁剪返回
     private Button btn_pop_album, btn_pop_camera, btn_pop_cancel;
     private String serverUrl;
     private LinearLayout camp_pop_linear;
     private RelativeLayout linear_image;
-    private static final int LOAD_IMAGE = 1;  //相册返回
     private File file;  //照片file
     private Uri imageUri; //照片URi
-    private static final int TAKE_PHOTO = 2;//相机返回
-    private static final int CUT_PHOTO = 3; //裁剪返回
 
     public static void startForm(Context context, String urlImage) {
         Intent intent = new Intent();

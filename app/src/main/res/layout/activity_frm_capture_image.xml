@@ -7,40 +7,40 @@
     android:gravity="bottom"
     android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/camp_pop_linear"
+    <LinearLayout
+        android:id="@+id/camp_pop_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:background="@null"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:paddingBottom="10dp">
+
+        <Button
+            android:id="@+id/btn_pop_album"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom"
-            android:background="@null"
-            android:orientation="vertical"
-            android:padding="10dp"
-            android:paddingBottom="10dp">
+            android:layout_height="45dp"
+            android:background="@color/white_view"
+            android:text="本地相册"
+            android:textSize="18sp" />
 
-            <Button
-                android:id="@+id/btn_pop_album"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:background="@color/white_view"
-                android:text="本地相册"
-                android:textSize="18sp" />
+        <Button
+            android:id="@+id/btn_pop_camera"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@color/white_view"
+            android:text="相机拍摄"
+            android:textSize="18sp" />
 
-            <Button
-                android:id="@+id/btn_pop_camera"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:background="@color/white_view"
-                android:text="相机拍摄"
-                android:textSize="18sp" />
-
-            <Button
-                android:id="@+id/btn_pop_cancel"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/white_view"
-                android:text="取消"
-                android:textSize="18sp" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/btn_pop_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white_view"
+            android:text="取消"
+            android:textSize="18sp" />
+    </LinearLayout>
 </RelativeLayout>

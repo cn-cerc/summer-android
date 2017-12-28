@@ -21,8 +21,6 @@ import java.util.List;
 
 public class AudioRecorderUtils {
 
-    // 最大录音时长1000*60*10
-    private final int MAX_LENGTH = 1000 * 60 * 60 * 5;
     //音频输入-麦克风
     private final static int AUDIO_INPUT = MediaRecorder.AudioSource.MIC;
     //采用频率
@@ -33,7 +31,8 @@ public class AudioRecorderUtils {
     private final static int AUDIO_CHANNEL = AudioFormat.CHANNEL_IN_MONO;
     //编码
     private final static int AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT;
-
+    // 最大录音时长1000*60*10
+    private final int MAX_LENGTH = 1000 * 60 * 60 * 5;
     //缓冲区字节大小
     private int bufferSizeInBytes = 0;
     //文件名
@@ -46,29 +45,16 @@ public class AudioRecorderUtils {
     //录音状态
     private Status status = Status.STATUS_NO_READY;
 
+    public AudioRecorderUtils() {
+
+    }
+
     public Status getStatus() {
         return status;
     }
 
     public String getFileName() {
         return fileName;
-    }
-
-    public enum Status {
-        //未开始
-        STATUS_NO_READY,
-        //预备
-        STATUS_READY,
-        //录音
-        STATUS_START,
-        //暂停
-        STATUS_PAUSE,
-        //停止
-        STATUS_STOP
-    }
-
-    public AudioRecorderUtils() {
-
     }
 
     public void createAudio(String fileName, int audioSource, int sampleRateInHz, int channelConfig, int audioFormat) {
@@ -274,5 +260,18 @@ public class AudioRecorderUtils {
                 fileName = null;
             }
         }).start();
+    }
+
+    public enum Status {
+        //未开始
+        STATUS_NO_READY,
+        //预备
+        STATUS_READY,
+        //录音
+        STATUS_START,
+        //暂停
+        STATUS_PAUSE,
+        //停止
+        STATUS_STOP
     }
 }

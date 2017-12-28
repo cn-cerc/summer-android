@@ -21,16 +21,13 @@ import cn.cerc.summer.android.basis.RemoteService;
 import cn.cerc.summer.android.forms.FrmMain;
 
 public class FrmLoginByAccount extends AppCompatActivity implements View.OnClickListener {
+    private static final String LOGTAG = "FrmLoginByAccount";
+    private final int MSG_LOGIN = 1;
     EditText edtAccount;
     EditText edtPassword;
     Button btnLogin;
     TextView lblMessage;
     CheckBox chkSave;
-    private String loginUrl;
-
-    private final int MSG_LOGIN = 1;
-    private static final String LOGTAG = "FrmLoginByAccount";
-
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -47,6 +44,14 @@ public class FrmLoginByAccount extends AppCompatActivity implements View.OnClick
             }
         }
     };
+    private String loginUrl;
+
+    public static void startForm(AppCompatActivity content, String loginUrl) {
+        Intent intent = new Intent();
+        intent.putExtra("loginUrl", loginUrl);
+        intent.setClass(content, FrmLoginByAccount.class);
+        content.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,13 +67,6 @@ public class FrmLoginByAccount extends AppCompatActivity implements View.OnClick
 
         Intent intent = getIntent();
         loginUrl = intent.getStringExtra("loginUrl");
-    }
-
-    public static void startForm(AppCompatActivity content, String loginUrl) {
-        Intent intent = new Intent();
-        intent.putExtra("loginUrl", loginUrl);
-        intent.setClass(content, FrmLoginByAccount.class);
-        content.startActivity(intent);
     }
 
     @Override

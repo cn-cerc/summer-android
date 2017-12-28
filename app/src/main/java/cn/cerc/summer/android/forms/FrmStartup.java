@@ -41,22 +41,21 @@ import cn.cerc.summer.android.forms.view.NavigationChatImageView;
 import cn.cerc.summer.android.parts.dialog.DialogUtil;
 
 public class FrmStartup extends AppCompatActivity {
-    LinearLayout llDialog;
-
+    public static String CACHE_FILE = "cacheFiles";
+    public static String IMAGE_STARTIP = "startup"; //广告图片缓存
+    public static SharedPreferences settings;
     private final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 11;
+    LinearLayout llDialog;
+    String resp = null;
     private boolean appUpdateReset = false;
     private FrmStartup instince;
     private Timer timer = new Timer();
     private int MSG_CLIENT = 1;
     private int IMAGE_CLTENT = 2;
     private MyApp myApp;
-    String resp = null;
     private JSONObject json = null;
     private ImageView start_image;
     private FrameLayout frameLayout;
-    public static String CACHE_FILE = "cacheFiles";
-    public static String IMAGE_STARTIP = "startup"; //广告图片缓存
-    public static SharedPreferences settings;
     private NavigationChatImageView navigationChatImageView;
 
     private Handler handler = new Handler() {
@@ -92,6 +91,17 @@ public class FrmStartup extends AppCompatActivity {
             }
         }
     };
+    private NavigationChatImageView.ImageViewPagerListener PagerListener = new NavigationChatImageView.ImageViewPagerListener() {
+        @Override
+        public void onPopSelected() {
+            startMainForm();
+        }
+    };
+
+    public static boolean isCachePathFileExist(String fileName) {
+        File file = new File(fileName);
+        return file.exists();
+    }
 
     private void showError(String errtitle, String errText) {
         llDialog.setVisibility(View.VISIBLE);
@@ -160,13 +170,6 @@ public class FrmStartup extends AppCompatActivity {
         });
     }
 
-    private NavigationChatImageView.ImageViewPagerListener PagerListener = new NavigationChatImageView.ImageViewPagerListener() {
-        @Override
-        public void onPopSelected() {
-            startMainForm();
-        }
-    };
-
     private void startMainForm() {
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -178,11 +181,6 @@ public class FrmStartup extends AppCompatActivity {
                 finish();
             }
         }, 1500);
-    }
-
-    public static boolean isCachePathFileExist(String fileName) {
-        File file = new File(fileName);
-        return file.exists();
     }
 
     @Override
@@ -231,7 +229,7 @@ public class FrmStartup extends AppCompatActivity {
                 startRequest();
                 return;
             }
-        }else {
+        } else {
             //申请权限
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.READ_PHONE_STATE},
