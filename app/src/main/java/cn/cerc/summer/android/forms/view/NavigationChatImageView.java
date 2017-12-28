@@ -121,87 +121,105 @@ public class NavigationChatImageView extends View implements View.OnClickListene
         Log.d("print", "loadimageViewPager: isfrer" + isfer);
         String cacheFile = settings.getString(CACHE_FILE, null);
         if (json != null) {
-            try {
-                final String imageAD = json.getString("imageStartup");
-                File filesDir = mContext.getExternalFilesDir(null);
-                String fileName = imageAD.substring(imageAD.lastIndexOf("/") + 1);
-                //存到本地的绝对路径
-                imageFilePath = FileUtils.getCacheFilePath(fileName);
-                File file = new File(fileName);
-                RequestParams entity = new RequestParams(imageAD);
-                entity.setSaveFilePath(imageFilePath);
-                x.http().get(entity, new Callback.CommonCallback<File>() {
-                    @Override
-                    public void onSuccess(File result) {
-                    }
-
-                    @Override
-                    public void onError(Throwable ex, boolean isOnCallback) {
-                    }
-
-                    @Override
-                    public void onCancelled(CancelledException cex) {
-                    }
-
-                    @Override
-                    public void onFinished() {
-                    }
-                });
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            if (isfer) {
+            if (json.has("startupImage")) {
                 try {
-                    final JSONArray imageAD = json.getJSONArray("imageAD");
-                    for (int i = 0; i < imageAD.length(); i++) {
-                        File filesDir = mContext.getExternalFilesDir(null);
-                        String fileName = imageAD.getString(i).substring(imageAD.getString(i).lastIndexOf("/") + 1);
-                        //存到本地的绝对路径
-                        if (FileUtils.isCacheFileExist(imageFileName + fileName)) {
-                            imageCarsousel();
-                            break;
+                    int imageNewAd = 0;
+                    int imageAd = settings.getInt("IMAGE_AD", -1);
+                    String startupImage = json.getString("startupImage");
+                    if (!"".equals(startupImage)) {
+                        String[] strings = startupImage.split(";");
+                        if (strings.length > 1) {
+                            startupImage = strings[1];
+                            imageNewAd = Integer.parseInt(strings[0]);
+                            settings.edit().putInt("IMAGE_AD", imageNewAd).commit();
+                        } else {
+                            settings.edit().putInt("IMAGE_AD", 0).commit();
                         }
-                        final String filePath = FileUtils.getCacheFilePath(imageFileName + (i + 1) + ".jpg");
-                        File file = new File(imageFileName + (i + 1) + ".jpg");
-                        //如果不存在
-                        if (!file.exists()) {
-                            //创建
-                            file.mkdirs();
-                        }
-                        RequestParams entity = new RequestParams(imageAD.getString(i));
-                        entity.setSaveFilePath(filePath);
-                        final int finalNum = i;
-                        x.http().get(entity, new Callback.CommonCallback<File>() {
-                            @Override
-                            public void onSuccess(File result) {
-                                if (finalNum == imageAD.length() - 1) {
-                                    imageCarsousel();
+                        if (imageAd != imageNewAd) {
+                            File filesDir = mContext.getExternalFilesDir(null);
+                            String fileName = startupImage.substring(startupImage.lastIndexOf("/") + 1);
+                            //存到本地的绝对路径
+                            imageFilePath = FileUtils.getCacheFilePath(fileName);
+                            File file = new File(fileName);
+                            RequestParams entity = new RequestParams(startupImage);
+                            entity.setSaveFilePath(imageFilePath);
+                            x.http().get(entity, new Callback.CommonCallback<File>() {
+                                @Override
+                                public void onSuccess(File result) {
                                 }
-                            }
 
-                            @Override
-                            public void onError(Throwable ex, boolean isOnCallback) {
-                            }
+                                @Override
+                                public void onError(Throwable ex, boolean isOnCallback) {
+                                }
 
-                            @Override
-                            public void onCancelled(CancelledException cex) {
-                            }
+                                @Override
+                                public void onCancelled(CancelledException cex) {
+                                }
 
-                            @Override
-                            public void onFinished() {
-                            }
-                        });
+                                @Override
+                                public void onFinished() {
+                                }
+                            });
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                //创建配置文件
+            }
+            if (isfer) {
+                if (json.has("adImages")) {
+                    try {
+                        final JSONArray imageAD = json.getJSONArray("adImages");
+                        if (imageAD.length() > 0) {
+                            for (int i = 0; i < imageAD.length(); i++) {
+                                File filesDir = mContext.getExternalFilesDir(null);
+                                String fileName = imageAD.getString(i).substring(imageAD.getString(i).lastIndexOf("/") + 1);
+                                //存到本地的绝对路径
+                                if (FileUtils.isCacheFileExist(imageFileName + fileName)) {
+                                    imageCarsousel();
+                                    break;
+                                }
+                                final String filePath = FileUtils.getCacheFilePath(imageFileName + (i + 1) + ".jpg");
+                                File file = new File(imageFileName + (i + 1) + ".jpg");
+                                //如果不存在
+                                if (!file.exists()) {
+                                    //创建
+                                    file.mkdirs();
+                                }
+                                RequestParams entity = new RequestParams(imageAD.getString(i));
+                                entity.setSaveFilePath(filePath);
+                                final int finalNum = i;
+                                x.http().get(entity, new Callback.CommonCallback<File>() {
+                                    @Override
+                                    public void onSuccess(File result) {
+                                        if (finalNum == imageAD.length() - 1) {
+                                            imageCarsousel();
+                                        }
+                                    }
 
+                                    @Override
+                                    public void onError(Throwable ex, boolean isOnCallback) {
+                                    }
+
+                                    @Override
+                                    public void onCancelled(CancelledException cex) {
+                                    }
+
+                                    @Override
+                                    public void onFinished() {
+                                    }
+                                });
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    //创建配置文件
+                }
                 settings.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).commit();
                 settings.edit().putString(CACHE_FILE, resp).commit();
                 if (imageFilePath != null)
                     settings.edit().putString(IMAGE_STARTIP, imageFilePath).commit();
-
             } else {
                 //存在
                 if (imageFilePath != null)

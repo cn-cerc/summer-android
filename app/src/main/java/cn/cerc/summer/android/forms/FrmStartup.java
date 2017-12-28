@@ -168,11 +168,16 @@ public class FrmStartup extends AppCompatActivity {
     };
 
     private void startMainForm() {
-        //启动主窗口
-        Intent intent = new Intent();
-        intent.setClass(instince, FrmMain.class);
-        instince.startActivity(intent);
-        finish();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //启动主窗口
+                Intent intent = new Intent();
+                intent.setClass(instince, FrmMain.class);
+                instince.startActivity(intent);
+                finish();
+            }
+        }, 1500);
     }
 
     public static boolean isCachePathFileExist(String fileName) {
