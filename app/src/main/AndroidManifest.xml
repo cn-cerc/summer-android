@@ -38,10 +38,10 @@
     <application
         android:name="cn.cerc.summer.android.core.MyApp"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/deting"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:hardwareAccelerated="true"
         android:theme="@style/AppTheme">
         <activity
             android:name="cn.cerc.summer.android.forms.FrmMain"
@@ -182,11 +182,13 @@
         </provider>
 
         <activity android:name="cn.cerc.summer.android.parts.image.FrmZoomImage" />
-        <activity android:name="cn.cerc.summer.android.parts.movie.FrmPlayMovie"
-            android:configChanges="orientation|screenSize|screenLayout"/>
+        <activity
+            android:name="cn.cerc.summer.android.parts.movie.FrmPlayMovie"
+            android:configChanges="orientation|screenSize|screenLayout" />
         <activity android:name="cn.cerc.summer.android.parts.music.FrmCaptureMusic" />
-        <activity android:name="cn.cerc.summer.android.parts.image.FrmCaptureImage"
-            android:theme="@style/MyCaptureDialogStyle"/>
+        <activity
+            android:name="cn.cerc.summer.android.parts.image.FrmCaptureImage"
+            android:theme="@style/MyCaptureDialogStyle" />
         <activity android:name="cn.cerc.summer.android.parts.barcode.FrmScanProduct" />
         <activity android:name="cn.cerc.summer.android.parts.barcode.DlgScanProduct" />
         <activity android:name="cn.cerc.summer.android.parts.login.FrmLoginByAccount" />
@@ -194,7 +196,9 @@
             android:name="cn.cerc.summer.android.parts.dialog.FrmShowWarning"
             android:theme="@style/MyDialogStyle" />
         <activity android:name="cn.cerc.summer.android.parts.barcode.FrmCreateQrcode" />
-        <activity android:name="cn.cerc.summer.android.parts.barcode.FrmScanBarcode"   android:screenOrientation="portrait"/>
+        <activity
+            android:name="cn.cerc.summer.android.parts.barcode.FrmScanBarcode"
+            android:screenOrientation="portrait" />
         <activity android:name="cn.cerc.summer.android.forms.FrmStartup">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

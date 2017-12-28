@@ -39,6 +39,9 @@ import cn.cerc.summer.android.core.FileUtils;
  */
 
 public class NavigationChatImageView extends View implements View.OnClickListener {
+    public static String CACHE_FILE = "cacheFiles";
+    public static String IMAGE_STARTIP = "startup"; //广告图片缓存
+    String resp = null;
     private Context mContext;
     private View view;
     //图片放置
@@ -55,12 +58,9 @@ public class NavigationChatImageView extends View implements View.OnClickListene
     private List<String> imagePathList = new ArrayList<String>();
     private SharedPreferences settings;  //共享参数
     private JSONObject json = null;
-    String resp = null;
     private String imageFileName = "cacheimage/";
     private String imageFilePath = null;
     private ImageViewPagerListener imageViewPagerListener;
-    public static String CACHE_FILE = "cacheFiles";
-    public static String IMAGE_STARTIP = "startup"; //广告图片缓存
 
     public NavigationChatImageView(final Activity context, String resp, SharedPreferences setting) {
         super(context);
@@ -109,11 +109,6 @@ public class NavigationChatImageView extends View implements View.OnClickListene
 
     public void setPopListener(ImageViewPagerListener listener) {
         imageViewPagerListener = listener;
-    }
-
-    //回调接口定义
-    public interface ImageViewPagerListener {
-        public void onPopSelected();
     }
 
     private void loadimageViewPager() {
@@ -306,21 +301,6 @@ public class NavigationChatImageView extends View implements View.OnClickListene
     }
 
     /**
-     * 自定义名称排序
-     */
-    class ImageComparator implements Comparator<String> {
-
-        @Override
-        public int compare(String lhs, String rhs) {
-            if ((getFileName(lhs)).compareTo(getFileName(rhs)) > 0) {
-                return 1;
-            } else {
-                return -1;
-            }
-        }
-    }
-
-    /**
      * 根据路径获取文件名
      *
      * @param pathandname
@@ -354,6 +334,26 @@ public class NavigationChatImageView extends View implements View.OnClickListene
             isImageFile = false;
         }
         return isImageFile;
+    }
+
+    //回调接口定义
+    public interface ImageViewPagerListener {
+        public void onPopSelected();
+    }
+
+    /**
+     * 自定义名称排序
+     */
+    class ImageComparator implements Comparator<String> {
+
+        @Override
+        public int compare(String lhs, String rhs) {
+            if ((getFileName(lhs)).compareTo(getFileName(rhs)) > 0) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
     }
 
     class MyAdapter extends PagerAdapter {

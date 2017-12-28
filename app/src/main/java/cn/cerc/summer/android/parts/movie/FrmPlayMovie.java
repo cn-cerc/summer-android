@@ -15,14 +15,14 @@ import com.mimrc.vine.R;
 import cn.cerc.summer.android.core.Constans;
 
 public class FrmPlayMovie extends AppCompatActivity {
-    private CommonVideoView commonVideoView;
-    private String videoUrl = null;
-    private SharedPreferences sharedPreferences;
-    private int num = 0;
     /**
      * 视频播放
      */
     private static String PLAY_MOVIE = "FrmPlayMovie_playmovie";
+    private CommonVideoView commonVideoView;
+    private String videoUrl = null;
+    private SharedPreferences sharedPreferences;
+    private int num = 0;
 
     public static void startForm(Context context, String movieUrl) {
         Intent intent = new Intent();
@@ -39,7 +39,7 @@ public class FrmPlayMovie extends AppCompatActivity {
         commonVideoView = (CommonVideoView) findViewById(R.id.videoview_movie);
         Intent intent = getIntent();
         videoUrl = intent.getStringExtra("url");
-        Log.d("print", "onCreate: url___)))___"+videoUrl);
+        Log.d("print", "onCreate: url___)))___" + videoUrl);
         commonVideoView.start(videoUrl);
     }
 

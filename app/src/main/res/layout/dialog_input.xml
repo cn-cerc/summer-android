@@ -4,82 +4,82 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical">
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/dialog_txt_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="10dp"
-            android:lineSpacingMultiplier="1.1"
-            android:text="确认当前服务器地址"
-            android:textColor="#4F4F4F"
-            android:textSize="20sp" />
-
-        <EditText
-            android:id="@+id/dialog_edit_input"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            />
-        </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="#dadada" />
-
-    <LinearLayout
-        android:id="@+id/dialog_view_bottom"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:showDividers="middle"
-        >
-
-        <Button
-            android:id="@+id/dialog_btn_cancel"
-            android:layout_width="0dip"
-            android:layout_height="40dip"
-            android:layout_marginLeft="3dip"
-            android:layout_weight="1"
-            android:background="@null"
-            android:singleLine="true"
-            android:text="取消"
-            android:textColor="@color/result_view"
-            android:textSize="18sp"/>
-
-        <View
-            android:layout_width="0.5dp"
             android:layout_height="match_parent"
-            android:background="#dadada" />
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/dialog_btn_ok"
-            android:layout_width="0dip"
-            android:layout_height="40dip"
-            android:layout_weight="1"
-            android:background="@null"
-            android:singleLine="true"
-            android:text="确定"
-            android:textSize="18sp"
-            android:textColor="#4F4F4F" />
-    </LinearLayout>
-</LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/dialog_txt_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="10dp"
+                    android:lineSpacingMultiplier="1.1"
+                    android:text="确认当前服务器地址"
+                    android:textColor="#4F4F4F"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/dialog_edit_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#dadada" />
+
+            <LinearLayout
+                android:id="@+id/dialog_view_bottom"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:showDividers="middle">
+
+                <Button
+                    android:id="@+id/dialog_btn_cancel"
+                    android:layout_width="0dip"
+                    android:layout_height="40dip"
+                    android:layout_marginLeft="3dip"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:singleLine="true"
+                    android:text="取消"
+                    android:textColor="@color/result_view"
+                    android:textSize="18sp" />
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:background="#dadada" />
+
+                <Button
+                    android:id="@+id/dialog_btn_ok"
+                    android:layout_width="0dip"
+                    android:layout_height="40dip"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:singleLine="true"
+                    android:text="确定"
+                    android:textColor="#4F4F4F"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </LinearLayout>
     </ScrollView>
 </LinearLayout>

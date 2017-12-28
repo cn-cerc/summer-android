@@ -15,19 +15,9 @@ public class VisualKeyboardTool {
     // For more information, see https://code.google.com/p/android/issues/detail?id=5497
     // To use this class, simply invoke assistActivity() on an Activity that already has its content view set.
 
-    /**
-     * 关联要监听的视图
-     *
-     * @param viewObserving
-     */
-    public static void assistActivity(View viewObserving) {
-        new VisualKeyboardTool(viewObserving);
-    }
-
     private View mViewObserved;//被监听的视图
     private int usableHeightPrevious;//视图变化前的可用高度
     private ViewGroup.LayoutParams frameLayoutParams;
-
     private VisualKeyboardTool(View viewObserving) {
         mViewObserved = viewObserving;
         //给View添加全局的布局监听器
@@ -37,6 +27,24 @@ public class VisualKeyboardTool {
             }
         });
         frameLayoutParams = mViewObserved.getLayoutParams();
+    }
+
+    /**
+     * 关联要监听的视图
+     *
+     * @param viewObserving
+     */
+    public static void assistActivity(View viewObserving) {
+        new VisualKeyboardTool(viewObserving);
+    }
+
+    public static int getStatusBarHeight(Context context) {
+        int result = 0;
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = context.getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 
     private void resetLayoutByUsableHeight(int usableHeightNow) {
@@ -58,17 +66,6 @@ public class VisualKeyboardTool {
     private int computeUsableHeight() {
         Rect r = new Rect();
         mViewObserved.getWindowVisibleDisplayFrame(r);
-        return (r.bottom - r.top+ getStatusBarHeight(MyApp.getInstance().getApplicationContext()));
-    }
-
-    public static int getStatusBarHeight(Context context)
-    {
-        int result = 0;
-        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0)
-        {
-            result = context.getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
+        return (r.bottom - r.top + getStatusBarHeight(MyApp.getInstance().getApplicationContext()));
     }
 }

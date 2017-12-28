@@ -37,92 +37,22 @@ import cn.jpush.android.api.JPushInterface;
  */
 
 public class MyApp extends android.app.Application {
+    public static final String DEVICE_TYPE = "android";
     public static String HOME_URL = "https://m.knowall.cn";
     //    public static String HOME_URL = "http://192.168.1.174";
     //    public static String HOME_URL = "http://192.168.31.247";
     public static String SERVICES_PATH = "services";
     public static String FORMS_PATH = "forms";
-    private final String APPCODE = "vine-android-standard";
-    public static final String DEVICE_TYPE = "android";
-
     private static MyApp instance;
-    private DisplayImageOptions options;
+    private final String APPCODE = "vine-android-standard";
     public boolean debug = false;
+    private DisplayImageOptions options;
     private String appVersion;
     private String clientId;
+    private List<String> cacheFiles = new ArrayList<>();
 
     public static MyApp getInstance() {
         return instance;
-    }
-
-    public boolean isDebug() {
-        return debug;
-    }
-
-    public DisplayImageOptions getImageOptions() {
-        return options;
-    }
-
-    private List<String> cacheFiles = new ArrayList<>();
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        instance = this;
-
-        x.Ext.init(this);//xutils 初始化
-        x.Ext.setDebug(true);//设置为debug
-
-        initImageLoader();
-
-        options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.mipmap.start) // 设置图片下载期间显示的图片
-                .showImageForEmptyUri(R.mipmap.error) // 设置图片Uri为空或是错误的时候显示的图片
-                .showImageOnFail(R.mipmap.error) // 设置图片加载或解码过程中发生错误显示的图片
-                .resetViewBeforeLoading(false)  // default 设置图片在加载前是否重置、复位
-                .cacheInMemory(true) // default  设置下载的图片是否缓存在内存中
-                .cacheOnDisk(true) // default  设置下载的图片是否缓存在SD卡中
-                .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2) // default 设置图片以如何的编码方式显示
-                .bitmapConfig(Bitmap.Config.RGB_565) // default 设置图片的解码类型
-                .displayer(new FadeInBitmapDisplayer(500))
-                .build();
-
-        JPushInterface.init(this);
-        JPushInterface.setDebugMode(true);
-    }
-
-    /**
-     * ImageLoader 初始化
-     */
-    private void initImageLoader() {
-        ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(this);
-        config.threadPriority(Thread.NORM_PRIORITY - 2);
-        config.denyCacheImageMultipleSizesInMemory();
-        config.discCacheFileCount(100);//缓存的文件数量
-        config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
-        config.diskCacheSize(200 * 1024 * 1024); // 100 MiB
-        config.tasksProcessingOrder(QueueProcessingType.LIFO);
-        // webConfig.writeDebugLogs(); // Remove for release app
-        ImageLoader.getInstance().init(config.build());
-
-    }
-
-    /**
-     * 获取的版本号
-     *
-     * @param context 上下文
-     * @return 版本号
-     */
-    public String getCurrentVersion(Context context) {
-        PackageManager pm = context.getPackageManager();
-        PackageInfo pi = null;
-        try {
-            pi = pm.getPackageInfo(context.getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return pi.versionName;
     }
 
     /**
@@ -146,19 +76,6 @@ public class MyApp extends android.app.Application {
      */
     public static String buildDeviceUrl(String baseUrl) {
         return String.format("%s?device=%s&CLIENTID=%s", baseUrl, DEVICE_TYPE, MyApp.getInstance().getClientId());
-    }
-
-    /**
-     * 储存缓存配置列表
-     */
-    public void saveCacheList() {
-        Map<String, String> map = new HashMap<String, String>();
-        for (String str : cacheFiles) {
-            String[] args = str.split(",");
-            map.put(args[0], args.length == 2 ? args[1] : "0");
-        }
-        JSONObject jsonObject = new JSONObject(map);
-        FileUtils.createFile(jsonObject.toString().getBytes(Charset.forName("utf-8")), Constans.CONFIGNAME);
     }
 
     /**
@@ -267,6 +184,91 @@ public class MyApp extends android.app.Application {
         return String.format("%s/%s/%s", HOME_URL, SERVICES_PATH, serviceCode);
     }
 
+    public static void setHomeUrl(String homeUrl) {
+        HOME_URL = homeUrl;
+    }
+
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public DisplayImageOptions getImageOptions() {
+        return options;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        instance = this;
+
+        x.Ext.init(this);//xutils 初始化
+        x.Ext.setDebug(true);//设置为debug
+
+        initImageLoader();
+
+        options = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.mipmap.start) // 设置图片下载期间显示的图片
+                .showImageForEmptyUri(R.mipmap.error) // 设置图片Uri为空或是错误的时候显示的图片
+                .showImageOnFail(R.mipmap.error) // 设置图片加载或解码过程中发生错误显示的图片
+                .resetViewBeforeLoading(false)  // default 设置图片在加载前是否重置、复位
+                .cacheInMemory(true) // default  设置下载的图片是否缓存在内存中
+                .cacheOnDisk(true) // default  设置下载的图片是否缓存在SD卡中
+                .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2) // default 设置图片以如何的编码方式显示
+                .bitmapConfig(Bitmap.Config.RGB_565) // default 设置图片的解码类型
+                .displayer(new FadeInBitmapDisplayer(500))
+                .build();
+
+        JPushInterface.init(this);
+        JPushInterface.setDebugMode(true);
+    }
+
+    /**
+     * ImageLoader 初始化
+     */
+    private void initImageLoader() {
+        ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(this);
+        config.threadPriority(Thread.NORM_PRIORITY - 2);
+        config.denyCacheImageMultipleSizesInMemory();
+        config.discCacheFileCount(100);//缓存的文件数量
+        config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
+        config.diskCacheSize(200 * 1024 * 1024); // 100 MiB
+        config.tasksProcessingOrder(QueueProcessingType.LIFO);
+        // webConfig.writeDebugLogs(); // Remove for release app
+        ImageLoader.getInstance().init(config.build());
+
+    }
+
+    /**
+     * 获取的版本号
+     *
+     * @param context 上下文
+     * @return 版本号
+     */
+    public String getCurrentVersion(Context context) {
+        PackageManager pm = context.getPackageManager();
+        PackageInfo pi = null;
+        try {
+            pi = pm.getPackageInfo(context.getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return pi.versionName;
+    }
+
+    /**
+     * 储存缓存配置列表
+     */
+    public void saveCacheList() {
+        Map<String, String> map = new HashMap<String, String>();
+        for (String str : cacheFiles) {
+            String[] args = str.split(",");
+            map.put(args[0], args.length == 2 ? args[1] : "0");
+        }
+        JSONObject jsonObject = new JSONObject(map);
+        FileUtils.createFile(jsonObject.toString().getBytes(Charset.forName("utf-8")), Constans.CONFIGNAME);
+    }
+
     public String getClientId() {
         return this.clientId;
     }
@@ -300,9 +302,5 @@ public class MyApp extends android.app.Application {
     //返回应用代码
     public String getAppCode() {
         return this.APPCODE;
-    }
-
-    public static void setHomeUrl(String homeUrl) {
-        HOME_URL = homeUrl;
     }
 }

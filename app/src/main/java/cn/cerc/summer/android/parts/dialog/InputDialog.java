@@ -20,14 +20,16 @@ import cn.cerc.summer.android.core.MyApp;
 public class InputDialog extends Dialog implements View.OnClickListener {
 
     private EditText dialog_edit_input;
-    private Button btn_cancel,btn_yes;
+    private Button btn_cancel, btn_yes;
     private OnDialogClick onDialogClick;
     private Context mContext;
     private TextView dialog_txt_title;
+
     public InputDialog(Context context) {
         super(context, R.style.DialogTheme);
         mContext = context;
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,20 +47,20 @@ public class InputDialog extends Dialog implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case  R.id.dialog_btn_ok:
+        switch (v.getId()) {
+            case R.id.dialog_btn_ok:
                 String newsUrl = dialog_edit_input.getText().toString();
-                if(dialog_edit_input.getText().toString().trim().equals("")){
+                if (dialog_edit_input.getText().toString().trim().equals("")) {
                     dialog_edit_input.setError("输入内容不能为空");
-                }else {
+                } else {
                     if (onDialogClick != null) {
                         onDialogClick.onConfrim(newsUrl);
                     }
                 }
 //                dismiss();
                 break;
-            case  R.id.dialog_btn_cancel:
-                if(onDialogClick!=null){
+            case R.id.dialog_btn_cancel:
+                if (onDialogClick != null) {
                     onDialogClick.onCancel();
 //                    Toast.makeText(mContext, "点击了取消", Toast.LENGTH_SHORT).show();
                 }
@@ -67,12 +69,13 @@ public class InputDialog extends Dialog implements View.OnClickListener {
         }
     }
 
-    public void setOnDialogClickListern(OnDialogClick onDialogClick){
+    public void setOnDialogClickListern(OnDialogClick onDialogClick) {
         this.onDialogClick = onDialogClick;
     }
 
-    public interface OnDialogClick{
+    public interface OnDialogClick {
         void onConfrim(String newsUrl);
+
         void onCancel();
     }
 }

@@ -17,8 +17,8 @@ import cn.cerc.jdb.core.Record;
  */
 
 public class ListViewAdapter extends ArrayAdapter<Record> {
-    private int resource;
     ListViewInterface displayItem;
+    private int resource;
 
     public ListViewAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull DataSet dataSet, ListViewInterface displayItem) {
         super(context, resource, dataSet.getRecords());

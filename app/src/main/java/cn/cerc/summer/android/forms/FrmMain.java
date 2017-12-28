@@ -76,14 +76,35 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     public final static int FILECHOOSER_RESULTCODE = 41;
     public final static int FILECHOOSER_RESULTCODE_FOR_ANDROID_5 = 42;
     private static final String LOGTAG = "FrmMain";
-
+    private static FrmMain instance;
+    private final int REQUEST_SETTING = 101;
+    public ArrayList<MainTitleMenu> mRightMenu;  //右侧菜单集合
+    public ArrayList<MainTitleMenu> mTitleMenu;  //标题菜单集合
+    public List<MainTitleMenu> mRightMenuTemp = new ArrayList<>();
+    public int winClose = -1;  //控制关闭窗口
     ImageView imgHome, imgBack, imgMore;
     TextView lblTitle;
     LinearLayout boxTitle;
+    int mIndex = 0;   //当前页面窗口位置下标
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            {
+                switch (msg.what) {
+                    case 1:
+                        boolean visibility = (boolean) msg.obj;
+                        boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
+                        break;
+                    case 2:
+                        String title = (String) msg.obj;
+                        lblTitle.setText(title);
+                        break;
 
-    private final int REQUEST_SETTING = 101;
-    private static FrmMain instance;
-
+                }
+            }
+        }
+    };
     private SharedPreferences settings;
     private BrowserView browser; //浏览器
     private String homeUrl;//Web系统首页
@@ -99,16 +120,13 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private int[] menu_img = new int[]{R.mipmap.message, R.mipmap.msg_manager, R.mipmap.home, R.mipmap.setting, R.mipmap.wipe, R.mipmap.logout, R.mipmap.reload};
     private List<MainPopupMenu> menuList;
     private ListPopupWindow popupWindow;//列表弹框
-
     private FrameLayout mainframe;
     private View view;      //弹出框子布局
     private ListView list_pop;
     private PopupWindow pop;
     private CommBottomPopWindow mTitlePopWindow;  //标题栏菜单项
     private CommBottomPopWindow mpopWindow; //
-    public ArrayList<MainTitleMenu> mRightMenu;  //右侧菜单集合
     private ArrayList<MainTitleMenu> mTitleWinMenu;  //标题菜单窗口集合
-    public ArrayList<MainTitleMenu> mTitleMenu;  //标题菜单集合
     private ArrayList<ArrayList<MainTitleMenu>> allTitleList;  //标题菜单总集合
     private ArrayList<ArrayList<MainTitleMenu>> allRightList;  //右侧总集合
     private List<MainTitleMenu> titlePage;  //多页面集合
@@ -117,14 +135,8 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private int classWebView = 0;
     private boolean webViewState = false;  //判断是否新建webView
     private RefreshMenu mRefreshMenu;
-    public List<MainTitleMenu> mRightMenuTemp = new ArrayList<>();
     private View hightview;
-    public BrowserView getBrowser() {
-        return browser;
-    }
-
     private MyApp myApp;
-
     /**
      * 推送消息的消息id， 点击通知栏打开
      */
@@ -150,14 +162,164 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             }
         }
     };
-
     /**
      * 是否直接退出
      */
     private boolean is_exit = false;
+    //标题菜单回调的点击事件
+    private CommBottomPopWindow.PopWindowListener mPopListener = new CommBottomPopWindow.PopWindowListener() {
+        @Override
+        public void onPopSelected(int which) {
+            switch (which) {
+                case 1:
+
+                case 2:
+                    switch (mTitleMenu.get(which).getName()) {
+                        case "关闭页面":
+                            //关闭当前窗口
+                            int windowNum = 0;
+                            for (int i = 0; i < allTitleList.size(); i++) {
+                                if (allTitleList.get(i).size() > 0) {
+                                    windowNum++;
+                                }
+                            }
+                            if (windowNum > 1) {
+                                newsWebView[classWebView].setVisibility(View.GONE);
+                                newsWebView[classWebView] = null;
+                                for (int i = 0; i < allTitleList.size(); i++) {
+                                    if (allTitleList.get(i).size() > 0) {
+                                        if (allTitleList.get(i).get(0).getOnlySign() == classWebView) {
+                                            allTitleList.get(classWebView).clear();
+                                            allRightList.get(classWebView).clear();
+                                        }
+                                    }
+                                }
+                                for (int i = 0; i < titlePage.size(); i++) {
+                                    if (titlePage.get(i).getOnlySign() == classWebView) {
+                                        titlePage.remove(i);
+                                    }
+                                }
+                                for (int i = 0; i < newsWebView.length; i++) {
+                                    if (newsWebView[i] != null) {
+                                        newsWebView[i].setVisibility(View.VISIBLE);
+                                        browser = newsWebView[i];
+                                        classWebView = i;
+                                        for (int l = 0; l < allTitleList.size(); l++) {
+                                            if (allTitleList.get(l).size() > 0) {
+                                                if (allTitleList.get(l).get(0).getOnlySign() == classWebView) {
+                                                    upDataAggre(allTitleList.get(l), titlePage);
+                                                    mTitleMenu.clear();
+                                                    mTitleMenu.addAll(allTitleList.get(l));
+                                                    mRightMenu.clear();
+                                                    mRightMenu.addAll(allRightList.get(l));
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        for (int j = 0; j < titlePage.size(); j++) {
+                                            if (titlePage.get(j).getOnlySign() == i) {
+                                                lblTitle.setText(titlePage.get(j).getName());
+                                                break;
+                                            }
+                                        }
+                                        break;
+                                    }
+                                }
+                            } else {
+                                Toast.makeText(myApp, "已经是顶层菜单", Toast.LENGTH_SHORT).show();
+                            }
+                            mTitlePopWindow.dismiss();
+                            initTitlePopWindow();
+                            break;
+                        case "新建窗口":
+                            AddWebView();
+                            mTitlePopWindow.dismiss();
+                            break;
+                        default:
+                            bettWin(which);
+                            break;
+                    }
+                    break;
+                default:
+                    bettWin(which);
+                    break;
+            }
+        }
+    };
+    /**
+     * 右侧菜单回调的点击事件
+     */
+    private CommBottomPopWindow.PopWindowListener mPopListener1 = new CommBottomPopWindow.PopWindowListener() {
+        @Override
+        public void onPopSelected(int which) {
+            switch (which) {
+                case 0:
+                    //设置界面
+                    FrmSettings.startFormForResult(FrmMain.getInstance(), REQUEST_SETTING, browser.getUrl());
+                    mpopWindow.dismiss();
+                    break;
+                case 1:
+                    browser.reload();
+                    clearAllCache(getApplicationContext());
+                    Toast.makeText(FrmMain.this, "刷新成功", Toast.LENGTH_SHORT).show();
+                    mpopWindow.dismiss();
+                    break;
+                case 2:
+                    Toast.makeText(FrmMain.this, "退出系统", Toast.LENGTH_SHORT).show();
+                    //退出系统
+                    finish();
+                    break;
+                default:
+                    // runScript(String.format("%s('%s', '%s')", mRightMenu.get(which).getUrl(), this.scriptTag, resultString));
+                    //   browser.loadUrl(mRightMenu.get(which).getName());
+                    runScript(String.format("%s('%s', '%s')", mRightMenu.get(which).getUrl(), mRightMenu.get(which).getScriptTag(), "回调成功"));
+                    mpopWindow.dismiss();
+                    break;
+            }
+        }
+    };
+    private List<MainTitleMenu> list;
 
     public static FrmMain getInstance() {
         return instance;
+    }
+
+    /**
+     * @param context 删除缓存
+     */
+    public static void clearAllCache(Context context) {
+        deleteDir(context.getCacheDir());
+        if (Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)) {
+            deleteDir(context.getExternalCacheDir());
+        }
+    }
+
+    private static boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            int size = 0;
+            if (children != null) {
+                size = children.length;
+                for (int i = 0; i < size; i++) {
+                    boolean success = deleteDir(new File(dir, children[i]));
+                    if (!success) {
+                        return false;
+                    }
+                }
+            }
+
+        }
+        if (dir == null) {
+            return true;
+        } else {
+
+            return dir.delete();
+        }
+    }
+
+    public BrowserView getBrowser() {
+        return browser;
     }
 
     public void setHomeUrl(String homeUrl) {
@@ -193,6 +355,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         browser.loadUrl(myApp.getStartPage());
 
     }
+
     private void initWindows() {
         Window window = getWindow();
         int color = getResources().getColor(android.R.color.transparent);
@@ -314,10 +477,10 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         lblTitle = (TextView) this.findViewById(R.id.lblTitle);
         boxTitle = (LinearLayout) findViewById(R.id.boxTitle);
         hightview = (View) findViewById(R.id.hightview);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             hightview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, VisualKeyboardTool.getStatusBarHeight(FrmMain.this)));
             hightview.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             hightview.setVisibility(View.GONE);
         }
         imgBack.setOnClickListener(this);
@@ -445,89 +608,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         initPopWindow();
     }
 
-    public int winClose = -1;  //控制关闭窗口
-    int mIndex = 0;   //当前页面窗口位置下标
-    //标题菜单回调的点击事件
-    private CommBottomPopWindow.PopWindowListener mPopListener = new CommBottomPopWindow.PopWindowListener() {
-        @Override
-        public void onPopSelected(int which) {
-            switch (which) {
-                case 1:
-
-                case 2:
-                    switch (mTitleMenu.get(which).getName()) {
-                        case "关闭页面":
-                            //关闭当前窗口
-                            int windowNum = 0;
-                            for (int i = 0; i < allTitleList.size(); i++) {
-                                if (allTitleList.get(i).size() > 0) {
-                                    windowNum++;
-                                }
-                            }
-                            if (windowNum > 1) {
-                                newsWebView[classWebView].setVisibility(View.GONE);
-                                newsWebView[classWebView] = null;
-                                for (int i = 0; i < allTitleList.size(); i++) {
-                                    if (allTitleList.get(i).size() > 0) {
-                                        if (allTitleList.get(i).get(0).getOnlySign() == classWebView) {
-                                            allTitleList.get(classWebView).clear();
-                                            allRightList.get(classWebView).clear();
-                                        }
-                                    }
-                                }
-                                for (int i = 0; i < titlePage.size(); i++) {
-                                    if (titlePage.get(i).getOnlySign() == classWebView) {
-                                        titlePage.remove(i);
-                                    }
-                                }
-                                for (int i = 0; i < newsWebView.length; i++) {
-                                    if (newsWebView[i] != null) {
-                                        newsWebView[i].setVisibility(View.VISIBLE);
-                                        browser = newsWebView[i];
-                                        classWebView = i;
-                                        for (int l = 0; l < allTitleList.size(); l++) {
-                                            if (allTitleList.get(l).size() > 0) {
-                                                if (allTitleList.get(l).get(0).getOnlySign() == classWebView) {
-                                                    upDataAggre(allTitleList.get(l), titlePage);
-                                                    mTitleMenu.clear();
-                                                    mTitleMenu.addAll(allTitleList.get(l));
-                                                    mRightMenu.clear();
-                                                    mRightMenu.addAll(allRightList.get(l));
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        for (int j = 0; j < titlePage.size(); j++) {
-                                            if (titlePage.get(j).getOnlySign() == i) {
-                                                lblTitle.setText(titlePage.get(j).getName());
-                                                break;
-                                            }
-                                        }
-                                        break;
-                                    }
-                                }
-                            } else {
-                                Toast.makeText(myApp, "已经是顶层菜单", Toast.LENGTH_SHORT).show();
-                            }
-                            mTitlePopWindow.dismiss();
-                            initTitlePopWindow();
-                            break;
-                        case "新建窗口":
-                            AddWebView();
-                            mTitlePopWindow.dismiss();
-                            break;
-                        default:
-                            bettWin(which);
-                            break;
-                    }
-                    break;
-                default:
-                    bettWin(which);
-                    break;
-            }
-        }
-    };
-
     /**
      * 切换窗口
      *
@@ -571,39 +651,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 break;
         }
     }
-
-    /**
-     * 右侧菜单回调的点击事件
-     */
-    private CommBottomPopWindow.PopWindowListener mPopListener1 = new CommBottomPopWindow.PopWindowListener() {
-        @Override
-        public void onPopSelected(int which) {
-            switch (which) {
-                case 0:
-                    //设置界面
-                    FrmSettings.startFormForResult(FrmMain.getInstance(), REQUEST_SETTING, browser.getUrl());
-                    mpopWindow.dismiss();
-                    break;
-                case 1:
-                    browser.reload();
-                    clearAllCache(getApplicationContext());
-                    Toast.makeText(FrmMain.this, "刷新成功", Toast.LENGTH_SHORT).show();
-                    mpopWindow.dismiss();
-                    break;
-                case 2:
-                    Toast.makeText(FrmMain.this, "退出系统", Toast.LENGTH_SHORT).show();
-                    //退出系统
-                    finish();
-                    break;
-                default:
-                    // runScript(String.format("%s('%s', '%s')", mRightMenu.get(which).getUrl(), this.scriptTag, resultString));
-                    //   browser.loadUrl(mRightMenu.get(which).getName());
-                    runScript(String.format("%s('%s', '%s')", mRightMenu.get(which).getUrl(), mRightMenu.get(which).getScriptTag(), "回调成功"));
-                    mpopWindow.dismiss();
-                    break;
-            }
-        }
-    };
 
     /**
      * 设置标题栏点击菜单
@@ -833,40 +880,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     }
 
     /**
-     * @param context 删除缓存
-     */
-    public static void clearAllCache(Context context) {
-        deleteDir(context.getCacheDir());
-        if (Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {
-            deleteDir(context.getExternalCacheDir());
-        }
-    }
-
-    private static boolean deleteDir(File dir) {
-        if (dir != null && dir.isDirectory()) {
-            String[] children = dir.list();
-            int size = 0;
-            if (children != null) {
-                size = children.length;
-                for (int i = 0; i < size; i++) {
-                    boolean success = deleteDir(new File(dir, children[i]));
-                    if (!success) {
-                        return false;
-                    }
-                }
-            }
-
-        }
-        if (dir == null) {
-            return true;
-        } else {
-
-            return dir.delete();
-        }
-    }
-
-    /**
      * 清除缓存
      */
     private int clearCacheFolder(File dir, long numDays) {
@@ -933,9 +946,9 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     }
 
     public void setTitleVisibility(boolean visibility) {
-        Message message =new Message();
-        message.what =1;
-        message.obj =visibility;
+        Message message = new Message();
+        message.what = 1;
+        message.obj = visibility;
         handler.sendMessage(message);
     }
 
@@ -951,8 +964,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             }
         });
     }
-
-    private List<MainTitleMenu> list;
 
     /**
      * 页面发生改变时清空js上层数据
@@ -984,9 +995,9 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     }
 
     public void setWebTitle(String title) {
-        Message message =new Message();
-        message.what =2;
-        message.obj =title;
+        Message message = new Message();
+        message.what = 2;
+        message.obj = title;
         handler.sendMessage(message);
     }
 
@@ -1121,23 +1132,4 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             super.onPageFinished(view, url);
         }
     }
-
-    Handler handler =new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);{
-                switch (msg.what){
-                    case 1:
-                        boolean visibility = (boolean) msg.obj;
-                        boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
-                        break;
-                    case 2:
-                        String title =(String)msg.obj;
-                        lblTitle.setText(title);
-                        break;
-
-                }
-            }
-        }
-    };
 }

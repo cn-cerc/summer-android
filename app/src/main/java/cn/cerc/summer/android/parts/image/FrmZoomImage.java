@@ -26,6 +26,20 @@ public class FrmZoomImage extends AppCompatActivity implements View.OnClickListe
     private ImageView content;
     private ImageView image;
     private Bitmap bitmap;
+    private Handler handler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            if (msg.what == 0x123) {
+                image.setImageBitmap(bitmap);
+            }
+        }
+    };
+
+    public static void startForm(Context context, String urlImage) {
+        Intent intent = new Intent();
+        intent.setClass(context, FrmZoomImage.class);
+        intent.putExtra("url", urlImage);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +56,6 @@ public class FrmZoomImage extends AppCompatActivity implements View.OnClickListe
         new DownloadTask().execute(url);
     }
 
-    public static void startForm(Context context, String urlImage) {
-        Intent intent = new Intent();
-        intent.setClass(context, FrmZoomImage.class);
-        intent.putExtra("url", urlImage);
-        context.startActivity(intent);
-    }
-
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.imgZoomBack:
@@ -63,33 +70,6 @@ public class FrmZoomImage extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-
-
-    /**
-     * 异步线程下载图片
-     */
-    class DownloadTask extends AsyncTask<String, Integer, Void> {
-
-        protected Void doInBackground(String... params) {
-            bitmap = getImageInputStream(params[0]);
-            return null;
-        }
-
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            Message message = new Message();
-            message.what = 0x123;
-            handler.sendMessage(message);
-        }
-    }
-
-    private Handler handler = new Handler() {
-        public void handleMessage(android.os.Message msg) {
-            if (msg.what == 0x123) {
-                image.setImageBitmap(bitmap);
-            }
-        }
-    };
 
     /**
      * 获取网络图片
@@ -136,6 +116,24 @@ public class FrmZoomImage extends AppCompatActivity implements View.OnClickListe
             fileOutputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 异步线程下载图片
+     */
+    class DownloadTask extends AsyncTask<String, Integer, Void> {
+
+        protected Void doInBackground(String... params) {
+            bitmap = getImageInputStream(params[0]);
+            return null;
+        }
+
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            Message message = new Message();
+            message.what = 0x123;
+            handler.sendMessage(message);
         }
     }
 }

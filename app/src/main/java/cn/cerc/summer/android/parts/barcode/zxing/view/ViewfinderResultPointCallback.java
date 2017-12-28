@@ -21,14 +21,14 @@ import com.google.zxing.ResultPointCallback;
 
 public final class ViewfinderResultPointCallback implements ResultPointCallback {
 
-  private final cn.cerc.summer.android.parts.barcode.zxing.view.ViewfinderView viewfinderView;
+    private final cn.cerc.summer.android.parts.barcode.zxing.view.ViewfinderView viewfinderView;
 
-  public ViewfinderResultPointCallback(cn.cerc.summer.android.parts.barcode.zxing.view.ViewfinderView viewfinderView) {
-    this.viewfinderView = viewfinderView;
-  }
+    public ViewfinderResultPointCallback(cn.cerc.summer.android.parts.barcode.zxing.view.ViewfinderView viewfinderView) {
+        this.viewfinderView = viewfinderView;
+    }
 
-  public void foundPossibleResultPoint(ResultPoint point) {
-    viewfinderView.addPossibleResultPoint(point);
-  }
+    public void foundPossibleResultPoint(ResultPoint point) {
+        viewfinderView.addPossibleResultPoint(point);
+    }
 
 }

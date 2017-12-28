@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+    android:layout_height="fill_parent">
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent">
 
         <SurfaceView
             android:id="@+id/preview_view"
@@ -27,10 +27,10 @@
                 android:layout_width="75.0dip"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
+                android:background="@android:color/transparent"
                 android:text="返回"
-                android:textSize="16sp"
                 android:textColor="@android:color/white"
-                android:background="@android:color/transparent"/>
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/textview_title"

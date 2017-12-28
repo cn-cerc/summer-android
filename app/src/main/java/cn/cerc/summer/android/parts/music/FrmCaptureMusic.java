@@ -26,24 +26,21 @@ import java.util.Date;
 
 public class FrmCaptureMusic extends AppCompatActivity implements View.OnClickListener {
 
+    public static String url;
     TextView tv_time;
     Button bt_start;
     Button bt_pause;
     Button bt_stop;
     ListView lv_recorder;
-
-    private AudioRecorderUtils audioRecorderUtils;
-
-    public static String url;
-    private String path;
-    private int time;
-
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
 
         }
     };
+    private AudioRecorderUtils audioRecorderUtils;
+    private String path;
+    private int time;
     Runnable runTime = new Runnable() {
         @Override
         public void run() {
@@ -62,6 +59,13 @@ public class FrmCaptureMusic extends AppCompatActivity implements View.OnClickLi
             handler.postDelayed(runTime, 1000);
         }
     };
+
+    public static void startForm(Context context, String url) {
+        FrmCaptureMusic.url = url;
+        Intent intent = new Intent();
+        intent.setClass(context, FrmCaptureMusic.class);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,13 +89,6 @@ public class FrmCaptureMusic extends AppCompatActivity implements View.OnClickLi
 
     private void initData() {
         audioRecorderUtils = new AudioRecorderUtils();
-    }
-
-    public static void startForm(Context context, String url) {
-        FrmCaptureMusic.url = url;
-        Intent intent = new Intent();
-        intent.setClass(context, FrmCaptureMusic.class);
-        context.startActivity(intent);
     }
 
     @Override

@@ -31,6 +31,26 @@ public class HttpClient {
         this.webUrl = webUrl;
     }
 
+    /**
+     * 封装请求体信息
+     * params     :   params请求体内容，encode编码格式
+     */
+    private static StringBuffer getRequestData(Map<String, String> params) {
+        StringBuffer stringBuffer = new StringBuffer();        //存储封装好的请求体信息
+        try {
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                stringBuffer.append(entry.getKey())
+                        .append("=")
+                        .append(URLEncoder.encode(entry.getValue(), ENCODE))
+                        .append("&");
+            }
+            stringBuffer.deleteCharAt(stringBuffer.length() - 1);    //删除最后的一个"&"
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return stringBuffer;
+    }
+
     public String post(Map<String, String> params) {
         return post(getRequestData(params).toString());
     }
@@ -79,27 +99,6 @@ public class HttpClient {
                 connection.disconnect();
         }
     }
-
-    /**
-     * 封装请求体信息
-     * params     :   params请求体内容，encode编码格式
-     */
-    private static StringBuffer getRequestData(Map<String, String> params) {
-        StringBuffer stringBuffer = new StringBuffer();        //存储封装好的请求体信息
-        try {
-            for (Map.Entry<String, String> entry : params.entrySet()) {
-                stringBuffer.append(entry.getKey())
-                        .append("=")
-                        .append(URLEncoder.encode(entry.getValue(), ENCODE))
-                        .append("&");
-            }
-            stringBuffer.deleteCharAt(stringBuffer.length() - 1);    //删除最后的一个"&"
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return stringBuffer;
-    }
-
 
     /**
      * 处理服务器的响应结果（将输入流转化成字符串）
