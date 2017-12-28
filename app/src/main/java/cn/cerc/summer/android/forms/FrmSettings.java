@@ -139,13 +139,13 @@ public class FrmSettings extends AppCompatActivity implements SeekBar.OnSeekBarC
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button1:
-                scales = ScreenUtils.getScales(this,4);
+                scales = ScreenUtils.getScales(this, 4);
                 break;
             case R.id.button2:
-                scales = ScreenUtils.getScales(this,4.5);
+                scales = ScreenUtils.getScales(this, 4.5);
                 break;
             case R.id.button3:
-                scales = ScreenUtils.getScales(this,5);
+                scales = ScreenUtils.getScales(this, 5);
                 break;
             case R.id.button4:
                 scales = ScreenUtils.getScales(this, 5.5);
