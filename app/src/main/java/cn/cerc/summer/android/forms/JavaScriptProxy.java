@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import cn.cerc.summer.android.services.CallBrowser;
 import cn.cerc.summer.android.services.CallLoginByAccount;
 import cn.cerc.summer.android.services.CallLoginByPhone;
 import cn.cerc.summer.android.services.CallPhoneNumber;
@@ -94,6 +95,7 @@ public class JavaScriptProxy extends Object {
         //
         services.put(SetMenuList.class, "设置菜单列表");
         services.put(RefreshMenu.class, "动态添加菜单");
+        services.put(CallBrowser.class, "调用外部浏览器");
     }
 
     private AppCompatActivity owner;
