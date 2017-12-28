@@ -18,6 +18,7 @@ public class VisualKeyboardTool {
     private View mViewObserved;//被监听的视图
     private int usableHeightPrevious;//视图变化前的可用高度
     private ViewGroup.LayoutParams frameLayoutParams;
+
     private VisualKeyboardTool(View viewObserving) {
         mViewObserved = viewObserving;
         //给View添加全局的布局监听器

@@ -477,7 +477,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         lblTitle = (TextView) this.findViewById(R.id.lblTitle);
         boxTitle = (LinearLayout) findViewById(R.id.boxTitle);
         hightview = (View) findViewById(R.id.hightview);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             hightview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, VisualKeyboardTool.getStatusBarHeight(FrmMain.this)));
             hightview.setVisibility(View.VISIBLE);
         } else {
