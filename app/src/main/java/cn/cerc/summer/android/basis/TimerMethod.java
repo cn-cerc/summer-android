@@ -28,16 +28,15 @@ public class TimerMethod {
         return instance;
     }
 
-    public void exce(boolean isTimer, int count,String token) {
-        if(token != null){
+    public void exce(boolean isTimer, int count, String token) {
+        if (token != null) {
             MySession.getInstance().setToken(token);
         }
+        stopTimer();
         if (isTimer) {
-            stopTimer();
             startTimer(count);
-        } else {
-            stopTimer();
         }
+
     }
 
     Handler handler = new Handler() {
@@ -91,7 +90,7 @@ public class TimerMethod {
         }
     }
 
-    public Timer getTimer(){
+    public Timer getTimer() {
         return this.mTimer;
     }
 }
