@@ -31,6 +31,7 @@ import cn.cerc.summer.android.services.GetTokenByAlipay;
 import cn.cerc.summer.android.services.GetTokenByQQ;
 import cn.cerc.summer.android.services.GetTokenByWeibo;
 import cn.cerc.summer.android.services.GetTokenByWeixin;
+import cn.cerc.summer.android.services.HeartbeatCheck;
 import cn.cerc.summer.android.services.PayByAlipay;
 import cn.cerc.summer.android.services.PayByBank;
 import cn.cerc.summer.android.services.PayByWeixin;
@@ -96,6 +97,7 @@ public class JavaScriptProxy extends Object {
         services.put(SetMenuList.class, "设置菜单列表");
         services.put(RefreshMenu.class, "动态添加菜单");
         services.put(CallBrowser.class, "调用外部浏览器");
+        services.put(HeartbeatCheck.class, "启动定时器");
     }
 
     private AppCompatActivity owner;

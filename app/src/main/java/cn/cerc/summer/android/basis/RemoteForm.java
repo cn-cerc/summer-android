@@ -1,6 +1,7 @@
 package cn.cerc.summer.android.basis;
 
 import android.os.Message;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,6 +35,7 @@ public class RemoteForm {
     }
 
     public RemoteForm exec() {
+        TimerMethod.getInstance().exce(true,-1,null);
         result = false;
         JSONObject json = null;
         try {
