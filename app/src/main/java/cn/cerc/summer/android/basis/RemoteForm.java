@@ -1,6 +1,7 @@
 package cn.cerc.summer.android.basis;
 
 import android.os.Message;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,6 +35,7 @@ public class RemoteForm {
     }
 
     public RemoteForm exec() {
+        TimerMethod.getInstance().exce(true,-1,null);
         result = false;
         JSONObject json = null;
         try {
@@ -42,9 +44,9 @@ public class RemoteForm {
                 token = MySession.getInstance().getToken();
             }
             HttpClient client = null;
-            if (token != null && !"".equals(token))
-                client = new HttpClient(MyApp.getFormUrl(formCode) + String.format("?sid=%s", token));
-            else
+            if (token != null && !"".equals(token)) {
+                client = new HttpClient(MyApp.getFormUrl(formCode) + String.format("?sid=%s&CLIENTID=%s", token,MyApp.getInstance().getClientId()));
+            }else
                 client = new HttpClient(MyApp.getFormUrl(formCode));
 
             String response = client.post(params);
