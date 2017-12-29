@@ -35,7 +35,7 @@ public class RemoteForm {
     }
 
     public RemoteForm exec() {
-        TimerMethod.getInstance().exce(true,-1,null);
+        TimerMethod.getInstance().exce(true, -1, null);
         result = false;
         JSONObject json = null;
         try {
@@ -45,8 +45,8 @@ public class RemoteForm {
             }
             HttpClient client = null;
             if (token != null && !"".equals(token)) {
-                client = new HttpClient(MyApp.getFormUrl(formCode) + String.format("?sid=%s&CLIENTID=%s", token,MyApp.getInstance().getClientId()));
-            }else
+                client = new HttpClient(MyApp.getFormUrl(formCode) + String.format("?sid=%s&CLIENTID=%s", token, MyApp.getInstance().getClientId()));
+            } else
                 client = new HttpClient(MyApp.getFormUrl(formCode));
 
             String response = client.post(params);

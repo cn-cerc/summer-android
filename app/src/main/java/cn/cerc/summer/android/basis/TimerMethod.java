@@ -14,6 +14,20 @@ import cn.cerc.summer.android.core.MySession;
 
 public class TimerMethod {
     private static TimerMethod instance = null;
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            {
+                switch (msg.what) {
+                    case 1:
+                        RemoteForm rf = new RemoteForm("WebDefault.heartbeatCheck");
+                        rf.execByMessage(3);
+                        break;
+                }
+            }
+        }
+    };
     private Timer mTimer;
     private long count = 900000;
     private TimerTask mTimerTask;
@@ -38,21 +52,6 @@ public class TimerMethod {
         }
 
     }
-
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            {
-                switch (msg.what) {
-                    case 1:
-                        RemoteForm rf = new RemoteForm("WebDefault.heartbeatCheck");
-                        rf.execByMessage(3);
-                        break;
-                }
-            }
-        }
-    };
 
     //启动定时器
     private void startTimer(int count) {

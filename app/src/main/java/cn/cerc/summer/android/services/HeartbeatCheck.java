@@ -29,15 +29,15 @@ public class HeartbeatCheck implements JavaScriptService {
         }
         boolean status = request.getBoolean("status");
         token = request.getString("token");
-        if(status) {
+        if (status) {
             if (TimerMethod.getInstance().getTimer() == null) {
                 if (request.has("time")) {
                     count = request.getInt("time") * 60000;
                 }
                 TimerMethod.getInstance().exce(status, count, token);
             }
-        }else{
-            if(TimerMethod.getInstance().getTimer() != null) {
+        } else {
+            if (TimerMethod.getInstance().getTimer() != null) {
                 TimerMethod.getInstance().exce(status, count, token);
             }
         }
