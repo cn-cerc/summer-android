@@ -44,9 +44,9 @@ public class RemoteForm {
                 token = MySession.getInstance().getToken();
             }
             HttpClient client = null;
-            if (token != null && !"".equals(token))
-                client = new HttpClient(MyApp.getFormUrl(formCode) + String.format("?sid=%s", token));
-            else
+            if (token != null && !"".equals(token)) {
+                client = new HttpClient(MyApp.getFormUrl(formCode) + String.format("?sid=%s&CLIENTID=%s", token,MyApp.getInstance().getClientId()));
+            }else
                 client = new HttpClient(MyApp.getFormUrl(formCode));
 
             String response = client.post(params);
