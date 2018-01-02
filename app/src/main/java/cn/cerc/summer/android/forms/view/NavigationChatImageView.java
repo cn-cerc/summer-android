@@ -2,6 +2,7 @@ package cn.cerc.summer.android.forms.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.mimrc.vine.R;
 
@@ -53,7 +55,7 @@ public class NavigationChatImageView extends View implements View.OnClickListene
     private ImageView lan_Iv;
     //小点之间的距离
     private int pointWidth;
-    private Button startbtn;
+    private TextView startText;
     private RelativeLayout start_relative;
     private List<String> imagePathList = new ArrayList<String>();
     private SharedPreferences settings;  //共享参数
@@ -61,6 +63,7 @@ public class NavigationChatImageView extends View implements View.OnClickListene
     private String imageFileName = "cacheimage/";
     private String imageFilePath = null;
     private ImageViewPagerListener imageViewPagerListener;
+    private boolean misScrolled;
 
     public NavigationChatImageView(final Activity context, String resp, SharedPreferences setting) {
         super(context);
@@ -77,11 +80,11 @@ public class NavigationChatImageView extends View implements View.OnClickListene
         view = inflater.inflate(R.layout.navigation_chat_frm_item, null);
         lan_Iv = (ImageView) view.findViewById(R.id.lan_Iv);
         linearLayout = (LinearLayout) view.findViewById(R.id.ll);
-        startbtn = (Button) view.findViewById(R.id.startbtn);
+        startText = (TextView) view.findViewById(R.id.startbtn);
         viewPager = (ViewPager) view.findViewById(R.id.vp);
         start_relative = (RelativeLayout) view.findViewById(R.id.start_relative);
         imageList = new ArrayList<ImageView>();
-        startbtn.setOnClickListener(this);
+        startText.setOnClickListener(this);
     }
 
     public View loadNavigationImage() {
@@ -98,12 +101,7 @@ public class NavigationChatImageView extends View implements View.OnClickListene
     public void onClick(View v) {
         if (v.getId() == R.id.startbtn) {
             //点击开始体验
-            if (startbtn.getText().equals("下一步")) {
-                viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
-            } else {
-                imageViewPagerListener.onPopSelected();
-            }
-
+            imageViewPagerListener.onPopSelected(0);
         }
     }
 
@@ -113,7 +111,6 @@ public class NavigationChatImageView extends View implements View.OnClickListene
 
     private void loadimageViewPager() {
         boolean isfer = settings.getBoolean(Constans.IS_FIRST_SHAREDKEY, true);
-        Log.d("print", "loadimageViewPager: isfrer" + isfer);
         String cacheFile = settings.getString(CACHE_FILE, null);
         if (json != null) {
             if (json.has("startupImage")) {
@@ -131,7 +128,6 @@ public class NavigationChatImageView extends View implements View.OnClickListene
                             settings.edit().putInt("IMAGE_AD", 0).commit();
                         }
                         if (imageAd != imageNewAd) {
-                            File filesDir = mContext.getExternalFilesDir(null);
                             String fileName = startupImage.substring(startupImage.lastIndexOf("/") + 1);
                             //存到本地的绝对路径
                             imageFilePath = FileUtils.getCacheFilePath(fileName);
@@ -161,18 +157,29 @@ public class NavigationChatImageView extends View implements View.OnClickListene
                     e.printStackTrace();
                 }
             }
-            if (isfer) {
-                if (json.has("adImages")) {
-                    try {
-                        final JSONArray imageAD = json.getJSONArray("adImages");
-                        if (imageAD.length() > 0) {
+            if (json.has("adImages")) {
+                try {
+                    int imagesNumber = settings.getInt("ADIMAGES", -1);
+                    int imagesNewsNumber = 0;
+                    final JSONArray imageAD = json.getJSONArray("adImages");
+                    if (imageAD.length() > 0) {
+                        String idImages = imageAD.getString(0);
+                        String[] strings = idImages.split(";");
+                        if (strings.length > 1) {
+                            imagesNewsNumber = Integer.parseInt(strings[0]);
+                            settings.edit().putInt("ADIMAGES", imagesNewsNumber).commit();
+                        } else {
+                            settings.edit().putInt("ADIMAGES", 0).commit();
+                        }
+                        if (imagesNumber != imagesNewsNumber || isfer) {
+                            final int[] finalNum = {0};
                             for (int i = 0; i < imageAD.length(); i++) {
-                                File filesDir = mContext.getExternalFilesDir(null);
-                                String fileName = imageAD.getString(i).substring(imageAD.getString(i).lastIndexOf("/") + 1);
-                                //存到本地的绝对路径
-                                if (FileUtils.isCacheFileExist(imageFileName + fileName)) {
-                                    imageCarsousel();
-                                    break;
+                                String[] adImages = imageAD.getString(i).split(";");
+                                String imageUrl;
+                                if (adImages.length > 1) {
+                                    imageUrl = adImages[1];
+                                } else {
+                                    imageUrl = imageAD.getString(i);
                                 }
                                 final String filePath = FileUtils.getCacheFilePath(imageFileName + (i + 1) + ".jpg");
                                 File file = new File(imageFileName + (i + 1) + ".jpg");
@@ -181,15 +188,15 @@ public class NavigationChatImageView extends View implements View.OnClickListene
                                     //创建
                                     file.mkdirs();
                                 }
-                                RequestParams entity = new RequestParams(imageAD.getString(i));
+                                RequestParams entity = new RequestParams(imageUrl);
                                 entity.setSaveFilePath(filePath);
-                                final int finalNum = i;
                                 x.http().get(entity, new Callback.CommonCallback<File>() {
                                     @Override
                                     public void onSuccess(File result) {
-                                        if (finalNum == imageAD.length() - 1) {
+                                        if (finalNum[0] == imageAD.length() - 1) {
                                             imageCarsousel();
                                         }
+                                        finalNum[0]++;
                                     }
 
                                     @Override
@@ -205,24 +212,30 @@ public class NavigationChatImageView extends View implements View.OnClickListene
                                     }
                                 });
                             }
+                        } else {
+                            if (imageFilePath != null) {
+                                settings.edit().putString(IMAGE_STARTIP, imageFilePath).commit();
+                            }
+                            imageViewPagerListener.onPopSelected(1500);
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
-                    //创建配置文件
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                settings.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).commit();
-                settings.edit().putString(CACHE_FILE, resp).commit();
-                if (imageFilePath != null)
+                //创建配置文件
+            }else{
+                if (imageFilePath != null) {
                     settings.edit().putString(IMAGE_STARTIP, imageFilePath).commit();
-            } else {
-                //存在
-                if (imageFilePath != null)
-                    settings.edit().putString(IMAGE_STARTIP, imageFilePath).commit();
-                imageViewPagerListener.onPopSelected();
+                }
+                imageViewPagerListener.onPopSelected(1500);
+            }
+            settings.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).commit();
+            settings.edit().putString(CACHE_FILE, resp).commit();
+            if (imageFilePath != null) {
+                settings.edit().putString(IMAGE_STARTIP, imageFilePath).commit();
             }
         } else {
-            imageViewPagerListener.onPopSelected();
+            imageViewPagerListener.onPopSelected(1500);
         }
     }
 
@@ -237,7 +250,7 @@ public class NavigationChatImageView extends View implements View.OnClickListene
             imageList.add(imageView);
             // 根据图片的个数去放置相应数量的小灰点
             ImageView huiImageView = new ImageView(mContext);
-            huiImageView.setImageResource(R.mipmap.hui_bg);
+            huiImageView.setImageResource(R.mipmap.white_bg);
             LinearLayout.LayoutParams layoutParams =
                     new LinearLayout.LayoutParams
                             (LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -256,7 +269,7 @@ public class NavigationChatImageView extends View implements View.OnClickListene
             public void onGlobalLayout() {
                 //视图全部绘制完成时，计算得到小点之间的距离
                 if (imagePathList.size() < 2) {
-                    startbtn.setText("开始体验");
+                    startText.setText("进入系统");
                 } else {
                     pointWidth = linearLayout.getChildAt(1).getLeft() - linearLayout.getChildAt(0).getLeft();
                     System.out.println(pointWidth);
@@ -271,9 +284,9 @@ public class NavigationChatImageView extends View implements View.OnClickListene
             public void onPageSelected(int position) {
                 //让滑到最后一页显示按钮
                 if (position == imagePathList.size() - 1) {
-                    startbtn.setText("开始体验");
+                    startText.setVisibility(VISIBLE);
                 } else {
-                    startbtn.setText("下一步");
+                    startText.setVisibility(GONE);
                 }
             }
 
@@ -289,6 +302,20 @@ public class NavigationChatImageView extends View implements View.OnClickListene
 
             @Override
             public void onPageScrollStateChanged(int state) {
+                switch (state) {
+                    case ViewPager.SCROLL_STATE_DRAGGING:
+                        misScrolled = false;
+                        break;
+                    case ViewPager.SCROLL_STATE_SETTLING:
+                        misScrolled = true;
+                        break;
+                    case ViewPager.SCROLL_STATE_IDLE:
+                        if (viewPager.getCurrentItem() == viewPager.getAdapter().getCount() - 1 && !misScrolled) {
+                            imageViewPagerListener.onPopSelected(0);
+                        }
+                        misScrolled = true;
+                        break;
+                }
             }
         });
     }
@@ -356,7 +383,7 @@ public class NavigationChatImageView extends View implements View.OnClickListene
 
     //回调接口定义
     public interface ImageViewPagerListener {
-        public void onPopSelected();
+        public void onPopSelected(int time);
     }
 
     /**
