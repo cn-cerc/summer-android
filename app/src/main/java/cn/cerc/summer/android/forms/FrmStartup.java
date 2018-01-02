@@ -175,7 +175,6 @@ public class FrmStartup extends AppCompatActivity {
         navigationChatImageView = new NavigationChatImageView(this, resp, settings);
         navigationChatImageView.setPopListener(PagerListener);
         frameLayout.addView(navigationChatImageView.loadNavigationImage());
-//        startMainForm();
     }
 
     private void startMainForm(int time) {
