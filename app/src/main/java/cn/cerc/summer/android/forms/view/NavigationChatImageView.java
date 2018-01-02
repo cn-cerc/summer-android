@@ -201,7 +201,6 @@ public class NavigationChatImageView extends View implements View.OnClickListene
 
                                     @Override
                                     public void onError(Throwable ex, boolean isOnCallback) {
-                                        Log.d("print", "onError: 出错了");
                                     }
 
                                     @Override
@@ -224,6 +223,11 @@ public class NavigationChatImageView extends View implements View.OnClickListene
                     e.printStackTrace();
                 }
                 //创建配置文件
+            }else{
+                if (imageFilePath != null) {
+                    settings.edit().putString(IMAGE_STARTIP, imageFilePath).commit();
+                }
+                imageViewPagerListener.onPopSelected(1500);
             }
             settings.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).commit();
             settings.edit().putString(CACHE_FILE, resp).commit();
