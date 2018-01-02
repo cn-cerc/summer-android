@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -93,8 +94,8 @@ public class FrmStartup extends AppCompatActivity {
     };
     private NavigationChatImageView.ImageViewPagerListener PagerListener = new NavigationChatImageView.ImageViewPagerListener() {
         @Override
-        public void onPopSelected() {
-            startMainForm();
+        public void onPopSelected(int time) {
+            startMainForm(time);
         }
     };
 
@@ -129,7 +130,7 @@ public class FrmStartup extends AppCompatActivity {
         //检测是否有新的版本
         final String oldVersion = myApp.getCurrentVersion(this);
         if (oldVersion.equals(myApp.getAppVersion())) {
-            startMainForm();
+            loadImageView();
             return;
         }
 
@@ -164,13 +165,20 @@ public class FrmStartup extends AppCompatActivity {
                     finish();
                 } else {
                     llDialog.setVisibility(View.GONE);
-                    startMainForm();
+                    loadImageView();
                 }
             }
         });
     }
 
-    private void startMainForm() {
+    private void loadImageView() {
+        navigationChatImageView = new NavigationChatImageView(this, resp, settings);
+        navigationChatImageView.setPopListener(PagerListener);
+        frameLayout.addView(navigationChatImageView.loadNavigationImage());
+//        startMainForm();
+    }
+
+    private void startMainForm(int time) {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -180,7 +188,7 @@ public class FrmStartup extends AppCompatActivity {
                 instince.startActivity(intent);
                 finish();
             }
-        }, 1500);
+        }, time);
     }
 
     @Override

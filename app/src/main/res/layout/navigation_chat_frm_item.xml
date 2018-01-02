@@ -33,18 +33,23 @@
                 android:id="@+id/lan_Iv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/lan_bg" />
+                android:src="@mipmap/hui_bg" />
 
         </RelativeLayout>
 
         <!-- 最后一页要显示的按钮，开始默认是不显示的 -->
-        <Button
+        <TextView
             android:id="@+id/startbtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:background="@drawable/ad_skip"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="50dp"
-            android:text="下一步" />
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:visibility="invisible"
+            android:text="进入系统"
+            android:layout_marginBottom="55dp"
+            />
     </RelativeLayout>
 </LinearLayout>
