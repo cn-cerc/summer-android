@@ -223,7 +223,7 @@ public class NavigationChatImageView extends View implements View.OnClickListene
                     e.printStackTrace();
                 }
                 //创建配置文件
-            }else{
+            } else {
                 if (imageFilePath != null) {
                     settings.edit().putString(IMAGE_STARTIP, imageFilePath).commit();
                 }

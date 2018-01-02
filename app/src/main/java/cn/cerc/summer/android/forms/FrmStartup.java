@@ -58,7 +58,12 @@ public class FrmStartup extends AppCompatActivity {
     private ImageView start_image;
     private FrameLayout frameLayout;
     private NavigationChatImageView navigationChatImageView;
-
+    private NavigationChatImageView.ImageViewPagerListener PagerListener = new NavigationChatImageView.ImageViewPagerListener() {
+        @Override
+        public void onPopSelected(int time) {
+            startMainForm(time);
+        }
+    };
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -90,12 +95,6 @@ public class FrmStartup extends AppCompatActivity {
                     showError("出现错误！", err);
                 }
             }
-        }
-    };
-    private NavigationChatImageView.ImageViewPagerListener PagerListener = new NavigationChatImageView.ImageViewPagerListener() {
-        @Override
-        public void onPopSelected(int time) {
-            startMainForm(time);
         }
     };
 
