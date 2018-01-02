@@ -55,7 +55,7 @@ public class NavigationChatImageView extends View implements View.OnClickListene
     private ImageView lan_Iv;
     //小点之间的距离
     private int pointWidth;
-    private TextView starttext;
+    private TextView startText;
     private RelativeLayout start_relative;
     private List<String> imagePathList = new ArrayList<String>();
     private SharedPreferences settings;  //共享参数
@@ -80,11 +80,11 @@ public class NavigationChatImageView extends View implements View.OnClickListene
         view = inflater.inflate(R.layout.navigation_chat_frm_item, null);
         lan_Iv = (ImageView) view.findViewById(R.id.lan_Iv);
         linearLayout = (LinearLayout) view.findViewById(R.id.ll);
-        starttext = (TextView) view.findViewById(R.id.startbtn);
+        startText = (TextView) view.findViewById(R.id.startbtn);
         viewPager = (ViewPager) view.findViewById(R.id.vp);
         start_relative = (RelativeLayout) view.findViewById(R.id.start_relative);
         imageList = new ArrayList<ImageView>();
-        starttext.setOnClickListener(this);
+        startText.setOnClickListener(this);
     }
 
     public View loadNavigationImage() {
@@ -269,7 +269,7 @@ public class NavigationChatImageView extends View implements View.OnClickListene
             public void onGlobalLayout() {
                 //视图全部绘制完成时，计算得到小点之间的距离
                 if (imagePathList.size() < 2) {
-                    starttext.setText("进入系统");
+                    startText.setText("进入系统");
                 } else {
                     pointWidth = linearLayout.getChildAt(1).getLeft() - linearLayout.getChildAt(0).getLeft();
                     System.out.println(pointWidth);
@@ -284,9 +284,9 @@ public class NavigationChatImageView extends View implements View.OnClickListene
             public void onPageSelected(int position) {
                 //让滑到最后一页显示按钮
                 if (position == imagePathList.size() - 1) {
-                    starttext.setVisibility(VISIBLE);
+                    startText.setVisibility(VISIBLE);
                 } else {
-                    starttext.setVisibility(GONE);
+                    startText.setVisibility(GONE);
                 }
             }
 
