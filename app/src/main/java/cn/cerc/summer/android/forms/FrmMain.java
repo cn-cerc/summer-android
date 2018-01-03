@@ -413,7 +413,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
      * 查看消息的url
      */
     private String getMsgUrl(String read) {
-        String url = settings.getString(Constans.SHARED_MSG_URL, "") + read;
+        String url = MyApp.HOME_URL + "/forms/FrmMessages" + read;
         return MyApp.buildDeviceUrl(url);
     }
 
