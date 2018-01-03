@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@null"/>
+    <solid android:color="@null" />
     <!-- 先画一遍边框颜色 -->
     <item>
         <shape>
@@ -13,8 +13,7 @@
         </shape>
     </item>
     <!-- 再画背景颜色 并且设置需要边框边的margin为边框宽度 -->
-    <item
-        android:top="1dp">
+    <item android:top="1dp">
         <shape>
             <corners
                 android:bottomLeftRadius="6dip"
