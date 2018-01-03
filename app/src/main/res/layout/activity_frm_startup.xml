@@ -14,51 +14,90 @@
         android:scaleType="centerCrop"
         android:src="@mipmap/startupimage"
         android:visibility="visible" />
-
+    <View
+        android:id="@+id/view_Masking"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#88000000"
+        android:visibility="gone"
+        />
     <LinearLayout
         android:id="@+id/llDialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_margin="60dp"
-        android:background="@android:color/white"
+        style="@style/DialogTheme"
+        android:layout_margin="25dp"
+        android:background="@drawable/point_white"
         android:orientation="vertical"
-        android:padding="16dp"
         android:visibility="gone">
 
-        <TextView
-            android:id="@+id/tvTitle"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:text="发现新版本"
-            android:textStyle="bold" />
+            android:background="@drawable/point_white"
+            >
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:src="@mipmap/updatehead" />
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="发现新版本"
+                android:textSize="20sp"
+                android:textColor="@color/white_view"
+                android:textStyle="bold" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tvReadme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="20dp"
             android:text="(更新说明)" />
 
+        <View
+            android:id="@+id/view_Line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#d9d9d9"
+            android:visibility="gone"
+            />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="2"
             android:gravity="center">
-
-            <Button
-                android:id="@+id/btnOk"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="更新" />
 
             <Button
                 android:id="@+id/btnCancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/btn_no"
+                android:layout_weight="1"
+                android:textColor="#2f8bf7"
+                android:textSize="16sp"
                 android:text="忽略" />
-        </LinearLayout>
 
+            <Button
+                android:id="@+id/btnOk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/btn_yes"
+                android:textColor="#2f8bf7"
+                android:textSize="16sp"
+                android:text="更新" />
+        </LinearLayout>
     </LinearLayout>
 
     <FrameLayout
