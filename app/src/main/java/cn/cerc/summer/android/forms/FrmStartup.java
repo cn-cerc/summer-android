@@ -109,7 +109,6 @@ public class FrmStartup extends AppCompatActivity {
         return file.exists();
     }
 
-    @SuppressLint("WrongConstant")
     private void showError(String errtitle, String errText) {
         llDialog.setVisibility(View.VISIBLE);
         view_Masking.setVisibility(View.VISIBLE);
