@@ -1,11 +1,14 @@
 package cn.cerc.summer.android.forms;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -56,6 +59,8 @@ public class FrmStartup extends AppCompatActivity {
     private MyApp myApp;
     private JSONObject json = null;
     private ImageView start_image;
+    private View view_Masking;
+    private View view_Line;
     private FrameLayout frameLayout;
     private NavigationChatImageView navigationChatImageView;
 
@@ -104,8 +109,11 @@ public class FrmStartup extends AppCompatActivity {
         return file.exists();
     }
 
+    @SuppressLint("WrongConstant")
     private void showError(String errtitle, String errText) {
         llDialog.setVisibility(View.VISIBLE);
+        view_Masking.setVisibility(View.VISIBLE);
+        view_Line.setVisibility(View.VISIBLE);
         TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
         tvTitle.setText(errtitle);
         TextView tvReadme = (TextView) findViewById(R.id.tvReadme);
@@ -113,6 +121,8 @@ public class FrmStartup extends AppCompatActivity {
         Button btnOK = (Button) findViewById(R.id.btnOk);
         btnOK.setVisibility(View.GONE);
         Button btnCancel = (Button) findViewById(R.id.btnCancel);
+        GradientDrawable drawable = new GradientDrawable();
+        btnCancel.setBackgroundDrawable(drawable);
         btnCancel.setText("确定");
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,6 +146,7 @@ public class FrmStartup extends AppCompatActivity {
 
         //发现有新版本
         llDialog.setVisibility(View.VISIBLE);
+        view_Masking.setVisibility(View.VISIBLE);
         JSONArray appUpdateReadme = json.getJSONArray("appUpdateReadme");
         TextView tvReadme = (TextView) findViewById(R.id.tvReadme);
         StringBuffer sbReadme = new StringBuffer();
@@ -165,6 +176,7 @@ public class FrmStartup extends AppCompatActivity {
                     finish();
                 } else {
                     llDialog.setVisibility(View.GONE);
+                    view_Masking.setVisibility(View.GONE);
                     loadImageView();
                 }
             }
@@ -200,6 +212,8 @@ public class FrmStartup extends AppCompatActivity {
         setContentView(R.layout.activity_frm_startup);
         instince = this;
         llDialog = (LinearLayout) findViewById(R.id.llDialog);
+        view_Masking = findViewById(R.id.view_Masking);
+        view_Line = findViewById(R.id.view_Line);
         start_image = (ImageView) findViewById(R.id.start_image);
         frameLayout = (FrameLayout) findViewById(R.id.frm_image);
         settings = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
