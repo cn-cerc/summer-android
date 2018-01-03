@@ -90,18 +90,16 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            {
-                switch (msg.what) {
-                    case 1:
-                        boolean visibility = (boolean) msg.obj;
-                        boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
-                        break;
-                    case 2:
-                        String title = (String) msg.obj;
-                        lblTitle.setText(title);
-                        break;
+            switch (msg.what) {
+                case 1:
+                    boolean visibility = (boolean) msg.obj;
+                    boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
+                    break;
+                case 2:
+                    String title = (String) msg.obj;
+                    lblTitle.setText(title);
+                    break;
 
-                }
             }
         }
     };
@@ -137,10 +135,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private RefreshMenu mRefreshMenu;
     private View hightview;
     private MyApp myApp;
-    /**
-     * 推送消息的消息id， 点击通知栏打开
-     */
-    private String msgId = "";
+
     private TagAliasCallback tac = new TagAliasCallback() {
         @Override
         public void gotResult(int i, String s, Set<String> set) {
@@ -409,23 +404,20 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         mRightMenu.add(new MainTitleMenu("退出系统", true, "", 1, ""));
     }
 
-    /**
-     * 查看消息的url
-     */
-    private String getMsgUrl(String read) {
-        String url = MyApp.HOME_URL + "/forms/FrmMessages" + read;
-        return MyApp.buildDeviceUrl(url);
-    }
-
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (intent.hasExtra("msgId")) {
-            msgId = intent.getStringExtra("msgId");
-            String msgurl = getMsgUrl(".show") + "&msgId=" + msgId;
-            Log.e(LOGTAG, msgurl);
-            browser.loadUrl(msgurl);
+            String msgId = intent.getStringExtra("msgId");
+            String url = getMsgUrl(msgId);
+            Log.e(LOGTAG, url);
+            browser.loadUrl(getMsgUrl(msgId));
         }
+    }
+
+    private String getMsgUrl(String msgId) {
+        String url = MyApp.getFormUrl("FrmMessages.show", true);
+        return String.format("%s&msgId=%s", url, msgId);
     }
 
     @Override
