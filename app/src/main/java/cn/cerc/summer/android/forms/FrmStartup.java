@@ -61,6 +61,7 @@ public class FrmStartup extends AppCompatActivity {
     private ImageView start_image;
     private View view_Masking;
     private View view_Line;
+    private TextView version;
     private FrameLayout frameLayout;
     private NavigationChatImageView navigationChatImageView;
     private NavigationChatImageView.ImageViewPagerListener PagerListener = new NavigationChatImageView.ImageViewPagerListener() {
@@ -212,6 +213,7 @@ public class FrmStartup extends AppCompatActivity {
         llDialog = (LinearLayout) findViewById(R.id.llDialog);
         view_Masking = findViewById(R.id.view_Masking);
         view_Line = findViewById(R.id.view_Line);
+        version = (TextView) findViewById(R.id.version);
         start_image = (ImageView) findViewById(R.id.start_image);
         frameLayout = (FrameLayout) findViewById(R.id.frm_image);
         settings = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
@@ -220,6 +222,12 @@ public class FrmStartup extends AppCompatActivity {
             start_image.setVisibility(View.VISIBLE);
             Bitmap bm = BitmapFactory.decodeFile(settings.getString(IMAGE_STARTIP, null));
             start_image.setImageBitmap(bm);
+        }
+
+        try {
+            version.setText("V" + MyApp.getVersionName(this) + "");
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
         }
         /*
         timer.schedule(new TimerTask() {

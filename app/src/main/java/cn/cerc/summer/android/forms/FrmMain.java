@@ -2,6 +2,8 @@ package cn.cerc.summer.android.forms;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -61,6 +63,7 @@ import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.core.ScreenUtils;
 import cn.cerc.summer.android.forms.view.BrowserView;
 import cn.cerc.summer.android.forms.view.DragPointView;
+import cn.cerc.summer.android.services.LongRunningService;
 import cn.cerc.summer.android.services.RefreshMenu;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
@@ -1131,5 +1134,16 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             progress.setVisibility(View.GONE);
             super.onPageFinished(view, url);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        Intent intent1 = new Intent("ELITOR_CLOCK");
+        PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent1, 0);
+        manager.cancel(pi);
+        Intent intent = new Intent(this, LongRunningService.class);
+        stopService(intent);
+        super.onDestroy();
     }
 }

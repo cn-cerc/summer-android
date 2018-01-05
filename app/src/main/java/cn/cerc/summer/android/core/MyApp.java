@@ -1,11 +1,13 @@
 package cn.cerc.summer.android.core;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.mimrc.vine.R;
@@ -45,11 +47,12 @@ public class MyApp extends android.app.Application {
     public static String FORMS_PATH = "forms";
     private static MyApp instance;
     private final String APPCODE = "vine-android-standard";
-    public boolean debug = false;
+    public boolean debug = true;
     private DisplayImageOptions options;
     private String appVersion;
     private String clientId;
     private List<String> cacheFiles = new ArrayList<>();
+    private Context mContext;
 
     public static MyApp getInstance() {
         return instance;
@@ -201,7 +204,6 @@ public class MyApp extends android.app.Application {
         super.onCreate();
 
         instance = this;
-
         x.Ext.init(this);//xutils 初始化
         x.Ext.setDebug(true);//设置为debug
 
@@ -237,6 +239,30 @@ public class MyApp extends android.app.Application {
         // webConfig.writeDebugLogs(); // Remove for release app
         ImageLoader.getInstance().init(config.build());
 
+    }
+
+    /**
+     * 判断服务状态
+     * @param mContext
+     * @param serviceName
+     * @return
+     */
+    public boolean isServiceWork(Context mContext, String serviceName) {
+        boolean isWork = false;
+        ActivityManager myAM = (ActivityManager) mContext
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> myList = myAM.getRunningServices(200);
+        if (myList.size() <= 0) {
+            return false;
+        }
+        for (int i = 0; i < myList.size(); i++) {
+            String mName = myList.get(i).service.getClassName().toString();
+            if (mName.equals(serviceName)) {
+                isWork = true;
+                break;
+            }
+        }
+        return isWork;
     }
 
     /**

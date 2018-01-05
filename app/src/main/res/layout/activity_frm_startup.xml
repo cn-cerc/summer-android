@@ -14,6 +14,16 @@
         android:scaleType="centerCrop"
         android:src="@mipmap/startupimage"
         android:visibility="visible" />
+    <TextView
+        android:id="@+id/version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:text="版本"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="50dp"/>
+
     <View
         android:id="@+id/view_Masking"
         android:layout_width="match_parent"
