@@ -17,7 +17,7 @@ import cn.cerc.summer.android.core.MySession;
  */
 
 public class LongRunningService extends Service {
-    private static int anHour = 60000;
+    private static int anHour = 900000;
     private AlarmManager manager;
 
     @Override
@@ -31,7 +31,7 @@ public class LongRunningService extends Service {
             MySession.getInstance().setToken(intent.getStringExtra("token"));
         }
         anHour = intent.getIntExtra("time", anHour);
-        Log.d("print", "onStartCommand: "+anHour);
+        Log.d("print", "onStartCommand: " + anHour);
         manager = (AlarmManager) getSystemService(ALARM_SERVICE);
         long triggerAtTime = SystemClock.elapsedRealtime() + anHour;
         Intent intent1 = new Intent("ELITOR_CLOCK");
