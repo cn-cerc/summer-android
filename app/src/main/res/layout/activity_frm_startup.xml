@@ -14,6 +14,7 @@
         android:scaleType="centerCrop"
         android:src="@mipmap/startupimage"
         android:visibility="visible" />
+
     <TextView
         android:id="@+id/version"
         android:layout_width="wrap_content"
@@ -29,14 +30,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#88000000"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
+
     <LinearLayout
         android:id="@+id/llDialog"
+        style="@style/DialogTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        style="@style/DialogTheme"
         android:layout_margin="25dp"
         android:background="@drawable/point_white"
         android:orientation="vertical"
@@ -45,8 +46,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/point_white"
-            >
+            android:background="@drawable/point_white">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -60,8 +60,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="发现新版本"
-                android:textSize="20sp"
                 android:textColor="@color/white_view"
+                android:textSize="20sp"
                 android:textStyle="bold" />
         </RelativeLayout>
 
@@ -80,8 +80,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#d9d9d9"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -92,11 +92,11 @@
                 android:id="@+id/btnCancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/btn_no"
                 android:layout_weight="1"
+                android:background="@drawable/btn_no"
+                android:text="忽略"
                 android:textColor="#2f8bf7"
-                android:textSize="16sp"
-                android:text="忽略" />
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/btnOk"
@@ -104,9 +104,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/btn_yes"
+                android:text="更新"
                 android:textColor="#2f8bf7"
-                android:textSize="16sp"
-                android:text="更新" />
+                android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>
 

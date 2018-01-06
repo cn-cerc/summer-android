@@ -72,16 +72,6 @@ public class MyApp extends android.app.Application {
     }
 
     /**
-     * 配置url
-     *
-     * @param baseUrl host
-     * @return url
-     */
-    public static String buildDeviceUrl(String baseUrl) {
-        return String.format("%s?device=%s&CLIENTID=%s", baseUrl, DEVICE_TYPE, MyApp.getInstance().getClientId());
-    }
-
-    /**
      * 读取缓存的配置文件
      *
      * @return 返回的文件json字符串
