@@ -34,8 +34,10 @@ public class HeartbeatCheck implements JavaScriptService {
         boolean status = request.getBoolean("status");
         token = request.getString("token");
         Intent intent = new Intent(context, LongRunningService.class);
-        intent.putExtra("token", token);
-        intent.putExtra("time", request.getInt("time")*60000);
+        if (!"".equals(token)) {
+            intent.putExtra("token", token);
+        }
+        intent.putExtra("time", request.getInt("time") * 60000);
         if (status) {
             if (!MyApp.getInstance().isServiceWork(context, "cn.cerc.summer.android.services.LongRunningService")) {
                 context.startService(intent);
