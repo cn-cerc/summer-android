@@ -1,5 +1,6 @@
 package cn.cerc.summer.android.forms;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -64,7 +66,6 @@ import cn.cerc.summer.android.forms.view.DragPointView;
 import cn.cerc.summer.android.services.RefreshMenu;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
-
 
 /**
  * 主界面
@@ -329,7 +330,9 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         setContentView(R.layout.activity_main);
         VisualKeyboardTool.assistActivity(findViewById(android.R.id.content)); //自动监听虚拟按键的变化，改变高度
         instance = this;
-
+        ActivityCompat.requestPermissions(FrmMain.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+        }, 0x67);
         settings = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
 
         mRightMenu = new ArrayList<MainTitleMenu>();

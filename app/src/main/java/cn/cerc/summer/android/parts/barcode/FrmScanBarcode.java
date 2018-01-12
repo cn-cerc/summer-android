@@ -327,10 +327,10 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
             return;
         }
         Intent resultIntent = new Intent();
-        Bundle bundle = new Bundle();
-        bundle.putString("result", resultString);
-        bundle.putParcelable("bitmap", bitmap);
-        resultIntent.putExtras(bundle);
+//        Bundle bundle = new Bundle();
+//        bundle.putString("result", resultString);
+//        bundle.putParcelable("bitmap", bitmap);
+//        resultIntent.putExtras(bundle);
         this.setResult(RESULT_OK, resultIntent);
 
         FrmMain obj = FrmMain.getInstance();

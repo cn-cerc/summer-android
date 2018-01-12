@@ -16,6 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import cn.cerc.summer.android.services.CallBrowser;
+import cn.cerc.summer.android.services.CallClockOff;
 import cn.cerc.summer.android.services.CallLoginByAccount;
 import cn.cerc.summer.android.services.CallLoginByPhone;
 import cn.cerc.summer.android.services.CallPhoneNumber;
@@ -98,6 +99,7 @@ public class JavaScriptProxy extends Object {
         services.put(RefreshMenu.class, "动态添加菜单");
         services.put(CallBrowser.class, "调用外部浏览器");
         services.put(HeartbeatCheck.class, "启动定时器");
+        services.put(CallClockOff.class, "考勤打卡");
     }
 
     private AppCompatActivity owner;
