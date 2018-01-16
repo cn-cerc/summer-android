@@ -68,6 +68,10 @@
             android:name="cn.cerc.summer.android.forms.FrmSettings"
             android:screenOrientation="portrait" />
 
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="961d762c2f2e1c94b0845c59aa57f00a" />
+        <service android:name="com.amap.api.location.APSService" />
         <!-- JPush -->
         <service
             android:name="cn.jpush.android.service.PushService"
@@ -192,6 +196,7 @@
         <activity android:name="cn.cerc.summer.android.parts.barcode.FrmScanProduct" />
         <activity android:name="cn.cerc.summer.android.parts.barcode.DlgScanProduct" />
         <activity android:name="cn.cerc.summer.android.parts.login.FrmLoginByAccount" />
+        <activity android:name="cn.cerc.summer.android.forms.view.ClockOffActivity"/>
         <activity
             android:name="cn.cerc.summer.android.parts.dialog.FrmShowWarning"
             android:theme="@style/MyDialogStyle" />
