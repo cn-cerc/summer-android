@@ -34,6 +34,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -297,11 +298,16 @@ public class FrmStartup extends AppCompatActivity {
     }
 
     private void startRequest() {
+        String id = null;
         TelephonyManager TelephonyMgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        MyApp.getInstance().setClientId("n_" + TelephonyMgr.getDeviceId());
+        id = TelephonyMgr.getDeviceId();
+        if (id == null) {
+            id = getSerialNumber();
+        }
+        MyApp.getInstance().setClientId("n_" + id);
 
         new Thread(new Runnable() {
             @Override
@@ -318,6 +324,18 @@ public class FrmStartup extends AppCompatActivity {
                 handler.sendMessage(msg);
             }
         }).start();
+    }
+
+    private String getSerialNumber() {
+        String serial = null;
+        try {
+            Class<?> c = Class.forName("android.os.SystemProperties");
+            Method get = c.getMethod("get", String.class);
+            serial = (String) get.invoke(c, "ro.serialno");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return serial;
     }
 
 }
