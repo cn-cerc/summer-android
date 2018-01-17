@@ -329,9 +329,9 @@ public class FrmStartup extends AppCompatActivity {
     private String getSerialNumber() {
         String serial = null;
         try {
-            Class<?> c = Class.forName("android.os.SystemProperties");
-            Method get = c.getMethod("get", String.class);
-            serial = (String) get.invoke(c, "ro.serialno");
+            Class<?> parameter = Class.forName("android.os.SystemProperties");
+            Method getMethod = parameter.getMethod("get", String.class);
+            serial = (String) getMethod.invoke(parameter, "ro.serialno");
         } catch (Exception e) {
             e.printStackTrace();
         }
