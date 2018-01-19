@@ -8,7 +8,7 @@
     <View
         android:id="@+id/head_view"
         android:layout_width="match_parent"
-        android:background="#0000"
+        android:background="#000"
         android:layout_height="15dp"
         android:visibility="gone"/>
 
