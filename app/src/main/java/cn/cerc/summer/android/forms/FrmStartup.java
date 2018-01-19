@@ -80,21 +80,25 @@ public class FrmStartup extends AppCompatActivity {
                     return;
                 }
                 String err = null;
-                try {
-                    json = new JSONObject(resp);
-                    if (json.has("result")) {
-                        if (json.getBoolean("result")) {
-                            instince.loadConfig(json);
+                if(resp.contains("result")) {
+                    try {
+                        json = new JSONObject(resp);
+                        if (json.has("result")) {
+                            if (json.getBoolean("result")) {
+                                instince.loadConfig(json);
+                            } else {
+                                err = json.getString("message");
+                            }
                         } else {
-                            err = json.getString("message");
+                            err = "取得后台服务异常，请稍后再试！";
                         }
-                    } else {
-                        err = "取得后台服务异常，请稍后再试！";
+                    } catch (JSONException e) {
+                        showError("出现错误！", resp);
+                    } catch (Exception e) {
+                        err = e.getMessage();
                     }
-                } catch (JSONException e) {
-                    showError("出现错误！", resp);
-                } catch (Exception e) {
-                    err = e.getMessage();
+                }else{
+                    showError("出现错误！", "网络请求错误，请检查网络后重试！");
                 }
                 if (err != null) {
                     showError("出现错误！", err);

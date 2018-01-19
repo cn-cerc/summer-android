@@ -5,6 +5,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <View
+        android:id="@+id/head_view"
+        android:layout_width="match_parent"
+        android:background="#0000"
+        android:layout_height="15dp"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:id="@+id/boxTitle"
         android:layout_width="match_parent"
