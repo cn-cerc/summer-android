@@ -95,7 +95,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     boolean visibility = (boolean) msg.obj;
                     boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
                     if (!visibility) {
-                        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && !Build.VERSION.RELEASE.contains("4.4.4")) {
+                        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && Build.VERSION.RELEASE.contains("4.4.2")) {
                             headview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, VisualKeyboardTool.getStatusBarHeight(FrmMain.this)));
                             headview.setVisibility(View.VISIBLE);
                         } else {
