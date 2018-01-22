@@ -97,6 +97,16 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 case 1:
                     boolean visibility = (boolean) msg.obj;
                     boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
+                    if (!visibility) {
+                        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && Build.VERSION.RELEASE.contains("4.4.2")) {
+                            headview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, VisualKeyboardTool.getStatusBarHeight(FrmMain.this)));
+                            headview.setVisibility(View.VISIBLE);
+                        } else {
+                            headview.setVisibility(View.GONE);
+                        }
+                    } else {
+                        headview.setVisibility(View.GONE);
+                    }
                     break;
                 case 2:
                     String title = (String) msg.obj;
@@ -137,6 +147,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private boolean webViewState = false;  //判断是否新建webView
     private RefreshMenu mRefreshMenu;
     private View hightview;
+    private View headview;
     private MyApp myApp;
 
     private TagAliasCallback tac = new TagAliasCallback() {
@@ -376,8 +387,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //透明状态栏
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //透明导航栏
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
             //设置contentview为fitsSystemWindows
             ViewGroup contentView = (ViewGroup) findViewById(android.R.id.content);
             View childAt = contentView.getChildAt(0);
@@ -472,6 +481,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         lblTitle = (TextView) this.findViewById(R.id.lblTitle);
         boxTitle = (LinearLayout) findViewById(R.id.boxTitle);
         hightview = (View) findViewById(R.id.hightview);
+        headview = (View) findViewById(R.id.head_view);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             hightview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, VisualKeyboardTool.getStatusBarHeight(FrmMain.this)));
             hightview.setVisibility(View.VISIBLE);
