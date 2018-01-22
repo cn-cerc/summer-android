@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.mimrc.vine.R;
@@ -233,6 +232,7 @@ public class MyApp extends android.app.Application {
 
     /**
      * 判断服务状态
+     *
      * @param mContext
      * @param serviceName
      * @return

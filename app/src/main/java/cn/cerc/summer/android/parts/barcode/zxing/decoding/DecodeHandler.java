@@ -16,15 +16,11 @@
 
 package cn.cerc.summer.android.parts.barcode.zxing.decoding;
 
-import java.util.Hashtable;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
-
-import cn.cerc.summer.android.parts.barcode.FrmScanBarcode;
 
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
@@ -34,6 +30,9 @@ import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
 import com.mimrc.vine.R;
 
+import java.util.Hashtable;
+
+import cn.cerc.summer.android.parts.barcode.FrmScanBarcode;
 import cn.cerc.summer.android.parts.barcode.zxing.camera.CameraManager;
 import cn.cerc.summer.android.parts.barcode.zxing.camera.PlanarYUVLuminanceSource;
 

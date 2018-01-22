@@ -1,7 +1,5 @@
 package cn.cerc.summer.android.parts.music;
 
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
 import org.json.JSONException;

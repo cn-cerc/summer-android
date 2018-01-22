@@ -6,8 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 
-import static android.database.sqlite.SQLiteDatabase.openOrCreateDatabase;
-
 /**
  * Created by Jason<sz9214e@qq.com> on 2017/8/7.
  */

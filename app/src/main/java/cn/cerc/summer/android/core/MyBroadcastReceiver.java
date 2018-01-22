@@ -1,11 +1,8 @@
 package cn.cerc.summer.android.core;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -13,10 +10,7 @@ import org.json.JSONObject;
 
 import cn.cerc.summer.android.basis.RemoteForm;
 import cn.cerc.summer.android.forms.FrmMain;
-import cn.cerc.summer.android.services.LongRunningService;
 import cn.jpush.android.api.JPushInterface;
-
-import static android.content.Context.ALARM_SERVICE;
 
 /**
  * Created by fff on 2016/11/28.

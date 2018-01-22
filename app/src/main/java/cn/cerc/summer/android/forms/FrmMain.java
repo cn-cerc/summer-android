@@ -54,13 +54,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import cn.cerc.summer.android.core.VisualKeyboardTool;
 import cn.cerc.summer.android.core.CommBottomPopWindow;
 import cn.cerc.summer.android.core.Constans;
 import cn.cerc.summer.android.core.MainPopupMenu;
 import cn.cerc.summer.android.core.MainTitleMenu;
 import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.core.ScreenUtils;
+import cn.cerc.summer.android.core.VisualKeyboardTool;
 import cn.cerc.summer.android.forms.view.BrowserView;
 import cn.cerc.summer.android.forms.view.DragPointView;
 import cn.cerc.summer.android.services.LongRunningService;
@@ -996,6 +996,17 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         handler.sendMessage(message);
     }
 
+    @Override
+    protected void onDestroy() {
+        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        Intent intent1 = new Intent("ELITOR_CLOCK");
+        PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent1, 0);
+        manager.cancel(pi);
+        Intent intent = new Intent(this, LongRunningService.class);
+        stopService(intent);
+        super.onDestroy();
+    }
+
     private class MyWebViewClient extends WebViewClient {
 
         @Override
@@ -1126,16 +1137,5 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             progress.setVisibility(View.GONE);
             super.onPageFinished(view, url);
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        Intent intent1 = new Intent("ELITOR_CLOCK");
-        PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent1, 0);
-        manager.cancel(pi);
-        Intent intent = new Intent(this, LongRunningService.class);
-        stopService(intent);
-        super.onDestroy();
     }
 }

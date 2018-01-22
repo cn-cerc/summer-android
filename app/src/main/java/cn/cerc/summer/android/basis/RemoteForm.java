@@ -2,7 +2,6 @@ package cn.cerc.summer.android.basis;
 
 import android.content.Intent;
 import android.os.Message;
-import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,7 +36,7 @@ public class RemoteForm {
     }
 
     public RemoteForm exec() {
-        Intent intent = new Intent(MyApp.getInstance(),LongRunningService.class);
+        Intent intent = new Intent(MyApp.getInstance(), LongRunningService.class);
         MyApp.getInstance().startService(intent);
         result = false;
         JSONObject json = null;
