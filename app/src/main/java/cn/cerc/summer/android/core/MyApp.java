@@ -47,7 +47,7 @@ public class MyApp extends android.app.Application {
     public static String FORMS_PATH = "forms";
     private static MyApp instance;
     private final String APPCODE = "vine-android-standard";
-    public boolean debug = true;
+    public boolean debug = false;
     private DisplayImageOptions options;
     private String appVersion;
     private String clientId;

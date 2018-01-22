@@ -75,9 +75,13 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
                 Log.e("xxxx", "444444444");
                 break;
             case "ELITOR_CLOCK":
-                Log.d("print", "onReceive: 执行成功");
-                RemoteForm rf = new RemoteForm("WebDefault.heartbeatCheck");
-                rf.execByMessage(3);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        RemoteForm rf = new RemoteForm("WebDefault.heartbeatCheck");
+                        rf.execByMessage(3);
+                    }
+                }).start();
                 break;
             default:
                 break;
