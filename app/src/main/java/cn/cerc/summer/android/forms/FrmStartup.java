@@ -262,7 +262,6 @@ public class FrmStartup extends AppCompatActivity {
             return;
         }
 
-
     }
 
     @Override

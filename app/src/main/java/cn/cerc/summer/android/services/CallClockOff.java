@@ -6,7 +6,7 @@ import android.content.Intent;
 import org.json.JSONObject;
 
 import cn.cerc.summer.android.forms.JavaScriptService;
-import cn.cerc.summer.android.forms.view.ClockOffActivity;
+import cn.cerc.summer.android.parts.sign.ClockOffActivity;
 
 /**
  * Created by Administrator on 2018/1/9.

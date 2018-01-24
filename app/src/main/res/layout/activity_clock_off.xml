@@ -12,12 +12,7 @@
         android:gravity="center_vertical"
         android:orientation="vertical">
 
-        <!--<View-->
-            <!--android:id="@+id/hightview"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="15dp" />-->
-
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:gravity="center_vertical">
@@ -26,6 +21,7 @@
                 android:id="@+id/imgBack"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:layout_centerVertical="true"
                 android:src="@drawable/ic_chevron_left_white_24dp" />
 
             <TextView
@@ -34,6 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ellipsize="marquee"
+                android:layout_centerInParent="true"
                 android:focusable="true"
                 android:gravity="center"
                 android:marqueeRepeatLimit="marquee_forever"
@@ -42,37 +39,7 @@
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/super_big" />
 
-
-            <RelativeLayout
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="15dp"
-                android:visibility="visible">
-
-                <ImageView
-                    android:id="@+id/imgMore"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/ic_more_vert_white_24dp" />
-
-                <cn.cerc.summer.android.forms.view.DragPointView
-                    android:id="@+id/dragpointview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentTop="true"
-                    android:padding="2dp"
-                    android:text=""
-                    android:visibility="gone"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/small" />
-
-            </RelativeLayout>
-        </LinearLayout>
+        </RelativeLayout>
 
 
     </LinearLayout>
@@ -83,10 +50,10 @@
         android:orientation="vertical">
 
         <!--<com.amap.api.maps.MapView-->
-            <!--android:id="@+id/mapView"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_weight="1">-->
+        <!--android:id="@+id/mapView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1">-->
 
         <!--</com.amap.api.maps.MapView>-->
         <LinearLayout
@@ -114,7 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text="定位中..."
+                android:text=""
                 android:textSize="14sp" />
         </LinearLayout>
 
@@ -127,7 +94,7 @@
         <RelativeLayout
             android:id="@+id/relative_image"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="160dp"
             android:layout_margin="25dp"
             android:background="@drawable/clock_image">
 
@@ -143,7 +110,8 @@
             <ImageView
                 android:id="@+id/image"
                 android:layout_width="match_parent"
-                android:layout_height="150dp" />
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"/>
         </RelativeLayout>
 
         <LinearLayout
@@ -159,6 +127,7 @@
                 android:text="打卡" />
 
             <Button
+                android:id="@+id/btn_recording"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

@@ -1,7 +1,8 @@
-package cn.cerc.summer.android.forms.view;
+package cn.cerc.summer.android.parts.sign;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -48,13 +49,20 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.mimrc.vine.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
 
+import cn.cerc.summer.android.basis.HttpClient;
 import cn.cerc.summer.android.core.AMapUtil;
 import cn.cerc.summer.android.core.MyApp;
+import cn.cerc.summer.android.core.MySession;
 import cn.cerc.summer.android.core.PhotoBitmapUtils;
+import cn.cerc.summer.android.core.RequestCallback;
 
 /**
  * Created by Administrator on 2018/1/9.
@@ -80,6 +88,7 @@ public class ClockOffActivity extends AppCompatActivity implements LocationSourc
     private LatLng latLngCurrent;
     private TextView text_address;
     private Button btn_PunchClock;
+    private Button btn_recording;
     private ImageView imgBack;
     private ImageView image;
     private TextView text_image;
@@ -87,12 +96,13 @@ public class ClockOffActivity extends AppCompatActivity implements LocationSourc
     private final static int TAKE_PICTURE = 1; //相机
     private Uri photoUri = null;
     private File file;
+    private boolean isPhotograph = false;
+    private String path = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clock_off);
-
 
         initView();
         changeToAmapView(savedInstanceState);
@@ -108,10 +118,12 @@ public class ClockOffActivity extends AppCompatActivity implements LocationSourc
         text_address = (TextView) findViewById(R.id.text_address);
         mContainerLayout = (LinearLayout) findViewById(R.id.mContainerLayout);
         btn_PunchClock = (Button) findViewById(R.id.btn_PunchClock);
+        btn_recording = (Button) findViewById(R.id.btn_recording);
         imgBack = (ImageView) findViewById(R.id.imgBack);
         image = (ImageView) findViewById(R.id.image);
         text_image = (TextView) findViewById(R.id.text_image);
         relative_image = (RelativeLayout) findViewById(R.id.relative_image);
+        btn_recording.setOnClickListener(this);
         btn_PunchClock.setOnClickListener(this);
         imgBack.setOnClickListener(this);
         text_image.setOnClickListener(this);
@@ -145,15 +157,11 @@ public class ClockOffActivity extends AppCompatActivity implements LocationSourc
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
         aMap.setMyLocationType(1);
-//        aMap.setOnMapLoadedListener(this);// 设置amap加载成功事件监听器
-//        aMap.setOnMarkerClickListener(this);// 设置点击marker事件监听器
-//        aMap.setOnInfoWindowClickListener(this);// 设置点击infoWindow事件监听器
-//        aMap.setInfoWindowAdapter(this);// 设置自定义InfoWindow样式
-//        aMap.moveCamera(CameraUpdateFactory.zoomTo(14));
         CameraPosition LUJIAZUI = new CameraPosition.Builder().target(new LatLng(22.579652, 113.861323)).zoom(17).bearing(0).tilt(45).build();
         aMap.animateCamera(CameraUpdateFactory.newCameraPosition(LUJIAZUI));
         setupLocationStyle();
         aMap.setOnMapClickListener(this);
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
         geocoderSearch = new GeocodeSearch(this);
         geocoderSearch.setOnGeocodeSearchListener(this);
         progDialog = new ProgressDialog(this);
@@ -172,12 +180,6 @@ public class ClockOffActivity extends AppCompatActivity implements LocationSourc
         //隐藏进度圈
         myLocationStyle.strokeColor(Color.argb(0, 0, 0, 0));// 设置圆形的边框颜色
         myLocationStyle.radiusFillColor(Color.argb(0, 0, 0, 0));// 设置圆形的填充颜色
-        // 自定义精度范围的圆形边框颜色
-//        myLocationStyle.strokeColor(STROKE_COLOR);
-        //自定义精度范围的圆形边框宽度
-        // 设置圆形的填充颜色
-//        myLocationStyle.radiusFillColor(FILL_COLOR);
-        // 将自定义的 myLocationStyle 对象添加到地图上
         aMap.setMyLocationStyle(myLocationStyle);
     }
 
@@ -192,10 +194,8 @@ public class ClockOffActivity extends AppCompatActivity implements LocationSourc
         file = PhotoBitmapUtils.createIconFile();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             photoUri = FileProvider.getUriForFile(this, "com.mimrc.vine.fileprovider", file);//通过FileProvider创建一个content类型的Uri
-            Log.d("print", "openCamera:11111 " + photoUri + "  ___  " + file.toString());
         } else {
             photoUri = Uri.fromFile(file);
-            Log.d("print", "openCamera:222222 " + photoUri);
         }
         Intent intent = new Intent();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -216,7 +216,9 @@ public class ClockOffActivity extends AppCompatActivity implements LocationSourc
                     Bitmap bitmap = null;
                     if (file != null) {
                         try {
-                            bitmap = BitmapFactory.decodeStream(new FileInputStream(PhotoBitmapUtils.amendRotatePhoto(file.getAbsolutePath(), this)));
+                            path = PhotoBitmapUtils.amendRotatePhoto(file.getAbsolutePath(), this);
+                            bitmap = BitmapFactory.decodeStream(new FileInputStream(path));
+                            isPhotograph = true;
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -224,10 +226,10 @@ public class ClockOffActivity extends AppCompatActivity implements LocationSourc
                     } else {
                         if (data != null) {
                             if (data.hasExtra("data")) {
-                                Log.d("print", "onActivityResult: data啊啊啊" + data.getParcelableExtra("data"));
                                 Log.i("URI", "data is not null");
                                 Bitmap bitmap1 = data.getParcelableExtra("data");
-                                PhotoBitmapUtils.savePhotoToSD(bitmap1, this);
+                                path = PhotoBitmapUtils.savePhotoToSD(bitmap1, this);
+                                isPhotograph = true;
                                 image.setImageBitmap(bitmap1);
                             }
                         }
@@ -235,7 +237,6 @@ public class ClockOffActivity extends AppCompatActivity implements LocationSourc
                 }
                 break;
         }
-
     }
 
     @Override
@@ -275,10 +276,6 @@ public class ClockOffActivity extends AppCompatActivity implements LocationSourc
             mLocationOption.setInterval(60000);
             //设置定位参数
             mlocationClient.setLocationOption(mLocationOption);
-            // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
-            // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
-            // 在定位结束后，在合适的生命周期调用onDestroy()方法
-            // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
             mlocationClient.startLocation();
         }
     }
@@ -298,6 +295,8 @@ public class ClockOffActivity extends AppCompatActivity implements LocationSourc
                 .position(latLng)
                 .draggable(true);
         marker = aMap.addMarker(markerOption);
+        aMap.moveCamera(CameraUpdateFactory.changeLatLng(latLng));
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
         latLngCurrent = latLng;
         getAddress(AMapUtil.convertToLatLonPoint(latLng));
     }
@@ -361,14 +360,12 @@ public class ClockOffActivity extends AppCompatActivity implements LocationSourc
                 if (isFirstLoc) {
                     CameraPosition LUJIAZUI = new CameraPosition.Builder().target(new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude())).zoom(17).bearing(0).tilt(45).build();
                     aMap.animateCamera(CameraUpdateFactory.newCameraPosition(LUJIAZUI));
-//                    setMapCustomStyleFile();
                     isFirstLoc = false;
                 }
 
                 mListener.onLocationChanged(aMapLocation);// 显示系统小蓝点
                 NowLocation = aMapLocation;
                 myLaLn = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
-//                String result = MapUtils.getLocationStr(aMapLocation);
                 Log.i("Location", aMapLocation.getLatitude() + "::::" + aMapLocation.getLongitude());
                 if (markerOption == null) {
                     String address = NowLocation.getProvince() + NowLocation.getCity() + NowLocation.getDistrict() + NowLocation.getStreet() + NowLocation.getStreetNum() + NowLocation.getAoiName();
@@ -395,10 +392,57 @@ public class ClockOffActivity extends AppCompatActivity implements LocationSourc
         switch (v.getId()) {
             case R.id.btn_PunchClock:
                 float distance = AMapUtils.calculateLineDistance(latLngSign, latLngCurrent);
-                Toast.makeText(this, "当前距离为" + distance, Toast.LENGTH_SHORT).show();
+                if (distance <= 400) {
+                    if ("".equals(text_address.getText().toString())) {
+                        Toast.makeText(ClockOffActivity.this, "定位失败，请检查定位权限！", Toast.LENGTH_SHORT).show();
+                    } else if (path == null || !isPhotograph) {
+                        Toast.makeText(ClockOffActivity.this, "请先进行拍照！", Toast.LENGTH_SHORT).show();
+                    } else {
+                        String token = null;
+                        token = MySession.getInstance().getToken();
+                        String client = null;
+                        if (token != null && !"".equals(token)) {
+                            client = MyApp.getFormUrl("FrmAttendance.clockIn") + String.format("?sid=%s&CLIENTID=%s", token, MyApp.getInstance().getClientId());
+                            HttpClient httpClient = new HttpClient("FrmAttendance.clockIn");
+                            HashMap<String, String> rf = new HashMap<>();
+                            rf.put("Address_", text_address.getText().toString());
+                            rf.put("Position_", markerOption.getPosition().longitude + "," + markerOption.getPosition().latitude);
+                            rf.put("FileUrl_", path);
+                            httpClient.POST(client, rf, new RequestCallback() {
+                                @Override
+                                public void success(String url, JSONObject json) {
+                                    Log.d("print", "success: " + json.toString());
+                                    try {
+                                        Toast.makeText(ClockOffActivity.this, json.getString("message"), Toast.LENGTH_SHORT).show();
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                @Override
+                                public void failt(String url, String error) {
+
+                                }
+
+                                @Override
+                                public Context getContext() {
+                                    return null;
+                                }
+                            });
+                        } else {
+                            Toast.makeText(this, "登录信息错误，请重登后重试！", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } else {
+                    Toast.makeText(this, "请选择当前定位100米之内的位置", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.imgBack:
                 finish();
+                break;
+            case R.id.btn_recording:
+                //打卡记录
                 break;
             case R.id.text_image:
                 photograph();
