@@ -40,8 +40,8 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.basis.RemoteForm;
+import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.forms.FrmMain;
 import cn.cerc.summer.android.parts.barcode.zxing.camera.CameraManager;
 import cn.cerc.summer.android.parts.barcode.zxing.decoding.CaptureActivityHandler;
@@ -125,21 +125,13 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
     }
 
     //调用扫描画面并回调javaScript
-    public static void startForm(AppCompatActivity context, String scriptFunction, String scriptTag) {
+    public static void startForm(AppCompatActivity context, String scriptFunction) {
         Intent intent = new Intent();
         intent.putExtra("scriptFunction", scriptFunction);
-        intent.putExtra("scriptTag", scriptTag);
         intent.setClass(context, FrmScanBarcode.class);
         context.startActivity(intent);
     }
 
-    //调用扫描画面并post到指定的url
-    public static void startForm(AppCompatActivity context, String postUrl) {
-        Intent intent = new Intent();
-        intent.putExtra("postUrl", postUrl);
-        intent.setClass(context, FrmScanBarcode.class);
-        context.startActivity(intent);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -149,7 +141,6 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
         Intent intent = getIntent();
         if (intent.hasExtra("scriptFunction")) {
             this.scriptFunction = intent.getStringExtra("scriptFunction");
-            this.scriptTag = intent.getStringExtra("scriptTag");
         } else if (intent.hasExtra("postUrl")) {
             this.postUrl = intent.getStringExtra("postUrl");
         } else {
@@ -331,7 +322,21 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
 
         FrmMain obj = FrmMain.getInstance();
         if (!"".equals(this.scriptFunction)) {
-            obj.runScript(String.format("%s('%s', '%s')", this.scriptFunction, this.scriptTag, resultString));
+            String result = "result : true";
+            String data = "data : ''";
+            if (!"".equals(resultString) && resultIntent != null) {
+                data = String.format("data :'%s'", resultString);
+            } else {
+                result = "result : false";
+            }
+            Log.d("print", "onResultHandler: " + String.format("(new Function( 'return %s') ()) ({\n" +
+                    "  %s,\n" +
+                    "  %s\n" +
+                    "})", this.scriptFunction, result, data));
+            obj.runScript(String.format("(new Function('return %s') ()) ({\n" +
+                    "  %s,\n" +
+                    "  %s\n" +
+                    "})", this.scriptFunction, result, data));
             //  RemoteForm   remoteForm  = new RemoteForm(postUrl==null||postUrl.equals("")?postUrl)
 
         } else if (!"".equals(this.postUrl)) {

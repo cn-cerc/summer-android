@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -21,18 +22,16 @@ public class ScanBarcode implements JavaScriptService {
     @Override
     public String execute(Context context, JSONObject request) throws Exception {
         //操作类型：0、回调js方法, 1: post到指定的url
+        Log.d("print", "execute: "+request.toString());
         int type = request.has("type") ? request.getInt("type") : 0;
         if (type == 0) {
-            if (!request.has("scriptFunction")) {
+            if (!request.has("callback")) {
                 return "没有指定要回调的javaScript函数";
-            }
-            if (!request.has("scriptTag")) {
-                return "没有指定要回调的scriptTag参数";
             }
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
                     == PackageManager.PERMISSION_GRANTED) {
                 FrmScanBarcode.startForm((AppCompatActivity) context,
-                        request.getString("scriptFunction"), request.getString("scriptTag"));
+                        request.getString("callback"));
                 return "true";
             } else {
                 ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.CAMERA}, 35);
