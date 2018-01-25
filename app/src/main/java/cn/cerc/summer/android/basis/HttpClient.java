@@ -1,16 +1,10 @@
 package cn.cerc.summer.android.basis;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONObject;
 import org.xutils.common.Callback;
-import org.xutils.common.util.KeyValue;
 import org.xutils.http.RequestParams;
-import org.xutils.http.body.UrlEncodedParamsBody;
 import org.xutils.x;
 
 import java.io.BufferedReader;
@@ -23,10 +17,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import cn.cerc.jdb.core.DataSet;
@@ -146,9 +138,6 @@ public class HttpClient {
         Log.e("map", map.toString());
         RequestParams param = new RequestParams(url);
         param.setMultipart(true);
-//        param.addHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-//        param.addHeader("Content-Type", "application/x-www-form-urlencoded");
-//        param.addHeader("charset", "UTF-8");
         Iterator it = map.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry entry = (Map.Entry) it.next();
@@ -186,118 +175,4 @@ public class HttpClient {
         });
     }
 
-    /**
-     * POST请求
-     * 带图片上传
-     */
-    public void POST2(final String url, HashMap<String, String> map, final RequestCallback rc) {
-
-        Log.e("map", map.toString());
-        List<KeyValue> mapText = new ArrayList<>();
-        RequestParams param = new RequestParams(url);
-        param.setMultipart(true);
-//        param.addHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-//        param.addHeader("Content-Type", "application/x-www-form-urlencoded");
-//        param.addHeader("charset", "ISO-8859-1");
-        Iterator it = map.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry entry = (Map.Entry) it.next();
-            String key = (String) entry.getKey();
-            String val = (String) entry.getValue();
-            Log.d("print", "POST: " + key + "    " + val);
-            if (null != key && key.contains("FileUrl_") || key.contains("video"))
-                param.addBodyParameter(key, new File(val));
-            else {
-                param.addBodyParameter(key, val);
-            }
-        }
-        x.http().post(param, new Callback.CommonCallback<JSONObject>() {
-            @Override
-            public void onSuccess(JSONObject result) {
-                Log.e("json", result.toString());
-                rc.success(url, result);
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                Log.d("print", "onError: " + ex.toString());
-                rc.failt(url, ex.toString());
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-                rc.failt(url, "已取消");
-            }
-
-            @Override
-            public void onFinished() {
-            }
-        });
-    }
-
-    /**
-     * POST请求
-     * 不带图片上传
-     */
-    public void POST(final String url, List<KeyValue> map, final RequestCallback rc) {
-        //        if (!AppUtil.getNetWorkStata(rc.getContext())) return;
-        RequestParams param = new RequestParams(url);
-//      param.addHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-        Log.e("map", map.toString());
-        try {
-            param.setRequestBody(new UrlEncodedParamsBody(map, "utf-8"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-       /* *//** 判断https证书是否成功验证 *//*
-        SSLContext sslContext = getSSLContext(MyApplication.getInstance());
-        if(null == sslContext){
-            if (BuildConfig.DEBUG) Log.d(TAG, "Error:Can't Get SSLContext!");
-            return ;
-        }
-        param.setSslSocketFactory(sslContext.getSocketFactory()); //绑定SSL证书(https请求)*/
-        x.http().post(param, new Callback.CommonCallback<JSONObject>() {
-            @Override
-            public void onSuccess(JSONObject result) {
-                Log.e("json", result.toString());
-                rc.success(url, result);
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                rc.failt(url, ex.toString());
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-                rc.failt(url, "已取消");
-            }
-
-            @Override
-            public void onFinished() {
-
-            }
-        });
-    }
-
-    /**
-     * 获取当前网络状态
-     *
-     * @param context 上下文
-     * @return 是否有网络
-     */
-    public static boolean getNetWorkStata(Context context) {
-        // 获取手机所有连接管理对象（包括对wi-fi,net等连接的管理）
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager != null) {
-            NetworkInfo info = connectivityManager.getActiveNetworkInfo();
-            if (info != null && info.isConnected()) { // 当前网络是连接的
-                if (info.getState() == NetworkInfo.State.CONNECTED) { // 当前所连接的网络可用
-                    return true;
-                }
-            }
-        }
-        Toast.makeText(context, "请检查网络或稍候重试", Toast.LENGTH_SHORT).show();
-        return false;
-    }
 }
