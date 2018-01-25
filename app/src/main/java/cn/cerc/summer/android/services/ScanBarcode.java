@@ -25,13 +25,13 @@ public class ScanBarcode implements JavaScriptService {
         Log.d("print", "execute: "+request.toString());
         int type = request.has("type") ? request.getInt("type") : 0;
         if (type == 0) {
-            if (!request.has("callback")) {
+            if (!request.has("_callback_")) {
                 return "没有指定要回调的javaScript函数";
             }
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
                     == PackageManager.PERMISSION_GRANTED) {
                 FrmScanBarcode.startForm((AppCompatActivity) context,
-                        request.getString("callback"));
+                        request.getString("_callback_"));
                 return "true";
             } else {
                 ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.CAMERA}, 35);
