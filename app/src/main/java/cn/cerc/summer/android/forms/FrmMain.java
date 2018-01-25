@@ -1064,7 +1064,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             if (!MyApp.getNetworkState(view.getContext())) return;
             currentUrl = url;
-            Log.d("print", "url___: " + url);
             clearData();
             is_ERROR = false;
             /*

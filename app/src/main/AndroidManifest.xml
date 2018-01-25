@@ -197,7 +197,7 @@
         <activity android:name="cn.cerc.summer.android.parts.barcode.FrmScanProduct" />
         <activity android:name="cn.cerc.summer.android.parts.barcode.DlgScanProduct" />
         <activity android:name="cn.cerc.summer.android.parts.login.FrmLoginByAccount" />
-        <activity android:name="cn.cerc.summer.android.parts.sign.ClockOffActivity" />
+        <activity android:name="cn.cerc.summer.android.parts.sign.ClockInActivity" />
         <activity
             android:name="cn.cerc.summer.android.parts.dialog.FrmShowWarning"
             android:theme="@style/MyDialogStyle" />

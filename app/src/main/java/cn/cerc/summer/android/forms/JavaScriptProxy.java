@@ -16,13 +16,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import cn.cerc.summer.android.services.CallBrowser;
-import cn.cerc.summer.android.services.CallClockOff;
 import cn.cerc.summer.android.services.CallLoginByAccount;
 import cn.cerc.summer.android.services.CallLoginByPhone;
 import cn.cerc.summer.android.services.CallPhoneNumber;
 import cn.cerc.summer.android.services.CaptureImage;
 import cn.cerc.summer.android.services.CaptureMovie;
 import cn.cerc.summer.android.services.CaptureMusic;
+import cn.cerc.summer.android.services.ClockIn;
 import cn.cerc.summer.android.services.CreateQrcode;
 import cn.cerc.summer.android.services.GetClientGPS;
 import cn.cerc.summer.android.services.GetClientId;
@@ -42,8 +42,8 @@ import cn.cerc.summer.android.services.PlayMusic;
 import cn.cerc.summer.android.services.RefreshMenu;
 import cn.cerc.summer.android.services.ScanBarcode;
 import cn.cerc.summer.android.services.ScanProduct;
-import cn.cerc.summer.android.services.SetMenuList;
 import cn.cerc.summer.android.services.SetAppliedTitle;
+import cn.cerc.summer.android.services.SetMenuList;
 import cn.cerc.summer.android.services.ShareToWeibo;
 import cn.cerc.summer.android.services.ShareToWeixin;
 import cn.cerc.summer.android.services.ShowWarning;
@@ -99,7 +99,7 @@ public class JavaScriptProxy extends Object {
         services.put(RefreshMenu.class, "动态添加菜单");
         services.put(CallBrowser.class, "调用外部浏览器");
         services.put(HeartbeatCheck.class, "启动定时器");
-        services.put(CallClockOff.class, "考勤打卡");
+        services.put(ClockIn.class, "考勤打卡");
     }
 
     private AppCompatActivity owner;

@@ -68,7 +68,7 @@ import cn.cerc.summer.android.core.RequestCallback;
  * Created by Administrator on 2018/1/9.
  */
 
-public class ClockOffActivity extends AppCompatActivity implements LocationSource, AMap.OnMapClickListener, GeocodeSearch.OnGeocodeSearchListener, AMapLocationListener, View.OnClickListener {
+public class ClockInActivity extends AppCompatActivity implements LocationSource, AMap.OnMapClickListener, GeocodeSearch.OnGeocodeSearchListener, AMapLocationListener, View.OnClickListener {
     private MapView mAmapView;
     private LinearLayout mContainerLayout;
     private AMap aMap;
@@ -109,7 +109,7 @@ public class ClockOffActivity extends AppCompatActivity implements LocationSourc
     }
 
     private void initView() {
-        ActivityCompat.requestPermissions(ClockOffActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+        ActivityCompat.requestPermissions(ClockInActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -267,7 +267,7 @@ public class ClockOffActivity extends AppCompatActivity implements LocationSourc
     public void activate(OnLocationChangedListener onLocationChangedListener) {
         mListener = onLocationChangedListener;
         if (mlocationClient == null) {
-            mlocationClient = new AMapLocationClient(ClockOffActivity.this);
+            mlocationClient = new AMapLocationClient(ClockInActivity.this);
             mLocationOption = new AMapLocationClientOption();
             //设置定位监听
             mlocationClient.setLocationListener(this);
@@ -380,7 +380,7 @@ public class ClockOffActivity extends AppCompatActivity implements LocationSourc
             } else {
                 String errText = "定位失败," + aMapLocation.getErrorCode() + ": " + aMapLocation.getErrorInfo();
                 Log.e("AmapErr", errText);
-                ActivityCompat.requestPermissions(ClockOffActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                ActivityCompat.requestPermissions(ClockInActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.ACCESS_COARSE_LOCATION
                 }, 0x67);
             }
@@ -392,11 +392,11 @@ public class ClockOffActivity extends AppCompatActivity implements LocationSourc
         switch (v.getId()) {
             case R.id.btn_PunchClock:
                 float distance = AMapUtils.calculateLineDistance(latLngSign, latLngCurrent);
-                if (distance <= 400) {
+                if (distance <= 200) {
                     if ("".equals(text_address.getText().toString())) {
-                        Toast.makeText(ClockOffActivity.this, "定位失败，请检查定位权限！", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ClockInActivity.this, "定位失败，请检查定位权限！", Toast.LENGTH_SHORT).show();
                     } else if (path == null || !isPhotograph) {
-                        Toast.makeText(ClockOffActivity.this, "请先进行拍照！", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ClockInActivity.this, "请先进行拍照！", Toast.LENGTH_SHORT).show();
                     } else {
                         String token = null;
                         token = MySession.getInstance().getToken();
@@ -413,7 +413,7 @@ public class ClockOffActivity extends AppCompatActivity implements LocationSourc
                                 public void success(String url, JSONObject json) {
                                     Log.d("print", "success: " + json.toString());
                                     try {
-                                        Toast.makeText(ClockOffActivity.this, json.getString("message"), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ClockInActivity.this, json.getString("message"), Toast.LENGTH_SHORT).show();
 
                                     } catch (JSONException e) {
                                         e.printStackTrace();
@@ -435,7 +435,7 @@ public class ClockOffActivity extends AppCompatActivity implements LocationSourc
                         }
                     }
                 } else {
-                    Toast.makeText(this, "请选择当前定位100米之内的位置", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "请选择当前定位200米之内的位置", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.imgBack:
