@@ -5,7 +5,6 @@ import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
@@ -224,32 +223,31 @@ public class JavaScriptProxy extends Object {
         String function = null;
         Class clazz = getClazz(classCode);
         JavaScriptResult json = new JavaScriptResult();
-        if (clazz != null) {
-            try {
+        JSONObject request = null;
+        try {
+            request = new JSONObject(dataIn);
+            if (request.has("_callback_")) {
+                function = request.getString("_callback_");
+            }
+            if (clazz != null) {
                 Object object = clazz.newInstance();
                 if (object instanceof JavaScriptService) {
                     JavaScriptService object1 = (JavaScriptService) object;
-                    try {
-                        JSONObject request = new JSONObject(dataIn);
-                        if (request.has("_callback_")) {
-                            function = request.getString("_callback_");
-                        }
-                        json.setData(object1.execute(this.owner, request));
-                        json.setResult(true);
-                        return json.toString();
-                    } catch (Exception e) {
-                        json.setMessage(e.getMessage());
-                    }
+                    json.setData(object1.execute(this.owner, request));
+                    json.setResult(true);
+                    return json.toString();
                 } else {
                     json.setMessage("not support JavascriptInterface");
                 }
-            } catch (InstantiationException e) {
-                json.setMessage("InstantiationException");
-            } catch (IllegalAccessException e) {
-                json.setMessage("IllegalAccessException");
+            } else {
+                json.setMessage("当前版本不支持: " + classCode);
             }
-        } else {
-            json.setMessage("当前版本不支持: " + classCode);
+        } catch (InstantiationException e) {
+            json.setMessage("InstantiationException");
+        } catch (IllegalAccessException e) {
+            json.setMessage("IllegalAccessException");
+        } catch (Exception e) {
+            json.setMessage(e.getMessage());
         }
         if (function != null && !"".equals(function)) {
             MyApp.getInstance().executiveJS(function, json.toString());
