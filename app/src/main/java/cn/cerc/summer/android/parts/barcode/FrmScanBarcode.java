@@ -43,6 +43,7 @@ import java.util.Vector;
 import cn.cerc.summer.android.basis.RemoteForm;
 import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.forms.FrmMain;
+import cn.cerc.summer.android.forms.JavaScriptResult;
 import cn.cerc.summer.android.parts.barcode.zxing.camera.CameraManager;
 import cn.cerc.summer.android.parts.barcode.zxing.decoding.CaptureActivityHandler;
 import cn.cerc.summer.android.parts.barcode.zxing.decoding.InactivityTimer;
@@ -309,11 +310,11 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
     /**
      * 跳转到上一个页面
      *
-     * @param resultString
+     * @param resultStr
      * @param bitmap
      */
-    private void onResultHandler(String resultString, Bitmap bitmap) {
-        if (TextUtils.isEmpty(resultString)) {
+    private void onResultHandler(String resultStr, Bitmap bitmap) {
+        if (TextUtils.isEmpty(resultStr)) {
             Toast.makeText(FrmScanBarcode.this, "Scan failed!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -322,25 +323,18 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
 
         FrmMain obj = FrmMain.getInstance();
         if (!"".equals(this.scriptFunction)) {
-            String result = "result : true";
-            String data = "data : ''";
-            if (!"".equals(resultString) && resultIntent != null) {
-                data = String.format("data :'%s'", resultString);
+            JavaScriptResult json = new JavaScriptResult();
+            json.setResult(true);
+            if (!"".equals(resultStr) && resultIntent != null) {
+                json.setData(resultStr);
             } else {
-                result = "result : false";
+                json.setResult(false);
             }
-            Log.d("print", "onResultHandler: " + String.format("(new Function( 'return %s') ()) ({\n" +
-                    "  %s,\n" +
-                    "  %s\n" +
-                    "})", this.scriptFunction, result, data));
-            obj.runScript(String.format("(new Function('return %s') ()) ({\n" +
-                    "  %s,\n" +
-                    "  %s\n" +
-                    "})", this.scriptFunction, result, data));
+            MyApp.getInstance().executiveJS(scriptFunction,json.toString());
             //  RemoteForm   remoteForm  = new RemoteForm(postUrl==null||postUrl.equals("")?postUrl)
 
         } else if (!"".equals(this.postUrl)) {
-            obj.loadUrl(String.format("%s?barcode=%s", this.postUrl, resultString));
+            obj.loadUrl(String.format("%s?barcode=%s", this.postUrl, resultStr));
 
             Log.e("URl", postUrl);
         } else {

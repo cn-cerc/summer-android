@@ -5,6 +5,7 @@ import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
@@ -15,6 +16,7 @@ import org.json.JSONObject;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.services.CallBrowser;
 import cn.cerc.summer.android.services.CallLoginByAccount;
 import cn.cerc.summer.android.services.CallLoginByPhone;
@@ -41,8 +43,8 @@ import cn.cerc.summer.android.services.PlayMusic;
 import cn.cerc.summer.android.services.RefreshMenu;
 import cn.cerc.summer.android.services.ScanBarcode;
 import cn.cerc.summer.android.services.ScanProduct;
-import cn.cerc.summer.android.services.SetMenuList;
 import cn.cerc.summer.android.services.SetAppliedTitle;
+import cn.cerc.summer.android.services.SetMenuList;
 import cn.cerc.summer.android.services.ShareToWeibo;
 import cn.cerc.summer.android.services.ShareToWeixin;
 import cn.cerc.summer.android.services.ShowWarning;
@@ -218,6 +220,8 @@ public class JavaScriptProxy extends Object {
     //调用指定的服务，须立即返回
     @JavascriptInterface
     public String send(String classCode, String dataIn) {
+        Toast.makeText(owner, dataIn, Toast.LENGTH_SHORT).show();
+        String function = null;
         Class clazz = getClazz(classCode);
         JavaScriptResult json = new JavaScriptResult();
         if (clazz != null) {
@@ -227,8 +231,12 @@ public class JavaScriptProxy extends Object {
                     JavaScriptService object1 = (JavaScriptService) object;
                     try {
                         JSONObject request = new JSONObject(dataIn);
+                        if (request.has("_callback_")) {
+                            function = request.getString("_callback_");
+                        }
                         json.setData(object1.execute(this.owner, request));
                         json.setResult(true);
+                        return json.toString();
                     } catch (Exception e) {
                         json.setMessage(e.getMessage());
                     }
@@ -243,6 +251,10 @@ public class JavaScriptProxy extends Object {
         } else {
             json.setMessage("当前版本不支持: " + classCode);
         }
+        if (function != null && !"".equals(function)) {
+            MyApp.getInstance().executiveJS(function, json.toString());
+        }
+
         return json.toString();
     }
 
