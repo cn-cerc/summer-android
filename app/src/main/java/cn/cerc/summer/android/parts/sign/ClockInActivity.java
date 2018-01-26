@@ -63,6 +63,7 @@ import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.core.MySession;
 import cn.cerc.summer.android.core.PhotoBitmapUtils;
 import cn.cerc.summer.android.core.RequestCallback;
+import cn.cerc.summer.android.forms.FrmMain;
 
 /**
  * Created by Administrator on 2018/1/9.
@@ -98,12 +99,14 @@ public class ClockInActivity extends AppCompatActivity implements LocationSource
     private File file;
     private boolean isPhotograph = false;
     private String path = null;
+    String token = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clock_off);
 
+        token =  MySession.getInstance().getToken();
         initView();
         changeToAmapView(savedInstanceState);
     }
@@ -398,7 +401,6 @@ public class ClockInActivity extends AppCompatActivity implements LocationSource
                     } else if (path == null || !isPhotograph) {
                         Toast.makeText(ClockInActivity.this, "请先进行拍照！", Toast.LENGTH_SHORT).show();
                     } else {
-                        String token = null;
                         token = MySession.getInstance().getToken();
                         String client = null;
                         if (token != null && !"".equals(token)) {
@@ -414,7 +416,7 @@ public class ClockInActivity extends AppCompatActivity implements LocationSource
                                     Log.d("print", "success: " + json.toString());
                                     try {
                                         Toast.makeText(ClockInActivity.this, json.getString("message"), Toast.LENGTH_SHORT).show();
-
+                                        finish();
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
@@ -443,6 +445,12 @@ public class ClockInActivity extends AppCompatActivity implements LocationSource
                 break;
             case R.id.btn_recording:
                 //打卡记录
+                if(token != null) {
+                    FrmMain.getInstance().loadUrl(MyApp.getFormUrl("FrmAttendance.attendance?sid=" + token));
+                }else{
+                    Toast.makeText(this, "账户信息有误，请重登后重试！", Toast.LENGTH_SHORT).show();
+                }
+                finish();
                 break;
             case R.id.text_image:
                 photograph();
