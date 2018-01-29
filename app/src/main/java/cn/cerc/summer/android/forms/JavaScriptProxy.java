@@ -219,7 +219,6 @@ public class JavaScriptProxy extends Object {
     //调用指定的服务，须立即返回
     @JavascriptInterface
     public String send(String classCode, String dataIn) {
-        Toast.makeText(owner, dataIn, Toast.LENGTH_SHORT).show();
         String function = null;
         Class clazz = getClazz(classCode);
         JavaScriptResult json = new JavaScriptResult();

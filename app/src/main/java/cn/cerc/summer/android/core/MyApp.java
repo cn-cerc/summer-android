@@ -39,8 +39,8 @@ import cn.jpush.android.api.JPushInterface;
 
 public class MyApp extends android.app.Application {
     public static final String DEVICE_TYPE = "android";
-        public static String HOME_URL = "https://m.knowall.cn";
-//    public static String HOME_URL = "http://192.168.9.134";
+    public static String HOME_URL = "https://m.knowall.cn";
+    //    public static String HOME_URL = "http://192.168.1.174";
     //    public static String HOME_URL = "http://192.168.31.247";
     public static String SERVICES_PATH = "services";
     public static String FORMS_PATH = "forms";
@@ -231,8 +231,7 @@ public class MyApp extends android.app.Application {
     }
 
     public void executiveJS(String function, String jsonObject) {
-        FrmMain obj = FrmMain.getInstance();
-        obj.runScript(String.format("(new Function('return %s') ()) ('%s')", function,jsonObject));
+        FrmMain.getInstance().runScript(String.format("(new Function('return %s') ()) ('%s')", function, jsonObject));
     }
 
     /**
