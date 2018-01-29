@@ -256,7 +256,7 @@ public class FrmStartup extends AppCompatActivity {
         } else {
             //申请权限
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_PHONE_STATE},
+                    new String[]{Manifest.permission.READ_PHONE_STATE,Manifest.permission.CAMERA},
                     MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
         }
 
@@ -293,7 +293,7 @@ public class FrmStartup extends AppCompatActivity {
                     }
                 } else {
                     ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.READ_PHONE_STATE},
+                            new String[]{Manifest.permission.READ_PHONE_STATE,Manifest.permission.CAMERA},
                             MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
                 }
                 return;
