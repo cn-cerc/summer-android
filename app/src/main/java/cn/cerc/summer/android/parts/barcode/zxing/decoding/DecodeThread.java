@@ -31,7 +31,6 @@ import cn.cerc.summer.android.parts.barcode.FrmScanBarcode;
 
 /**
  * This thread does all the heavy lifting of decoding the images.
- * �����߳�
  */
 final class DecodeThread extends Thread {
 
