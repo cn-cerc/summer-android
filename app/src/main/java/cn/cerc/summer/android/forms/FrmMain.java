@@ -331,6 +331,18 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         return browser;
     }
 
+    public void reloadPage() {
+        String loadUrl;
+        if (currentUrl != null && !"".equals(currentUrl)) {
+            if (currentUrl.contains("?")) {
+                loadUrl = currentUrl + String.format("&device=%s&CLIENTID=%s", MyApp.DEVICE_TYPE, MyApp.getInstance().getClientId());
+            } else {
+                loadUrl = currentUrl + String.format("?device=%s&CLIENTID=%s", MyApp.DEVICE_TYPE, MyApp.getInstance().getClientId());
+            }
+            browser.loadUrl(loadUrl);
+        }
+    }
+
     public void setHomeUrl(String homeUrl) {
         this.homeUrl = homeUrl;
         browser.loadUrl(homeUrl);

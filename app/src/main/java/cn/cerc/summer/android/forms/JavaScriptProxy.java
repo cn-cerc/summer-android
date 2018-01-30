@@ -39,6 +39,7 @@ import cn.cerc.summer.android.services.PlayImage;
 import cn.cerc.summer.android.services.PlayMovie;
 import cn.cerc.summer.android.services.PlayMusic;
 import cn.cerc.summer.android.services.RefreshMenu;
+import cn.cerc.summer.android.services.ReloadPage;
 import cn.cerc.summer.android.services.ScanBarcode;
 import cn.cerc.summer.android.services.ScanProduct;
 import cn.cerc.summer.android.services.SetAppliedTitle;
@@ -98,6 +99,7 @@ public class JavaScriptProxy extends Object {
         services.put(RefreshMenu.class, "动态添加菜单");
         services.put(CallBrowser.class, "调用外部浏览器");
         services.put(HeartbeatCheck.class, "启动定时器");
+        services.put(ReloadPage.class, "刷新页面");
     }
 
     private AppCompatActivity owner;
