@@ -75,7 +75,6 @@ public class ClockInActivity extends AppCompatActivity implements LocationSource
     private AMap aMap;
     public static LatLng myLaLn;
     private GeocodeSearch geocoderSearch;
-    private ProgressDialog progDialog = null;
     private LocationSource.OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
     private AMapLocationClientOption mLocationOption;
@@ -84,6 +83,7 @@ public class ClockInActivity extends AppCompatActivity implements LocationSource
     public AMapLocation NowLocation = null;
     private MarkerOptions markerOption;
     private Marker marker;
+    private ProgressDialog progDialog = null;
 
     private LatLng latLngSign;
     private LatLng latLngCurrent;
@@ -308,7 +308,7 @@ public class ClockInActivity extends AppCompatActivity implements LocationSource
      * 响应逆地理编码
      */
     public void getAddress(final LatLonPoint latLonPoint) {
-        showDialog();
+        showDialog("正在获取地址..");
         RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 200,
                 GeocodeSearch.AMAP);// 第一个参数表示一个Latlng，第二参数表示范围多少米，第三个参数表示是火系坐标系还是GPS原生坐标系
         geocoderSearch.getFromLocationAsyn(query);// 设置异步逆地理编码请求
@@ -317,11 +317,11 @@ public class ClockInActivity extends AppCompatActivity implements LocationSource
     /**
      * 显示进度条对话框
      */
-    public void showDialog() {
+    public void showDialog(String strName) {
         progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progDialog.setIndeterminate(false);
         progDialog.setCancelable(true);
-        progDialog.setMessage("正在获取地址");
+        progDialog.setMessage(strName);
         progDialog.show();
     }
 
@@ -404,6 +404,7 @@ public class ClockInActivity extends AppCompatActivity implements LocationSource
                         token = MySession.getInstance().getToken();
                         String client = null;
                         if (token != null && !"".equals(token)) {
+                            showDialog("打卡中，请稍后..");
                             client = MyApp.getFormUrl("FrmAttendance.clockIn") + String.format("?sid=%s&CLIENTID=%s", token, MyApp.getInstance().getClientId());
                             HttpClient httpClient = new HttpClient("FrmAttendance.clockIn");
                             HashMap<String, String> rf = new HashMap<>();
@@ -416,6 +417,7 @@ public class ClockInActivity extends AppCompatActivity implements LocationSource
                                     Log.d("print", "success: " + json.toString());
                                     try {
                                         Toast.makeText(ClockInActivity.this, json.getString("message"), Toast.LENGTH_SHORT).show();
+                                        dismissDialog();
                                         finish();
                                     } catch (JSONException e) {
                                         e.printStackTrace();
@@ -424,7 +426,8 @@ public class ClockInActivity extends AppCompatActivity implements LocationSource
 
                                 @Override
                                 public void failt(String url, String error) {
-
+                                    Toast.makeText(ClockInActivity.this, "打卡失败，请检查网络后重试！", Toast.LENGTH_SHORT).show();
+                                    dismissDialog();
                                 }
 
                                 @Override
