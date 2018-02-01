@@ -164,7 +164,7 @@ public class ClockInActivity extends AppCompatActivity implements LocationSource
         aMap.animateCamera(CameraUpdateFactory.newCameraPosition(LUJIAZUI));
         setupLocationStyle();
         aMap.setOnMapClickListener(this);
-        aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(18));
         geocoderSearch = new GeocodeSearch(this);
         geocoderSearch.setOnGeocodeSearchListener(this);
         progDialog = new ProgressDialog(this);
@@ -299,7 +299,6 @@ public class ClockInActivity extends AppCompatActivity implements LocationSource
                 .draggable(true);
         marker = aMap.addMarker(markerOption);
         aMap.moveCamera(CameraUpdateFactory.changeLatLng(latLng));
-        aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
         latLngCurrent = latLng;
         getAddress(AMapUtil.convertToLatLonPoint(latLng));
     }
@@ -322,6 +321,7 @@ public class ClockInActivity extends AppCompatActivity implements LocationSource
         progDialog.setIndeterminate(false);
         progDialog.setCancelable(true);
         progDialog.setMessage(strName);
+        progDialog.setCanceledOnTouchOutside(false);
         progDialog.show();
     }
 
@@ -341,8 +341,6 @@ public class ClockInActivity extends AppCompatActivity implements LocationSource
             if (result != null && result.getRegeocodeAddress() != null
                     && result.getRegeocodeAddress().getFormatAddress() != null) {
                 text_address.setText(result.getRegeocodeAddress().getFormatAddress());
-                aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                        markerOption.getPosition(), 15));
             } else {
 
             }
