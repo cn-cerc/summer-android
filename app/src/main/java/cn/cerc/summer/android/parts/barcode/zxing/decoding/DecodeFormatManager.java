@@ -16,15 +16,15 @@
 
 package cn.cerc.summer.android.parts.barcode.zxing.decoding;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Vector;
-import java.util.regex.Pattern;
-
 import android.content.Intent;
 import android.net.Uri;
 
 import com.google.zxing.BarcodeFormat;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Vector;
+import java.util.regex.Pattern;
 
 final class DecodeFormatManager {
 

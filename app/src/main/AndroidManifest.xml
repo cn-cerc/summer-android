@@ -5,7 +5,7 @@
     <permission
         android:name="com.mimrc.vine.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" />
-
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
@@ -130,6 +130,7 @@
         <receiver android:name="cn.jpush.android.service.AlarmReceiver" />
         <!-- Required. AppKey copied from Portal -->
         <!-- User defined. 用户自定义的广播接收器 -->
+        <service android:name="cn.cerc.summer.android.services.LongRunningService"/>
         <receiver
             android:name="cn.cerc.summer.android.core.MyBroadcastReceiver"
             android:enabled="true">
@@ -145,7 +146,8 @@
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />
                 <!-- 接收网络变化 连接/断开 since 1.6.3 -->
                 <action android:name="cn.jpush.android.intent.CONNECTION" />
-
+                <!--定时器-->
+                <action android:name="ELITOR_CLOCK"/>
                 <category android:name="com.mimrc.vine" />
             </intent-filter>
         </receiver>

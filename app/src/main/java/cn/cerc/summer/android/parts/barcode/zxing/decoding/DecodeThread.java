@@ -16,22 +16,21 @@
 
 package cn.cerc.summer.android.parts.barcode.zxing.decoding;
 
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.concurrent.CountDownLatch;
-
 import android.os.Handler;
 import android.os.Looper;
-
-import cn.cerc.summer.android.parts.barcode.FrmScanBarcode;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.ResultPointCallback;
 
+import java.util.Hashtable;
+import java.util.Vector;
+import java.util.concurrent.CountDownLatch;
+
+import cn.cerc.summer.android.parts.barcode.FrmScanBarcode;
+
 /**
  * This thread does all the heavy lifting of decoding the images.
- * �����߳�
  */
 final class DecodeThread extends Thread {
 

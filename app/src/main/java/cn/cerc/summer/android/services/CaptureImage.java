@@ -8,7 +8,6 @@ import org.json.JSONObject;
 
 import cn.cerc.summer.android.forms.JavaScriptService;
 import cn.cerc.summer.android.parts.image.FrmCaptureImage;
-import cn.cerc.summer.android.parts.music.FrmCaptureMusic;
 
 /**
  * Created by Jason<sz9214e@qq.com> on 2017/8/9.
