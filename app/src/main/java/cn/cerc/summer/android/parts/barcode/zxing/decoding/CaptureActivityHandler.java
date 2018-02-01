@@ -16,8 +16,6 @@
 
 package cn.cerc.summer.android.parts.barcode.zxing.decoding;
 
-import java.util.Vector;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -27,12 +25,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import cn.cerc.summer.android.parts.barcode.FrmScanBarcode;
-
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.mimrc.vine.R;
 
+import java.util.Vector;
+
+import cn.cerc.summer.android.parts.barcode.FrmScanBarcode;
 import cn.cerc.summer.android.parts.barcode.zxing.camera.CameraManager;
 import cn.cerc.summer.android.parts.barcode.zxing.view.ViewfinderResultPointCallback;
 

@@ -2,6 +2,8 @@ package cn.cerc.summer.android.forms;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -52,15 +54,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import cn.cerc.summer.android.core.VisualKeyboardTool;
 import cn.cerc.summer.android.core.CommBottomPopWindow;
 import cn.cerc.summer.android.core.Constans;
 import cn.cerc.summer.android.core.MainPopupMenu;
 import cn.cerc.summer.android.core.MainTitleMenu;
 import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.core.ScreenUtils;
+import cn.cerc.summer.android.core.VisualKeyboardTool;
 import cn.cerc.summer.android.forms.view.BrowserView;
 import cn.cerc.summer.android.forms.view.DragPointView;
+import cn.cerc.summer.android.services.LongRunningService;
 import cn.cerc.summer.android.services.RefreshMenu;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
@@ -326,6 +329,18 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
     public BrowserView getBrowser() {
         return browser;
+    }
+
+    public void reloadPage() {
+        String loadUrl;
+        if (currentUrl != null && !"".equals(currentUrl)) {
+            if (currentUrl.contains("?")) {
+                loadUrl = currentUrl + String.format("&device=%s&CLIENTID=%s", MyApp.DEVICE_TYPE, MyApp.getInstance().getClientId());
+            } else {
+                loadUrl = currentUrl + String.format("?device=%s&CLIENTID=%s", MyApp.DEVICE_TYPE, MyApp.getInstance().getClientId());
+            }
+            browser.loadUrl(loadUrl);
+        }
     }
 
     public void setHomeUrl(String homeUrl) {
@@ -1001,6 +1016,17 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         message.what = 2;
         message.obj = title;
         handler.sendMessage(message);
+    }
+
+    @Override
+    protected void onDestroy() {
+        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        Intent intent1 = new Intent("ELITOR_CLOCK");
+        PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent1, 0);
+        manager.cancel(pi);
+        Intent intent = new Intent(this, LongRunningService.class);
+        stopService(intent);
+        super.onDestroy();
     }
 
     private class MyWebViewClient extends WebViewClient {

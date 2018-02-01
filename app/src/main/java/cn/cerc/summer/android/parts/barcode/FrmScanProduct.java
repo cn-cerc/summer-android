@@ -36,10 +36,10 @@ import java.util.TimerTask;
 
 import cn.cerc.jdb.core.DataSet;
 import cn.cerc.jdb.core.Record;
-import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.basis.ListViewAdapter;
 import cn.cerc.summer.android.basis.ListViewInterface;
 import cn.cerc.summer.android.basis.RemoteForm;
+import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.forms.FrmMain;
 
 import static cn.cerc.summer.android.parts.music.FrmCaptureMusic.url;

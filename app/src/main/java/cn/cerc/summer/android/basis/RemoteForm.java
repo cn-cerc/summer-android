@@ -1,7 +1,7 @@
 package cn.cerc.summer.android.basis;
 
+import android.content.Intent;
 import android.os.Message;
-import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,6 +11,7 @@ import java.util.Map;
 
 import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.core.MySession;
+import cn.cerc.summer.android.services.LongRunningService;
 
 /**
  * Created by Jason<sz9214e@qq.com> on 2017/9/4.
@@ -35,7 +36,8 @@ public class RemoteForm {
     }
 
     public RemoteForm exec() {
-        TimerMethod.getInstance().exce(true, -1, null);
+        Intent intent = new Intent(MyApp.getInstance(), LongRunningService.class);
+        MyApp.getInstance().startService(intent);
         result = false;
         JSONObject json = null;
         try {
