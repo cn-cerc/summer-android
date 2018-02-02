@@ -22,6 +22,7 @@ import cn.cerc.summer.android.services.CallPhoneNumber;
 import cn.cerc.summer.android.services.CaptureImage;
 import cn.cerc.summer.android.services.CaptureMovie;
 import cn.cerc.summer.android.services.CaptureMusic;
+import cn.cerc.summer.android.services.ClockIn;
 import cn.cerc.summer.android.services.CreateQrcode;
 import cn.cerc.summer.android.services.GetClientGPS;
 import cn.cerc.summer.android.services.GetClientId;
@@ -99,6 +100,7 @@ public class JavaScriptProxy extends Object {
         services.put(RefreshMenu.class, "动态添加菜单");
         services.put(CallBrowser.class, "调用外部浏览器");
         services.put(HeartbeatCheck.class, "启动定时器");
+        services.put(ClockIn.class, "考勤打卡");
         services.put(ReloadPage.class, "刷新页面");
     }
 

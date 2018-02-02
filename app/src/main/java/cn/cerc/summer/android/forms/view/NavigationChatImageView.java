@@ -215,6 +215,11 @@ public class NavigationChatImageView extends View implements View.OnClickListene
                             }
                             imageViewPagerListener.onPopSelected(1500);
                         }
+                    } else {
+                        if (imageFilePath != null) {
+                            settings.edit().putString(IMAGE_STARTIP, imageFilePath).commit();
+                        }
+                        imageViewPagerListener.onPopSelected(1500);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
