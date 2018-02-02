@@ -1,11 +1,14 @@
 package cn.cerc.summer.android.core;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.widget.Toast;
 
 import com.mimrc.vine.R;
@@ -51,6 +54,7 @@ public class MyApp extends android.app.Application {
     private String appVersion;
     private String clientId;
     private List<String> cacheFiles = new ArrayList<>();
+    private Context mContext;
 
     public static MyApp getInstance() {
         return instance;
@@ -192,7 +196,6 @@ public class MyApp extends android.app.Application {
         super.onCreate();
 
         instance = this;
-
         x.Ext.init(this);//xutils 初始化
         x.Ext.setDebug(true);//设置为debug
 
@@ -232,6 +235,31 @@ public class MyApp extends android.app.Application {
 
     public void executiveJS(String function, String jsonObject) {
         FrmMain.getInstance().runScript(String.format("(new Function('return %s') ()) ('%s')", function, jsonObject));
+    }
+
+    /**
+     * 判断服务状态
+     *
+     * @param mContext
+     * @param serviceName
+     * @return
+     */
+    public boolean isServiceWork(Context mContext, String serviceName) {
+        boolean isWork = false;
+        ActivityManager myAM = (ActivityManager) mContext
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> myList = myAM.getRunningServices(200);
+        if (myList.size() <= 0) {
+            return false;
+        }
+        for (int i = 0; i < myList.size(); i++) {
+            String mName = myList.get(i).service.getClassName().toString();
+            if (mName.equals(serviceName)) {
+                isWork = true;
+                break;
+            }
+        }
+        return isWork;
     }
 
     /**
@@ -297,5 +325,33 @@ public class MyApp extends android.app.Application {
     //返回应用代码
     public String getAppCode() {
         return this.APPCODE;
+    }
+
+    /**
+     * 批量申请权限
+     * @param permArray
+     * @param questCode
+     * @param activity
+     * @return
+     */
+    public static boolean isPermissionsAllGranted(String[] permArray,int questCode,Activity activity){
+        //6.0以下系统，取消请求权限
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
+            return true;
+        }
+        //获得批量请求但被禁止的权限列表
+        List<String> deniedPerms = new ArrayList<String>();
+        for(int i=0;permArray!=null&&i<permArray.length;i++){
+            if(PackageManager.PERMISSION_GRANTED !=activity.checkSelfPermission(permArray[i])){
+                deniedPerms.add(permArray[i]);
+            }
+        }
+        int denyPermNum = deniedPerms.size();
+        //进行批量请求
+        if(denyPermNum != 0){
+            activity.requestPermissions(deniedPerms.toArray(new String[denyPermNum]),questCode);
+            return false;
+        }
+        return true;
     }
 }

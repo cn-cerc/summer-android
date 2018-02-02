@@ -29,9 +29,6 @@ import com.mimrc.vine.R;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import cn.cerc.summer.android.forms.FrmMain;
-import cn.cerc.summer.android.parts.movie.FrmPlayMovie;
-
 /**
  * 视频播放控件
  * Created by yangtaiyu on 2017/10/19.

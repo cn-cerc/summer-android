@@ -1,13 +1,11 @@
 package cn.cerc.summer.android.forms;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,7 +15,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -62,6 +59,7 @@ public class FrmStartup extends AppCompatActivity {
     private ImageView start_image;
     private View view_Masking;
     private View view_Line;
+    private TextView version;
     private FrameLayout frameLayout;
     private NavigationChatImageView navigationChatImageView;
     private NavigationChatImageView.ImageViewPagerListener PagerListener = new NavigationChatImageView.ImageViewPagerListener() {
@@ -217,6 +215,7 @@ public class FrmStartup extends AppCompatActivity {
         llDialog = (LinearLayout) findViewById(R.id.llDialog);
         view_Masking = findViewById(R.id.view_Masking);
         view_Line = findViewById(R.id.view_Line);
+        version = (TextView) findViewById(R.id.version);
         start_image = (ImageView) findViewById(R.id.start_image);
         frameLayout = (FrameLayout) findViewById(R.id.frm_image);
         settings = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
@@ -225,6 +224,12 @@ public class FrmStartup extends AppCompatActivity {
             start_image.setVisibility(View.VISIBLE);
             Bitmap bm = BitmapFactory.decodeFile(settings.getString(IMAGE_STARTIP, null));
             start_image.setImageBitmap(bm);
+        }
+
+        try {
+            version.setText("V" + MyApp.getVersionName(this) + "");
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
         }
         /*
         timer.schedule(new TimerTask() {
@@ -256,7 +261,7 @@ public class FrmStartup extends AppCompatActivity {
         } else {
             //申请权限
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_PHONE_STATE},
+                    new String[]{Manifest.permission.READ_PHONE_STATE,Manifest.permission.CAMERA},
                     MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
         }
 
@@ -266,7 +271,6 @@ public class FrmStartup extends AppCompatActivity {
             showError("权限不足", "系统运行时必须读取IMEI，防止非您本人冒用您的帐号，请您于设置中开启相应权限后才能继续使用！");
             return;
         }
-
 
     }
 
@@ -293,7 +297,7 @@ public class FrmStartup extends AppCompatActivity {
                     }
                 } else {
                     ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.READ_PHONE_STATE},
+                            new String[]{Manifest.permission.READ_PHONE_STATE,Manifest.permission.CAMERA},
                             MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
                 }
                 return;

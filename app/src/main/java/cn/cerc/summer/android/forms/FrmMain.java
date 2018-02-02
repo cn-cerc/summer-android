@@ -1,7 +1,10 @@
 package cn.cerc.summer.android.forms;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +15,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -52,19 +56,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import cn.cerc.summer.android.core.VisualKeyboardTool;
 import cn.cerc.summer.android.core.CommBottomPopWindow;
 import cn.cerc.summer.android.core.Constans;
 import cn.cerc.summer.android.core.MainPopupMenu;
 import cn.cerc.summer.android.core.MainTitleMenu;
 import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.core.ScreenUtils;
+import cn.cerc.summer.android.core.VisualKeyboardTool;
 import cn.cerc.summer.android.forms.view.BrowserView;
 import cn.cerc.summer.android.forms.view.DragPointView;
+import cn.cerc.summer.android.services.LongRunningService;
 import cn.cerc.summer.android.services.RefreshMenu;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
-
 
 /**
  * 主界面
@@ -328,6 +332,18 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         return browser;
     }
 
+    public void reloadPage() {
+        String loadUrl;
+        if (currentUrl != null && !"".equals(currentUrl)) {
+            if (currentUrl.contains("?")) {
+                loadUrl = currentUrl + String.format("&device=%s&CLIENTID=%s", MyApp.DEVICE_TYPE, MyApp.getInstance().getClientId());
+            } else {
+                loadUrl = currentUrl + String.format("?device=%s&CLIENTID=%s", MyApp.DEVICE_TYPE, MyApp.getInstance().getClientId());
+            }
+            browser.loadUrl(loadUrl);
+        }
+    }
+
     public void setHomeUrl(String homeUrl) {
         this.homeUrl = homeUrl;
         browser.loadUrl(homeUrl);
@@ -340,7 +356,9 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         setContentView(R.layout.activity_main);
         VisualKeyboardTool.assistActivity(findViewById(android.R.id.content)); //自动监听虚拟按键的变化，改变高度
         instance = this;
-
+        ActivityCompat.requestPermissions(FrmMain.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+        }, 0x67);
         settings = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
 
         mRightMenu = new ArrayList<MainTitleMenu>();
@@ -1003,6 +1021,17 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         handler.sendMessage(message);
     }
 
+    @Override
+    protected void onDestroy() {
+        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        Intent intent1 = new Intent("ELITOR_CLOCK");
+        PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent1, 0);
+        manager.cancel(pi);
+        Intent intent = new Intent(this, LongRunningService.class);
+        stopService(intent);
+        super.onDestroy();
+    }
+
     private class MyWebViewClient extends WebViewClient {
 
         @Override
@@ -1061,7 +1090,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             if (!MyApp.getNetworkState(view.getContext())) return;
             currentUrl = url;
-            Log.d("print", "url___: " + url);
             clearData();
             is_ERROR = false;
             /*

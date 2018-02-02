@@ -8,6 +8,7 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cn.cerc.summer.android.basis.RemoteForm;
 import cn.cerc.summer.android.forms.FrmMain;
 import cn.jpush.android.api.JPushInterface;
 
@@ -66,6 +67,15 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
                 break;
             case Constans.REGISTRATION:
                 Log.e("xxxx", "444444444");
+                break;
+            case "ELITOR_CLOCK":
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        RemoteForm rf = new RemoteForm("WebDefault.heartbeatCheck");
+                        rf.execByMessage(3);
+                    }
+                }).start();
                 break;
             default:
                 break;

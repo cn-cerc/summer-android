@@ -2,18 +2,27 @@ package cn.cerc.summer.android.basis;
 
 import android.util.Log;
 
+import org.json.JSONObject;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import cn.cerc.jdb.core.DataSet;
+import cn.cerc.summer.android.core.RequestCallback;
 
 /**
  * Created by Jason<sz9214e@qq.com> on 2017/8/26.
@@ -119,4 +128,51 @@ public class HttpClient {
         resultData = new String(byteArrayOutputStream.toByteArray());
         return resultData;
     }
+
+    /**
+     * POST请求
+     * 带图片上传
+     */
+    public void POST(final String url, HashMap<String, String> map, final RequestCallback rc) {
+
+        Log.e("map", map.toString());
+        RequestParams param = new RequestParams(url);
+        param.setMultipart(true);
+        Iterator it = map.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry entry = (Map.Entry) it.next();
+            String key = (String) entry.getKey();
+            String val = (String) entry.getValue();
+            Log.d("print", "POST: " + key + "    " + val);
+            if (null != key && key.contains("FileUrl_") || key.contains("video"))
+                param.addBodyParameter(key, new File(val));
+            else {
+                param.addBodyParameter(key, val);
+            }
+        }
+        Log.d("print", "POST: " + url);
+        x.http().post(param, new Callback.CommonCallback<JSONObject>() {
+            @Override
+            public void onSuccess(JSONObject result) {
+                Log.e("json", result.toString());
+                rc.success(url, result);
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                Log.d("print", "onError: " + ex.toString());
+                rc.failt(url, ex.toString());
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                rc.failt(url, "已取消");
+            }
+
+            @Override
+            public void onFinished() {
+            }
+        });
+    }
+
 }

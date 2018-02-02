@@ -5,7 +5,7 @@
     <permission
         android:name="com.mimrc.vine.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" />
-
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
@@ -42,7 +42,7 @@
         android:icon="@mipmap/deting"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyAppTheme">
+        android:theme="@style/AppTheme">
         <activity
             android:name="cn.cerc.summer.android.forms.FrmMain"
             android:launchMode="singleTask"
@@ -68,6 +68,11 @@
             android:name="cn.cerc.summer.android.forms.FrmSettings"
             android:screenOrientation="portrait" />
 
+        <!--高德地图Key-->
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="2c6f508a4dc4fc86a41159b1c6b89671" />
+        <service android:name="com.amap.api.location.APSService" />
         <!-- JPush -->
         <service
             android:name="cn.jpush.android.service.PushService"
@@ -125,6 +130,7 @@
         <receiver android:name="cn.jpush.android.service.AlarmReceiver" />
         <!-- Required. AppKey copied from Portal -->
         <!-- User defined. 用户自定义的广播接收器 -->
+        <service android:name="cn.cerc.summer.android.services.LongRunningService"/>
         <receiver
             android:name="cn.cerc.summer.android.core.MyBroadcastReceiver"
             android:enabled="true">
@@ -140,7 +146,8 @@
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />
                 <!-- 接收网络变化 连接/断开 since 1.6.3 -->
                 <action android:name="cn.jpush.android.intent.CONNECTION" />
-
+                <!--定时器-->
+                <action android:name="ELITOR_CLOCK"/>
                 <category android:name="com.mimrc.vine" />
             </intent-filter>
         </receiver>
@@ -192,6 +199,7 @@
         <activity android:name="cn.cerc.summer.android.parts.barcode.FrmScanProduct" />
         <activity android:name="cn.cerc.summer.android.parts.barcode.DlgScanProduct" />
         <activity android:name="cn.cerc.summer.android.parts.login.FrmLoginByAccount" />
+        <activity android:name="cn.cerc.summer.android.parts.sign.ClockInActivity" />
         <activity
             android:name="cn.cerc.summer.android.parts.dialog.FrmShowWarning"
             android:theme="@style/MyDialogStyle" />
@@ -199,7 +207,8 @@
         <activity
             android:name="cn.cerc.summer.android.parts.barcode.FrmScanBarcode"
             android:screenOrientation="portrait" />
-        <activity android:name="cn.cerc.summer.android.forms.FrmStartup">
+        <activity android:name="cn.cerc.summer.android.forms.FrmStartup"
+            android:theme="@style/Theme.MyAppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
