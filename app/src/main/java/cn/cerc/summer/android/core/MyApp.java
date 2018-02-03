@@ -181,6 +181,8 @@ public class MyApp extends android.app.Application {
 
     public static void setHomeUrl(String homeUrl) {
         HOME_URL = homeUrl;
+        MyApp.getInstance().getSharedPreferences("NEW_HOST", Context.MODE_PRIVATE).edit().putString("host",homeUrl).commit();
+
     }
 
     public boolean isDebug() {

@@ -1,6 +1,7 @@
 package cn.cerc.summer.android.forms;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -225,7 +226,10 @@ public class FrmStartup extends AppCompatActivity {
             Bitmap bm = BitmapFactory.decodeFile(settings.getString(IMAGE_STARTIP, null));
             start_image.setImageBitmap(bm);
         }
-
+        String host = MyApp.getInstance().getSharedPreferences("NEW_HOST", Context.MODE_PRIVATE).getString("host","");
+        if(!"".equals(host) && host != null){
+            MyApp.setHomeUrl(host);
+        }
         try {
             version.setText("V" + MyApp.getVersionName(this) + "");
         } catch (PackageManager.NameNotFoundException e) {
