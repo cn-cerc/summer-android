@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.cerc.summer.android.forms.FrmMain;
 import cn.jpush.android.api.JPushInterface;
 
 /**
@@ -180,6 +181,8 @@ public class MyApp extends android.app.Application {
 
     public static void setHomeUrl(String homeUrl) {
         HOME_URL = homeUrl;
+        MyApp.getInstance().getSharedPreferences("NEW_HOST", Context.MODE_PRIVATE).edit().putString("host",homeUrl).commit();
+
     }
 
     public boolean isDebug() {
@@ -230,6 +233,10 @@ public class MyApp extends android.app.Application {
         // webConfig.writeDebugLogs(); // Remove for release app
         ImageLoader.getInstance().init(config.build());
 
+    }
+
+    public void executiveJS(String function, String jsonObject) {
+        FrmMain.getInstance().runScript(String.format("(new Function('return %s') ()) ('%s')", function, jsonObject));
     }
 
     /**

@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.services.CallBrowser;
 import cn.cerc.summer.android.services.CallLoginByAccount;
 import cn.cerc.summer.android.services.CallLoginByPhone;
@@ -222,31 +223,39 @@ public class JavaScriptProxy extends Object {
     //调用指定的服务，须立即返回
     @JavascriptInterface
     public String send(String classCode, String dataIn) {
+        String function = null;
         Class clazz = getClazz(classCode);
         JavaScriptResult json = new JavaScriptResult();
-        if (clazz != null) {
-            try {
+        JSONObject request = null;
+        try {
+            request = new JSONObject(dataIn);
+            if (request.has("_callback_")) {
+                function = request.getString("_callback_");
+            }
+            if (clazz != null) {
                 Object object = clazz.newInstance();
                 if (object instanceof JavaScriptService) {
                     JavaScriptService object1 = (JavaScriptService) object;
-                    try {
-                        JSONObject request = new JSONObject(dataIn);
-                        json.setData(object1.execute(this.owner, request));
-                        json.setResult(true);
-                    } catch (Exception e) {
-                        json.setMessage(e.getMessage());
-                    }
+                    json.setData(object1.execute(this.owner, request));
+                    json.setResult(true);
+                    return json.toString();
                 } else {
                     json.setMessage("not support JavascriptInterface");
                 }
-            } catch (InstantiationException e) {
-                json.setMessage("InstantiationException");
-            } catch (IllegalAccessException e) {
-                json.setMessage("IllegalAccessException");
+            } else {
+                json.setMessage("当前版本不支持: " + classCode);
             }
-        } else {
-            json.setMessage("当前版本不支持: " + classCode);
+        } catch (InstantiationException e) {
+            json.setMessage("InstantiationException");
+        } catch (IllegalAccessException e) {
+            json.setMessage("IllegalAccessException");
+        } catch (Exception e) {
+            json.setMessage(e.getMessage());
         }
+        if (function != null && !"".equals(function)) {
+            MyApp.getInstance().executiveJS(function, json.toString());
+        }
+
         return json.toString();
     }
 

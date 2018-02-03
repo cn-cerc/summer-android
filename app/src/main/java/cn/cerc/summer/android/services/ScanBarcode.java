@@ -22,16 +22,13 @@ public class ScanBarcode implements JavaScriptService {
         //操作类型：0、回调js方法, 1: post到指定的url
         int type = request.has("type") ? request.getInt("type") : 0;
         if (type == 0) {
-            if (!request.has("scriptFunction")) {
+            if (!request.has("_callback_")) {
                 return "没有指定要回调的javaScript函数";
-            }
-            if (!request.has("scriptTag")) {
-                return "没有指定要回调的scriptTag参数";
             }
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
                     == PackageManager.PERMISSION_GRANTED) {
                 FrmScanBarcode.startForm((AppCompatActivity) context,
-                        request.getString("scriptFunction"), request.getString("scriptTag"));
+                        request.getString("_callback_"));
                 return "true";
             } else {
                 ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.CAMERA}, 35);
