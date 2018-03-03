@@ -34,13 +34,13 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListPopupWindow;
-import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,8 +65,8 @@ import cn.cerc.summer.android.core.ScreenUtils;
 import cn.cerc.summer.android.core.VisualKeyboardTool;
 import cn.cerc.summer.android.forms.view.BrowserView;
 import cn.cerc.summer.android.forms.view.DragPointView;
+import cn.cerc.summer.android.parts.login.LoginActivity;
 import cn.cerc.summer.android.services.LongRunningService;
-import cn.cerc.summer.android.services.RefreshMenu;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 
@@ -89,6 +89,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     ImageView imgHome, imgBack, imgMore;
     TextView lblTitle;
     LinearLayout boxTitle;
+    private Button btn_reload;
     int mIndex = 0;   //当前页面窗口位置下标
     Handler handler = new Handler() {
         @Override
@@ -97,7 +98,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             switch (msg.what) {
                 case 1:
                     boolean visibility = (boolean) msg.obj;
-                    boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
+//                    boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
                     if (!visibility) {
                         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && Build.VERSION.RELEASE.contains("4.4.2")) {
                             headview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, VisualKeyboardTool.getStatusBarHeight(FrmMain.this)));
@@ -126,16 +127,13 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private ProgressBar progress;
     private DragPointView dragpointview;
     private ImageView tipsImage;
+    private RelativeLayout linear_error;
     private String logoutUrl = "";
     private boolean is_ERROR = false;//是否错误了
-    private String[] menus;//菜单
-    private int[] menu_img = new int[]{R.mipmap.message, R.mipmap.msg_manager, R.mipmap.home, R.mipmap.setting, R.mipmap.wipe, R.mipmap.logout, R.mipmap.reload};
     private List<MainPopupMenu> menuList;
     private ListPopupWindow popupWindow;//列表弹框
     private FrameLayout mainframe;
     private View view;      //弹出框子布局
-    private ListView list_pop;
-    private PopupWindow pop;
     private CommBottomPopWindow mTitlePopWindow;  //标题栏菜单项
     private CommBottomPopWindow mpopWindow; //
     private ArrayList<MainTitleMenu> mTitleWinMenu;  //标题菜单窗口集合
@@ -146,7 +144,6 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private String currentUrl = null;
     private int classWebView = 0;
     private boolean webViewState = false;  //判断是否新建webView
-    private RefreshMenu mRefreshMenu;
     private View hightview;
     private View headview;
     private MyApp myApp;
@@ -269,9 +266,11 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     mpopWindow.dismiss();
                     break;
                 case 1:
-                    browser.reload();
-                    clearAllCache(getApplicationContext());
-                    Toast.makeText(FrmMain.this, "刷新成功", Toast.LENGTH_SHORT).show();
+//                    browser.reload();
+//                    clearAllCache(getApplicationContext());
+//                    Toast.makeText(FrmMain.this, "刷新成功", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(FrmMain.this, LoginActivity.class);
+                    startActivity(intent);
                     mpopWindow.dismiss();
                     break;
                 case 2:
@@ -520,7 +519,10 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         mainframe = (FrameLayout) this.findViewById(R.id.mainframe);
         progress = (ProgressBar) this.findViewById(R.id.progress);
         tipsImage = (ImageView) this.findViewById(R.id.image_tips);
+        linear_error = (RelativeLayout) this.findViewById(R.id.linear_error);
+        btn_reload = (Button) this.findViewById(R.id.btn_reload);
         browser = (BrowserView) this.findViewById(R.id.webView);
+        btn_reload.setOnClickListener(this);
         browser.getSettings().setTextZoom(settings.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this, ScreenUtils.getInches(this))));
 
         //jsAndroid 供web端js调用标识，修改请通知web开发者
@@ -888,6 +890,10 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 mTitlePopWindow.showAsDropDown(boxTitle);
                 mTitlePopWindow.show(view);
                 break;
+            case R.id.btn_reload:
+                //重新加载
+                browser.reload();
+                break;
             default:
                 break;
         }
@@ -1139,7 +1145,9 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                         titlePage.get(i).setName("出错了");
                     }
                 }
-                tipsImage.setVisibility(View.VISIBLE);
+                //出错时显示标题栏及错误页面
+                boxTitle.setVisibility(View.VISIBLE);
+                linear_error.setVisibility(View.VISIBLE);
             } else {
                 lblTitle.setText(browser.getTitle());
                 for (int i = 0; i < titlePage.size(); i++) {
@@ -1147,7 +1155,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                         titlePage.get(i).setName(browser.getTitle());
                     }
                 }
-                tipsImage.setVisibility(View.GONE);
+                linear_error.setVisibility(View.GONE);
             }
             /*
             if (isGoHome) {
