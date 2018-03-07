@@ -56,7 +56,5 @@ dependencies {
     compile 'com.google.android.gms:play-services-appindexing:9.2.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
-    //选择器
-    compile 'com.airsaid.library:pickerview:1.0.3'
     implementation files('libs/AMap2DMap_5.2.0_AMapSearch_5.7.0_AMapLocation_3.7.0_20171229.jar')
 }

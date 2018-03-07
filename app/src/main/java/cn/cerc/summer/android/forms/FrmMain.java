@@ -65,7 +65,6 @@ import cn.cerc.summer.android.core.ScreenUtils;
 import cn.cerc.summer.android.core.VisualKeyboardTool;
 import cn.cerc.summer.android.forms.view.BrowserView;
 import cn.cerc.summer.android.forms.view.DragPointView;
-import cn.cerc.summer.android.parts.login.LoginActivity;
 import cn.cerc.summer.android.services.LongRunningService;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
@@ -98,7 +97,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             switch (msg.what) {
                 case 1:
                     boolean visibility = (boolean) msg.obj;
-//                    boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
+                    boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
                     if (!visibility) {
                         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && Build.VERSION.RELEASE.contains("4.4.2")) {
                             headview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, VisualKeyboardTool.getStatusBarHeight(FrmMain.this)));
@@ -266,11 +265,9 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     mpopWindow.dismiss();
                     break;
                 case 1:
-//                    browser.reload();
-//                    clearAllCache(getApplicationContext());
-//                    Toast.makeText(FrmMain.this, "刷新成功", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(FrmMain.this, LoginActivity.class);
-                    startActivity(intent);
+                    browser.reload();
+                    clearAllCache(getApplicationContext());
+                    Toast.makeText(FrmMain.this, "刷新成功", Toast.LENGTH_SHORT).show();
                     mpopWindow.dismiss();
                     break;
                 case 2:
@@ -343,9 +340,14 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         }
     }
 
-    public void setHomeUrl(String homeUrl) {
+    public void setHomeUrl(final String homeUrl) {
         this.homeUrl = homeUrl;
-        browser.loadUrl(homeUrl);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                browser.loadUrl(homeUrl);
+            }
+        });
     }
 
     @Override
