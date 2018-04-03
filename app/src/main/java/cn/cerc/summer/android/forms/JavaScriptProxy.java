@@ -17,6 +17,7 @@ import java.util.Map;
 
 import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.services.CallBrowser;
+import cn.cerc.summer.android.services.startVine;
 import cn.cerc.summer.android.services.CallLoginByAccount;
 import cn.cerc.summer.android.services.CallLoginByPhone;
 import cn.cerc.summer.android.services.CallPhoneNumber;
@@ -103,6 +104,8 @@ public class JavaScriptProxy extends Object {
         services.put(HeartbeatCheck.class, "启动定时器");
         services.put(ClockIn.class, "考勤打卡");
         services.put(ReloadPage.class, "刷新页面");
+        //
+        services.put(startVine.class,"切换服务器");
     }
 
     private AppCompatActivity owner;

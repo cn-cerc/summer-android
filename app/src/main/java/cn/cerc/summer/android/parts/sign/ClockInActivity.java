@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -88,6 +89,7 @@ public class ClockInActivity extends AppCompatActivity implements LocationSource
     private LatLng latLngSign;
     private LatLng latLngCurrent;
     private TextView text_address;
+    private EditText edit_remarks;
     private Button btn_PunchClock;
     private Button btn_recording;
     private ImageView imgBack;
@@ -106,7 +108,7 @@ public class ClockInActivity extends AppCompatActivity implements LocationSource
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clock_off);
 
-        token =  MySession.getInstance().getToken();
+        token = MySession.getInstance().getToken();
         initView();
         changeToAmapView(savedInstanceState);
     }
@@ -119,6 +121,7 @@ public class ClockInActivity extends AppCompatActivity implements LocationSource
                 Manifest.permission.CAMERA
         }, 0x67);
         text_address = (TextView) findViewById(R.id.text_address);
+        edit_remarks = (EditText) findViewById(R.id.edit_remarks);
         mContainerLayout = (LinearLayout) findViewById(R.id.mContainerLayout);
         btn_PunchClock = (Button) findViewById(R.id.btn_PunchClock);
         btn_recording = (Button) findViewById(R.id.btn_recording);
@@ -402,10 +405,12 @@ public class ClockInActivity extends AppCompatActivity implements LocationSource
                         token = MySession.getInstance().getToken();
                         String client = null;
                         if (token != null && !"".equals(token)) {
+                            String remarks = edit_remarks.getText().toString().trim();
                             showDialog("打卡中，请稍后..");
                             client = MyApp.getFormUrl("FrmAttendance.clockIn") + String.format("?sid=%s&CLIENTID=%s", token, MyApp.getInstance().getClientId());
                             HttpClient httpClient = new HttpClient("FrmAttendance.clockIn");
                             HashMap<String, String> rf = new HashMap<>();
+                            rf.put("Remark_", remarks);
                             rf.put("Address_", text_address.getText().toString());
                             rf.put("Position_", markerOption.getPosition().longitude + "," + markerOption.getPosition().latitude);
                             rf.put("FileUrl_", path);
@@ -446,9 +451,9 @@ public class ClockInActivity extends AppCompatActivity implements LocationSource
                 break;
             case R.id.btn_recording:
                 //打卡记录
-                if(token != null) {
+                if (token != null) {
                     FrmMain.getInstance().loadUrl(MyApp.getFormUrl("FrmAttendance.attendance?sid=" + token));
-                }else{
+                } else {
                     Toast.makeText(this, "账户信息有误，请重登后重试！", Toast.LENGTH_SHORT).show();
                 }
                 finish();

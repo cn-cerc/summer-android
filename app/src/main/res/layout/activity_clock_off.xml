@@ -28,9 +28,9 @@
                 android:id="@+id/lblTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:layout_weight="1"
                 android:ellipsize="marquee"
-                android:layout_centerInParent="true"
                 android:focusable="true"
                 android:gravity="center"
                 android:marqueeRepeatLimit="marquee_forever"
@@ -91,6 +91,32 @@
             android:layout_marginTop="5dp"
             android:background="#44000000" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="备注：" />
+
+            <EditText
+                android:id="@+id/edit_remarks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@null"
+                />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="5dp"
+            android:background="#44000000" />
+
         <RelativeLayout
             android:id="@+id/relative_image"
             android:layout_width="match_parent"
@@ -111,7 +137,7 @@
                 android:id="@+id/image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop" />
         </RelativeLayout>
 
         <LinearLayout
