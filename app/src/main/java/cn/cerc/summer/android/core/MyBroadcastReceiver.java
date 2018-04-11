@@ -116,9 +116,9 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         String msg = bundle.getString(JPushInterface.EXTRA_ALERT);
         json = new JSONObject(alert);
         if (json.has("sound")) {
-            if (json.getString("sound").equals("trade_mall")) {
+            if (json.getString("sound").equals("trade_mall.wav")) {
                 notification.setSound(
-                        Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.test));
+                        Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.trade_mall));
             } else {
                 return false;
             }
