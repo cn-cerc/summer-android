@@ -88,35 +88,8 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     ImageView imgHome, imgBack, imgMore;
     TextView lblTitle;
     LinearLayout boxTitle;
-    private Button btn_reload;
     int mIndex = 0;   //当前页面窗口位置下标
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case 1:
-                    boolean visibility = (boolean) msg.obj;
-                    boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
-                    if (!visibility) {
-                        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && Build.VERSION.RELEASE.contains("4.4.2")) {
-                            headview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, VisualKeyboardTool.getStatusBarHeight(FrmMain.this)));
-                            headview.setVisibility(View.VISIBLE);
-                        } else {
-                            headview.setVisibility(View.GONE);
-                        }
-                    } else {
-                        headview.setVisibility(View.GONE);
-                    }
-                    break;
-                case 2:
-                    String title = (String) msg.obj;
-                    lblTitle.setText(title);
-                    break;
-
-            }
-        }
-    };
+    private Button btn_reload;
     private SharedPreferences settings;
     private BrowserView browser; //浏览器
     private String homeUrl;//Web系统首页
@@ -145,6 +118,34 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private boolean webViewState = false;  //判断是否新建webView
     private View hightview;
     private View headview;
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 1:
+                    boolean visibility = (boolean) msg.obj;
+                    boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
+                    if (!visibility) {
+                        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && Build.VERSION.RELEASE.contains("4.4.2")) {
+                            headview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, VisualKeyboardTool.getStatusBarHeight(FrmMain.this)));
+                            headview.setVisibility(View.VISIBLE);
+                        } else {
+                            headview.setVisibility(View.GONE);
+                        }
+                    } else {
+                        headview.setVisibility(View.GONE);
+                    }
+                    break;
+                case 2:
+                    String title = (String) msg.obj;
+                    lblTitle.setText(title);
+                    break;
+
+            }
+        }
+    };
+    private long firstTime = 0;
     private MyApp myApp;
 
     private TagAliasCallback tac = new TagAliasCallback() {
@@ -182,63 +183,13 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 case 2:
                     switch (mTitleMenu.get(which).getName()) {
                         case "关闭页面":
-                            //关闭当前窗口
-                            int windowNum = 0;
-                            for (int i = 0; i < allTitleList.size(); i++) {
-                                if (allTitleList.get(i).size() > 0) {
-                                    windowNum++;
-                                }
-                            }
-                            if (windowNum > 1) {
-                                newsWebView[classWebView].setVisibility(View.GONE);
-                                newsWebView[classWebView] = null;
-                                for (int i = 0; i < allTitleList.size(); i++) {
-                                    if (allTitleList.get(i).size() > 0) {
-                                        if (allTitleList.get(i).get(0).getOnlySign() == classWebView) {
-                                            allTitleList.get(classWebView).clear();
-                                            allRightList.get(classWebView).clear();
-                                        }
-                                    }
-                                }
-                                for (int i = 0; i < titlePage.size(); i++) {
-                                    if (titlePage.get(i).getOnlySign() == classWebView) {
-                                        titlePage.remove(i);
-                                    }
-                                }
-                                for (int i = 0; i < newsWebView.length; i++) {
-                                    if (newsWebView[i] != null) {
-                                        newsWebView[i].setVisibility(View.VISIBLE);
-                                        browser = newsWebView[i];
-                                        classWebView = i;
-                                        for (int l = 0; l < allTitleList.size(); l++) {
-                                            if (allTitleList.get(l).size() > 0) {
-                                                if (allTitleList.get(l).get(0).getOnlySign() == classWebView) {
-                                                    upDataAggre(allTitleList.get(l), titlePage);
-                                                    mTitleMenu.clear();
-                                                    mTitleMenu.addAll(allTitleList.get(l));
-                                                    mRightMenu.clear();
-                                                    mRightMenu.addAll(allRightList.get(l));
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        for (int j = 0; j < titlePage.size(); j++) {
-                                            if (titlePage.get(j).getOnlySign() == i) {
-                                                lblTitle.setText(titlePage.get(j).getName());
-                                                break;
-                                            }
-                                        }
-                                        break;
-                                    }
-                                }
-                            } else {
-                                Toast.makeText(myApp, "已经是顶层菜单", Toast.LENGTH_SHORT).show();
-                            }
+                            closeWindow();
+
                             mTitlePopWindow.dismiss();
                             initTitlePopWindow();
                             break;
                         case "新建窗口":
-                            AddWebView();
+                            AddWebView(myApp.getStartPage());
                             mTitlePopWindow.dismiss();
                             break;
                         default:
@@ -324,6 +275,67 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         }
     }
 
+    public void closeWindow() {
+        //关闭当前窗口
+        int windowNum = 0;
+        for (int i = 0; i < allTitleList.size(); i++) {
+            if (allTitleList.get(i).size() > 0) {
+                windowNum++;
+            }
+        }
+        if (windowNum > 1) {
+            newsWebView[classWebView].setVisibility(View.GONE);
+            newsWebView[classWebView] = null;
+            for (int i = 0; i < allTitleList.size(); i++) {
+                if (allTitleList.get(i).size() > 0) {
+                    if (allTitleList.get(i).get(0).getOnlySign() == classWebView) {
+                        allTitleList.get(classWebView).clear();
+                        allRightList.get(classWebView).clear();
+                    }
+                }
+            }
+            for (int i = 0; i < titlePage.size(); i++) {
+                if (titlePage.get(i).getOnlySign() == classWebView) {
+                    titlePage.remove(i);
+                }
+            }
+            for (int i = 0; i < newsWebView.length; i++) {
+                if (newsWebView[i] != null) {
+                    newsWebView[i].setVisibility(View.VISIBLE);
+                    browser = newsWebView[i];
+                    classWebView = i;
+                    for (int l = 0; l < allTitleList.size(); l++) {
+                        if (allTitleList.get(l).size() > 0) {
+                            if (allTitleList.get(l).get(0).getOnlySign() == classWebView) {
+                                upDataAggre(allTitleList.get(l), titlePage);
+                                mTitleMenu.clear();
+                                mTitleMenu.addAll(allTitleList.get(l));
+                                mRightMenu.clear();
+                                mRightMenu.addAll(allRightList.get(l));
+                                break;
+                            }
+                        }
+                    }
+                    for (int j = 0; j < titlePage.size(); j++) {
+                        if (titlePage.get(j).getOnlySign() == i) {
+                            lblTitle.setText(titlePage.get(j).getName());
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        } else {
+            if (System.currentTimeMillis() - firstTime > 2000) {
+                Toast.makeText(FrmMain.this, "再按一次退出APP", Toast.LENGTH_SHORT).show();
+                firstTime = System.currentTimeMillis();
+            } else {
+                firstTime = 0;
+                finish();
+            }
+        }
+    }
+
     public BrowserView getBrowser() {
         return browser;
     }
@@ -346,6 +358,24 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             @Override
             public void run() {
                 browser.loadUrl(homeUrl);
+            }
+        });
+    }
+
+    public void setCloseWindow() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                closeWindow();
+            }
+        });
+    }
+
+    public void setAddWindow(final String url) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AddWebView(url);
             }
         });
     }
@@ -593,7 +623,9 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                         startActivity(home);
                     } else {
                         if (browser.canGoBack()) browser.goBack();// 返回键退回
-                        else finish();
+                        else {
+                            closeWindow();
+                        }
                     }
                     return true;
                 } else
@@ -601,7 +633,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             }
         });
         browser.setOnLongClickListener(this);
-        AddWebView();
+        AddWebView(myApp.getStartPage());
     }
 
     @Override
@@ -828,7 +860,9 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                         } else {
                             if (newsWebView[classWebView].canGoBack())
                                 newsWebView[classWebView].goBack();// 返回键退回
-                            else finish();
+                            else {
+                                closeWindow();
+                            }
                         }
                         return true;
                     } else
@@ -845,7 +879,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     /**
      * 新建窗口
      */
-    private void AddWebView() {
+    public void AddWebView(String newsUrl) {
         if (newsWebView()) {
             //将数据存进总集合
             for (int i = 0; i < allTitleList.size(); i++) {
@@ -858,7 +892,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 }
             }
             browser = newsWebView[classWebView];
-            browser.loadUrl(myApp.getStartPage());
+            browser.loadUrl(newsUrl);
         }
     }
 
@@ -866,7 +900,10 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.imgBack:
-                browser.goBack();
+                if (browser.canGoBack()) browser.goBack();// 返回键退回
+                else {
+                    closeWindow();
+                }
                 break;
             case R.id.imgMore:
                 initPopWindow();
@@ -947,9 +984,9 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     }
 
     /*
-   *android 4.1以上webview调用的图片方法
-   * @param uploadMsg 回调方法
-    */
+       *android 4.1以上webview调用的图片方法
+       * @param uploadMsg 回调方法
+        */
     private void openFileChooserImpl(ValueCallback<Uri> uploadMsg) {
         mUploadMessage = uploadMsg;
         Intent i = new Intent(Intent.ACTION_GET_CONTENT);
@@ -1044,6 +1081,11 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
         @Override
         public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
+            if (url.startsWith("newtab:")) {
+                AddWebView(url.replace("newtab:", ""));
+                return true;
+            }
+
             if (!(url.startsWith("http") || url.startsWith("https"))) {
                 return true;
             }
@@ -1140,6 +1182,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
         @Override
         public void onPageFinished(WebView view, String url) {
+            view.loadUrl("javascript: var allLinks = document.getElementsByTagName('a');if (allLinks) {var i;for (i=0; i<allLinks.length; i++) {var link = allLinks[i];var target = link.getAttribute('target'); if (target && target == '_blank') {link.href = 'newtab:'+link.href;link.setAttribute('target','_self');}}}");
             if (is_ERROR) {
                 lblTitle.setText("出错了");
                 for (int i = 0; i < titlePage.size(); i++) {
