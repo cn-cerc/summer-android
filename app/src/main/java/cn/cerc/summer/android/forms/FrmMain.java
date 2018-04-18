@@ -560,12 +560,13 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 mUploadMessageForAndroid5 = null;
                 break;
             case 1:
-                //TODO 登录返回
-                Log.d("print", "onActivityResult: " + resultCode);
-                Toast.makeText(instance, "返回了数据", Toast.LENGTH_SHORT).show();
-                if (resultCode == 10) {
-                    Toast.makeText(instance, "返回数据了————————" + data.getBooleanExtra("return_data", false), Toast.LENGTH_SHORT).show();
+                if (resultCode == 10 ) {
+                    if (data.getBooleanExtra("return_data", false)) {
+                        Toast.makeText(instance, "登录成功！", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                 }
+                Toast.makeText(instance, "登录失败！", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
