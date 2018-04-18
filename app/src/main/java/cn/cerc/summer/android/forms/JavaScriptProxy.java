@@ -17,9 +17,6 @@ import java.util.Map;
 
 import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.services.CallBrowser;
-import cn.cerc.summer.android.services.closeWindow;
-import cn.cerc.summer.android.services.newWindow;
-import cn.cerc.summer.android.services.startVine;
 import cn.cerc.summer.android.services.CallLoginByAccount;
 import cn.cerc.summer.android.services.CallLoginByPhone;
 import cn.cerc.summer.android.services.CallPhoneNumber;
@@ -52,6 +49,10 @@ import cn.cerc.summer.android.services.SetMenuList;
 import cn.cerc.summer.android.services.ShareToWeibo;
 import cn.cerc.summer.android.services.ShareToWeixin;
 import cn.cerc.summer.android.services.ShowWarning;
+import cn.cerc.summer.android.services.closeWindow;
+import cn.cerc.summer.android.services.jaLogin;
+import cn.cerc.summer.android.services.newWindow;
+import cn.cerc.summer.android.services.startVine;
 
 /**
  * 供js调用的js
@@ -107,9 +108,11 @@ public class JavaScriptProxy extends Object {
         services.put(ClockIn.class, "考勤打卡");
         services.put(ReloadPage.class, "刷新页面");
         //
-        services.put(startVine.class,"切换服务器");
-        services.put(closeWindow.class,"关闭窗口");
-        services.put(newWindow.class,"新建窗口");
+        services.put(startVine.class, "切换服务器");
+        services.put(closeWindow.class, "关闭窗口");
+        services.put(newWindow.class, "新建窗口");
+        //
+        services.put(jaLogin.class, "聚安云登录");
     }
 
     private AppCompatActivity owner;

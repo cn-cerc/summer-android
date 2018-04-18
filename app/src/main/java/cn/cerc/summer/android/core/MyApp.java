@@ -175,6 +175,14 @@ public class MyApp extends android.app.Application {
             return String.format("%s/%s/%s", HOME_URL, FORMS_PATH, formCode);
     }
 
+    public static String getNewUrl(String formCode, boolean first) {
+        if (first)
+            return String.format("%s/%s/%s?CLIENTID=%s&device=%s", MyApp.HOME_URL, FORMS_PATH, formCode,
+                    MyApp.getInstance().getClientId(), DEVICE_TYPE);
+        else
+            return String.format("%s/%s/%s&CLIENTID=%s&device=%s", HOME_URL, FORMS_PATH, formCode,MyApp.getInstance().getClientId(), DEVICE_TYPE);
+    }
+
     public static String getServiceUrl(String serviceCode) {
         return String.format("%s/%s/%s", HOME_URL, SERVICES_PATH, serviceCode);
     }

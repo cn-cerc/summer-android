@@ -5,9 +5,12 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -65,6 +68,7 @@ import cn.cerc.summer.android.core.ScreenUtils;
 import cn.cerc.summer.android.core.VisualKeyboardTool;
 import cn.cerc.summer.android.forms.view.BrowserView;
 import cn.cerc.summer.android.forms.view.DragPointView;
+import cn.cerc.summer.android.parts.dialog.DialogUtil;
 import cn.cerc.summer.android.services.LongRunningService;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
@@ -125,7 +129,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             switch (msg.what) {
                 case 1:
                     boolean visibility = (boolean) msg.obj;
-                    boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
+//                    boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
                     if (!visibility) {
                         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && Build.VERSION.RELEASE.contains("4.4.2")) {
                             headview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, VisualKeyboardTool.getStatusBarHeight(FrmMain.this)));
@@ -184,12 +188,12 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     switch (mTitleMenu.get(which).getName()) {
                         case "关闭页面":
                             closeWindow();
-
+                            Toast.makeText(myApp, "页签已关闭", Toast.LENGTH_SHORT).show();
                             mTitlePopWindow.dismiss();
                             initTitlePopWindow();
                             break;
                         case "新建窗口":
-                            AddWebView(myApp.getStartPage());
+                            AddWebView(myApp.getFormUrl("WebDefault", true));
                             mTitlePopWindow.dismiss();
                             break;
                         default:
@@ -380,6 +384,57 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         });
     }
 
+    public void skipAPPlication(final String content, final String downloadUrl) {
+        runOnUiThread(new Runnable() {
+            @SuppressLint("WrongConstant")
+            @Override
+            public void run() {
+                if (isAvilible("com.cncerc.www")) {
+                    String packageName = "com.cncerc.www";
+                    String activity = "com.cncerc.www.activity.JayunLoginActivity";
+                    ComponentName component = new ComponentName(packageName, activity);
+                    Intent intent = new Intent();
+                    intent.setComponent(component);
+                    intent.setFlags(101);
+                    intent.putExtra("data", content);
+                    intent.putExtra("appPackageName", "com.mimrc.vine");
+                    intent.putExtra("appClassName", "cn.cerc.summer.android.forms.FrmMain");
+                    startActivityForResult(intent, 1);
+                } else {
+                    if (downloadUrl != null && !"".equals(downloadUrl)) {
+                        DialogUtil.DownloadDialog(FrmMain.this, true, new DialogUtil.OnclickUpdateListen() {
+                            @Override
+                            public void click(boolean bool) {
+                                if (bool) {
+                                    Intent intent = new Intent();
+                                    intent.setAction("android.intent.action.VIEW");
+                                    Uri content_url = Uri.parse(downloadUrl);
+                                    intent.setData(content_url);
+                                    startActivity(intent);
+                                }
+                            }
+                        });
+                    } else {
+                        Toast.makeText(FrmMain.this, "没有安装该APP！", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+    }
+
+    public boolean isAvilible(String packageName) {
+        PackageManager packageManager = getPackageManager();
+
+        //获取手机系统的所有APP包名，然后进行一一比较
+        List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);
+        for (int i = 0; i < pinfo.size(); i++) {
+            if (((PackageInfo) pinfo.get(i)).packageName
+                    .equalsIgnoreCase(packageName))
+                return true;
+        }
+        return false;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -453,7 +508,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private void initData() {
         mTitleMenu.clear();
         mRightMenu.clear();
-        mTitleMenu.add(new MainTitleMenu("返回首页", false, myApp.getStartPage(), 1, classWebView));  //设置初始化数据
+        mTitleMenu.add(new MainTitleMenu("返回首页", false, myApp.getFormUrl("WebDefault", true), 1, classWebView));  //设置初始化数据
         mTitleMenu.add(new MainTitleMenu("新建窗口", false, "", 1, classWebView));
         mRightMenu.add(new MainTitleMenu("设置", false, "", 1, ""));
         mRightMenu.add(new MainTitleMenu("刷新", false, "", 1, ""));
@@ -503,6 +558,14 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     mUploadMessageForAndroid5.onReceiveValue(new Uri[]{});
                 }
                 mUploadMessageForAndroid5 = null;
+                break;
+            case 1:
+                //TODO 登录返回
+                Log.d("print", "onActivityResult: " + resultCode);
+                Toast.makeText(instance, "返回了数据", Toast.LENGTH_SHORT).show();
+                if (resultCode == 10) {
+                    Toast.makeText(instance, "返回数据了————————" + data.getBooleanExtra("return_data", false), Toast.LENGTH_SHORT).show();
+                }
                 break;
             default:
                 break;
@@ -633,7 +696,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             }
         });
         browser.setOnLongClickListener(this);
-        AddWebView(myApp.getStartPage());
+        AddWebView(myApp.getFormUrl("WebDefault", true));
     }
 
     @Override
