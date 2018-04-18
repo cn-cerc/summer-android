@@ -17,9 +17,8 @@ public class ClockIn implements JavaScriptService {
 
     @Override
     public String execute(Context context, JSONObject request) throws Exception {
-//        Intent intent = new Intent(context, ClockInActivity.class);
-//        context.startActivity(intent);
-        FrmMain.getInstance().skipAPPlication("登录信息");
+        Intent intent = new Intent(context, ClockInActivity.class);
+        context.startActivity(intent);
         return "true";
     }
 }
