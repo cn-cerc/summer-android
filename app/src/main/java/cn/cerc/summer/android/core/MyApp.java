@@ -45,6 +45,7 @@ public class MyApp extends android.app.Application {
     public static String HOME_URL = "https://m.knowall.cn";
     //    public static String HOME_URL = "http://192.168.1.174";
     //    public static String HOME_URL = "http://192.168.31.247";
+    public static String HOME_PAGE = "WebDefault";
     public static String SERVICES_PATH = "services";
     public static String FORMS_PATH = "forms";
     private static MyApp instance;
@@ -315,7 +316,7 @@ public class MyApp extends android.app.Application {
     }
 
     public String getStartPage() {
-        return String.format("%s?CLIENTID=%s&device=%s", MyApp.HOME_URL, MyApp.getInstance().getClientId(), DEVICE_TYPE);
+        return String.format("%s/%s/%s?CLIENTID=%s&device=%s", MyApp.HOME_URL, MyApp.FORMS_PATH, MyApp.HOME_PAGE, MyApp.getInstance().getClientId(), DEVICE_TYPE);
     }
 
     //载入配置
