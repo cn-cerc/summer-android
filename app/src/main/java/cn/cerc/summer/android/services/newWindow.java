@@ -4,6 +4,7 @@ import android.content.Context;
 
 import org.json.JSONObject;
 
+import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.forms.FrmMain;
 import cn.cerc.summer.android.forms.JavaScriptService;
 
@@ -19,6 +20,9 @@ public class newWindow implements JavaScriptService {
             return "没有传入指定参数";
         }
         String url = request.getString("url");
+        if (!url.startsWith("http")) {
+            url = String.format("%s/%s/%s", MyApp.HOME_URL, MyApp.FORMS_PATH, url);
+        }
         if(!"".equals(url) && url != null) {
             FrmMain.getInstance().setAddWindow(url);
         }else{
