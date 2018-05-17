@@ -47,7 +47,7 @@ public final class RGBLuminanceSource extends LuminanceSource {
         // In order to measure pure decoding speed, we convert the entire image
         // to a greyscale array
         // up front, which is the same as the Y channel of the
-        // YUVLuminanceSource in the real app.
+        // YUVLuminanceSource chooseFileInAnim the real app.
         luminances = new byte[width * height];
         for (int y = 0; y < height; y++) {
             int offset = y * width;

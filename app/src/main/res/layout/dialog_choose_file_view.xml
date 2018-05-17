@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:background="@drawable/choose_file_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvImage"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:text="图片"/>
+
+        <View
+            android:background="#FF999999"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+
+        <TextView
+            android:id="@+id/tvFile"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:text="文件"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvCancle"
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/choose_file_bg"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="20dp"
+        android:text="取消"/>
+
+</LinearLayout>

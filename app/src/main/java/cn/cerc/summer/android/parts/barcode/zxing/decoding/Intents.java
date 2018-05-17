@@ -26,7 +26,7 @@ public final class Intents {
 
     public static final class Scan {
         /**
-         * Send this intent to open the Barcodes app in scanning mode, find a barcode, and return
+         * Send this intent to open the Barcodes app chooseFileInAnim scanning mode, find a barcode, and return
          * the results.
          */
         public static final String ACTION = "com.google.zxing.client.android.SCAN";
@@ -92,7 +92,7 @@ public final class Intents {
         public static final String RESULT_FORMAT = "SCAN_RESULT_FORMAT";
 
         /**
-         * Setting this to false will not save scanned codes in the history.
+         * Setting this to false will not save scanned codes chooseFileInAnim the history.
          */
         public static final String SAVE_HISTORY = "SAVE_HISTORY";
 
