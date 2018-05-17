@@ -214,6 +214,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--图片文件选择并上传界面-->
+        <activity android:name="cn.cerc.summer.android.forms.FrmChooseFile"
+                  android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>
