@@ -53,6 +53,7 @@ import cn.cerc.summer.android.services.UploadImgField;
 import cn.cerc.summer.android.services.closeWindow;
 import cn.cerc.summer.android.services.jaLogin;
 import cn.cerc.summer.android.services.newWindow;
+import cn.cerc.summer.android.services.startVine;
 
 /**
  * 供js调用的js
@@ -108,8 +109,7 @@ public class JavaScriptProxy extends Object {
         services.put(ClockIn.class, "考勤打卡");
         services.put(ReloadPage.class, "刷新页面");
         //
-        // TODO: 2018-5-15 暂时注释
-//        services.put(startVine.class, "切换服务器");
+        services.put(startVine.class, "切换服务器");
         services.put(closeWindow.class, "关闭窗口");
         services.put(newWindow.class, "新建窗口");
         //

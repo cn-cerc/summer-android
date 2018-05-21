@@ -321,7 +321,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     titlePage.remove(i);
                 }
             }
-            for (int i = 0; i < newsWebView.length; i++) {
+            for (int i = newsWebView.length - 1; i >= 0; i--) {
                 if (newsWebView[i] != null) {
                     newsWebView[i].setVisibility(View.VISIBLE);
                     browser = newsWebView[i];

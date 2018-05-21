@@ -195,6 +195,7 @@
         <activity android:name="cn.cerc.summer.android.parts.music.FrmCaptureMusic" />
         <activity
             android:name="cn.cerc.summer.android.parts.image.FrmCaptureImage"
+            android:launchMode="singleTop"
             android:theme="@style/MyCaptureDialogStyle" />
         <activity android:name="cn.cerc.summer.android.parts.barcode.FrmScanProduct" />
         <activity android:name="cn.cerc.summer.android.parts.barcode.DlgScanProduct" />
