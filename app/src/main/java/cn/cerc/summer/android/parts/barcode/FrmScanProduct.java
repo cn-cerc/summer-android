@@ -288,7 +288,7 @@ public class FrmScanProduct extends AppCompatActivity implements View.OnClickLis
             adapter.notifyDataSetChanged();
             requestUpload(dataSet.getCurrent());
         }
-        edtBarcode.setSelection(0, edtBarcode.getText().toString().length() - 1);
+        edtBarcode.setSelection(0, edtBarcode.getText().toString().length());
         edtBarcode.requestFocus();
     }
 
