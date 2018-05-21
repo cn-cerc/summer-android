@@ -46,6 +46,7 @@ import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.core.MySession;
 import cn.cerc.summer.android.core.PhotoBitmapUtils;
 import cn.cerc.summer.android.core.RequestCallback;
+import cn.cerc.summer.android.forms.FrmMain;
 
 /**
  * Created by yangtaiyu on 2017/10/16.
@@ -367,16 +368,17 @@ public class FrmCaptureImage extends Activity implements View.OnClickListener {
     private void uploadingImage(Bitmap bitmap) {
         Toast.makeText(this, "开始上传", Toast.LENGTH_SHORT).show();
         String client = MyApp.getFormUrl("FrmCusFollowUp.uploadFile") + String.format("?sid=%s&CLIENTID=%s", MySession.getInstance().getToken(), MyApp.getInstance().getClientId());
-        Log.d("print", "uploadingImage: "+client);
+        Log.d("print", "uploadingImage: " + client);
         HttpClient httpClient = new HttpClient("FrmCusFollowUp.uploadFile");
         HashMap<String, String> rf = new HashMap<>();
         rf.put("followup", path);
         httpClient.POST(client, rf, new RequestCallback() {
             @Override
             public void success(String url, JSONObject json) {
-                Log.d("print", "success: " +url+"   " + json.toString());
+                Log.d("print", "success: " + url + "   " + json.toString());
                 try {
                     Toast.makeText(FrmCaptureImage.this, json.getString("message"), Toast.LENGTH_SHORT).show();
+                    FrmMain.getInstance().reloadPage();
                     finish();
                 } catch (JSONException e) {
                     e.printStackTrace();
