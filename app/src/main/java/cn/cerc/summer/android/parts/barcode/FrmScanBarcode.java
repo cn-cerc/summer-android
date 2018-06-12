@@ -330,7 +330,7 @@ public class FrmScanBarcode extends AppCompatActivity implements Callback, View.
             } else {
                 json.setResult(false);
             }
-            MyApp.getInstance().executiveJS(scriptFunction,json.toString());
+            MyApp.getInstance().executiveJS(scriptFunction, json.toString());
             //  RemoteForm   remoteForm  = new RemoteForm(postUrl==null||postUrl.equals("")?postUrl)
 
         } else if (!"".equals(this.postUrl)) {

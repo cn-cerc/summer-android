@@ -1,7 +1,6 @@
 package cn.cerc.summer.android.services;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.json.JSONObject;
 

@@ -3,5 +3,7 @@
     <corners android:radius="10dp" />
     <solid android:color="@android:color/white" />
     <!--边框的宽度及颜色-->
-    <stroke android:width="0.5px" android:color="@color/bag_black" />
+    <stroke
+        android:width="0.5px"
+        android:color="@color/bag_black" />
 </shape>
