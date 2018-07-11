@@ -1135,7 +1135,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     }
 
     public void reload(int scales) {
-        browser.getSettings().setTextZoom(Integer.valueOf(settings.getInt(Constans.SCALE_SHAREDKEY, 90)));
+        browser.getSettings().setTextZoom(Integer.valueOf(settings.getInt(Constans.SCALE_SHAREDKEY, 100)));
         browser.reload();
     }
 
