@@ -711,7 +711,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         btn_reload = (Button) this.findViewById(R.id.btn_reload);
         browser = (BrowserView) this.findViewById(R.id.webView);
         btn_reload.setOnClickListener(this);
-        browser.getSettings().setTextZoom(settings.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this, ScreenUtils.getInches(this))));
+        browser.getSettings().setTextZoom(settings.getInt(Constans.SCALE_SHAREDKEY, 100));
 
         //jsAndroid 供web端js调用标识，修改请通知web开发者
         browser.addJavascriptInterface(new JavaScriptProxy(this), "JSobj");
@@ -947,7 +947,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             titlePage.add(new MainTitleMenu("欢迎页", false, currentUrl, 3, classWebView));
             newsWebView[classWebView] = new BrowserView(this);
             mainframe.addView(newsWebView[classWebView]);
-            newsWebView[classWebView].getSettings().setTextZoom(settings.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this, ScreenUtils.getInches(this))));
+            newsWebView[classWebView].getSettings().setTextZoom(settings.getInt(Constans.SCALE_SHAREDKEY, 100));
 
             //jsAndroid 供web端js调用标识，修改请通知web开发者
             newsWebView[classWebView].addJavascriptInterface(new JavaScriptProxy(this), "JSobj");

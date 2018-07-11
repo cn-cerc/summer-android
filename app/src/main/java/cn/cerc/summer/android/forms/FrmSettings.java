@@ -48,7 +48,7 @@ public class FrmSettings extends AppCompatActivity implements SeekBar.OnSeekBarC
         settings = getSharedPreferences(Constans.SHARED_SETTING_TAB, MODE_PRIVATE);
 
 
-        def_scales = ScreenUtils.getScales(this, ScreenUtils.getInches(this));
+        def_scales = ScreenUtils.getScales(this,100);
         back = (ImageView) this.findViewById(R.id.back);
         button = (Button) this.findViewById(R.id.save);
         edittext = (EditText) this.findViewById(R.id.url);
