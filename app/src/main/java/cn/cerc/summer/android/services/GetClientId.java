@@ -20,7 +20,7 @@ public class GetClientId implements JavaScriptService {
             return "没有传入指定参数";
         }
         String function = request.getString("_callback_");
-        MyApp.getInstance().executiveJS(function,MyApp.getInstance().getClientId());
+        MyApp.getInstance().executiveJS(function, MyApp.getInstance().getClientId());
         return MyApp.getInstance().getClientId();
     }
 }

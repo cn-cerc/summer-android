@@ -1,3 +1,4 @@
+
 # Created by https://www.gitignore.io/api/androidstudio
 
 ### AndroidStudio ###
@@ -62,26 +63,7 @@ obj/
 /out/
 
 # User-specific configurations
-.idea/libraries/
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/.name
-.idea/compiler.xml
-.idea/copyright/profiles_settings.xml
-.idea/encodings.xml
-.idea/misc.xml
-.idea/modules.xml
-.idea/scopes/scope_settings.xml
-.idea/dictionaries
-.idea/vcs.xml
-.idea/jsLibraryMappings.xml
-.idea/datasources.xml
-.idea/dataSources.ids
-.idea/sqlDataSources.xml
-.idea/dynamic.xml
-.idea/uiDesigner.xml
-
-# Keystore files
+.idea/
 
 # OS-specific files
 .DS_Store
@@ -95,6 +77,8 @@ Thumbs.db
 # Legacy Eclipse project files
 .classpath
 .project
+.cproject
+.settings/
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
@@ -124,9 +108,8 @@ crashlytics-build.properties
 fabric.properties
 
 ### AndroidStudio Patch ###
-# Google Services plugin
-google-services.json
 
 !/gradle/wrapper/gradle-wrapper.jar
+
 
 # End of https://www.gitignore.io/api/androidstudio

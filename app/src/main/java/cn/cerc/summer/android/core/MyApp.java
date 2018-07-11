@@ -43,8 +43,6 @@ import cn.jpush.android.api.JPushInterface;
 public class MyApp extends android.app.Application {
     public static final String DEVICE_TYPE = "android";
     public static String HOME_URL = "https://m.knowall.cn";
-//        public static String HOME_URL = "http://192.168.31.150";
-    //    public static String HOME_URL = "http://192.168.31.247";
     public static String HOME_PAGE = "WebDefault";
     public static String SERVICES_PATH = "services";
     public static String FORMS_PATH = "forms";
@@ -190,8 +188,37 @@ public class MyApp extends android.app.Application {
 
     public static void setHomeUrl(String homeUrl) {
         HOME_URL = homeUrl;
-        MyApp.getInstance().getSharedPreferences("NEW_HOST", Context.MODE_PRIVATE).edit().putString("host",homeUrl).commit();
+        MyApp.getInstance().getSharedPreferences("NEW_HOST", Context.MODE_PRIVATE).edit().putString("host", homeUrl).commit();
 
+    }
+
+    /**
+     * 批量申请权限
+     *
+     * @param permArray
+     * @param questCode
+     * @param activity
+     * @return
+     */
+    public static boolean isPermissionsAllGranted(String[] permArray, int questCode, Activity activity) {
+        //6.0以下系统，取消请求权限
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+        //获得批量请求但被禁止的权限列表
+        List<String> deniedPerms = new ArrayList<String>();
+        for (int i = 0; permArray != null && i < permArray.length; i++) {
+            if (PackageManager.PERMISSION_GRANTED != activity.checkSelfPermission(permArray[i])) {
+                deniedPerms.add(permArray[i]);
+            }
+        }
+        int denyPermNum = deniedPerms.size();
+        //进行批量请求
+        if (denyPermNum != 0) {
+            activity.requestPermissions(deniedPerms.toArray(new String[denyPermNum]), questCode);
+            return false;
+        }
+        return true;
     }
 
     public boolean isDebug() {
@@ -336,33 +363,5 @@ public class MyApp extends android.app.Application {
     //返回应用代码
     public String getAppCode() {
         return this.APPCODE;
-    }
-
-    /**
-     * 批量申请权限
-     * @param permArray
-     * @param questCode
-     * @param activity
-     * @return
-     */
-    public static boolean isPermissionsAllGranted(String[] permArray,int questCode,Activity activity){
-        //6.0以下系统，取消请求权限
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
-            return true;
-        }
-        //获得批量请求但被禁止的权限列表
-        List<String> deniedPerms = new ArrayList<String>();
-        for(int i=0;permArray!=null&&i<permArray.length;i++){
-            if(PackageManager.PERMISSION_GRANTED !=activity.checkSelfPermission(permArray[i])){
-                deniedPerms.add(permArray[i]);
-            }
-        }
-        int denyPermNum = deniedPerms.size();
-        //进行批量请求
-        if(denyPermNum != 0){
-            activity.requestPermissions(deniedPerms.toArray(new String[denyPermNum]),questCode);
-            return false;
-        }
-        return true;
     }
 }

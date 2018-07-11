@@ -18,17 +18,12 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.UUID;
 
 /**
  * Created by Administrator on 2018/1/11.
  */
 
 public class PhotoBitmapUtils {
-    /**
-     * 存放拍摄图片的文件夹
-     */
-    private static final String FILES_NAME = "/MyPhoto";
     /**
      * 获取的时间格式
      */
@@ -37,8 +32,15 @@ public class PhotoBitmapUtils {
      * 图片种类
      */
     public static final String IMAGE_TYPE = ".jpg";
-
+    /**
+     * 存放拍摄图片的文件夹
+     */
+    private static final String FILES_NAME = "/MyPhoto";
     private static File iconDir;
+
+    // 防止实例化
+    private PhotoBitmapUtils() {
+    }
 
     public static File createIconFile() {
         File external = Environment.getExternalStorageDirectory();
@@ -49,13 +51,9 @@ public class PhotoBitmapUtils {
         }
         String fileName = "";
         if (iconDir != null) {
-            fileName ="image.jpg";
+            fileName = "image.jpg";
         }
         return new File(iconDir, fileName);
-    }
-
-    // 防止实例化
-    private PhotoBitmapUtils() {
     }
 
     /**

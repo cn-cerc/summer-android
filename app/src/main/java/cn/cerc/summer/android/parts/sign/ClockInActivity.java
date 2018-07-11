@@ -71,21 +71,22 @@ import cn.cerc.summer.android.forms.FrmMain;
  */
 
 public class ClockInActivity extends AppCompatActivity implements LocationSource, AMap.OnMapClickListener, GeocodeSearch.OnGeocodeSearchListener, AMapLocationListener, View.OnClickListener {
+    private final static int TAKE_PICTURE = 1; //相机
+    public static LatLng myLaLn;
+    public AMapLocation NowLocation = null;
+    String token = null;
     private MapView mAmapView;
     private LinearLayout mContainerLayout;
     private AMap aMap;
-    public static LatLng myLaLn;
     private GeocodeSearch geocoderSearch;
     private LocationSource.OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
     private AMapLocationClientOption mLocationOption;
     //标识，用于判断是否只显示一次定位信息和用户重新定位
     private boolean isFirstLoc = true;
-    public AMapLocation NowLocation = null;
     private MarkerOptions markerOption;
     private Marker marker;
     private ProgressDialog progDialog = null;
-
     private LatLng latLngSign;
     private LatLng latLngCurrent;
     private TextView text_address;
@@ -96,12 +97,10 @@ public class ClockInActivity extends AppCompatActivity implements LocationSource
     private ImageView image;
     private TextView text_image;
     private RelativeLayout relative_image;
-    private final static int TAKE_PICTURE = 1; //相机
     private Uri photoUri = null;
     private File file;
     private boolean isPhotograph = false;
     private String path = null;
-    String token = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

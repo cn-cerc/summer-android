@@ -80,7 +80,7 @@ public class FrmStartup extends AppCompatActivity {
                     return;
                 }
                 String err = null;
-                if(resp.contains("result")) {
+                if (resp.contains("result")) {
                     try {
                         json = new JSONObject(resp);
                         if (json.has("result")) {
@@ -97,7 +97,7 @@ public class FrmStartup extends AppCompatActivity {
                     } catch (Exception e) {
                         err = e.getMessage();
                     }
-                }else{
+                } else {
                     showError("出现错误！", "网络请求错误，请检查网络后重试！");
                 }
                 if (err != null) {
@@ -226,8 +226,8 @@ public class FrmStartup extends AppCompatActivity {
             Bitmap bm = BitmapFactory.decodeFile(settings.getString(IMAGE_STARTIP, null));
             start_image.setImageBitmap(bm);
         }
-        String host = MyApp.getInstance().getSharedPreferences("NEW_HOST", Context.MODE_PRIVATE).getString("host","");
-        if(!"".equals(host) && host != null){
+        String host = MyApp.getInstance().getSharedPreferences("NEW_HOST", Context.MODE_PRIVATE).getString("host", "");
+        if (!"".equals(host) && host != null) {
             MyApp.setHomeUrl(host);
         }
         try {
@@ -265,7 +265,7 @@ public class FrmStartup extends AppCompatActivity {
         } else {
             //申请权限
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_PHONE_STATE,Manifest.permission.CAMERA},
+                    new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CAMERA},
                     MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
         }
 
@@ -301,7 +301,7 @@ public class FrmStartup extends AppCompatActivity {
                     }
                 } else {
                     ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.READ_PHONE_STATE,Manifest.permission.CAMERA},
+                            new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CAMERA},
                             MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
                 }
                 return;
