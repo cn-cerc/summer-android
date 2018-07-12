@@ -60,7 +60,7 @@ public class FrmSettings extends AppCompatActivity implements SeekBar.OnSeekBarC
         if (null == getIntent().getStringExtra("address"))
             edittext.setText(settings.getString(Constans.HOME, ""));
         else edittext.setText(getIntent().getStringExtra("address"));
-        scales = settings.getInt(Constans.SCALE_SHAREDKEY, def_scales);
+        scales = settings.getInt(Constans.SCALE_SHAREDKEY, 100);
         customseekbar.setProgress(scales);
 
         lin_cun = (LinearLayout) this.findViewById(R.id.lin_cun);
@@ -100,6 +100,7 @@ public class FrmSettings extends AppCompatActivity implements SeekBar.OnSeekBarC
         recover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                def_scales = 100;
                 settings.edit().putString(Constans.HOME, MyApp.HOME_URL).putInt(Constans.SCALE_SHAREDKEY, def_scales).commit();
                 customseekbar.setProgress(def_scales);
                 FrmMain.getInstance().reload(def_scales);

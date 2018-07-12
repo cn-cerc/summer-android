@@ -77,10 +77,10 @@ public final class CameraManager {
         this.context = context;
         this.configManager = new CameraConfigurationManager(context);
 
-        // Camera.setOneShotPreviewCallback() has a race condition in Cupcake, so we use the older
+        // Camera.setOneShotPreviewCallback() has a race condition chooseFileInAnim Cupcake, so we use the older
         // Camera.setPreviewCallback() on 1.5 and earlier. For Donut and later, we need to use
         // the more efficient one shot callback, as the older one can swamp the system and cause it
-        // to run out of memory. We can't use SDK_INT because it was introduced in the Donut SDK.
+        // to run chooseFileOutAnim of memory. We can't use SDK_INT because it was introduced in the Donut SDK.
         //useOneShotPreviewCallback = Integer.parseInt(Build.VERSION.SDK) > Build.VERSION_CODES.CUPCAKE;
         useOneShotPreviewCallback = Integer.parseInt(Build.VERSION.SDK) > 3; // 3 = Cupcake
 
@@ -139,7 +139,7 @@ public final class CameraManager {
     }
 
     /**
-     * Closes the camera driver if still in use.
+     * Closes the camera driver if still chooseFileInAnim use.
      */
     public void closeDriver() {
         if (camera != null) {
@@ -176,7 +176,7 @@ public final class CameraManager {
 
     /**
      * A single preview frame will be returned to the handler supplied. The data will arrive as byte[]
-     * in the message.obj field, with width and height encoded as message.arg1 and message.arg2,
+     * chooseFileInAnim the message.obj field, with width and height encoded as message.arg1 and message.arg2,
      * respectively.
      *
      * @param handler The handler to send the message to.
@@ -210,9 +210,9 @@ public final class CameraManager {
     /**
      * Calculates the framing rect which the UI should draw to show the user where to place the
      * barcode. This target helps with alignment as well as forces the user to hold the device
-     * far enough away to ensure the image will be in focus.
+     * far enough away to ensure the image will be chooseFileInAnim focus.
      *
-     * @return The rectangle to draw on screen in window coordinates.
+     * @return The rectangle to draw on screen chooseFileInAnim window coordinates.
      */
     public Rect getFramingRect() {
         Point screenResolution = configManager.getScreenResolution();
@@ -241,7 +241,7 @@ public final class CameraManager {
     }
 
     /**
-     * Like {@link #getFramingRect} but coordinates are in terms of the preview frame,
+     * Like {@link #getFramingRect} but coordinates are chooseFileInAnim terms of the preview frame,
      * not UI / screen.
      */
     public Rect getFramingRectInPreview() {
@@ -268,7 +268,7 @@ public final class CameraManager {
      *
      * @param points The points returned by the Reader subclass through Result.getResultPoints().
      * @return An array of Points scaled to the size of the framing rect and offset appropriately
-     *         so they can be drawn in screen coordinates.
+     *         so they can be drawn chooseFileInAnim screen coordinates.
      */
   /*
   public Point[] convertResultPoints(ResultPoint[] points) {
@@ -301,7 +301,7 @@ public final class CameraManager {
             // This is the standard Android format which all devices are REQUIRED to support.
             // In theory, it's the only one we should ever care about.
             case PixelFormat.YCbCr_420_SP:
-                // This format has never been seen in the wild, but is compatible as we only care
+                // This format has never been seen chooseFileInAnim the wild, but is compatible as we only care
                 // about the Y channel, so allow it.
             case PixelFormat.YCbCr_422_SP:
                 return new cn.cerc.summer.android.parts.barcode.zxing.camera.PlanarYUVLuminanceSource(data, width, height, rect.left, rect.top,

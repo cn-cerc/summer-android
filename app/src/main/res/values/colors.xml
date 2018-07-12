@@ -15,4 +15,5 @@
     <color name="gray_view">#5ea9c8</color>
     <color name="movie_linearbg">#CC282828</color>
     <color name="dialog_background">#00000000</color>
+    <color name="gallery_blue">#3299ba</color>
 </resources>

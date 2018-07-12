@@ -144,7 +144,7 @@ public class HttpClient {
             String key = (String) entry.getKey();
             String val = (String) entry.getValue();
             Log.d("print", "POST: " + key + "    " + val);
-            if (null != key && key.contains("FileUrl_") || key.contains("video"))
+            if (null != key && key.contains("FileUrl_") || key.contains("followup"))
                 param.addBodyParameter(key, new File(val));
             else {
                 param.addBodyParameter(key, val);

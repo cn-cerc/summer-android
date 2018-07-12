@@ -5,9 +5,14 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -15,6 +20,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -49,6 +55,13 @@ import com.alipay.sdk.util.H5PayResultModel;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.Thing;
 import com.mimrc.vine.R;
+import com.yancy.gallerypick.config.GalleryConfig;
+import com.yancy.gallerypick.config.GalleryPick;
+import com.yancy.gallerypick.inter.IHandlerCallBack;
+
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -58,21 +71,30 @@ import java.util.Set;
 
 import cn.cerc.summer.android.core.CommBottomPopWindow;
 import cn.cerc.summer.android.core.Constans;
+import cn.cerc.summer.android.core.GlideImageLoader;
 import cn.cerc.summer.android.core.MainPopupMenu;
 import cn.cerc.summer.android.core.MainTitleMenu;
 import cn.cerc.summer.android.core.MyApp;
+import cn.cerc.summer.android.core.OnFileChooseItemListener;
 import cn.cerc.summer.android.core.ScreenUtils;
 import cn.cerc.summer.android.core.VisualKeyboardTool;
 import cn.cerc.summer.android.forms.view.BrowserView;
 import cn.cerc.summer.android.forms.view.DragPointView;
+import cn.cerc.summer.android.parts.dialog.DialogUtil;
+import cn.cerc.summer.android.parts.dialog.FileDialog;
 import cn.cerc.summer.android.services.LongRunningService;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
+import top.zibin.luban.Luban;
+import top.zibin.luban.OnCompressListener;
 
 /**
  * 主界面
  */
 public class FrmMain extends AppCompatActivity implements View.OnLongClickListener, View.OnClickListener {
+
+    private static final String TAG = "FrmMain";
+
     public static final String NETWORK_CHANGE = "android.net.conn.NETWORK_CHANGE";
     public static final String APP_UPDATA = "com.mimrc.vine.APP_UPDATA";
     public static final String JSON_ERROR = "com.mimrc.vine.JSON_ERROR";
@@ -125,7 +147,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             switch (msg.what) {
                 case 1:
                     boolean visibility = (boolean) msg.obj;
-                    boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
+//                    boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
                     if (!visibility) {
                         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && Build.VERSION.RELEASE.contains("4.4.2")) {
                             headview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, VisualKeyboardTool.getStatusBarHeight(FrmMain.this)));
@@ -184,12 +206,12 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     switch (mTitleMenu.get(which).getName()) {
                         case "关闭页面":
                             closeWindow();
-
+                            Toast.makeText(myApp, "页签已关闭", Toast.LENGTH_SHORT).show();
                             mTitlePopWindow.dismiss();
                             initTitlePopWindow();
                             break;
                         case "新建窗口":
-                            AddWebView(myApp.getStartPage());
+                            AddWebView(myApp.getFormUrl("WebDefault", true));
                             mTitlePopWindow.dismiss();
                             break;
                         default:
@@ -299,7 +321,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     titlePage.remove(i);
                 }
             }
-            for (int i = 0; i < newsWebView.length; i++) {
+            for (int i = newsWebView.length - 1; i >= 0; i--) {
                 if (newsWebView[i] != null) {
                     newsWebView[i].setVisibility(View.VISIBLE);
                     browser = newsWebView[i];
@@ -380,6 +402,57 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         });
     }
 
+    public void skipAPPlication(final String content, final String downloadUrl) {
+        runOnUiThread(new Runnable() {
+            @SuppressLint("WrongConstant")
+            @Override
+            public void run() {
+                if (isAvilible("com.cncerc.www")) {
+                    String packageName = "com.cncerc.www";
+                    String activity = "com.cncerc.www.activity.JayunLoginActivity";
+                    ComponentName component = new ComponentName(packageName, activity);
+                    Intent intent = new Intent();
+                    intent.setComponent(component);
+                    intent.setFlags(101);
+                    intent.putExtra("data", content);
+                    intent.putExtra("appPackageName", "com.mimrc.vine");
+                    intent.putExtra("appClassName", "cn.cerc.summer.android.forms.FrmMain");
+                    startActivityForResult(intent, 1);
+                } else {
+                    if (downloadUrl != null && !"".equals(downloadUrl)) {
+                        DialogUtil.DownloadDialog(FrmMain.this, true, new DialogUtil.OnclickUpdateListen() {
+                            @Override
+                            public void click(boolean bool) {
+                                if (bool) {
+                                    Intent intent = new Intent();
+                                    intent.setAction("android.intent.action.VIEW");
+                                    Uri content_url = Uri.parse(downloadUrl);
+                                    intent.setData(content_url);
+                                    startActivity(intent);
+                                }
+                            }
+                        });
+                    } else {
+                        Toast.makeText(FrmMain.this, "没有安装该APP！", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+    }
+
+    public boolean isAvilible(String packageName) {
+        PackageManager packageManager = getPackageManager();
+
+        //获取手机系统的所有APP包名，然后进行一一比较
+        List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);
+        for (int i = 0; i < pinfo.size(); i++) {
+            if (((PackageInfo) pinfo.get(i)).packageName
+                    .equalsIgnoreCase(packageName))
+                return true;
+        }
+        return false;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -453,7 +526,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private void initData() {
         mTitleMenu.clear();
         mRightMenu.clear();
-        mTitleMenu.add(new MainTitleMenu("返回首页", false, myApp.getStartPage(), 1, classWebView));  //设置初始化数据
+        mTitleMenu.add(new MainTitleMenu("返回首页", false, myApp.getFormUrl("WebDefault", true), 1, classWebView));  //设置初始化数据
         mTitleMenu.add(new MainTitleMenu("新建窗口", false, "", 1, classWebView));
         mRightMenu.add(new MainTitleMenu("设置", false, "", 1, ""));
         mRightMenu.add(new MainTitleMenu("刷新", false, "", 1, ""));
@@ -504,10 +577,93 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 }
                 mUploadMessageForAndroid5 = null;
                 break;
+            case 1:
+                if (resultCode == 10 ) {
+                    if (data.getBooleanExtra("return_data", false)) {
+                        Toast.makeText(instance, "登录成功！", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                Toast.makeText(instance, "登录失败！", Toast.LENGTH_SHORT).show();
+                break;
+            case 789://选择本地文件返回
+                if (null == data.getData())return;
+                Uri uri = data.getData();//得到uri，后面就是将uri转化成file的过程。
+                String[] proj = {MediaStore.Images.Media.DATA};
+                Cursor actualimagecursor = managedQuery(uri, proj, null, null, null);
+                int actual_image_column_index = actualimagecursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                actualimagecursor.moveToFirst();
+                String img_path = actualimagecursor.getString(actual_image_column_index);
+                File file = new File(img_path);
+                String filePath = file.getAbsolutePath();
+                Log.e(TAG, "选择本地文件路径: " + filePath);
+                if (!TextUtils.isEmpty(filePath)){
+                    if (filePath.endsWith("jpg") || filePath.endsWith("png"))//图片类
+                        zipImgage(filePath);
+                    else {//其它文件
+                        uploadImg(MyApp.getFormUrl("FrmCusFollowUp.uploadFile"),"" + filePath);
+                    }
+                }
+                break;
             default:
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    /**
+     * 上传图片至服务器
+     *
+     * @param url      服务器接口
+     * @param filePath 本地图片路径
+     */
+    public void uploadImg(String url, final String filePath) {
+        final ProgressDialog pb = new ProgressDialog(this);
+        pb.setMessage("正在上传");
+        pb.setCancelable(false);
+        pb.show();
+        RequestParams params = new RequestParams(url);
+        params.setMultipart(true);//设置表单传送
+        params.setCancelFast(true);//设置可以立即被停止
+        params.addBodyParameter("Filedata", new File(filePath), "multipart/form-data");
+
+        Callback.Cancelable cancelable = x.http().post(params, new Callback.ProgressCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                pb.dismiss();
+                Toast.makeText(FrmMain.this, "上传成功", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                pb.dismiss();
+                Toast.makeText(FrmMain.this, "上传失败，请重新上传", Toast.LENGTH_SHORT).show();
+                Log.i("uploadImg", "ex-->" + ex.getMessage());
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                Log.i("upload", "onCancelled");
+            }
+
+            @Override
+            public void onFinished() {
+            }
+
+            @Override
+            public void onWaiting() {
+
+            }
+
+            @Override
+            public void onStarted() {
+
+            }
+
+            @Override
+            public void onLoading(long total, long current, boolean isDownloading) {
+            }
+        });
     }
 
     @Override
@@ -555,7 +711,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         btn_reload = (Button) this.findViewById(R.id.btn_reload);
         browser = (BrowserView) this.findViewById(R.id.webView);
         btn_reload.setOnClickListener(this);
-        browser.getSettings().setTextZoom(settings.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this, ScreenUtils.getInches(this))));
+        browser.getSettings().setTextZoom(settings.getInt(Constans.SCALE_SHAREDKEY, 100));
 
         //jsAndroid 供web端js调用标识，修改请通知web开发者
         browser.addJavascriptInterface(new JavaScriptProxy(this), "JSobj");
@@ -633,7 +789,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             }
         });
         browser.setOnLongClickListener(this);
-        AddWebView(myApp.getStartPage());
+        AddWebView(myApp.getFormUrl("WebDefault", true));
     }
 
     @Override
@@ -791,7 +947,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             titlePage.add(new MainTitleMenu("欢迎页", false, currentUrl, 3, classWebView));
             newsWebView[classWebView] = new BrowserView(this);
             mainframe.addView(newsWebView[classWebView]);
-            newsWebView[classWebView].getSettings().setTextZoom(settings.getInt(Constans.SCALE_SHAREDKEY, ScreenUtils.getScales(this, ScreenUtils.getInches(this))));
+            newsWebView[classWebView].getSettings().setTextZoom(settings.getInt(Constans.SCALE_SHAREDKEY, 100));
 
             //jsAndroid 供web端js调用标识，修改请通知web开发者
             newsWebView[classWebView].addJavascriptInterface(new JavaScriptProxy(this), "JSobj");
@@ -979,7 +1135,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     }
 
     public void reload(int scales) {
-        browser.getSettings().setTextZoom(Integer.valueOf(settings.getInt(Constans.SCALE_SHAREDKEY, 90)));
+        browser.getSettings().setTextZoom(Integer.valueOf(settings.getInt(Constans.SCALE_SHAREDKEY, 100)));
         browser.reload();
     }
 
@@ -1215,4 +1371,109 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             super.onPageFinished(view, url);
         }
     }
+
+    private List<String> path = new ArrayList<>();
+
+    public void showChooseFileDialog() {
+
+        FileDialog fileDialog = new FileDialog(FrmMain.this,R.style.loadingDialogStyle);
+        fileDialog.show();
+        fileDialog.setOnFileChooseItemListener(new OnFileChooseItemListener() {
+            @Override
+            public void onChoose(int choosePos) {
+                if (choosePos == 1) {//图片+相机
+                    chooseImageOrCamera();
+                } else if (choosePos == 2) {//文件
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    //intent.setType(“image/*”);//选择图片
+                    //intent.setType(“audio/*”); //选择音频
+                    //intent.setType(“video/*”); //选择视频 （mp4 3gp 是android支持的视频格式）
+                    //intent.setType(“video/*;image/*”);//同时选择视频和图片
+                    intent.setType("*/*");//无类型限制
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    startActivityForResult(intent, 789);
+                }
+            }
+        });
+    }
+
+    /**
+     * 图片、相机
+     */
+    private void chooseImageOrCamera() {
+        IHandlerCallBack iHandlerCallBack = new IHandlerCallBack() {
+            @Override
+            public void onStart() {
+            }
+
+            @Override
+            public void onSuccess(List<String> photoList) {
+                path.clear();
+                for (String s : photoList) {
+                    path.add(s);
+                    Log.e(TAG, "图片路径: " + s );
+                    zipImgage(photoList.get(0));
+                }
+            }
+
+            @Override
+            public void onCancel() {
+            }
+
+            @Override
+            public void onFinish() {
+            }
+
+            @Override
+            public void onError() {
+            }
+        };
+        GalleryConfig galleryConfig = new GalleryConfig.Builder()
+                .imageLoader(new GlideImageLoader())    // ImageLoader 加载框架（必填）
+                .iHandlerCallBack(iHandlerCallBack)     // 监听接口（必填）
+                .provider("com.mimrc.vine.fileprovider")   // provider (必填)
+                .pathList(path)                         // 记录已选的图片
+                .multiSelect(false)                      // 是否多选   默认：false
+                .multiSelect(false, 1)                   // 配置是否多选的同时 配置多选数量   默认：false ， 9
+                .maxSize(1)                             // 配置多选时 的多选数量。    默认：9
+                .crop(false)                             // 快捷开启裁剪功能，仅当单选 或直接开启相机时有效
+                .isShowCamera(true)                     // 是否现实相机按钮  默认：false
+                .filePath("/地藤")          // 图片存放路径
+                .build();
+        GalleryPick.getInstance().setGalleryConfig(galleryConfig).open(this);
+    }
+
+    /**
+     * 图片压缩
+     *
+     * @param imagePath
+     */
+    private void zipImgage(final String imagePath) {
+        String sdkFile = Environment.getExternalStorageDirectory().getAbsolutePath();
+        Luban.with(this)
+                .load(imagePath) // 传人要压缩的图片列表
+                .ignoreBy(100)  // 忽略不压缩图片的大小
+                .setTargetDir(sdkFile + File.separator + "地藤") // 设置压缩后文件存储位置
+                .setCompressListener(new OnCompressListener() { //设置回调
+                    @Override
+                    public void onStart() {
+                        Toast.makeText(FrmMain.this,"正在压缩图片~",Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onSuccess(File file) {
+                        String filePath = file.getAbsolutePath();
+                        Log.e(TAG, "压缩后的图片路径: " + filePath);
+                        Toast.makeText(FrmMain.this,"图片压缩成功~",Toast.LENGTH_SHORT).show();
+//                        handler.sendEmptyMessage(11);
+                        uploadImg(MyApp.getFormUrl("FrmCusFollowUp.uploadFile"),"" + filePath);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Toast.makeText(FrmMain.this,"图片加载失败，请重新选择~",Toast.LENGTH_SHORT).show();
+                    }
+                }).launch();    //启动压缩
+    }
+
 }

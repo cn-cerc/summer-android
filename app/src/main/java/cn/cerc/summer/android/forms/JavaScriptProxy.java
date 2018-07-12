@@ -49,7 +49,9 @@ import cn.cerc.summer.android.services.SetMenuList;
 import cn.cerc.summer.android.services.ShareToWeibo;
 import cn.cerc.summer.android.services.ShareToWeixin;
 import cn.cerc.summer.android.services.ShowWarning;
+import cn.cerc.summer.android.services.UploadImgField;
 import cn.cerc.summer.android.services.closeWindow;
+import cn.cerc.summer.android.services.jaLogin;
 import cn.cerc.summer.android.services.newWindow;
 import cn.cerc.summer.android.services.startVine;
 
@@ -110,6 +112,11 @@ public class JavaScriptProxy extends Object {
         services.put(startVine.class, "切换服务器");
         services.put(closeWindow.class, "关闭窗口");
         services.put(newWindow.class, "新建窗口");
+        //
+        services.put(jaLogin.class, "聚安云登录");
+        //
+        services.put(UploadImgField.class, "图片（压缩）文件并上传");
+
     }
 
     private AppCompatActivity owner;

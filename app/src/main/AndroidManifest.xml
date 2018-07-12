@@ -196,6 +196,7 @@
         <activity android:name="cn.cerc.summer.android.parts.music.FrmCaptureMusic" />
         <activity
             android:name="cn.cerc.summer.android.parts.image.FrmCaptureImage"
+            android:launchMode="singleTop"
             android:theme="@style/MyCaptureDialogStyle" />
         <activity android:name="cn.cerc.summer.android.parts.barcode.FrmScanProduct" />
         <activity android:name="cn.cerc.summer.android.parts.barcode.DlgScanProduct" />
@@ -216,6 +217,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--图片文件选择并上传界面-->
+        <activity android:name="cn.cerc.summer.android.forms.FrmChooseFile"
+                  android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>
