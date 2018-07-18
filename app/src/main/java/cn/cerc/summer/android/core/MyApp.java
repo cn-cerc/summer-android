@@ -42,7 +42,7 @@ import cn.jpush.android.api.JPushInterface;
 
 public class MyApp extends android.app.Application {
     public static final String DEVICE_TYPE = "android";
-    public static String HOME_URL = "https://m.knowall.cn";
+    public static String HOME_URL = "https://m.diteng.site";
     public static String HOME_PAGE = "WebDefault";
     public static String SERVICES_PATH = "services";
     public static String FORMS_PATH = "forms";
