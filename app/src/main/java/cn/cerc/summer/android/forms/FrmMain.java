@@ -778,10 +778,26 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                         home.addCategory(Intent.CATEGORY_HOME);
                         startActivity(home);
                     } else {
-                        if (browser.canGoBack()) browser.goBack();// 返回键退回
-                        else {
-                            closeWindow();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                            browser.evaluateJavascript("javascript:ReturnBtnClick()", new ValueCallback<String>() {
+                                @Override
+                                public void onReceiveValue(String value) {
+                                    //此处为 js 返回的结果
+                                    if (value == null || "".equals(value) || "null".equals(value)) {
+                                        if (browser.canGoBack()) browser.goBack();// 返回键退回
+                                        else {
+                                            closeWindow();
+                                        }
+                                    }
+                                }
+                            });
+                        }else{
+                            if (browser.canGoBack()) browser.goBack();// 返回键退回
+                            else {
+                                closeWindow();
+                            }
                         }
+
                     }
                     return true;
                 } else
@@ -1014,10 +1030,24 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                             home.addCategory(Intent.CATEGORY_HOME);
                             startActivity(home);
                         } else {
-                            if (newsWebView[classWebView].canGoBack())
-                                newsWebView[classWebView].goBack();// 返回键退回
-                            else {
-                                closeWindow();
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                                browser.evaluateJavascript("javascript:ReturnBtnClick()", new ValueCallback<String>() {
+                                    @Override
+                                    public void onReceiveValue(String value) {
+                                        //此处为 js 返回的结果
+                                        if (value == null || "".equals(value) || "null".equals(value)) {
+                                            if (browser.canGoBack()) browser.goBack();// 返回键退回
+                                            else {
+                                                closeWindow();
+                                            }
+                                        }
+                                    }
+                                });
+                            }else{
+                                if (browser.canGoBack()) browser.goBack();// 返回键退回
+                                else {
+                                    closeWindow();
+                                }
                             }
                         }
                         return true;
@@ -1056,9 +1086,24 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.imgBack:
-                if (browser.canGoBack()) browser.goBack();// 返回键退回
-                else {
-                    closeWindow();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    browser.evaluateJavascript("javascript:ReturnBtnClick()", new ValueCallback<String>() {
+                        @Override
+                        public void onReceiveValue(String value) {
+                            //此处为 js 返回的结果
+                            if (value == null || "".equals(value) || "null".equals(value)) {
+                                if (browser.canGoBack()) browser.goBack();// 返回键退回
+                                else {
+                                    closeWindow();
+                                }
+                            }
+                        }
+                    });
+                }else{
+                    if (browser.canGoBack()) browser.goBack();// 返回键退回
+                    else {
+                        closeWindow();
+                    }
                 }
                 break;
             case R.id.imgMore:
