@@ -52,6 +52,7 @@ import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
 import com.alipay.sdk.util.H5PayResultModel;
+import com.android.skipapp.SkipAPPUtil;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.Thing;
 import com.mimrc.vine.R;
@@ -147,7 +148,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
             switch (msg.what) {
                 case 1:
                     boolean visibility = (boolean) msg.obj;
-//                    boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
+                    boxTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
                     if (!visibility) {
                         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && Build.VERSION.RELEASE.contains("4.4.2")) {
                             headview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, VisualKeyboardTool.getStatusBarHeight(FrmMain.this)));
@@ -402,40 +403,11 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         });
     }
 
-    public void skipAPPlication(final String content, final String downloadUrl) {
+    public void skipAPPlication(final String content) {
         runOnUiThread(new Runnable() {
-            @SuppressLint("WrongConstant")
             @Override
             public void run() {
-                if (isAvilible("com.cncerc.www")) {
-                    String packageName = "com.cncerc.www";
-                    String activity = "com.cncerc.www.activity.JayunLoginActivity";
-                    ComponentName component = new ComponentName(packageName, activity);
-                    Intent intent = new Intent();
-                    intent.setComponent(component);
-                    intent.setFlags(101);
-                    intent.putExtra("data", content);
-                    intent.putExtra("appPackageName", "com.mimrc.vine");
-                    intent.putExtra("appClassName", "cn.cerc.summer.android.forms.FrmMain");
-                    startActivityForResult(intent, 1);
-                } else {
-                    if (downloadUrl != null && !"".equals(downloadUrl)) {
-                        DialogUtil.DownloadDialog(FrmMain.this, true, new DialogUtil.OnclickUpdateListen() {
-                            @Override
-                            public void click(boolean bool) {
-                                if (bool) {
-                                    Intent intent = new Intent();
-                                    intent.setAction("android.intent.action.VIEW");
-                                    Uri content_url = Uri.parse(downloadUrl);
-                                    intent.setData(content_url);
-                                    startActivity(intent);
-                                }
-                            }
-                        });
-                    } else {
-                        Toast.makeText(FrmMain.this, "没有安装该APP！", Toast.LENGTH_SHORT).show();
-                    }
-                }
+                SkipAPPUtil.execut(FrmMain.this, content, "https://www.jayun.site/forms/install");
             }
         });
     }
