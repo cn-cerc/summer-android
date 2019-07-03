@@ -9,12 +9,12 @@ import android.widget.ImageView;
 import android.widget.ListPopupWindow;
 import android.widget.TextView;
 
-import com.sd5gs.vine.R;
+import com.sd5gs.views.R;
 
 import java.util.List;
 
-import cn.sd5g.appas.android.core.MainPopupMenu;
-import cn.sd5g.appas.android.core.ScreenUtils;
+import cn.sd5g.appas.android.units.MainPopupMenu;
+import cn.sd5g.appas.android.units.ScreenUtils;
 
 public class ShowPopupWindow {
 

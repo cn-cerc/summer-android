@@ -31,7 +31,7 @@ import com.google.zxing.NotFoundException;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeReader;
-import com.sd5gs.vine.R;
+import com.sd5gs.views.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,7 +41,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import cn.sd5g.appas.android.basis.RemoteForm;
-import cn.sd5g.appas.android.core.MyApp;
+import cn.sd5g.appas.android.units.MyApp;
 import cn.sd5g.appas.android.forms.FrmMain;
 import cn.sd5g.appas.android.forms.JavaScriptResult;
 import cn.sd5g.appas.android.parts.barcode.zxing.camera.CameraManager;

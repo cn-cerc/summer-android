@@ -7,7 +7,7 @@ import android.content.Intent;
 
 import org.json.JSONObject;
 
-import cn.sd5g.appas.android.core.MyApp;
+import cn.sd5g.appas.android.units.MyApp;
 import cn.sd5g.appas.android.forms.JavaScriptService;
 
 import static android.content.Context.ALARM_SERVICE;

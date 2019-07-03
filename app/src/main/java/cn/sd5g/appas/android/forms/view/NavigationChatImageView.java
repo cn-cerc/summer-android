@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sd5gs.vine.R;
+import com.sd5gs.views.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,8 +30,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import cn.sd5g.appas.android.core.Constans;
-import cn.sd5g.appas.android.core.FileUtils;
+import cn.sd5g.appas.android.units.Constans;
+import cn.sd5g.appas.android.units.FileUtils;
 
 public class NavigationChatImageView extends View implements View.OnClickListener {
     public static String CACHE_FILE = "cacheFiles";

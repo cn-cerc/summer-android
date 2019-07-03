@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.sd5gs.vine.R;
+import com.sd5gs.views.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

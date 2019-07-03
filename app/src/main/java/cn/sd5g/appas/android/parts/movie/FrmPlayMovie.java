@@ -10,7 +10,7 @@ import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.sd5gs.vine.R;
+import com.sd5gs.views.R;
 
 public class FrmPlayMovie extends AppCompatActivity {
     /**

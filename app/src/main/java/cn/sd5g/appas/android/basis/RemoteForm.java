@@ -9,8 +9,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import cn.sd5g.appas.android.core.MyApp;
-import cn.sd5g.appas.android.core.MySession;
+import cn.sd5g.appas.android.units.MyApp;
+import cn.sd5g.appas.android.units.MySession;
 import cn.sd5g.appas.android.services.LongRunningService;
 
 public class RemoteForm {

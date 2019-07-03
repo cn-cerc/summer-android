@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sd5gs.vine.R;
+import com.sd5gs.views.R;
 
 import cn.sd5g.appas.android.parts.barcode.zxing.encoding.EncodingHandler;
 

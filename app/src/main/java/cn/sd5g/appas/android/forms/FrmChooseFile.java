@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.sd5gs.vine.R;
+import com.sd5gs.views.R;
 import com.yancy.gallerypick.config.GalleryConfig;
 import com.yancy.gallerypick.config.GalleryPick;
 import com.yancy.gallerypick.inter.IHandlerCallBack;
@@ -16,8 +16,8 @@ import com.yancy.gallerypick.inter.IHandlerCallBack;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.sd5g.appas.android.core.GlideImageLoader;
-import cn.sd5g.appas.android.core.OnFileChooseItemListener;
+import cn.sd5g.appas.android.units.GlideImageLoader;
+import cn.sd5g.appas.android.units.OnFileChooseItemListener;
 import cn.sd5g.appas.android.parts.dialog.FileDialog;
 
 public class FrmChooseFile extends AppCompatActivity implements View.OnClickListener {

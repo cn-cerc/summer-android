@@ -6,7 +6,6 @@ import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -54,7 +53,7 @@ import com.alipay.sdk.app.PayTask;
 import com.alipay.sdk.util.H5PayResultModel;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.Thing;
-import com.sd5gs.vine.R;
+import com.sd5gs.views.R;
 import com.yancy.gallerypick.config.GalleryConfig;
 import com.yancy.gallerypick.config.GalleryPick;
 import com.yancy.gallerypick.inter.IHandlerCallBack;
@@ -69,17 +68,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import cn.sd5g.appas.android.core.CommBottomPopWindow;
-import cn.sd5g.appas.android.core.Constans;
-import cn.sd5g.appas.android.core.GlideImageLoader;
-import cn.sd5g.appas.android.core.MainPopupMenu;
-import cn.sd5g.appas.android.core.MainTitleMenu;
-import cn.sd5g.appas.android.core.MyApp;
-import cn.sd5g.appas.android.core.OnFileChooseItemListener;
-import cn.sd5g.appas.android.core.VisualKeyboardTool;
+import cn.sd5g.appas.android.units.CommBottomPopWindow;
+import cn.sd5g.appas.android.units.Constans;
+import cn.sd5g.appas.android.units.GlideImageLoader;
+import cn.sd5g.appas.android.units.MainPopupMenu;
+import cn.sd5g.appas.android.units.MainTitleMenu;
+import cn.sd5g.appas.android.units.MyApp;
+import cn.sd5g.appas.android.units.OnFileChooseItemListener;
+import cn.sd5g.appas.android.units.VisualKeyboardTool;
 import cn.sd5g.appas.android.forms.view.BrowserView;
 import cn.sd5g.appas.android.forms.view.DragPointView;
-import cn.sd5g.appas.android.parts.dialog.DialogUtil;
 import cn.sd5g.appas.android.parts.dialog.FileDialog;
 import cn.sd5g.appas.android.services.LongRunningService;
 import cn.jpush.android.api.JPushInterface;
@@ -92,8 +90,8 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private static final String TAG = "FrmMain";
 
     public static final String NETWORK_CHANGE = "android.net.conn.NETWORK_CHANGE";
-    public static final String APP_UPDATA = "com.sd5gs.vine.APP_UPDATA";
-    public static final String JSON_ERROR = "com.sd5gs.vine.JSON_ERROR";
+    public static final String APP_UPDATA = "com.sd5gs.views.APP_UPDATA";
+    public static final String JSON_ERROR = "com.sd5gs.views.JSON_ERROR";
     public final static int FILECHOOSER_RESULTCODE = 41;
     public final static int FILECHOOSER_RESULTCODE_FOR_ANDROID_5 = 42;
     private static final String LOGTAG = "FrmMain";
@@ -1442,7 +1440,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         GalleryConfig galleryConfig = new GalleryConfig.Builder()
                 .imageLoader(new GlideImageLoader())    // ImageLoader 加载框架（必填）
                 .iHandlerCallBack(iHandlerCallBack)     // 监听接口（必填）
-                .provider("com.sd5gs.vine.fileprovider")   // provider (必填)
+                .provider("com.sd5gs.views.fileprovider")   // provider (必填)
                 .pathList(path)                         // 记录已选的图片
                 .multiSelect(false)                      // 是否多选   默认：false
                 .multiSelect(false, 1)                   // 配置是否多选的同时 配置多选数量   默认：false ， 9

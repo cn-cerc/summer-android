@@ -25,7 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.sd5gs.vine.R;
+import com.sd5gs.views.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,8 +38,8 @@ import java.util.Map;
 import java.util.Timer;
 
 import cn.sd5g.appas.android.basis.HttpClient;
-import cn.sd5g.appas.android.core.Constans;
-import cn.sd5g.appas.android.core.MyApp;
+import cn.sd5g.appas.android.units.Constans;
+import cn.sd5g.appas.android.units.MyApp;
 import cn.sd5g.appas.android.forms.view.NavigationChatImageView;
 import cn.sd5g.appas.android.parts.dialog.DialogUtil;
 
@@ -320,22 +320,22 @@ public class FrmStartup extends AppCompatActivity {
             id = getSerialNumber();
         }
         MyApp.getInstance().setClientId("n_" + id);
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                MyApp myApp = MyApp.getInstance();
-                HttpClient client = new HttpClient(MyApp.getFormUrl("install.client"));
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("appCode", myApp.getAppCode());
-                params.put("curVersion", myApp.getCurrentVersion(instince));
-                String response = client.post(params);
-                Message msg = new Message();
-                msg.what = MSG_CLIENT;
-                msg.obj = response;
-                handler.sendMessage(msg);
-            }
-        }).start();
+        startMainForm(1000);
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                MyApp myApp = MyApp.getInstance();
+//                HttpClient client = new HttpClient(MyApp.getFormUrl("install.client"));
+//                Map<String, String> params = new HashMap<String, String>();
+//                params.put("appCode", myApp.getAppCode());
+//                params.put("curVersion", myApp.getCurrentVersion(instince));
+//                String response = client.post(params);
+//                Message msg = new Message();
+//                msg.what = MSG_CLIENT;
+//                msg.obj = response;
+//                handler.sendMessage(msg);
+//            }
+//        }).start();
     }
 
     private String getSerialNumber() {

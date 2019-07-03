@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.sd5gs.vine.R;
+import com.sd5gs.views.R;
 
 import java.io.File;
 import java.io.FileOutputStream;

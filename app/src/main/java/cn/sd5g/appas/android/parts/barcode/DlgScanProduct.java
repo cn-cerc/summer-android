@@ -15,12 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sd5gs.vine.R;
+import com.sd5gs.views.R;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-import cn.cerc.jdb.core.Record;
 import cn.sd5g.appas.android.basis.RemoteForm;
 
 public class DlgScanProduct extends AppCompatActivity implements View.OnClickListener {
@@ -57,18 +56,6 @@ public class DlgScanProduct extends AppCompatActivity implements View.OnClickLis
         }
     };
 
-    public static void startFormForResult(AppCompatActivity context, int recordIndex, Record item,
-                                          String modifyUrl, String deleteUrl) {
-        Intent intent = new Intent();
-        intent.setClass(context, DlgScanProduct.class);
-        intent.putExtra("recordIndex", recordIndex);
-        intent.putExtra("num", item.getInt("num"));
-        intent.putExtra("barcode", item.getString("barcode"));
-        intent.putExtra("isSpare", item.getBoolean("isSpare"));
-        intent.putExtra("modifyUrl", modifyUrl);
-        intent.putExtra("deleteUrl", deleteUrl);
-        context.startActivityForResult(intent, 1, null);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

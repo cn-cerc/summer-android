@@ -5,9 +5,8 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
-import cn.sd5g.appas.android.core.MySession;
+import cn.sd5g.appas.android.units.MySession;
 import cn.sd5g.appas.android.forms.JavaScriptService;
-import cn.sd5g.appas.android.parts.barcode.FrmScanProduct;
 
 public class ScanProduct implements JavaScriptService {
     @Override
@@ -48,9 +47,6 @@ public class ScanProduct implements JavaScriptService {
 
         Log.d("ScanProduct", json.getString("title"));
         MySession.getInstance().setToken(token);
-        FrmScanProduct.startForm(context, json.getString("title"), json.getString("homeUrl"),
-                json.getString("returnUrl"), json.getString("appendUrl"), json.getString("modifyUrl"),
-                json.getString("deleteUrl"), json.getString("viewUrl"));
         return "true";
     }
 }

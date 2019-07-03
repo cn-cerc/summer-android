@@ -9,7 +9,7 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.Log;
 
-import cn.sd5g.appas.android.core.MySession;
+import cn.sd5g.appas.android.units.MySession;
 
 public class LongRunningService extends Service {
     private static int anHour = 900000;

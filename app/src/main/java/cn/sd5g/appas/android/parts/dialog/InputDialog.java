@@ -8,9 +8,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.sd5gs.vine.R;
+import com.sd5gs.views.R;
 
-import cn.sd5g.appas.android.core.MyApp;
+import cn.sd5g.appas.android.units.MyApp;
 
 public class InputDialog extends Dialog implements View.OnClickListener {
 

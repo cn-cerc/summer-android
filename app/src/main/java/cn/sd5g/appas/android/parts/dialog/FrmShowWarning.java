@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.sd5gs.vine.R;
+import com.sd5gs.views.R;
 
 public class FrmShowWarning extends Activity implements View.OnClickListener {
     LinearLayout llRect;

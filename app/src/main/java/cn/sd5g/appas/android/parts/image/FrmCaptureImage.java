@@ -30,7 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.sd5gs.vine.R;
+import com.sd5gs.views.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,10 +42,10 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import cn.sd5g.appas.android.basis.HttpClient;
-import cn.sd5g.appas.android.core.MyApp;
-import cn.sd5g.appas.android.core.MySession;
-import cn.sd5g.appas.android.core.PhotoBitmapUtils;
-import cn.sd5g.appas.android.core.RequestCallback;
+import cn.sd5g.appas.android.units.MyApp;
+import cn.sd5g.appas.android.units.MySession;
+import cn.sd5g.appas.android.units.PhotoBitmapUtils;
+import cn.sd5g.appas.android.units.RequestCallback;
 import cn.sd5g.appas.android.forms.FrmMain;
 
 public class FrmCaptureImage extends Activity implements View.OnClickListener {
@@ -256,7 +256,7 @@ public class FrmCaptureImage extends Activity implements View.OnClickListener {
         }
         file = PhotoBitmapUtils.createIconFile();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            photoUri = FileProvider.getUriForFile(this, "com.sd5gs.vine.fileprovider", file);//通过FileProvider创建一个content类型的Uri
+            photoUri = FileProvider.getUriForFile(this, "com.sd5gs.views.fileprovider", file);//通过FileProvider创建一个content类型的Uri
         } else {
             photoUri = Uri.fromFile(file);
         }

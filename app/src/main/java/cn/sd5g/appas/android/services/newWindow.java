@@ -4,7 +4,7 @@ import android.content.Context;
 
 import org.json.JSONObject;
 
-import cn.sd5g.appas.android.core.MyApp;
+import cn.sd5g.appas.android.units.MyApp;
 import cn.sd5g.appas.android.forms.FrmMain;
 import cn.sd5g.appas.android.forms.JavaScriptService;
 

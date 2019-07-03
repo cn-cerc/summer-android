@@ -14,11 +14,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sd5gs.vine.R;
+import com.sd5gs.views.R;
 
-import cn.sd5g.appas.android.core.Constans;
-import cn.sd5g.appas.android.core.MyApp;
-import cn.sd5g.appas.android.core.ScreenUtils;
+import cn.sd5g.appas.android.units.Constans;
+import cn.sd5g.appas.android.units.MyApp;
+import cn.sd5g.appas.android.units.ScreenUtils;
 import cn.sd5g.appas.android.forms.view.CustomSeekBar;
 
 public class FrmSettings extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener {

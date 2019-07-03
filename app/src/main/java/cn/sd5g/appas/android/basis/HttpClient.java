@@ -21,8 +21,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import cn.cerc.jdb.core.DataSet;
-import cn.sd5g.appas.android.core.RequestCallback;
+import cn.sd5g.appas.android.units.RequestCallback;
 
 public class HttpClient {
     private final static String ENCODE = "utf-8";
@@ -30,7 +29,6 @@ public class HttpClient {
     private String webUrl;
     private int resultCode = 0;
     private String message = null;
-    private DataSet dataOut = null;
 
     public HttpClient(String webUrl) {
         this.webUrl = webUrl;
@@ -60,9 +58,6 @@ public class HttpClient {
         return post(getRequestData(params).toString());
     }
 
-    public String post(DataSet dataIn) {
-        return post(dataIn.toString());
-    }
 
     public String post(String request) {
         HttpURLConnection connection = null;

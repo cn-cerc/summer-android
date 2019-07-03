@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.sd5gs.vine">
+    package="com.sd5gs.views">
 
     <permission
-        android:name="com.sd5gs.vine.permission.JPUSH_MESSAGE"
+        android:name="com.sd5gs.views.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" />
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -19,7 +19,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="com.mimrc.vine.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="com.sd5gs.views.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -37,10 +37,10 @@
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
 
     <application
-        android:name="cn.sd5g.appas.android.core.MyApp"
+        android:name="cn.sd5g.appas.android.units.MyApp"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
-        android:icon="@mipmap/deting"
+        android:icon="@mipmap/android_logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -57,7 +57,7 @@
             -->
         </activity>
         <activity
-            android:name="com.sd5gs.vine.wxapi.WXPayEntryActivity"
+            android:name="com.sd5gs.views.wxapi.WXPayEntryActivity"
             android:exported="true"
             android:launchMode="singleTop" />
 
@@ -93,7 +93,7 @@
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.DaemonService" />
 
-                <category android:name="com.mimrc.vine" />
+                <category android:name="com.sd5gs.views" />
             </intent-filter>
         </service>
         <!-- Required -->
@@ -103,7 +103,7 @@
             <intent-filter android:priority="1000">
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
 
-                <category android:name="com.mimrc.vine" />
+                <category android:name="com.sd5gs.views" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT" />
@@ -119,7 +119,7 @@
                 <action android:name="cn.jpush.android.ui.PushActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="com.mimrc.vine" />
+                <category android:name="com.sd5gs.views" />
             </intent-filter>
         </activity>
         <!-- Required SDK核心功能 -->
@@ -133,7 +133,7 @@
         <!-- User defined. 用户自定义的广播接收器 -->
         <service android:name="cn.sd5g.appas.android.services.LongRunningService" />
         <receiver
-            android:name="cn.sd5g.appas.android.core.MyBroadcastReceiver"
+            android:name="cn.sd5g.appas.android.units.MyBroadcastReceiver"
             android:enabled="true">
             <intent-filter>
 
@@ -149,7 +149,7 @@
                 <action android:name="cn.jpush.android.intent.CONNECTION" />
                 <!--定时器-->
                 <action android:name="ELITOR_CLOCK" />
-                <category android:name="com.mimrc.vine" />
+                <category android:name="com.sd5gs.views" />
             </intent-filter>
         </receiver>
 
@@ -181,7 +181,7 @@
         <!-- alipay sdk end -->
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.sd5gs.vine.fileprovider"
+            android:authorities="com.sd5gs.views.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -198,9 +198,7 @@
             android:name="cn.sd5g.appas.android.parts.image.FrmCaptureImage"
             android:launchMode="singleTop"
             android:theme="@style/MyCaptureDialogStyle" />
-        <activity android:name="cn.sd5g.appas.android.parts.barcode.FrmScanProduct" />
         <activity android:name="cn.sd5g.appas.android.parts.barcode.DlgScanProduct" />
-        <activity android:name="cn.sd5g.appas.android.parts.login.FrmLoginByAccount" />
         <activity android:name="cn.sd5g.appas.android.parts.sign.ClockInActivity" />
         <activity
             android:name="cn.sd5g.appas.android.parts.dialog.FrmShowWarning"

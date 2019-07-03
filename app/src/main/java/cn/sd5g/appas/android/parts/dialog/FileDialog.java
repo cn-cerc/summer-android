@@ -12,9 +12,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.sd5gs.vine.R;
+import com.sd5gs.views.R;
 
-import cn.sd5g.appas.android.core.OnFileChooseItemListener;
+import cn.sd5g.appas.android.units.OnFileChooseItemListener;
 
 public class FileDialog extends Dialog implements View.OnClickListener {
 

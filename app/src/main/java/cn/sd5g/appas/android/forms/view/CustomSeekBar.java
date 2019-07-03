@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.sd5gs.vine.R;
+import com.sd5gs.views.R;
 
 public class CustomSeekBar extends LinearLayout implements SeekBar.OnSeekBarChangeListener, Animation.AnimationListener {
 

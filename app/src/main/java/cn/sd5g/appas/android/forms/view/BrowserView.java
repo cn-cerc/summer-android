@@ -13,8 +13,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import cn.sd5g.appas.android.core.Constans;
-import cn.sd5g.appas.android.core.MyApp;
+import cn.sd5g.appas.android.units.Constans;
+import cn.sd5g.appas.android.units.MyApp;
 
 public class BrowserView extends WebView {
 

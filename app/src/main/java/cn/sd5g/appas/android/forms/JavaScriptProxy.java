@@ -15,7 +15,7 @@ import org.json.JSONObject;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import cn.sd5g.appas.android.core.MyApp;
+import cn.sd5g.appas.android.units.MyApp;
 import cn.sd5g.appas.android.services.CallBrowser;
 import cn.sd5g.appas.android.services.CallLoginByAccount;
 import cn.sd5g.appas.android.services.CallLoginByPhone;
@@ -51,9 +51,8 @@ import cn.sd5g.appas.android.services.ShareToWeixin;
 import cn.sd5g.appas.android.services.ShowWarning;
 import cn.sd5g.appas.android.services.UploadImgField;
 import cn.sd5g.appas.android.services.closeWindow;
-import cn.sd5g.appas.android.services.jaLogin;
 import cn.sd5g.appas.android.services.newWindow;
-import cn.sd5g.appas.android.services.startVine;
+import cn.sd5g.appas.android.services.startEngin;
 
 public class JavaScriptProxy extends Object {
     private static Map<Class, String> services = new LinkedHashMap<>();
@@ -105,7 +104,7 @@ public class JavaScriptProxy extends Object {
         services.put(ClockIn.class, "考勤打卡");
         services.put(ReloadPage.class, "刷新页面");
         //
-        services.put(startVine.class, "切换服务器");
+        services.put(startEngin.class, "切换服务器");
         services.put(closeWindow.class, "关闭窗口");
         services.put(newWindow.class, "新建窗口");
         //

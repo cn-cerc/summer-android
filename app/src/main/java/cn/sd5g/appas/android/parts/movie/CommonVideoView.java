@@ -24,7 +24,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
-import com.sd5gs.vine.R;
+import com.sd5gs.views.R;
 
 import java.util.Timer;
 import java.util.TimerTask;
