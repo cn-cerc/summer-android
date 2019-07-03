@@ -68,7 +68,7 @@
                     android:layout_centerInParent="true"
                     android:src="@drawable/ic_more_vert_white_24dp" />
 
-                <cn.cerc.summer.android.forms.view.DragPointView
+                <cn.sd5g.appas.android.forms.view.DragPointView
                     android:id="@+id/dragpointview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -99,7 +99,7 @@
                 android:layout_height="match_parent">
 
 
-                <cn.cerc.summer.android.forms.view.BrowserView
+                <cn.sd5g.appas.android.forms.view.BrowserView
                     android:id="@+id/webView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

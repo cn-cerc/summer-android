@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical"
-    tools:context="cn.cerc.summer.android.parts.barcode.DlgScanProduct">
+    tools:context="cn.sd5g.appas.android.parts.barcode.DlgScanProduct">
 
     <LinearLayout
         android:layout_width="match_parent"

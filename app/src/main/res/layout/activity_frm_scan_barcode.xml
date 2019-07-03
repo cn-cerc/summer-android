@@ -13,7 +13,7 @@
             android:layout_height="fill_parent"
             android:layout_gravity="center" />
 
-        <cn.cerc.summer.android.parts.barcode.zxing.view.ViewfinderView
+        <cn.sd5g.appas.android.parts.barcode.zxing.view.ViewfinderView
             android:id="@+id/viewfinder_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

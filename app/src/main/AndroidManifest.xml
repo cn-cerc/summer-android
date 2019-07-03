@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mimrc.vine">
+    package="com.sd5gs.vine">
 
     <permission
-        android:name="com.mimrc.vine.permission.JPUSH_MESSAGE"
+        android:name="com.sd5gs.vine.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" />
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -37,7 +37,7 @@
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
 
     <application
-        android:name="cn.cerc.summer.android.core.MyApp"
+        android:name="cn.sd5g.appas.android.core.MyApp"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/deting"
@@ -45,7 +45,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="cn.cerc.summer.android.forms.FrmMain"
+            android:name="cn.sd5g.appas.android.forms.FrmMain"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <!--
@@ -57,7 +57,7 @@
             -->
         </activity>
         <activity
-            android:name=".wxapi.WXPayEntryActivity"
+            android:name="com.sd5gs.vine.wxapi.WXPayEntryActivity"
             android:exported="true"
             android:launchMode="singleTop" />
 
@@ -66,7 +66,7 @@
             android:value="true" />
 
         <activity
-            android:name="cn.cerc.summer.android.forms.FrmSettings"
+            android:name="cn.sd5g.appas.android.forms.FrmSettings"
             android:screenOrientation="portrait" />
 
         <!--高德地图Key-->
@@ -131,9 +131,9 @@
         <receiver android:name="cn.jpush.android.service.AlarmReceiver" />
         <!-- Required. AppKey copied from Portal -->
         <!-- User defined. 用户自定义的广播接收器 -->
-        <service android:name="cn.cerc.summer.android.services.LongRunningService" />
+        <service android:name="cn.sd5g.appas.android.services.LongRunningService" />
         <receiver
-            android:name="cn.cerc.summer.android.core.MyBroadcastReceiver"
+            android:name="cn.sd5g.appas.android.core.MyBroadcastReceiver"
             android:enabled="true">
             <intent-filter>
 
@@ -158,7 +158,7 @@
             android:value="cc92570c841a688af5adc5b0" />
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
-            //cc92570c841a688af5adc5b0 地藤  //7502239d02e7247478fc1a42 e健康
+            //cc92570c841a688af5adc5b0 sd5g  //7502239d02e7247478fc1a42 e健康
                 App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
         -->
         <meta-data
@@ -181,7 +181,7 @@
         <!-- alipay sdk end -->
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.mimrc.vine.fileprovider"
+            android:authorities="com.sd5gs.vine.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -189,28 +189,28 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name="cn.cerc.summer.android.parts.image.FrmZoomImage" />
+        <activity android:name="cn.sd5g.appas.android.parts.image.FrmZoomImage" />
         <activity
-            android:name="cn.cerc.summer.android.parts.movie.FrmPlayMovie"
+            android:name="cn.sd5g.appas.android.parts.movie.FrmPlayMovie"
             android:configChanges="orientation|screenSize|screenLayout" />
-        <activity android:name="cn.cerc.summer.android.parts.music.FrmCaptureMusic" />
+        <activity android:name="cn.sd5g.appas.android.parts.music.FrmCaptureMusic" />
         <activity
-            android:name="cn.cerc.summer.android.parts.image.FrmCaptureImage"
+            android:name="cn.sd5g.appas.android.parts.image.FrmCaptureImage"
             android:launchMode="singleTop"
             android:theme="@style/MyCaptureDialogStyle" />
-        <activity android:name="cn.cerc.summer.android.parts.barcode.FrmScanProduct" />
-        <activity android:name="cn.cerc.summer.android.parts.barcode.DlgScanProduct" />
-        <activity android:name="cn.cerc.summer.android.parts.login.FrmLoginByAccount" />
-        <activity android:name="cn.cerc.summer.android.parts.sign.ClockInActivity" />
+        <activity android:name="cn.sd5g.appas.android.parts.barcode.FrmScanProduct" />
+        <activity android:name="cn.sd5g.appas.android.parts.barcode.DlgScanProduct" />
+        <activity android:name="cn.sd5g.appas.android.parts.login.FrmLoginByAccount" />
+        <activity android:name="cn.sd5g.appas.android.parts.sign.ClockInActivity" />
         <activity
-            android:name="cn.cerc.summer.android.parts.dialog.FrmShowWarning"
+            android:name="cn.sd5g.appas.android.parts.dialog.FrmShowWarning"
             android:theme="@style/MyDialogStyle" />
-        <activity android:name="cn.cerc.summer.android.parts.barcode.FrmCreateQrcode" />
+        <activity android:name="cn.sd5g.appas.android.parts.barcode.FrmCreateQrcode" />
         <activity
-            android:name="cn.cerc.summer.android.parts.barcode.FrmScanBarcode"
+            android:name="cn.sd5g.appas.android.parts.barcode.FrmScanBarcode"
             android:screenOrientation="portrait" />
         <activity
-            android:name="cn.cerc.summer.android.forms.FrmStartup"
+            android:name="cn.sd5g.appas.android.forms.FrmStartup"
             android:theme="@style/Theme.MyAppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -219,7 +219,7 @@
         </activity>
 
         <!--图片文件选择并上传界面-->
-        <activity android:name="cn.cerc.summer.android.forms.FrmChooseFile"
+        <activity android:name="cn.sd5g.appas.android.forms.FrmChooseFile"
                   android:screenOrientation="portrait"/>
 
     </application>

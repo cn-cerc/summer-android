@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="cn.cerc.summer.android.parts.movie.FrmPlayMovie">
+    tools:context="cn.sd5g.appas.android.parts.movie.FrmPlayMovie">
 
-    <cn.cerc.summer.android.parts.movie.CommonVideoView
+    <cn.sd5g.appas.android.parts.movie.CommonVideoView
         android:id="@+id/videoview_movie"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></cn.cerc.summer.android.parts.movie.CommonVideoView>
+        android:layout_height="match_parent"></cn.sd5g.appas.android.parts.movie.CommonVideoView>
 </LinearLayout>
