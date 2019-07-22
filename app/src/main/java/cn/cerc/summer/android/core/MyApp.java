@@ -42,12 +42,12 @@ import cn.jpush.android.api.JPushInterface;
 
 public class MyApp extends android.app.Application {
     public static final String DEVICE_TYPE = "android";
-    public static String HOME_URL = "https://m.diteng.site";
-    public static String HOME_PAGE = "WebDefault";
+    public static String HOME_URL = "https://m.yiyoupin.com.cn";
+    public static String HOME_PAGE = "FrmIndex_Phone";
     public static String SERVICES_PATH = "services";
-    public static String FORMS_PATH = "forms";
+    public static String FORMS_PATH = "elves";
     private static MyApp instance;
-    private final String APPCODE = "vine-android-standard";
+    private final String APPCODE = "elves-android-beta";
     public boolean debug = false;
     private DisplayImageOptions options;
     private String appVersion;

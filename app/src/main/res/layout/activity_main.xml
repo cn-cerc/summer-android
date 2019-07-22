@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:gravity="center_vertical"
+        android:visibility="gone"
         android:orientation="vertical">
 
         <View

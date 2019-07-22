@@ -1212,10 +1212,10 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     }
 
     public void setTitleVisibility(boolean visibility) {
-        Message message = new Message();
-        message.what = 1;
-        message.obj = visibility;
-        handler.sendMessage(message);
+//        Message message = new Message();
+//        message.what = 1;
+//        message.obj = visibility;
+//        handler.sendMessage(message);
     }
 
     public void loadUrl(String url) {

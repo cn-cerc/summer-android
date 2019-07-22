@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -25,6 +26,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.gifdecoder.GifDecoder;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.request.target.Target;
 import com.mimrc.vine.R;
 
 import org.json.JSONArray;
@@ -102,6 +111,37 @@ public class FrmStartup extends AppCompatActivity {
                 }
                 if (err != null) {
                     showError("出现错误！", err);
+                }
+            }else if (msg.what ==IMAGE_CLTENT){
+                if (ContextCompat.checkSelfPermission(FrmStartup.this, Manifest.permission.READ_PHONE_STATE)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    if (MyApp.getInstance().isDebug()) {
+                        DialogUtil.InputDialog(FrmStartup.this, new DialogUtil.OnclickAddressListen() {
+                            @Override
+                            public void click(boolean bool, String newsUrl) {
+                                if (bool) {
+                                    MyApp.setHomeUrl(newsUrl);
+                                }
+                                startRequest();
+                                return;
+                            }
+                        });
+                    } else {
+                        startRequest();
+                        return;
+                    }
+                } else {
+                    //申请权限
+                    ActivityCompat.requestPermissions(FrmStartup.this,
+                            new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CAMERA},
+                            MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
+                }
+
+                //检查是否已被拒绝过
+                if (ActivityCompat.shouldShowRequestPermissionRationale(FrmStartup.this,
+                        Manifest.permission.READ_PHONE_STATE)) {
+                    showError("权限不足", "系统运行时必须读取IMEI，防止非您本人冒用您的帐号，请您于设置中开启相应权限后才能继续使用！");
+                    return;
                 }
             }
         }
@@ -245,36 +285,29 @@ public class FrmStartup extends AppCompatActivity {
             }
         }, 3000);
         */
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
-                == PackageManager.PERMISSION_GRANTED) {
-            if (MyApp.getInstance().isDebug()) {
-                DialogUtil.InputDialog(this, new DialogUtil.OnclickAddressListen() {
-                    @Override
-                    public void click(boolean bool, String newsUrl) {
-                        if (bool) {
-                            MyApp.setHomeUrl(newsUrl);
-                        }
-                        startRequest();
-                        return;
-                    }
-                });
-            } else {
-                startRequest();
-                return;
+        Glide.with(getApplicationContext()).load(R.mipmap.startupimage)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE).listener(new RequestListener<Integer, GlideDrawable>() {
+            @Override
+            public boolean onException(Exception e, Integer model, Target<GlideDrawable> target, boolean isFirstResource) {
+                return false;
             }
-        } else {
-            //申请权限
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CAMERA},
-                    MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
-        }
 
-        //检查是否已被拒绝过
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.READ_PHONE_STATE)) {
-            showError("权限不足", "系统运行时必须读取IMEI，防止非您本人冒用您的帐号，请您于设置中开启相应权限后才能继续使用！");
-            return;
-        }
+            @Override
+            public boolean onResourceReady(GlideDrawable resource, Integer model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                // 获取gif动画时长
+                GifDrawable drawable = (GifDrawable) resource;
+                GifDecoder decoder = drawable.getDecoder();
+                long duration = 0;
+                for (int i = 0; i < drawable.getFrameCount(); i++) {
+                    duration += decoder.getDelay(i);
+                }
+                Log.e("peter", "动画时长" + duration);
+                //后面这段代码根据你的具体业务需求，添加相应的代码块
+                handler.sendEmptyMessageDelayed(IMAGE_CLTENT,
+                        duration+500);
+                return false;
+            }
+        }).into(new GlideDrawableImageViewTarget(start_image, 1));
 
     }
 
