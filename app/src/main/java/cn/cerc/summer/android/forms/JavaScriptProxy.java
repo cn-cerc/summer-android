@@ -16,6 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import cn.cerc.summer.android.core.MyApp;
+import cn.cerc.summer.android.services.ArGame;
 import cn.cerc.summer.android.services.CallBrowser;
 import cn.cerc.summer.android.services.CallLoginByAccount;
 import cn.cerc.summer.android.services.CallLoginByPhone;
@@ -116,6 +117,9 @@ public class JavaScriptProxy extends Object {
         services.put(jaLogin.class, "聚安云登录");
         //
         services.put(UploadImgField.class, "图片（压缩）文件并上传");
+
+        services.put(ArGame.class, "跳转ar游戏");
+//        services.put(ArLocation.class, "跳转ar地图");
 
     }
 
