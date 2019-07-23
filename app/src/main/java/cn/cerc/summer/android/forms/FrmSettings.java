@@ -14,7 +14,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mimrc.vine.R;
+import com.elves.app.R;
 
 import cn.cerc.summer.android.core.Constans;
 import cn.cerc.summer.android.core.MyApp;

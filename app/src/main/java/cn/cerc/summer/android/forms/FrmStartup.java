@@ -34,7 +34,7 @@ import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.bumptech.glide.request.target.Target;
-import com.mimrc.vine.R;
+import com.elves.app.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;

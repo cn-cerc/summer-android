@@ -29,7 +29,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.google.zxing.ResultPoint;
-import com.mimrc.vine.R;
+import com.elves.app.R;
 
 import java.util.Collection;
 import java.util.HashSet;

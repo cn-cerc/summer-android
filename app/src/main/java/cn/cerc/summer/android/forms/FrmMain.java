@@ -54,7 +54,7 @@ import com.alipay.sdk.app.PayTask;
 import com.alipay.sdk.util.H5PayResultModel;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.Thing;
-import com.mimrc.vine.R;
+import com.elves.app.R;
 import com.yancy.gallerypick.config.GalleryConfig;
 import com.yancy.gallerypick.config.GalleryPick;
 import com.yancy.gallerypick.inter.IHandlerCallBack;
@@ -76,7 +76,6 @@ import cn.cerc.summer.android.core.MainPopupMenu;
 import cn.cerc.summer.android.core.MainTitleMenu;
 import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.core.OnFileChooseItemListener;
-import cn.cerc.summer.android.core.ScreenUtils;
 import cn.cerc.summer.android.core.VisualKeyboardTool;
 import cn.cerc.summer.android.forms.view.BrowserView;
 import cn.cerc.summer.android.forms.view.DragPointView;
@@ -96,8 +95,8 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
     private static final String TAG = "FrmMain";
 
     public static final String NETWORK_CHANGE = "android.net.conn.NETWORK_CHANGE";
-    public static final String APP_UPDATA = "com.mimrc.vine.APP_UPDATA";
-    public static final String JSON_ERROR = "com.mimrc.vine.JSON_ERROR";
+    public static final String APP_UPDATA = "com.elves.app.APP_UPDATA";
+    public static final String JSON_ERROR = "com.elves.app.JSON_ERROR";
     public final static int FILECHOOSER_RESULTCODE = 41;
     public final static int FILECHOOSER_RESULTCODE_FOR_ANDROID_5 = 42;
     private static final String LOGTAG = "FrmMain";
@@ -415,7 +414,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                     intent.setComponent(component);
                     intent.setFlags(101);
                     intent.putExtra("data", content);
-                    intent.putExtra("appPackageName", "com.mimrc.vine");
+                    intent.putExtra("appPackageName", "com.elves.app");
                     intent.putExtra("appClassName", "cn.cerc.summer.android.forms.FrmMain");
                     startActivityForResult(intent, 1);
                 } else {
@@ -1476,7 +1475,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
         GalleryConfig galleryConfig = new GalleryConfig.Builder()
                 .imageLoader(new GlideImageLoader())    // ImageLoader 加载框架（必填）
                 .iHandlerCallBack(iHandlerCallBack)     // 监听接口（必填）
-                .provider("com.mimrc.vine.fileprovider")   // provider (必填)
+                .provider("com.elves.app.fileprovider")   // provider (必填)
                 .pathList(path)                         // 记录已选的图片
                 .multiSelect(false)                      // 是否多选   默认：false
                 .multiSelect(false, 1)                   // 配置是否多选的同时 配置多选数量   默认：false ， 9

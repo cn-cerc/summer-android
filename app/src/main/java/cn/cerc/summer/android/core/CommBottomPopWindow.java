@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.mimrc.vine.R;
+import com.elves.app.R;
 
 import java.util.List;
 

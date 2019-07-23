@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.ListPopupWindow;
 import android.widget.TextView;
 
-import com.mimrc.vine.R;
+import com.elves.app.R;
 
 import java.util.List;
 

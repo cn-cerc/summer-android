@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.mimrc.vine.R;
+import com.elves.app.R;
 
 import java.io.File;
 import java.io.FileOutputStream;

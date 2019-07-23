@@ -48,7 +48,7 @@ import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
-import com.mimrc.vine.R;
+import com.elves.app.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -198,7 +198,7 @@ public class ClockInActivity extends AppCompatActivity implements LocationSource
         }
         file = PhotoBitmapUtils.createIconFile();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            photoUri = FileProvider.getUriForFile(this, "com.mimrc.vine.fileprovider", file);//通过FileProvider创建一个content类型的Uri
+            photoUri = FileProvider.getUriForFile(this, "com.elves.app.fileprovider", file);//通过FileProvider创建一个content类型的Uri
         } else {
             photoUri = Uri.fromFile(file);
         }

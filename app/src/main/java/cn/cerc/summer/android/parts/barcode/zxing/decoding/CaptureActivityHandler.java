@@ -27,7 +27,7 @@ import android.util.Log;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
-import com.mimrc.vine.R;
+import com.elves.app.R;
 
 import java.util.Vector;
 

@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.mimrc.vine.R;
+import com.elves.app.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

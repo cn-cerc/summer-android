@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.mimrc.vine.R;
+import com.elves.app.R;
 
 /**
  * Created by fff on 2016/11/24.

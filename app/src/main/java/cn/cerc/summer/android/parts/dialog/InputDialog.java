@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.mimrc.vine.R;
+import com.elves.app.R;
 
 import cn.cerc.summer.android.core.MyApp;
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mimrc.vine">
+    package="com.elves.app">
 
     <permission
-        android:name="com.mimrc.vine.permission.JPUSH_MESSAGE"
+        android:name="com.elves.app.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" />
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -57,7 +57,7 @@
             -->
         </activity>
         <activity
-            android:name=".wxapi.WXPayEntryActivity"
+            android:name="com.elves.app.wxapi.WXPayEntryActivity"
             android:exported="true"
             android:launchMode="singleTop" />
 
@@ -181,7 +181,7 @@
         <!-- alipay sdk end -->
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.mimrc.vine.fileprovider"
+            android:authorities="com.elves.app.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

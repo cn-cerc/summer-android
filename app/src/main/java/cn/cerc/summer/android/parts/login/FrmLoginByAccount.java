@@ -12,7 +12,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.mimrc.vine.R;
+import com.elves.app.R;
 
 import cn.cerc.jdb.core.DataSet;
 import cn.cerc.summer.android.basis.RemoteService;

@@ -11,7 +11,7 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.widget.Toast;
 
-import com.mimrc.vine.R;
+import com.elves.app.R;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;

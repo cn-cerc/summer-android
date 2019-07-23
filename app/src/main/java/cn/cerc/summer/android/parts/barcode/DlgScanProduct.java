@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mimrc.vine.R;
+import com.elves.app.R;
 
 import java.util.Timer;
 import java.util.TimerTask;

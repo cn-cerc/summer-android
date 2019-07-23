@@ -30,7 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.mimrc.vine.R;
+import com.elves.app.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -259,7 +259,7 @@ public class FrmCaptureImage extends Activity implements View.OnClickListener {
         }
         file = PhotoBitmapUtils.createIconFile();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            photoUri = FileProvider.getUriForFile(this, "com.mimrc.vine.fileprovider", file);//通过FileProvider创建一个content类型的Uri
+            photoUri = FileProvider.getUriForFile(this, "com.elves.app.fileprovider", file);//通过FileProvider创建一个content类型的Uri
         } else {
             photoUri = Uri.fromFile(file);
         }

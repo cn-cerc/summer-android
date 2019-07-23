@@ -18,16 +18,16 @@ android {
     compileSdkVersion 25
     buildToolsVersion '26.0.2'
     defaultConfig {
-        applicationId "com.mimrc.vine"
+        applicationId "com.elves.app"
         minSdkVersion 18
         targetSdkVersion 25
-        versionCode 36
-        versionName "1.1.3.9"
+        versionCode 1
+        versionName "1.0.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         manifestPlaceholders = [
-                JPUSH_PKGNAME: "com.mimrc.vine",
+                JPUSH_PKGNAME: "com.elves.app",
                 JPUSH_APPKEY : "cc92570c841a688af5adc5b0", //JPush上注册的包名对应的appkey.//cc92570c841a688af5adc5b0 //7502239d02e7247478fc1a42
                 JPUSH_CHANNEL: "developer-default"
         ]
@@ -38,6 +38,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+//    repositories{
+//        flatDir{
+//            dirs 'libs'
+//        }
+//    }
 }
 
 dependencies {

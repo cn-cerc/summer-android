@@ -5,7 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.bumptech.glide.Glide;
-import com.mimrc.vine.R;
+import com.elves.app.R;
 import com.yancy.gallerypick.inter.ImageLoader;
 import com.yancy.gallerypick.widget.GalleryImageView;
 
