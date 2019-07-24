@@ -19,6 +19,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.yt.hz.financial.argame.SpeechApp;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,7 +41,7 @@ import cn.jpush.android.api.JPushInterface;
  * Created by Jason<sz9214e@qq.com> on 2016/11/2.
  */
 
-public class MyApp extends android.app.Application {
+public class MyApp extends SpeechApp {
     public static final String DEVICE_TYPE = "android";
     public static String HOME_URL = "https://m.yiyoupin.com.cn";
     public static String HOME_PAGE = "FrmIndex_Phone";

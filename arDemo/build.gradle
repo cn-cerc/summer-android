@@ -8,7 +8,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         if (false) {
-            applicationId "com.csii.zybk.ui"
+            applicationId "com.elves.app"
         }
         minSdkVersion 16
         targetSdkVersion 27
