@@ -58,6 +58,7 @@ import com.yt.hz.financial.argame.util.RequestUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -95,7 +96,9 @@ public class LocationActivity extends Activity implements View.OnClickListener, 
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
-
+        PermissionHelper.with(this).requestCode(PERMISSION_CODE).requestPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA
+        ).request();
         CustomSensorManager.getInstance(this).setOnAnglaChanged(new CustomSensorManager.OnAnglaChanged() {
             @Override
             public void onChanged(float angla) {
@@ -485,6 +488,12 @@ public class LocationActivity extends Activity implements View.OnClickListener, 
     @PermissionSucceed(requestCode = PERMISSION_CODE)
     private void onPermissionSuccess() {
         try {
+            File file = new File(getFilesDir().getAbsolutePath());
+            if (!file.exists()){
+                file.mkdirs();
+            }
+            OCUtil.getInstent().copyZipToSDCard(new File(getFilesDir().getAbsolutePath()+"/ssdf_guida.ssdf"),getAssets().open("ssdf_guida.ssdf"));
+
             startAR();
         } catch (IOException e) {
             e.printStackTrace();
