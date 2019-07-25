@@ -110,6 +110,20 @@ public class LocationActivity extends Activity implements View.OnClickListener, 
         Intent intent = getIntent();
         //mArID = intent.getStringExtra("id");
 
+        findViewById(R.id.iv_fanhui).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        findViewById(R.id.iv_return).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rlSearch.setVisibility(View.GONE);
+                rlHome.setVisibility(View.VISIBLE);
+            }
+        });
+
         rlFood = findViewById(R.id.rl_search_food);
         rlFood.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,6 +206,7 @@ public class LocationActivity extends Activity implements View.OnClickListener, 
             public void onClick(View v) {
                 //搜索按钮点击
                 String key = etSearch.getText().toString();
+                Log.e("yuan getKey",key);
                 if (key!=null&&!key.equals("")) {
                     requestLocation(key);
                 }
@@ -295,10 +310,11 @@ public class LocationActivity extends Activity implements View.OnClickListener, 
                 theBody.setString("value",locationMsg);
                 mTheMessageClient.send(new Message(MessageID.locationMsg.getId(), theBody));
                 EasyARDictionary theBody1 = new EasyARDictionary();
-                theBody1.setFloat("x", (float) latitude);
-                theBody1.setFloat("y", (float) longitude);
+                theBody1.setFloat("x", (float) longitude);
+                theBody1.setFloat("y", (float) latitude);
                 mTheMessageClient.send(new Message(MessageID.currentLocation.getId(), theBody1));
             }
+            Log.e("yuan","经度: " + location.getLongitude() + " 纬度: " + location.getLatitude()+ "\n");
             //showToast("经度: " + location.getLongitude() + " 纬度: " + location.getLatitude()+ "\n");
         }
 
@@ -418,14 +434,14 @@ public class LocationActivity extends Activity implements View.OnClickListener, 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        showToast("发现目标！"+value);
+                        //showToast("发现目标！"+value);
 
                         Gson gson = new Gson();
                         LocationMsgBean.ResultsBean answerBean =  gson.fromJson(value, LocationMsgBean.ResultsBean.class);
                         rlLocation.setVisibility(View.VISIBLE);
                         tvLoactionName.setText(answerBean.getName());
                         tvLocationDetail.setText(answerBean.getAddress());
-                        //Log.e("yuan answerBean",answerBean.getMessage());
+                        Log.e("yuan answerBean",value);
                     }
                 });
 
@@ -435,7 +451,7 @@ public class LocationActivity extends Activity implements View.OnClickListener, 
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(LocationActivity.this,message.getId()+"",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(LocationActivity.this,message.getId()+"",Toast.LENGTH_SHORT).show();
                 }
             });
         }

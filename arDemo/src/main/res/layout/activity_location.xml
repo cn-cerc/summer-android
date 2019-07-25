@@ -17,6 +17,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="47dp"
+            android:id="@+id/iv_fanhui"
+            android:background="@drawable/icon_fanhui"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
     <Button
         android:id="@+id/btn_search"
         android:layout_centerHorizontal="true"
@@ -46,6 +53,8 @@
             android:textColor="#fff7fbff"
             android:textSize="13sp"/>
         <TextView
+            android:ellipsize="end"
+            android:maxLines="2"
             android:id="@+id/tv_location_detail"
             android:layout_marginTop="41dp"
             android:layout_marginLeft="13dp"
