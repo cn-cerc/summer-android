@@ -26,6 +26,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
@@ -255,6 +256,9 @@ public class FrmStartup extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_frm_startup);
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CAMERA},
+                MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
         instince = this;
         llDialog = (LinearLayout) findViewById(R.id.llDialog);
         view_Masking = findViewById(R.id.view_Masking);
@@ -376,7 +380,6 @@ public class FrmStartup extends AppCompatActivity {
             id = getSerialNumber();
         }
         MyApp.getInstance().setClientId("n_" + id);
-
         new Thread(new Runnable() {
             @Override
             public void run() {
