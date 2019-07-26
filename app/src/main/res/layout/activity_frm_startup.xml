@@ -15,6 +15,11 @@
         android:src="@mipmap/startupimage"
         android:visibility="visible" />
 
+    <VideoView
+        android:id="@+id/videoView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <TextView
         android:id="@+id/version"
         android:layout_width="wrap_content"

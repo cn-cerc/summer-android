@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.GradientDrawable;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +26,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.gifdecoder.GifDecoder;
@@ -285,30 +287,53 @@ public class FrmStartup extends AppCompatActivity {
             }
         }, 3000);
         */
-        Glide.with(getApplicationContext()).load(R.mipmap.startupimage)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE).listener(new RequestListener<Integer, GlideDrawable>() {
-            @Override
-            public boolean onException(Exception e, Integer model, Target<GlideDrawable> target, boolean isFirstResource) {
-                return false;
-            }
+//        Glide.with(getApplicationContext()).load(R.mipmap.startupimage)
+//                .diskCacheStrategy(DiskCacheStrategy.SOURCE).listener(new RequestListener<Integer, GlideDrawable>() {
+//            @Override
+//            public boolean onException(Exception e, Integer model, Target<GlideDrawable> target, boolean isFirstResource) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onResourceReady(GlideDrawable resource, Integer model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+//                // 获取gif动画时长
+//                GifDrawable drawable = (GifDrawable) resource;
+//                GifDecoder decoder = drawable.getDecoder();
+//                long duration = 0;
+//                for (int i = 0; i < drawable.getFrameCount(); i++) {
+//                    duration += decoder.getDelay(i);
+//                }
+//                Log.e("peter", "动画时长" + duration);
+//                //后面这段代码根据你的具体业务需求，添加相应的代码块
+//                handler.sendEmptyMessageDelayed(IMAGE_CLTENT,
+//                        duration+500);
+//                return false;
+//            }
+//        }).into(new GlideDrawableImageViewTarget(start_image, 1));
 
-            @Override
-            public boolean onResourceReady(GlideDrawable resource, Integer model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                // 获取gif动画时长
-                GifDrawable drawable = (GifDrawable) resource;
-                GifDecoder decoder = drawable.getDecoder();
-                long duration = 0;
-                for (int i = 0; i < drawable.getFrameCount(); i++) {
-                    duration += decoder.getDelay(i);
-                }
-                Log.e("peter", "动画时长" + duration);
-                //后面这段代码根据你的具体业务需求，添加相应的代码块
-                handler.sendEmptyMessageDelayed(IMAGE_CLTENT,
-                        duration+500);
-                return false;
-            }
-        }).into(new GlideDrawableImageViewTarget(start_image, 1));
+          /*主要代码起始位置*/
+    final VideoView vv = (VideoView) this.findViewById(R.id.videoView);
+    final String uri = "android.resource://" + getPackageName() + "/" + R.raw.seartvideo;
+    vv.setVideoURI(Uri.parse(uri));
+    vv.start();
+    vv.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+      @Override
+      public void onPrepared(MediaPlayer mp) {
+        mp.start();
+        mp.setLooping(false);
+      }
+    });
 
+    vv.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+          @Override
+          public void onCompletion(MediaPlayer mp) {
+//        		Intent intent = new Intent(inst, second.class);
+//        		startActivity(intent);
+//        		inst.finish();
+              startRequest();
+          }
+        });
+    /*主要代码结束位置*/
     }
 
     @Override
