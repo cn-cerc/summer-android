@@ -68,6 +68,7 @@ public class FrmStartup extends AppCompatActivity {
     private Timer timer = new Timer();
     private int MSG_CLIENT = 1;
     private int IMAGE_CLTENT = 2;
+    private boolean isPlayThe = false;
     private MyApp myApp;
     private JSONObject json = null;
     private ImageView start_image;
@@ -332,6 +333,7 @@ public class FrmStartup extends AppCompatActivity {
     vv.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
           @Override
           public void onCompletion(MediaPlayer mp) {
+              isPlayThe = true;
               startRequest();
           }
         });
@@ -370,6 +372,9 @@ public class FrmStartup extends AppCompatActivity {
     }
 
     private void startRequest() {
+        if (!isPlayThe){
+            return;
+        }
         String id = null;
         TelephonyManager TelephonyMgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
