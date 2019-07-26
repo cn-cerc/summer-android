@@ -52,6 +52,7 @@ import cn.cerc.summer.android.basis.HttpClient;
 import cn.cerc.summer.android.core.Constans;
 import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.forms.view.NavigationChatImageView;
+import cn.cerc.summer.android.parts.CustomVideoView;
 import cn.cerc.summer.android.parts.dialog.DialogUtil;
 
 public class FrmStartup extends AppCompatActivity {
@@ -312,7 +313,7 @@ public class FrmStartup extends AppCompatActivity {
 //        }).into(new GlideDrawableImageViewTarget(start_image, 1));
 
           /*主要代码起始位置*/
-    final VideoView vv = (VideoView) this.findViewById(R.id.videoView);
+    final CustomVideoView vv = (CustomVideoView) this.findViewById(R.id.videoView);
     final String uri = "android.resource://" + getPackageName() + "/" + R.raw.seartvideo;
     vv.setVideoURI(Uri.parse(uri));
     vv.start();
@@ -327,9 +328,6 @@ public class FrmStartup extends AppCompatActivity {
     vv.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
           @Override
           public void onCompletion(MediaPlayer mp) {
-//        		Intent intent = new Intent(inst, second.class);
-//        		startActivity(intent);
-//        		inst.finish();
               startRequest();
           }
         });

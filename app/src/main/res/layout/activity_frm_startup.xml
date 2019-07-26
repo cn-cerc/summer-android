@@ -15,7 +15,7 @@
         android:src="@mipmap/startupimage"
         android:visibility="visible" />
 
-    <VideoView
+    <cn.cerc.summer.android.parts.CustomVideoView
         android:id="@+id/videoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
