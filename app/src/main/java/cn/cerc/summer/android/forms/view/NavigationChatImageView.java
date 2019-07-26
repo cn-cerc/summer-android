@@ -213,13 +213,13 @@ public class NavigationChatImageView extends View implements View.OnClickListene
                             if (imageFilePath != null) {
                                 settings.edit().putString(IMAGE_STARTIP, imageFilePath).commit();
                             }
-                            imageViewPagerListener.onPopSelected(1500);
+                            imageViewPagerListener.onPopSelected(100);
                         }
                     } else {
                         if (imageFilePath != null) {
                             settings.edit().putString(IMAGE_STARTIP, imageFilePath).commit();
                         }
-                        imageViewPagerListener.onPopSelected(1500);
+                        imageViewPagerListener.onPopSelected(100);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -229,7 +229,7 @@ public class NavigationChatImageView extends View implements View.OnClickListene
                 if (imageFilePath != null) {
                     settings.edit().putString(IMAGE_STARTIP, imageFilePath).commit();
                 }
-                imageViewPagerListener.onPopSelected(1500);
+                imageViewPagerListener.onPopSelected(100);
             }
             settings.edit().putBoolean(Constans.IS_FIRST_SHAREDKEY, false).commit();
             settings.edit().putString(CACHE_FILE, resp).commit();
@@ -237,7 +237,7 @@ public class NavigationChatImageView extends View implements View.OnClickListene
                 settings.edit().putString(IMAGE_STARTIP, imageFilePath).commit();
             }
         } else {
-            imageViewPagerListener.onPopSelected(1500);
+            imageViewPagerListener.onPopSelected(100);
         }
     }
 

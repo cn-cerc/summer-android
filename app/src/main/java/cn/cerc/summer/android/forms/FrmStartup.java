@@ -246,7 +246,7 @@ public class FrmStartup extends AppCompatActivity {
                 instince.startActivity(intent);
                 finish();
             }
-        }, time);
+        }, 100);
     }
 
     @Override
