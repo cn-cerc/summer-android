@@ -1281,6 +1281,44 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
         @Override
         public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
+            try {
+                if (url != null) {
+                    if (url.contains("platformapi/startapp") ||
+                            url.contains("mailto://") || url.startsWith("tel://") ||
+                            url.contains("wtloginmqq://")) {
+                        try {
+                            Uri uri = Uri.parse(url);
+                            Intent intent;
+                            intent = Intent.parseUri(url,
+                                    Intent.URI_INTENT_SCHEME);
+                            intent.addCategory("android.intent.category.BROWSABLE");
+                            intent.setComponent(null);
+                            // intent.setSelector(null);
+                            startActivity(intent);
+                            return true;
+                        } catch (Exception e) {
+
+                        }
+                    }
+                    // 微信、支付宝跳转
+                    // 发邮件、打电话（联系医助）跳转
+                    if (url.startsWith("weixin://") ||
+                            url.startsWith("wtloginmqq://") || url.startsWith("alipays://")) {
+                        Uri uri = Uri.parse(url);
+                        Intent intent;
+                        intent = Intent.parseUri(url,
+                                Intent.URI_INTENT_SCHEME);
+                        intent.addCategory("android.intent.category.BROWSABLE");
+                        intent.setComponent(null);
+                        // intent.setSelector(null);
+                        startActivity(intent);
+                        return true;
+                    }
+                }
+            } catch (Exception e) {
+                //防止crash (如果手机上没有安装处理某个scheme开头的url的APP, 会导致crash)
+                return false;
+            }
             if (url.startsWith("newtab:")) {
                 AddWebView(url.replace("newtab:", ""));
                 return true;
