@@ -1394,6 +1394,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 boxTitle.setVisibility(View.VISIBLE);
                 linear_error.setVisibility(View.VISIBLE);
             } else {
+                boxTitle.setVisibility(View.GONE);
                 lblTitle.setText(browser.getTitle());
                 for (int i = 0; i < titlePage.size(); i++) {
                     if (titlePage.get(i).getOnlySign() == classWebView) {
