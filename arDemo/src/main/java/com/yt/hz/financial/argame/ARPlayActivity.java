@@ -687,7 +687,7 @@ public class ARPlayActivity extends Activity implements View.OnClickListener, Sa
 
     private void showTip(final String str) {
         mToast.setText(str);
-        mToast.show();
+//        mToast.show();
     }
 
     /**
