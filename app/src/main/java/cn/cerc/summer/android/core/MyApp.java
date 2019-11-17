@@ -43,13 +43,13 @@ import cn.jpush.android.api.JPushInterface;
 
 public class MyApp extends SpeechApp {
     public static final String DEVICE_TYPE = "android";
-//    public static String HOME_URL = "https://m.yiyoupin.com.cn";
-    public static String HOME_URL = "https://app.fccmmedia.com";
+    public static String HOME_URL = "https://app.yiyoupin.com.cn";
+//    public static String HOME_URL = "https://app.fccmmedia.com";
     public static String HOME_PAGE = "FrmIndex_Phone";
     public static String SERVICES_PATH = "services";
     public static String FORMS_PATH = "elves";
     private static MyApp instance;
-    private final String APPCODE = "elves-android-beta";
+    private final String APPCODE = "elves-android-release";
     public boolean debug = false;
     private DisplayImageOptions options;
     private String appVersion;
