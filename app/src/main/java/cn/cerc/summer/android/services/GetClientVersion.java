@@ -1,7 +1,6 @@
 package cn.cerc.summer.android.services;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -179,7 +179,7 @@ public class MyApp extends android.app.Application {
             return String.format("%s/%s/%s?CLIENTID=%s&device=%s", MyApp.HOME_URL, FORMS_PATH, formCode,
                     MyApp.getInstance().getClientId(), DEVICE_TYPE);
         else
-            return String.format("%s/%s/%s&CLIENTID=%s&device=%s", HOME_URL, FORMS_PATH, formCode,MyApp.getInstance().getClientId(), DEVICE_TYPE);
+            return String.format("%s/%s/%s&CLIENTID=%s&device=%s", HOME_URL, FORMS_PATH, formCode, MyApp.getInstance().getClientId(), DEVICE_TYPE);
     }
 
     public static String getServiceUrl(String serviceCode) {

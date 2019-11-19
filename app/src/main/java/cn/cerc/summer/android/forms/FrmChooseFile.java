@@ -65,7 +65,7 @@ public class FrmChooseFile extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.ivBack://返回
                 finish();
                 break;
@@ -82,7 +82,7 @@ public class FrmChooseFile extends AppCompatActivity implements View.OnClickList
 
     public void showChooseFileDialog() {
 
-        Toast.makeText(this,"点击了",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "点击了", Toast.LENGTH_SHORT).show();
 
         FileDialog fileDialog = new FileDialog(this);
         fileDialog.show();

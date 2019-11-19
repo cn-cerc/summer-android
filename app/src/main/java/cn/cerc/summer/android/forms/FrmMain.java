@@ -76,7 +76,6 @@ import cn.cerc.summer.android.core.MainPopupMenu;
 import cn.cerc.summer.android.core.MainTitleMenu;
 import cn.cerc.summer.android.core.MyApp;
 import cn.cerc.summer.android.core.OnFileChooseItemListener;
-import cn.cerc.summer.android.core.ScreenUtils;
 import cn.cerc.summer.android.core.VisualKeyboardTool;
 import cn.cerc.summer.android.forms.view.BrowserView;
 import cn.cerc.summer.android.forms.view.DragPointView;
@@ -578,7 +577,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 mUploadMessageForAndroid5 = null;
                 break;
             case 1:
-                if (resultCode == 10 ) {
+                if (resultCode == 10) {
                     if (data.getBooleanExtra("return_data", false)) {
                         Toast.makeText(instance, "登录成功！", Toast.LENGTH_SHORT).show();
                         return;
@@ -587,7 +586,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 Toast.makeText(instance, "登录失败！", Toast.LENGTH_SHORT).show();
                 break;
             case 789://选择本地文件返回
-                if (null == data.getData())return;
+                if (null == data.getData()) return;
                 Uri uri = data.getData();//得到uri，后面就是将uri转化成file的过程。
                 String[] proj = {MediaStore.Images.Media.DATA};
                 Cursor actualimagecursor = managedQuery(uri, proj, null, null, null);
@@ -597,11 +596,11 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 File file = new File(img_path);
                 String filePath = file.getAbsolutePath();
                 Log.e(TAG, "选择本地文件路径: " + filePath);
-                if (!TextUtils.isEmpty(filePath)){
+                if (!TextUtils.isEmpty(filePath)) {
                     if (filePath.endsWith("jpg") || filePath.endsWith("png"))//图片类
                         zipImgage(filePath);
                     else {//其它文件
-                        uploadImg(MyApp.getFormUrl("FrmCusFollowUp.uploadFile"),"" + filePath);
+                        uploadImg(MyApp.getFormUrl("FrmCusFollowUp.uploadFile"), "" + filePath);
                     }
                 }
                 break;
@@ -791,7 +790,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                                     }
                                 }
                             });
-                        }else{
+                        } else {
                             if (browser.canGoBack()) browser.goBack();// 返回键退回
                             else {
                                 closeWindow();
@@ -1043,7 +1042,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                                         }
                                     }
                                 });
-                            }else{
+                            } else {
                                 if (browser.canGoBack()) browser.goBack();// 返回键退回
                                 else {
                                     closeWindow();
@@ -1099,7 +1098,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                             }
                         }
                     });
-                }else{
+                } else {
                     if (browser.canGoBack()) browser.goBack();// 返回键退回
                     else {
                         closeWindow();
@@ -1421,7 +1420,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
 
     public void showChooseFileDialog() {
 
-        FileDialog fileDialog = new FileDialog(FrmMain.this,R.style.loadingDialogStyle);
+        FileDialog fileDialog = new FileDialog(FrmMain.this, R.style.loadingDialogStyle);
         fileDialog.show();
         fileDialog.setOnFileChooseItemListener(new OnFileChooseItemListener() {
             @Override
@@ -1456,7 +1455,7 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 path.clear();
                 for (String s : photoList) {
                     path.add(s);
-                    Log.e(TAG, "图片路径: " + s );
+                    Log.e(TAG, "图片路径: " + s);
                     zipImgage(photoList.get(0));
                 }
             }
@@ -1502,21 +1501,21 @@ public class FrmMain extends AppCompatActivity implements View.OnLongClickListen
                 .setCompressListener(new OnCompressListener() { //设置回调
                     @Override
                     public void onStart() {
-                        Toast.makeText(FrmMain.this,"正在压缩图片~",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FrmMain.this, "正在压缩图片~", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onSuccess(File file) {
                         String filePath = file.getAbsolutePath();
                         Log.e(TAG, "压缩后的图片路径: " + filePath);
-                        Toast.makeText(FrmMain.this,"图片压缩成功~",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FrmMain.this, "图片压缩成功~", Toast.LENGTH_SHORT).show();
 //                        handler.sendEmptyMessage(11);
-                        uploadImg(MyApp.getFormUrl("FrmCusFollowUp.uploadFile"),"" + filePath);
+                        uploadImg(MyApp.getFormUrl("FrmCusFollowUp.uploadFile"), "" + filePath);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Toast.makeText(FrmMain.this,"图片加载失败，请重新选择~",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FrmMain.this, "图片加载失败，请重新选择~", Toast.LENGTH_SHORT).show();
                     }
                 }).launch();    //启动压缩
     }
