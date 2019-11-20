@@ -89,7 +89,7 @@ public class MainActivity extends Activity {
                         "                \"uniqueId\": \"uniqueId\"\n" +
                         "              }\n" +
                         "          },\n" +
-                        "  \"key\":\"d8336a2db103406d8163dee0bf410f74\",\n" +
+                        "  \"key\":\"0ea93f831cad4069b3bfbc8d6479d4f3\",\n" +
                         "  \"timestamp\":\""+System.currentTimeMillis()+"\"\n" +
                         "}";//json数据.
                 RequestBody body = RequestBody.create(JSON, jsonStr);
