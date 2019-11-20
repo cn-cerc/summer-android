@@ -3,16 +3,16 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         debug {
-            keyAlias 'Vine2017'
-            keyPassword 'Mimrc2017'
-            storeFile file('../summer.jks')
-            storePassword 'Mimrc2017'
+            keyAlias 'key0'
+            keyPassword 'a123456'
+            storeFile file('../elves.jks')
+            storePassword 'a123456'
         }
         release {
-            keyAlias 'Vine2017'
-            keyPassword 'Mimrc2017'
-            storeFile file('../summer.jks')
-            storePassword 'Mimrc2017'
+            keyAlias 'key0'
+            keyPassword 'a123456'
+            storeFile file('../elves.jks')
+            storePassword 'a123456'
         }
     }
     compileSdkVersion 26
